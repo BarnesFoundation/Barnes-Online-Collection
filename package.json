@@ -1,0 +1,24 @@
+{
+  "name": "barnes-collection-www",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "^4.15.3",
+    "morgan": "^1.8.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.2",
+    "react-scripts": "1.0.5"
+  },
+  "scripts": {
+    "client": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "server": "node server/index.js",
+    "start": "npm-run-all --parallel server client"
+  },
+  "proxy": "http://localhost:4000"
+}
