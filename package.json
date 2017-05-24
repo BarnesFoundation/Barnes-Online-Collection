@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^4.0.0",
+    "elasticsearch": "^13.0.1",
     "express": "^4.15.3",
     "morgan": "^1.8.1",
     "react": "^15.5.4",

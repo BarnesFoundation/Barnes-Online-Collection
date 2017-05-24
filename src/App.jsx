@@ -4,7 +4,7 @@ import './App.css';
 
 class App extends Component {
   componentDidMount() {
-    fetch('/api/test');
+    fetch('/api/objects/5227');
   }
 
   render() {
