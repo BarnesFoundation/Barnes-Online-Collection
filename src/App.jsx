@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+
+import './index.css';
 
 class App extends Component {
-  componentDidMount() {
-    fetch('/api/objects/5227');
-  }
+  // componentDidMount() {
+  //   fetch('/api/objects/5227');
+  // }
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.jsx</code> and save to reload.
-        </p>
-      </div>
+      <Provider store={this.props.store}>
+        <Router>
+          <Route path="/" component={Layout} />
+        </Router>
+      </Provider>
     );
   }
 }
+
+App.propTypes = {
+  store: PropTypes.object.isRequired
+};
 
 export default App;

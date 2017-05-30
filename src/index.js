@@ -1,8 +1,28 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import './index.css';
+import { render } from 'react-dom';
+// import { AppContainer } from 'react-hot-loader';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './App';
+import { configureStore } from './store';
+import registerServiceWorker from './registerServiceWorker';
+
+const store = configureStore(window.__INITIAL_STATE__);
+const mountApp = document.getElementById('root');
+
+
+render(
+  <App store={store} />,
+  mountApp
+);
+
+// if (module.hot) {
+//   module.hot.accept('./App', () => {
+//     const NextApp = require('./App').default;
+//     render(
+//       <AppContainer>
+//         <NextApp store={store} />
+//       </AppContainer>
+//     );
+//   });
+// }
 registerServiceWorker();
