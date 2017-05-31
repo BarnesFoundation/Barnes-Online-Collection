@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
-import SearchBar from './SearchBar';
+import SearchBar from './SearchBar/SearchBar';
 import Results from './Results/Results';
+import SearchTags from './SearchTags/SearchTags';
 
 
 class Layout extends Component {
@@ -12,6 +13,7 @@ class Layout extends Component {
       <div className="app">
         <h1>Barnes Collection</h1>
         <SearchBar />
+        <SearchTags />
         <Results />        
       </div>
     );

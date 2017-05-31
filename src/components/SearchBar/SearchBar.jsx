@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as QueryActions from '../actions/query';
-import * as ObjectActions from '../actions/objects';
+import * as QueryActions from '../../actions/query';
+import * as ObjectActions from '../../actions/objects';
+
+import './searchbar.css';
 
 class SearchBar extends Component {
   constructor(props) {
@@ -20,14 +22,21 @@ class SearchBar extends Component {
     this.props.findObjectsByKeyword(this.props.query);
   }
 
+  componentWillUpdate(nextProps) {
+    if (this.props.query !== nextProps.query) {
+      this.props.findObjectsByKeyword(nextProps.query);
+    } 
+  }
+
   render() {
     return (
       <section aria-label="search">
-        <form onSubmit={this.handleSubmit}>
+        <form className="searchbar__container" onSubmit={this.handleSubmit}>
           <input
             type="text"
             value={this.props.query}
             onChange={this.handleChange}
+            className="searchbar"
           />
         </form>
       </section>

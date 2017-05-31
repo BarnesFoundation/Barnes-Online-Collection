@@ -6,3 +6,10 @@ export function setQuery(query) {
     payload: query
   }
 }
+
+export function appendToQuery(word) {
+  return {
+    type: ActionTypes.APPEND_TO_QUERY,
+    payload: word
+  }
+}

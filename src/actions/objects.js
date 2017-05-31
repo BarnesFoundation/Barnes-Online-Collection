@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as ActionTypes from '../constants';
+import { resetSearchTags } from './searchTags';
 
 const setObjects = (objects) => {
   return {
@@ -10,6 +11,7 @@ const setObjects = (objects) => {
 
 export const getObjects = () => {
   return (dispatch) => {
+    dispatch(resetSearchTags());
     axios.get('/api/search', {
       params: {
         q: 'highlight:true'
@@ -24,6 +26,9 @@ export const getObjects = () => {
 
 export const findObjectsByKeyword = (query) => {
   return (dispatch) => {
+    if (query === '') {
+      return getObjects()(dispatch);
+    }
     axios.get('/api/search', {
       params: {
         q: `_all:${query}`
