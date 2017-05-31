@@ -37,7 +37,8 @@ app.get('/api/objects/:object_id', function (req, res) {
 });
 
 app.get('/api/search', (req, res) => {
-  const query = req.params.query;
+  const query = req.query.q;
+  console.log(query);
   esClient.search({
     index: "collection",
     q: query

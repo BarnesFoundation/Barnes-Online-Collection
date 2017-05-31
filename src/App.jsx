@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 
+import 'normalize.css';
 import './index.css';
 
 class App extends Component {

@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import Test from './Test';
+
+import SearchBar from './SearchBar';
+import Results from './Results/Results';
+
 
 class Layout extends Component {
   render() {
     return (
       <div className="app">
-        <h1>Welcome to my Application</h1>
-        <Route path="/test" component={Test} />
+        <h1>Barnes Collection</h1>
+        <SearchBar />
+        <Results />        
       </div>
     );
   }
