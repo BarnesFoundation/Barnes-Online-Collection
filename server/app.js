@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const elasticsearch = require('elasticsearch');
+const auth = require('http-auth');
 
 const app = express();
 const esClient = new elasticsearch.Client({
@@ -18,9 +19,17 @@ const esClient = new elasticsearch.Client({
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
 
+
+// if in production, set up authentication
+if (process.env.NODE_ENV === 'production') {
+  const basic = auth.basic({
+    file: path.resolve(__dirname, '../.htpasswd')
+  });
+  app.use(auth.connect(basic));
+}
+
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
-
 
 app.get('/api/objects/:object_id', function (req, res) {
   esClient.get({
@@ -38,7 +47,6 @@ app.get('/api/objects/:object_id', function (req, res) {
 
 app.get('/api/search', (req, res) => {
   const query = req.query.q;
-  console.log(query);
   esClient.search({
     index: "collection",
     q: query

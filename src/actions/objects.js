@@ -18,7 +18,6 @@ export const getObjects = () => {
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => object._source);
-      console.log(objects);
       dispatch(setObjects(objects));
     });
   }
@@ -35,7 +34,6 @@ export const findObjectsByKeyword = (query) => {
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
-      console.log(objects);
       dispatch(setObjects(objects));
     });
   }
