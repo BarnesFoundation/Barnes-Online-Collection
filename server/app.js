@@ -19,6 +19,18 @@ const esClient = new elasticsearch.Client({
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
 
+// redirect http to https
+if (process.env.NODE_ENV === "production") {
+  app.enable('trust proxy');
+  app.use(function(req, res, next) {
+    if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
+      return res.redirect('https://' + req.headers.host + req.url);
+    }
+    return next();
+  });
+}
+
+
 app.get('/health', (req, res) => {
   res.json({ success: true });
 });
