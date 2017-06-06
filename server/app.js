@@ -19,6 +19,9 @@ const esClient = new elasticsearch.Client({
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
 
+app.get('/health', (req, res) => {
+  res.json({ success: true });
+});
 
 // if in production, set up authentication
 if (process.env.NODE_ENV === 'production') {
@@ -31,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
-app.get('/api/objects/:object_id', function (req, res) {
+app.get('/api/objects/:object_id', (req, res) => {
   esClient.get({
     index: "collection",
     type: "object",
