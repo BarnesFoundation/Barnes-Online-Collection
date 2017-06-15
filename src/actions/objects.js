@@ -17,7 +17,7 @@ export const getObjects = () => {
         q: 'highlight:true'
       }
     }).then((response) => {
-      const objects = response.data.hits.hits.map(object => object._source);
+      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
       dispatch(setObjects(objects));
     });
   }

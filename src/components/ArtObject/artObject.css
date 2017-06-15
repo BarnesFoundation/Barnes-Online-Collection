@@ -1,0 +1,47 @@
+.art-object__header {
+  display: flex;
+}
+
+.art-object__image {
+  max-width: 50%;
+  align-self: center;
+}
+
+.art-object__tombstone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.art-object__title {
+  width: 100%;
+}
+
+.art-object__labels{
+  text-align: right;
+  padding-right: 10px;
+}
+
+.art-object__label {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.art-object__short-description {
+  width: 100%;
+}
+
+.art-object__accordian-panel {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.art-object__accordian-title {
+  width: 100%;
+}
+
+.art-object__more-info {
+  margin: 0 auto;
+  max-width: 800px;
+}

@@ -2,7 +2,7 @@ import * as ActionTypes from '../constants';
 
 const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
 
-function generateObjectImageUrls(object) {
+export const generateObjectImageUrls = (object) => {
   if (!object.imageSecret) {
     return object;
   }

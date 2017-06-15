@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ObjectActions from '../../actions/objects';
-import ArtObject from '../ArtObject';
+import * as ObjectsActions from '../../actions/objects';
+import * as ObjectActions from '../../actions/object';
+import ArtObjectCard from '../ArtObject/ArtObjectCard';
 import './results.css';
 
 class Results extends Component {
@@ -17,8 +18,14 @@ class Results extends Component {
       <ul>
         {objects.map(object => {
           return (
-            <li key={object.id}>
-              <ArtObject 
+            <li
+              key={object.id}
+              onClick={() => {
+                this.props.setObject(object);
+                this.props.history.push(`/objects/${object.id}`)
+              }}
+            >
+              <ArtObjectCard 
                 title={object.title}
                 people={object.people}
                 medium={object.medium}
@@ -47,7 +54,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions), dispatch);
+  return bindActionCreators(Object.assign({}, ObjectsActions, ObjectActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Results);

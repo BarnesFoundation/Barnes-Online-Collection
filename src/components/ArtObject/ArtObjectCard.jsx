@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ArtObject extends Component {
+class ArtObjectCard extends Component {
   render() {
     return (
       <div>
@@ -13,4 +13,4 @@ class ArtObject extends Component {
   }
 }
 
-export default ArtObject;
+export default ArtObjectCard;

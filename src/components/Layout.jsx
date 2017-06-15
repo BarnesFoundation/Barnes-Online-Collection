@@ -8,12 +8,13 @@ import SearchTags from './SearchTags/SearchTags';
 
 class Layout extends Component {
   render() {
+    console.log(this.props.history);
     return (
       <div className="app">
         <h1>Barnes Collection</h1>
         <SearchBar />
         <SearchTags />
-        <Results />        
+        <Results history={this.props.history}/>        
       </div>
     );
   }
