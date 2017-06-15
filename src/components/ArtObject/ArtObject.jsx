@@ -8,31 +8,38 @@ import { Link } from 'react-router-dom';
 const copyrightMap = {
   1: {
     copy: 'In Copyright',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en'
+    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
+    type: 'small'
   },
   3: {
     copy: 'ARS',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en'
+    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
+    type: 'small'
   },
   4: {
     copy: 'Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/'
+    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
+    type: 'large'
   },
   8: {
     copy: 'No Known Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/'
+    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
+    type: 'large'
   },
   2: {
     copy: 'World Rights: Copyright Undetermined',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en'
+    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
+    type: 'small'
   },
   10: {
     copy: 'World Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/'
+    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
+    type: 'large'
   },
   6: {
     copy: 'No Known Claimant',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en'
+    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
+    type: 'small'
   }
 }
 
@@ -54,7 +61,23 @@ class ArtObject extends Component {
     return (
       <section>
         <div className="art-object__header">
-          <img className="art-object__image"src={this.props.imageUrlLarge} alt={this.props.title}/>
+          <div className="art-object__image-container">
+            <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
+            <div className="art-object__image-options no-print">
+              <button>
+                Zoom
+              </button>
+              <button>
+                Share
+              </button>
+              <button onClick={window.print}>
+                Print
+              </button>
+              <button>
+                Purchase Print
+              </button>
+            </div>
+          </div>
           <div className="art-object__tombstone">
             <h1 className="art-object__title">{this.props.title}</h1>
             <div className="art-object__labels">
@@ -118,9 +141,25 @@ class ArtObject extends Component {
             >
             {getCopyright(this.props.objRightsTypeId).copy}
             </a>
+            {getCopyright(this.props.objRightsTypeId).type === "small" ?
+              <div className="no-print">
+                <button>
+                  Request Image
+                </button>
+              </div>
+              :
+              <div className="no-print">
+                <button>
+                  Download
+                </button>
+                <button>
+                  Request Hi Res
+                </button>
+              </div>
+            }
           </p>
         </div>
-        <footer className="art-object__footer">
+        <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>
         </footer>
       </section>

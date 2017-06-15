@@ -2,9 +2,22 @@
   display: flex;
 }
 
-.art-object__image {
+.art-object__image-container {
   max-width: 50%;
   align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.art-object__image {
+  max-width: 100%;
+}
+
+.art-object__image-options {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 
 .art-object__tombstone {
