@@ -45,3 +45,8 @@
   margin: 0 auto;
   max-width: 800px;
 }
+
+.art-object__footer {
+  width: 100%;
+  text-align: center;
+}

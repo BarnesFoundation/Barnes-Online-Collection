@@ -9,7 +9,9 @@ import './results.css';
 
 class Results extends Component {
   componentDidMount() {
-    this.props.getObjects();
+    if (this.props.objects.length === 0) {
+      this.props.getObjects();
+    }
   }
 
   render() {

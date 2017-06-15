@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
 import './artObject.css';
+import { Link } from 'react-router-dom';
 
 const copyrightMap = {
   1: {
@@ -119,6 +120,9 @@ class ArtObject extends Component {
             </a>
           </p>
         </div>
+        <footer className="art-object__footer">
+          <Link to="/">Back to Results</Link>
+        </footer>
       </section>
     );
   }
