@@ -27,13 +27,22 @@ REACT_APP_PRINTS_ENDPOINT=<url_for_json_map_from_accession_number_to_print_url>
 ## Production Installation
 1. Clone this repository
 2. `$ npm install`
-3. Create an `.env` file as above
-4. `$ npm run build`
-5. `$ npm install -g pm2`
-6. `$ pm2 start ecosystem.json`
+3. Create a `.env` file as above
+4. Create a `.htpasswd` file with a username and encrypted password in the root of this directory, using `htpasswd`
+5. `$ npm run build`
+6. `$ npm install -g pm2`
+7. `$ pm2 start ecosystem.json`
 
 ## Technical Stack
 
 This project uses everything included with create-react-app, plus Redux, React Router, and other smaller dependencies.
 
 This project assumes you have a separate Elasticsearch instance with the collection data and an S3 bucket with the images, following the [Flickr](https://www.flickr.com/services/api/misc.urls.html) convention.
+
+## API 
+
+This project wraps all calls to Elasticsearch in its own API. It uses the `elasticsearch` npm module and has the following routes:
+
+`GET /api/objects/:object_id` returns the art object matching the `:object_id`
+
+`GET /api/search` returns 10 art objects matching a query `q`, which is formatting according to [this documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search)
