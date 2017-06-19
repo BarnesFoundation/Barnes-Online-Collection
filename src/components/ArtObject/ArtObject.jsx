@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
+import * as PrintActions from '../../actions/prints';
 import './artObject.css';
 import { Link } from 'react-router-dom';
 
@@ -44,7 +45,7 @@ const copyrightMap = {
 }
 
 const getCopyright = (id) => {
-  if (!id) return {link: "", copy: ""};
+  if (!id) return {link: '', copy: 'No Known Copyright', type: 'small'};
   return copyrightMap[id];
 }
 
@@ -57,7 +58,16 @@ class ArtObject extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.prints.length === 0) {
+      this.props.getPrints();
+    }
+  }
+
   render() {
+    const printAvailable = this.props.prints.find((print) => {
+      return print.id === this.props.invno
+    });
     return (
       <section>
         <div className="art-object__header">
@@ -73,9 +83,11 @@ class ArtObject extends Component {
               <button onClick={window.print}>
                 Print
               </button>
-              <button>
-                Purchase Print
-              </button>
+              {printAvailable && 
+                <a href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
+                  Purchase Print
+                </a>
+              }
             </div>
           </div>
           <div className="art-object__tombstone">
@@ -168,11 +180,11 @@ class ArtObject extends Component {
 }
 
 function mapStateToProps(state) {
-  return {...state.object};
+  return Object.assign({}, {...state.object}, { prints: state.prints });
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(ObjectActions, dispatch);
+  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObject);
