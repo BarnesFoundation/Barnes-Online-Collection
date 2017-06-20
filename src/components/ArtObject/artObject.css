@@ -63,3 +63,16 @@
   width: 100%;
   text-align: center;
 }
+
+.art-object__colors {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.art-object__color-swatch {
+  width: 40px;
+  height: 40px;
+  border: 2px solid black;
+}
