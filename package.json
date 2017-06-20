@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.74.0",
     "axios": "^0.16.1",
     "dotenv": "^4.0.0",
     "elasticsearch": "^13.0.1",

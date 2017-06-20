@@ -69,7 +69,6 @@ class ArtObject extends Component {
     const printAvailable = this.props.prints.find((print) => {
       return print.id === this.props.invno
     });
-    console.log(this.props);
     return (
       <section>
         <Helmet>
@@ -169,7 +168,7 @@ class ArtObject extends Component {
               </div>
               :
               <div className="no-print">
-                <button>
+                <button onClick={this.props.getSignedUrl.bind(this, this.props.invno)}>
                   Download
                 </button>
                 <button>

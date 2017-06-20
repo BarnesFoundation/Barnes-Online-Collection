@@ -20,3 +20,10 @@ export const getObject = (id) => {
     });
   }
 }
+
+export const getSignedUrl = (invno) => {
+  var newWindow = window.open('', '_blank');
+  axios.get(`/api/objects/${invno}/original_signed_url`).then((response) => {
+    newWindow.location = response.data.url;
+  });
+}

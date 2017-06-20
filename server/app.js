@@ -3,6 +3,14 @@ const morgan = require('morgan');
 const path = require('path');
 const elasticsearch = require('elasticsearch');
 const auth = require('http-auth');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+});
+
+const signedUrlExpireSeconds = 60 * 5;
 
 const app = express();
 const esClient = new elasticsearch.Client({
@@ -72,6 +80,16 @@ app.get('/api/search', (req, res) => {
       res.json(esRes);
     }
   });
+});
+
+app.get('/api/objects/:object_invno/original_signed_url', (req, res) => {
+  const invno = req.params.object_invno;
+  const url = s3.getSignedUrl('getObject', {
+    Bucket: process.env.AWS_BUCKET,
+    Key: `assets/${invno}.jpg`,
+    Expires: signedUrlExpireSeconds
+  });
+  res.json({url});
 });
  
 // Always return the main index.html, so react-router render the route in the client
