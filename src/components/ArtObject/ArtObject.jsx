@@ -5,6 +5,7 @@ import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
 import './artObject.css';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const copyrightMap = {
   1: {
@@ -68,8 +69,15 @@ class ArtObject extends Component {
     const printAvailable = this.props.prints.find((print) => {
       return print.id === this.props.invno
     });
+    console.log(this.props);
     return (
       <section>
+        <Helmet>
+          <meta property="og:title" content={`${this.props.culture || this.props.people} - ${this.props.title}`} />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content={window.location.href} />
+          <meta property="og:image" content={this.props.imageUrlLarge} />
+        </Helmet>
         <div className="art-object__header">
           <div className="art-object__image-container">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
