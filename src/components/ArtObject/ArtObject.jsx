@@ -59,11 +59,18 @@ class ArtObject extends Component {
       const id = props.match.params.id;
       this.props.getObject(id);
     }
+    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   componentDidMount() {
     if (this.props.prints.length === 0) {
       this.props.getPrints();
+    }
+  }
+
+  handleKeyUp(e) {
+    if (e.which === 27) {
+      this.props.hideZoomOverlay();
     }
   }
 
@@ -81,7 +88,7 @@ class ArtObject extends Component {
       }
     }
     return (
-      <section>
+      <section onKeyUp={this.handleKeyUp}>
         <Helmet>
           <meta property="og:title" content={`${this.props.culture || this.props.people} - ${this.props.title}`} />
           <meta property="og:type" content="website" />
