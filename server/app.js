@@ -58,7 +58,8 @@ app.get('/api/objects/:object_id', (req, res) => {
   esClient.get({
     index: "collection",
     type: "object",
-    id: req.params.object_id
+    id: req.params.object_id,
+    _sourceExclude: "imageOriginalSecret"
   }, function(error, esRes) {
     if (error) {
       res.json(error);
@@ -72,7 +73,8 @@ app.get('/api/search', (req, res) => {
   const query = req.query.q;
   esClient.search({
     index: "collection",
-    q: query
+    q: query,
+    _sourceExclude: "imageOriginalSecret"
   }, function(error, esRes) {
     if (error) {
       res.json(error);

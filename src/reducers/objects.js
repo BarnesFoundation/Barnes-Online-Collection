@@ -11,7 +11,6 @@ export const generateObjectImageUrls = (object) => {
   const newObject = Object.assign({}, object);
   newObject.imageUrlSmall = `${baseUrl}/${object.id}_${object.imageSecret}_n.jpg`;
   newObject.imageUrlLarge = `${baseUrl}/${object.id}_${object.imageSecret}_b.jpg`;
-  newObject.imageUrlOriginal = `${baseUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
   return newObject;
 }
 
