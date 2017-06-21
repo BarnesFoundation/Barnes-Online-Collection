@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
+import * as UIActions from '../../actions/ui';
 import './artObject.css';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import Zoom from '../Zoom/Zoom';
 
 const copyrightMap = {
   1: {
@@ -93,7 +95,7 @@ class ArtObject extends Component {
               {colorSwatches}
             </div>
             <div className="art-object__image-options no-print">
-              <button>
+              <button onClick={this.props.showZoomOverlay}>
                 Zoom
               </button>
               <button>
@@ -193,17 +195,18 @@ class ArtObject extends Component {
         <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>
         </footer>
+        {this.props.ui.zoomOverlayVisible && <Zoom invno={this.props.invno} onExit={this.props.hideZoomOverlay}/>}
       </section>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return Object.assign({}, {...state.object}, { prints: state.prints });
+  return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions), dispatch);
+  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObject);

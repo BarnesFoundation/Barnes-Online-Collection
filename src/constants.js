@@ -14,3 +14,8 @@ export const REMOVE_SEARCHTAG = 'REMOVE_SEARCHTAG';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';
+
+//ui
+export const SHOW_ZOOM_OVERLAY = 'SHOW_ZOOM_OVERLAY';
+export const HIDE_ZOOM_OVERLAY = 'HIDE_ZOOM_OVERLAY';
+export const RESET_UI = 'RESET_UI';
