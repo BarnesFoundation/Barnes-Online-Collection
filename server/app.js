@@ -5,6 +5,8 @@ const elasticsearch = require('elasticsearch');
 const auth = require('http-auth');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
+const request = require('request');
+const bodyParser = require('body-parser');
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY
@@ -26,6 +28,9 @@ const esClient = new elasticsearch.Client({
 
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // redirect http to https
 if (process.env.NODE_ENV === "production") {
@@ -84,6 +89,15 @@ app.get('/api/search', (req, res) => {
   });
 });
 
+const getSignedUrl = (invno) => {
+  const url = s3.getSignedUrl('getObject', {
+    Bucket: process.env.AWS_BUCKET,
+    Key: `assets/${invno}.jpg`,
+    Expires: signedUrlExpireSeconds
+  });
+  return url;
+}
+
 app.get('/api/objects/:object_invno/original_signed_url', (req, res) => {
   const invno = req.params.object_invno;
   const url = s3.getSignedUrl('getObject', {
@@ -92,6 +106,29 @@ app.get('/api/objects/:object_invno/original_signed_url', (req, res) => {
     Expires: signedUrlExpireSeconds
   });
   res.json({url});
+});
+
+app.post('/api/objects/:object_invno/download', (req, res) => {
+  const field = req.body.field;
+  request({
+    uri: `https://${process.env.WUFOO_SUBDOMAIN}.wufoo.com/api/v3/forms/${process.env.WUFOO_DOWNLOAD_FORM}/entries.json`,
+    method: 'POST',
+    auth: {
+      username: process.env.WUFOO_USERNAME,
+      password: process.env.WUFOO_PASSWORD,
+      sendImmediately: false
+    },
+    form: {
+      'Field1': field
+    }
+  }, (err, response, body) => {
+    const parsedBody = JSON.parse(body);
+    if (parsedBody.Success === 1) {
+      res.json({url: getSignedUrl(req.params.object_invno)});
+    } else {
+      res.status(500).json({success: false});
+    }
+  });
 });
  
 // Always return the main index.html, so react-router render the route in the client

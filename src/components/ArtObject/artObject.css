@@ -76,3 +76,38 @@
   height: 40px;
   border: 2px solid black;
 }
+
+.download-image-button {
+  display: none;
+}
+
+.download-image-form {
+  display: none;
+  flex-direction: column;
+}
+
+.download-image-button:checked + .download-image-form {
+  display: flex;
+}
+
+button {
+  padding: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+button:hover {
+  background-color: #ccc;
+}
+
+.download-image-label {
+  padding: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.download-image-label:hover {
+  background-color: #ccc;
+}

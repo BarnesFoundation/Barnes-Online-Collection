@@ -27,3 +27,11 @@ export const getSignedUrl = (invno) => {
     newWindow.location = response.data.url;
   });
 }
+
+export const submitDownloadForm = (invno, field) => {
+  return (dispatch) => {
+    axios.post(`/api/objects/${invno}/download`, { field }).then((response) => {
+      console.log(response.data.url);
+    });
+  }
+}

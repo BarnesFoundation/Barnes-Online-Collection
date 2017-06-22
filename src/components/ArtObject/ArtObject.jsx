@@ -60,6 +60,7 @@ class ArtObject extends Component {
       this.props.getObject(id);
     }
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -72,6 +73,11 @@ class ArtObject extends Component {
     if (e.which === 27) {
       this.props.hideZoomOverlay();
     }
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault();
+    this.props.submitDownloadForm(this.props.invno, this.downloadReason.value); 
   }
 
   render() {
@@ -189,11 +195,19 @@ class ArtObject extends Component {
               </div>
               :
               <div className="no-print">
-                <button onClick={this.props.getSignedUrl.bind(this, this.props.invno)}>
-                  Download
-                </button>
                 <button>
                   Request Hi Res
+                </button>
+                <label htmlFor="download-image-button" className="download-image-label">Download</label>
+                <input type="checkbox" id="download-image-button" className="download-image-button" />
+                <form onSubmit={this.handleFormSubmit} className="download-image-form">
+                  <label htmlFor="reason">What do you want to use this image for?</label>
+                  <textarea id="reason" ref={(element) => { this.downloadReason = element; }}>
+                  </textarea>
+                  <input type="submit" />
+                </form>
+                <button onClick={this.props.getSignedUrl.bind(this, this.props.invno)}>
+                  Download
                 </button>
               </div>
             }
