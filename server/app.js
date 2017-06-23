@@ -98,16 +98,6 @@ const getSignedUrl = (invno) => {
   return url;
 }
 
-app.get('/api/objects/:object_invno/original_signed_url', (req, res) => {
-  const invno = req.params.object_invno;
-  const url = s3.getSignedUrl('getObject', {
-    Bucket: process.env.AWS_BUCKET,
-    Key: `assets/${invno}.jpg`,
-    Expires: signedUrlExpireSeconds
-  });
-  res.json({url});
-});
-
 app.post('/api/objects/:object_invno/download', (req, res) => {
   const field = req.body.field;
   request({

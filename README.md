@@ -46,3 +46,6 @@ This project wraps all calls to Elasticsearch in its own API. It uses the `elast
 `GET /api/objects/:object_id` returns the art object matching the `:object_id`
 
 `GET /api/search` returns 10 art objects matching a query `q`, which is formatting according to [this documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search)
+
+`POST /api/objects/:object_invno/download` returns a signed object url upon submitting the Wufoo form with the necessary fields. 
+
