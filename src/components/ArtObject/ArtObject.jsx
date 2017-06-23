@@ -78,6 +78,9 @@ class ArtObject extends Component {
   handleFormSubmit(e) {
     e.preventDefault();
     this.props.submitDownloadForm(this.props.invno, this.downloadReason.value); 
+    this.downloadReason.value = '';
+    this.downloadToggle.checked = false;
+
   }
 
   render() {
@@ -199,16 +202,18 @@ class ArtObject extends Component {
                   Request Hi Res
                 </button>
                 <label htmlFor="download-image-button" className="download-image-label">Download</label>
-                <input type="checkbox" id="download-image-button" className="download-image-button" />
+                <input
+                  type="checkbox"
+                  id="download-image-button"
+                  className="download-image-button"
+                  ref={(element) => { this.downloadToggle = element; }}
+                />
                 <form onSubmit={this.handleFormSubmit} className="download-image-form">
                   <label htmlFor="reason">What do you want to use this image for?</label>
                   <textarea id="reason" ref={(element) => { this.downloadReason = element; }}>
                   </textarea>
                   <input type="submit" />
                 </form>
-                <button onClick={this.props.getSignedUrl.bind(this, this.props.invno)}>
-                  Download
-                </button>
               </div>
             }
           </p>
