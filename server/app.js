@@ -119,7 +119,8 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
       sendImmediately: false
     },
     form: {
-      'Field1': field
+      'Field1': field,
+      'Field3': req.params.object_invno
     }
   }, (err, response, body) => {
     const parsedBody = JSON.parse(body);
