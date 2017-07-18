@@ -18,10 +18,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     ```bash
     brew install git-crypt
     ```
-4. Copy `.env-example` to a new file `.env` in the root directory. You will need to define each of the environment variables included in the sample file.
-5. All necessary environment variables are stored in this repository in an encrypted file, which you can open using `git-crypt`. [TODO: Add instructions here.]
-6. `$ npm run build` to build the app.
-7. `$ npm start` to run the app.
+4. Copy `.env-example` to a new file `.env` in the root directory. You will need to define each of the environment variables included in the sample file. You can alternatively find a completed `.env` file in the copy of this project repo on the Barnes admin server.
+5. `$ npm run build` to build the app.
+6. `$ npm start` to run the app.
 
 ## Production Installation
 1. Clone this repository
