@@ -77,7 +77,7 @@ class ArtObject extends Component {
 
   handleFormSubmit(e) {
     e.preventDefault();
-    this.props.submitDownloadForm(this.props.invno, this.downloadReason.value); 
+    this.props.submitDownloadForm(this.props.invno, this.downloadReason.value);
     this.downloadReason.value = '';
     this.downloadToggle.checked = false;
 
@@ -97,7 +97,7 @@ class ArtObject extends Component {
       }
     }
     return (
-      <section onKeyUp={this.handleKeyUp}>
+      <section className="art-object" onKeyUp={this.handleKeyUp}>
         <Helmet>
           <meta property="og:title" content={`${this.props.culture || this.props.people} - ${this.props.title}`} />
           <meta property="og:type" content="website" />
@@ -120,7 +120,7 @@ class ArtObject extends Component {
               <button onClick={window.print}>
                 Print
               </button>
-              {printAvailable && 
+              {printAvailable &&
                 <a href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
                   Purchase Print
                 </a>

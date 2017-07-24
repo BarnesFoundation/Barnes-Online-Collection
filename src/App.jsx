@@ -1,3 +1,7 @@
+// Import normalize and base styles first so that component styles can override them if needed.
+import 'normalize.css';
+import './index.css';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
@@ -5,9 +9,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout';
 import ArtObject from './components/ArtObject/ArtObject';
 import history from './history';
-
-import 'normalize.css';
-import './index.css';
 
 class App extends Component {
   // componentDidMount() {
