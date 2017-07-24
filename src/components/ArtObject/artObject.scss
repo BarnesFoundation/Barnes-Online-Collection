@@ -1,3 +1,5 @@
+@import "../../scss/variables.scss";
+
 .art-object {
 
   &__header {
@@ -100,7 +102,7 @@
   }
 
   button:hover {
-    background-color: #ccc;
+    background-color: $color-grey-dark;
   }
 
   .download-image-label {
@@ -111,6 +113,6 @@
   }
 
   .download-image-label:hover {
-    background-color: #ccc;
+    background-color: $color-grey-dark;
   }
 }
