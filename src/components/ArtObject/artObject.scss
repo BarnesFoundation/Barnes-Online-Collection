@@ -1,0 +1,116 @@
+.art-object {
+
+  &__header {
+    display: flex;
+  }
+
+  &__image-container {
+    max-width: 50%;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__image {
+    max-width: 100%;
+  }
+
+  &__image-options {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__tombstone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 10px;
+  }
+
+  &__title {
+    width: 100%;
+  }
+
+  &__labels {
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  &__label {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  &__short-description {
+    width: 100%;
+  }
+
+  &__accordian-panel {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__accordian-title {
+    width: 100%;
+  }
+
+  &__more-info {
+    margin: 0 auto;
+    max-width: 800px;
+  }
+
+  &__footer {
+    width: 100%;
+    text-align: center;
+  }
+
+  &__colors {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  &__color-swatch {
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+  }
+
+  .download-image-button {
+    display: none;
+  }
+
+  .download-image-form {
+    display: none;
+    flex-direction: column;
+  }
+
+  .download-image-button:checked + .download-image-form {
+    display: flex;
+  }
+
+  button {
+    padding: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: transparent;
+  }
+
+  button:hover {
+    background-color: #ccc;
+  }
+
+  .download-image-label {
+    padding: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .download-image-label:hover {
+    background-color: #ccc;
+  }
+}

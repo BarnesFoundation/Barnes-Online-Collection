@@ -15,6 +15,7 @@
     "leaflet": "^1.0.3",
     "leaflet-iiif": "git+https://github.com/mejackreed/Leaflet-IIIF.git",
     "morgan": "^1.8.1",
+    "node-sass-chokidar": "0.0.3",
     "normalize.css": "^7.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
@@ -31,12 +32,14 @@
     "react-scripts": "1.0.5"
   },
   "scripts": {
-    "client": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
+    "start": "npm-run-all --parallel watch-css server client",
+    "build": "npm run build-css && react-scripts build",
     "server": "node server/index.js",
-    "start": "npm-run-all --parallel server client"
+    "client": "react-scripts start",
+    "eject": "react-scripts eject",
+    "test": "react-scripts test --env=jsdom",
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
   },
   "proxy": "http://localhost:4000"
 }
