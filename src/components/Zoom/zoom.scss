@@ -1,11 +1,13 @@
+@import '../../scss/variables.scss';
+
 .zoom {
   position: fixed;
   height: 100%;
   width: 100%;
   top: 0;
   left: 0;
-  z-index: 100;
-  background-color: #333;
+  z-index: 1;
+  background-color: $color-grey-dark;
 
   &__exit {
     position: absolute;
@@ -13,7 +15,7 @@
     right: 20px;
     height: 40px;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 2;
   }
 
   .map-container {
