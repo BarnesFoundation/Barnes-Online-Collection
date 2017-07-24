@@ -7,6 +7,7 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const request = require('request');
 const bodyParser = require('body-parser');
+
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY
@@ -121,7 +122,7 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
     }
   });
 });
- 
+
 // Always return the main index.html, so react-router render the route in the client
 app.get('*/:page', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
