@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import SearchBar from './SearchBar/SearchBar';
-import Results from './Results/Results';
+import SearchResults from './SearchResults/SearchResults';
 import SearchTags from './SearchTags/SearchTags';
 
 
@@ -14,7 +14,7 @@ class Layout extends Component {
         <h1>Barnes Collection</h1>
         <SearchBar />
         <SearchTags />
-        <Results history={this.props.history}/>        
+        <SearchResults history={this.props.history}/>
       </div>
     );
   }
