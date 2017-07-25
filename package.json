@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "npm-run-all": "^4.0.2",
-    "react-scripts": "1.0.5"
+    "react-scripts": "1.0.5",
+    "sass-lint": "^1.10.2"
   },
   "scripts": {
     "start": "npm-run-all --parallel watch-css server client",
@@ -39,6 +40,7 @@
     "eject": "react-scripts eject",
     "test": "react-scripts test --env=jsdom",
     "build-css": "node-sass-chokidar src/ -o src/",
+    "sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
   },
   "proxy": "http://localhost:4000"

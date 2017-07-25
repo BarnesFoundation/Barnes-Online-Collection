@@ -142,8 +142,8 @@ class ArtObject extends Component {
               <p>{this.props.medium}</p>
             </div>
             <div className="art-object__short-description"
-              dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}>
-            </div>
+              dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
+            ></div>
           </div>
         </div>
         <div className="art-object__more-info">
@@ -171,13 +171,11 @@ class ArtObject extends Component {
         </div>
         {this.props.visualDescription && <div className="art-object__more-info">
           <h2>Visual Discription</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.visualDescription}}>
-          </div>
+          <div dangerouslySetInnerHTML={{__html: this.props.visualDescription}}></div>
         </div>}
         {this.props.longDescription && <div className="art-object__more-info">
           <h2>Long Description</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.longDescription}}>
-          </div>
+          <div dangerouslySetInnerHTML={{__html: this.props.longDescription}}></div>
         </div>}
         <div className="art-object__more-info">
           <h2>Copyright/Download</h2>

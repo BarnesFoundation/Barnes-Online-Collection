@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as QueryActions from '../../actions/query';
 import * as ObjectActions from '../../actions/objects';
 
-import './searchbar.css';
+import './searchBar.css';
 
 class SearchBar extends Component {
   constructor(props) {
@@ -25,18 +25,18 @@ class SearchBar extends Component {
   componentWillUpdate(nextProps) {
     if (this.props.query !== nextProps.query) {
       this.props.findObjectsByKeyword(nextProps.query);
-    } 
+    }
   }
 
   render() {
     return (
-      <section aria-label="search">
+      <section aria-label="search" className="searchbar">
         <form className="searchbar__container" onSubmit={this.handleSubmit}>
           <input
             type="text"
             value={this.props.query}
             onChange={this.handleChange}
-            className="searchbar"
+            className="searchbar__input"
           />
         </form>
       </section>

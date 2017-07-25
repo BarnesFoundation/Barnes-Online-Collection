@@ -1,5 +1,6 @@
-.art-object {
+@import '../../scss/variables.scss';
 
+.art-object {
   &__header {
     display: flex;
   }
@@ -76,7 +77,7 @@
   &__color-swatch {
     width: 40px;
     height: 40px;
-    border: 2px solid black;
+    border: 2px solid $color-black;
   }
 
   .download-image-button {
@@ -94,23 +95,23 @@
 
   button {
     padding: 10px;
-    border: 1px solid black;
+    border: 1px solid $color-black;
     cursor: pointer;
     background-color: transparent;
-  }
 
-  button:hover {
-    background-color: #ccc;
+    &:hover {
+      background-color: $color-grey-light;
+    }
   }
 
   .download-image-label {
     padding: 10px;
-    border: 1px solid black;
+    border: 1px solid $color-black;
     cursor: pointer;
     display: inline-block;
   }
 
   .download-image-label:hover {
-    background-color: #ccc;
+    background-color: $color-grey-light;
   }
 }

@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
 import ArtObjectCard from '../ArtObject/ArtObjectCard';
-import './results.css';
+import './searchResults.css';
 
-class Results extends Component {
+class SearchResults extends Component {
   componentDidMount() {
     if (this.props.objects.length === 0) {
       this.props.getObjects();
@@ -15,9 +15,9 @@ class Results extends Component {
   }
 
   render() {
-    const { objects } = this.props; 
+    const { objects } = this.props;
     return (
-      <ul>
+      <ul className="search-results">
         {objects.map(object => {
           return (
             <li
@@ -27,7 +27,7 @@ class Results extends Component {
                 this.props.history.push(`/objects/${object.id}`)
               }}
             >
-              <ArtObjectCard 
+              <ArtObjectCard
                 title={object.title}
                 people={object.people}
                 medium={object.medium}
@@ -41,11 +41,11 @@ class Results extends Component {
   }
 }
 
-Results.propTypes = {
+SearchResults.propTypes = {
   getObjects: PropTypes.func.isRequired
 };
 
-Results.defaultProps = {
+SearchResults.defaultProps = {
   objects: []
 }
 
@@ -59,4 +59,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, ObjectsActions, ObjectActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Results);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResults);

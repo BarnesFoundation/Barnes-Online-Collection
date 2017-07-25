@@ -1,0 +1,11 @@
+.search-results {
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  li {
+    width: 25%;
+    cursor: pointer;
+  }
+}
