@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import * as QueryActions from '../../actions/query';
 import * as ObjectActions from '../../actions/objects';
 
-import './searchBar.css';
+import './searchInput.css';
 
-class SearchBar extends Component {
+class SearchInput extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,6 +30,8 @@ class SearchBar extends Component {
 
   render() {
     return (
+      <div>
+        <p>SearchInput</p>
       <section aria-label="search" className="searchbar">
         <form className="searchbar__container" onSubmit={this.handleSubmit}>
           <input
@@ -40,6 +42,7 @@ class SearchBar extends Component {
           />
         </form>
       </section>
+      </div>
     );
   }
 }
@@ -55,4 +58,4 @@ function mapDispatchToProps(dispatch) {
     dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchInput);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import SearchBar from '../../components/SearchBar/SearchBar';
-import SearchResults from '../../components/SearchResults/SearchResults';
-import SearchTags from '../../components/SearchTags/SearchTags';
+import Header from './Header';
+import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
+import Footer from '../../components/Footer/Footer';
 
 
 class LandingPage extends Component {
@@ -11,10 +11,10 @@ class LandingPage extends Component {
     console.log(this.props.history);
     return (
       <div className="app">
-        <h1>Barnes Collection</h1>
-        <SearchBar />
-        <SearchTags />
-        <SearchResults history={this.props.history}/>
+        <h1>LandingPage</h1>
+        <Header />
+        <ArtObjectGrid />
+        <Footer />
       </div>
     );
   }

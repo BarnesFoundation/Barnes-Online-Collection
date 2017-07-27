@@ -52,7 +52,7 @@ const getCopyright = (id) => {
   return copyrightMap[id];
 }
 
-class ArtObject extends Component {
+class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
     if (!props.title) {
@@ -233,4 +233,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArtObject);
+export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectPage);
