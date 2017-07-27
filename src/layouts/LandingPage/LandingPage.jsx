@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import SearchBar from './SearchBar/SearchBar';
-import SearchResults from './SearchResults/SearchResults';
-import SearchTags from './SearchTags/SearchTags';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import SearchResults from '../../components/SearchResults/SearchResults';
+import SearchTags from '../../components/SearchTags/SearchTags';
 
 
-class Layout extends Component {
+class LandingPage extends Component {
   render() {
     console.log(this.props.history);
     return (
@@ -20,8 +20,8 @@ class Layout extends Component {
   }
 }
 
-Layout.propTypes = {
+LandingPage.propTypes = {
   children: PropTypes.element
 };
 
-export default Layout;
+export default LandingPage;

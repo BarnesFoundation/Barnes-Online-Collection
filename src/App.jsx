@@ -6,8 +6,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Layout from './components/Layout';
-import ArtObject from './components/ArtObject/ArtObject';
+import LandingPage from './layouts/LandingPage/LandingPage';
+import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import history from './history';
 
 class App extends Component {
@@ -20,8 +20,8 @@ class App extends Component {
       <Provider store={this.props.store}>
         <Router history={history}>
           <Switch>
-            <Route exact path="/" component={Layout} />
-            <Route exact path="/objects/:id" component={ArtObject} />
+            <Route exact path="/" component={LandingPage} />
+            <Route exact path="/objects/:id" component={ArtObjectPage} />
           </Switch>
         </Router>
       </Provider>
