@@ -8,6 +8,7 @@ import './artObjectPage.css';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Zoom from '../../components/Zoom/Zoom';
+import TabbedContent from './TabbedContent/TabbedContent';
 
 const copyrightMap = {
   1: {
@@ -104,6 +105,9 @@ class ArtObjectPage extends Component {
           <meta property="og:url" content={window.location.href} />
           <meta property="og:image" content={this.props.imageUrlLarge} />
         </Helmet>
+        <div className="art-object__tabbed-content-test">
+          <TabbedContent/>
+        </div>
         <div className="art-object__header">
           <div className="art-object__image-container">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
