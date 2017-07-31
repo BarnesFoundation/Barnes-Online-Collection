@@ -8,7 +8,7 @@ class HeaderText extends Component {
   render() {
     return (
       <div>
-        <p>HeaderText</p>
+        <h1>{this.props.text}</h1>
       </div>
     );
   }
