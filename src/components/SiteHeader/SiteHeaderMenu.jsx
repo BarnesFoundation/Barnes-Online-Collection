@@ -15,7 +15,7 @@ class SiteHeaderMenu extends Component {
   render() {
     return (
       <div>
-        <p>Site Header Menu</p>
+        <p>SiteHeaderMenu</p>
         <SiteHeaderMenuItems />
         <SiteSearchToggle />
         <SiteSearchInput />
