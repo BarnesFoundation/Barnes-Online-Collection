@@ -11,21 +11,27 @@ class CollectionFiltersMenu extends Component {
       filters: {
         colors: {
           title: "Colors",
+          type: "checkbox"
         },
         lines: {
           title: "Lines",
+          type: "radio"
         },
         light: {
           title: "Light",
+          type: "slider"
         },
         space: {
           title: "Space",
+          type: "slider"
         },
         shuffle: {
           title: "Shuffle",
+          type: "shuffle"
         },
         search: {
           title: "Search",
+          type: "search"
         }
       }
     };

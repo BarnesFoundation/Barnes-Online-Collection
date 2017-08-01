@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import Header from './Header';
+import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import Footer from '../../components/Footer/Footer';
-
 
 class LandingPage extends Component {
   render() {
@@ -13,6 +13,7 @@ class LandingPage extends Component {
       <div className="app">
         <h1>LandingPage</h1>
         <Header />
+        <CollectionFiltersPanel />
         <ArtObjectGrid />
         <Footer />
       </div>
@@ -20,8 +21,8 @@ class LandingPage extends Component {
   }
 }
 
-LandingPage.propTypes = {
-  children: PropTypes.element
-};
+// LandingPage.propTypes = {
+//   children: PropTypes.element
+// };
 
 export default LandingPage;

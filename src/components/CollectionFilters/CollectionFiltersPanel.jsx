@@ -28,16 +28,16 @@ class CollectionFiltersPanel extends Component {
           selectFilter={this.selectFilter}
         />
 
-        {this.state.selectedFilter == 'search' &&
+        {this.state.selectedFilter === 'search' &&
           <SearchInput />
         }
 
-        {this.state.selectedFilter == "shuffle" &&
+        {this.state.selectedFilter === "shuffle" &&
           <p>Shuffle state of filter panel</p>
         }
 
-        {this.state.selectedFilter && this.state.selectedFilter != 'search' && this.state.selectedFilter != "shuffle" &&
-          <CollectionFiltersSet selectedFilter={this.state.selectedFilter}/>
+        {this.state.selectedFilter && this.state.selectedFilter !== 'search' && this.state.selectedFilter !== "shuffle" &&
+          <CollectionFiltersSet selectedFilter={this.state.selectedFilter} title={this.state.selectedFilter}/>
         }
       </div>
     );
