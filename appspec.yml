@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /usr/local/barnes/projects/barnes-collection-www
+hooks:
+  AfterInstall:
+    - location: /ubuntu/post-deploy.sh
+      timeout: 300
