@@ -14,7 +14,8 @@ export const getObjects = () => {
     dispatch(resetSearchTags());
     axios.get('/api/search', {
       params: {
-        q: 'highlight:true'
+        // q: 'highlight:true'
+        q: '_exists_:imageSecret'
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));

@@ -13,10 +13,8 @@ class ArtObject extends Component {
   render() {
     return (
       <div>
-        <p>ArtObject</p>
-        <ArtObjectImage />
-        <ArtObjectOverlay />
-        <ArtObjectCaption />
+        <ArtObjectImage alt={this.props.title} src={this.props.imageUrlSmall}/>
+        <ArtObjectOverlay title={this.props.title} medium={this.props.medium}/>
       </div>
     );
   }

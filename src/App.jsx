@@ -5,9 +5,12 @@ import './index.css';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
+
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
+
 import history from './history';
 
 class App extends Component {

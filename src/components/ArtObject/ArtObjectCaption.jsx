@@ -7,7 +7,7 @@ class ArtObjectCaption extends Component {
 
   render() {
     return (
-      <div><p>ArtObjectCaption</p></div>
+      <p>{this.props.title}, {this.props.medium}</p>
     );
   }
 }

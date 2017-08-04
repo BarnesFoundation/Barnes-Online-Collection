@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import ArtObjectCaption from './ArtObjectCaption';
+
 class ArtObjectOverlay extends Component {
   constructor(props) {
     super(props);
@@ -7,7 +9,7 @@ class ArtObjectOverlay extends Component {
 
   render() {
     return (
-      <div><p>ArtObjectOverlay</p></div>
+      <p><ArtObjectCaption title={this.props.title} medium={this.props.medium}/></p>
     );
   }
 }

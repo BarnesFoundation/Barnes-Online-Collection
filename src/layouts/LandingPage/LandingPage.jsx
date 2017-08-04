@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import Header from './Header';
 import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
@@ -8,13 +8,13 @@ import Footer from '../../components/Footer/Footer';
 
 class LandingPage extends Component {
 
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    // Landing Page needs to:
-    // - know all of the queries/tags the user has applied
-    // - tell the art object grid what objects to display
-  }
+  //   // Landing Page needs to:
+  //   // - know all of the queries/tags the user has applied
+  //   // - tell the art object grid what objects to display
+  // }
 
   render() {
     console.log(this.props.history);
@@ -23,15 +23,15 @@ class LandingPage extends Component {
         <h1>LandingPage</h1>
         <Header />
         <CollectionFiltersPanel />
-        <ArtObjectGrid />
+        <ArtObjectGrid history={this.props.history}/>
         <Footer />
       </div>
     );
   }
 }
 
-// LandingPage.propTypes = {
-//   children: PropTypes.element
-// };
+LandingPage.propTypes = {
+  children: PropTypes.element
+};
 
 export default LandingPage;

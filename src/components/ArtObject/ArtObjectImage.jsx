@@ -7,7 +7,7 @@ class ArtObjectImage extends Component {
 
   render() {
     return (
-      <div><img alt="ArtObjectImage"/></div>
+      <img alt={this.props.alt} src={this.props.src}/>
     );
   }
 }
