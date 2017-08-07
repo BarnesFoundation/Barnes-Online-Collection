@@ -77,9 +77,13 @@ app.get('/api/objects/:object_id', (req, res) => {
 
 app.get('/api/search', (req, res) => {
   const query = req.query.q;
+  const from_num = req.query.from || 0;
+  const size = req.query.size || 20;
   esClient.search({
     index: "collection",
     q: query,
+    from: from_num,
+    size: size,
     _sourceExclude: "imageOriginalSecret"
   }, function(error, esRes) {
     if (error) {
