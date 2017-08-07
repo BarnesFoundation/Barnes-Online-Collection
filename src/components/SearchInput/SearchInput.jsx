@@ -23,9 +23,9 @@ class SearchInput extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.query !== nextProps.query) {
-      this.props.findObjectsByKeyword(nextProps.query);
-    }
+    // if (this.props.query !== nextProps.query) {
+    //   // this.props.findObjectsByKeyword(nextProps.query);
+    // }
   }
 
   render() {
