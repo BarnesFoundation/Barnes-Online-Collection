@@ -29,4 +29,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, QueryActions), dispatch);
 }
 
-export default CollectionFiltersApplied;
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersApplied);

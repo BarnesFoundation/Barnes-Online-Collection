@@ -27,6 +27,7 @@ class SearchInput extends Component {
     this.props.setQuery(this.state.value);
     this.props.findObjectsByKeyword(this.state.value);
     // this.props.findObjectsByKeyword(this.props.query);
+    this.setState({value: ''});
   }
 
   componentWillUpdate(nextProps) {
@@ -41,6 +42,7 @@ class SearchInput extends Component {
         <form className="searchbar__container" onSubmit={this.handleSubmit}>
           <input
             type="text"
+            autoFocus="true"
             // value={this.props.query}
             value={this.state.value}
             onChange={this.handleChange}
