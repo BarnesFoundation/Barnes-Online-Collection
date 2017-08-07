@@ -10,7 +10,7 @@ class SiteHeaderMenuItems extends Component {
   render() {
     return (
       <div>
-        <a href={this.props.link} alt={this.props.title}>{this.props.title}</a>
+        <a href={`https://www.barnesfoundation.org/${this.props.link}`} alt={this.props.title}>{this.props.title}</a>
       </div>
     );
   }
