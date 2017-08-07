@@ -36,13 +36,12 @@ class TabbedContent extends Component {
               const tabData = this.state.tabs[key];
 
               return (
-                // <Link to="/about">About</Link>
-                <a
-                  href="#"
+                <Link
+                  to={this.props.baseUrl + tabData.slug}
                   onClick={this.handleContentTabClick(tabData.slug)}
                 >
                   {tabData.title}
-                </a>
+                </Link>
               );
             })
         }
@@ -66,8 +65,6 @@ class TabbedContent extends Component {
 
   handleContentTabClick(slug) {
     return function(e) {
-      e.preventDefault();
-
       this.selectTab(slug);
     }.bind(this);
   }
