@@ -14,7 +14,6 @@ export const getObjects = () => {
   const body = bodybuilder()
     .filter('exists', 'imageSecret')
     .from(0).size(25)
-    .query('match', '_all', 'matisse')
     .build();
 
   return (dispatch) => {
