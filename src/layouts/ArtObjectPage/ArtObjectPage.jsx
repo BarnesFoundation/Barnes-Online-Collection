@@ -59,6 +59,13 @@ class ArtObjectPage extends Component {
       this.props.location.pathname.slice(0, panelSlugIdx) :
       this.props.location.pathname;
 
+    // todo: quick fix. move this to a router.
+    const hasTrailingSlash = !!baseUrl.match(/^.*\/$/);
+
+    if (!hasTrailingSlash) {
+      window.location = baseUrl + '/';
+    }
+
     this.state = {
       panelSlug: panelSlug,
       baseUrl: baseUrl,
