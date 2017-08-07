@@ -147,7 +147,7 @@ class PanelDetails extends Component {
         </div>}
         <div className="art-object__more-info">
           <h2>Copyright/Download</h2>
-          <p className="art-object__label">
+          <div className="art-object__label">
             <span>Copyright Status: </span>
             <a
               href={getCopyright(this.props.objRightsTypeId).link}
@@ -182,7 +182,7 @@ class PanelDetails extends Component {
                 </form>
               </div>
             }
-          </p>
+          </div>
         </div>
         {this.props.ui.zoomOverlayVisible && <Zoom invno={this.props.invno} onExit={this.props.hideZoomOverlay}/>}
       </div>
