@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as QueryActions from '../../actions/query';
-import * as ObjectActions from '../../actions/objects';
+import * as ObjectsActions from '../../actions/objects';
 
 import './searchInput.css';
 
@@ -54,7 +54,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},ObjectActions, QueryActions),
+  return bindActionCreators(Object.assign({},ObjectsActions, QueryActions),
     dispatch);
 }
 
