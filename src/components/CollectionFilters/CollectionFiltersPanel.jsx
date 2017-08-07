@@ -8,6 +8,7 @@ import * as ObjectActions from '../../actions/object';
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersSet from './CollectionFiltersSet';
+import CollectionFiltersApplied from './CollectionFiltersApplied';
 
 import './collectionFilters.css';
 
@@ -46,6 +47,9 @@ class CollectionFiltersPanel extends Component {
         {this.state.selectedFilter && this.state.selectedFilter !== 'search' && this.state.selectedFilter !== "shuffle" &&
           <CollectionFiltersSet selectedFilter={this.state.selectedFilter} title={this.state.selectedFilter}/>
         }
+
+        <CollectionFiltersApplied />
+
       </div>
     );
   }
