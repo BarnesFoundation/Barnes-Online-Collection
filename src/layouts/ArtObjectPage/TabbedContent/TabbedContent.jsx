@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Link } from 'react-router-dom'
 import PanelVisuallyRelated from '../PanelVisuallyRelated'
 import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
@@ -7,27 +7,69 @@ import PanelDetails from '../PanelDetails'
 class TabbedContent extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      selectedTab: this.props.slug,
+      tabs: {
+        visuallyRelated: {
+          title: 'Visually Related',
+          slug: '',
+        },
+        ensemble: {
+          title: 'Ensemble',
+          slug: 'ensemble',
+        },
+        details: {
+          title: 'Details',
+          slug: 'details',
+        },
+      },
+    };
   }
 
   render() {
     return (
-      <Tabs defaultIndex={0}>
-        <TabList>
-          <Tab>Visually Related</Tab>
-          <Tab>Ensemble</Tab>
-          <Tab>Details</Tab>
-        </TabList>
-        <TabPanel>
+      <div>
+        {
+          Object.keys(this.state.tabs)
+            .map(key => {
+              const tabData = this.state.tabs[key];
+
+              return (
+                // <Link to="/about">About</Link>
+                <a
+                  href="#"
+                  onClick={this.handleContentTabClick(tabData.slug)}
+                >
+                  {tabData.title}
+                </a>
+              );
+            })
+        }
+
+        {this.state.selectedTab === '' &&
           <PanelVisuallyRelated/>
-        </TabPanel>
-        <TabPanel>
+        }
+        {this.state.selectedTab === 'ensemble' &&
           <PanelEnsemble/>
-        </TabPanel>
-        <TabPanel>
+        }
+        {this.state.selectedTab === 'details' &&
           <PanelDetails/>
-        </TabPanel>
-      </Tabs>
+        }
+      </div>
     );
+  }
+
+  selectTab(tabKey) {
+    this.setState({selectedTab: tabKey});
+  }
+
+  handleContentTabClick(slug) {
+    return function(e) {
+      e.preventDefault();
+
+      this.selectTab(slug);
+    }.bind(this);
   }
 }
 

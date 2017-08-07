@@ -51,10 +51,23 @@ const copyrightMap = {
 class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
+
+    const id = props.match.params.id;
+    const panelSlug = props.match.params.panel || '';
+    const panelSlugIdx = this.props.location.pathname.search(panelSlug);
+    const baseUrl = panelSlugIdx ?
+      this.props.location.pathname.slice(0, panelSlugIdx) :
+      this.props.location.pathname;
+
+    this.state = {
+      panelSlug: panelSlug,
+      baseUrl: baseUrl,
+    };
+
     if (!props.title) {
-      const id = props.match.params.id;
       this.props.getObject(id);
     }
+
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
@@ -89,7 +102,10 @@ class ArtObjectPage extends Component {
           <meta property="og:image" content={this.props.imageUrlLarge} />
         </Helmet>
         <div className="art-object__tabbed-content-test">
-          <TabbedContent />
+          <TabbedContent
+            slug={this.state.panelSlug}
+            baseUrl={this.state.baseUrl}
+          />
         </div>
         <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>

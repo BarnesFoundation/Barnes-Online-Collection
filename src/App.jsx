@@ -25,6 +25,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={LandingPage} />
             <Route exact path="/objects/:id" component={ArtObjectPage} />
+            <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
           </Switch>
         </Router>
       </Provider>
