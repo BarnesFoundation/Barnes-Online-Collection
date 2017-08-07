@@ -15,7 +15,8 @@ export const getObjects = () => {
     axios.get('/api/search', {
       params: {
         // q: 'highlight:true'
-        q: '_exists_:imageSecret'
+        q: '_exists_:imageSecret AND _all:"matisse"'
+        // q: '_exists_:imageSecret',
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
@@ -31,7 +32,7 @@ export const findObjectsByKeyword = (query) => {
     }
     axios.get('/api/search', {
       params: {
-        q: `_all:${query}`
+        q: `_exists_:imageSecret AND _all:${query}`
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
