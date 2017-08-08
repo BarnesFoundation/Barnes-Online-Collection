@@ -7,7 +7,7 @@ export function configureStore(initialState = {}) {
     applyMiddleware(thunk)
   ];
 
-  const store = createStore(rootReducer, initialState, compose(...enhancers));
+  let store = createStore(rootReducer, initialState, compose(...enhancers));
 
   // if (module.hot) {
   //   module.hot.accept('./reducers', () => {

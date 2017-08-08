@@ -3,13 +3,8 @@ import React, { Component } from 'react';
 import CollectionFiltersSetTypeCheckbox from './CollectionFiltersSetTypeCheckbox';
 import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
-import CollectionFiltersApplied from './CollectionFiltersApplied';
 
 class CollectionFiltersSet extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let filterSet = null;
 
@@ -28,7 +23,7 @@ class CollectionFiltersSet extends Component {
         filterSet = <CollectionFiltersSetTypeSlider />;
         break;
       default:
-        filterSet = <CollectionFiltersApplied />;
+        filterSet = null;
         break;
     }
 
