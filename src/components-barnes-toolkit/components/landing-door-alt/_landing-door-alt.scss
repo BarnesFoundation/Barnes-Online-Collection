@@ -1,0 +1,78 @@
+/***
+
+Landing Door (alternative version)
+====
+* Class name: `m-landing-door-alt`
+* Tags used on: `<div>`
+
+An alternative (smaller) version of `.m-landing-door` where the image is to the
+right of the copy instead of being above it - on medium-to-large screen sizes
+and up.
+
+***/
+
+.m-landing-door-alt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @include breakpoint('medium+') {
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+  }
+}
+
+.m-landing-door-alt__header {
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - 20px);
+  }
+}
+
+.m-landing-door-alt__header a {
+  display: block;
+}
+
+.m-landing-door-alt__media {
+  display: block;
+
+  @include breakpoint('large+') {
+    margin-top: 12px;
+    width: 100%;
+  }
+}
+
+.m-landing-door-alt__body {
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - 20px);
+  }
+}
+
+.m-landing-door-alt__title {
+  margin-top: 11px;
+
+  @include breakpoint('medium+') {
+    margin-top: -5px;
+  }
+}
+
+.m-landing-door-alt__summary {
+  margin-top: -25px;
+
+  @include breakpoint('medium+') {
+    margin-top: -5px;
+  }
+}
+
+.m-landing-door-alt__link {
+  margin-top: 5px;
+}

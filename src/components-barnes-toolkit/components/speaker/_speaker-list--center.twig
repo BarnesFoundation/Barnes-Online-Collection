@@ -1,0 +1,49 @@
+{#
+
+Speaker list component
+(inside a centrally-aligned .m-block)
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Speakers' %}
+{% endif %}
+
+{% if speakers is empty %}
+  {%
+    set speakers = [
+      {
+        image: '//placehold.it/275x275',
+        name: 'Speaker one',
+        job: 'Job title for speaker',
+        summary: [
+          '<p>This is the summary for speaker number one.</p>'
+        ]
+      },
+      {
+        image: '//placehold.it/275x275',
+        name: 'Speaker two',
+        job: 'Job title for speaker',
+        summary: [
+          '<p>This is the summary for speaker number two it is a little longer than the first summary and it is intended to show the copy breaking onto multiples lines so we can test it on different devices.</p>'
+        ]
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block--flush-top m-block--no-border m-centered-paragraph">
+  <div class="m-centered-paragraph__container">
+    <div class="m-speaker-list">
+      {% for speaker in speakers %}
+        {% include path ~ "speaker/_speaker.twig" with speaker %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

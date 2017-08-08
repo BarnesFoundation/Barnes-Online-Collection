@@ -1,0 +1,42 @@
+/**
+
+Mobile options
+
+On small screens only we display an important (but optional) message
+below the header - where Barnes can add very important stuff like
+a Google maps link or today’s open status.
+
+**/
+
+.m-mobile-options {
+  background: $color__white;
+  border: 1px solid $color__border;
+  border-width: 1px 0;
+  color: $color__copy--light;
+  font-size: 18px;
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  padding: 6px 0 9px;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'header')};
+
+  @include breakpoint('medium+') {
+    display: none;
+  }
+}
+
+.m-mobile-options__welcome {
+  /* here to convey structure */
+}
+
+.m-mobile-options__links {
+  /* here to convey structure */
+}
+
+.m-mobile-options__links {
+  /* here to convey structure */
+}
+
+.m-mobile-options__link:not(:first-child) {
+  margin-left: 15px;
+}

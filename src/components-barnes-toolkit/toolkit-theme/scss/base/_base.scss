@@ -1,0 +1,75 @@
+
+//
+// Base Styles
+//
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  -ms-overflow-style: none;
+}
+
+// ::-webkit-scrollbar {
+//     display: none;
+// }
+
+body {
+  background-color: $color-light;
+  @include debug-colors(yellow);
+  -moz-font-feature-settings: "kern";
+  -webkit-font-feature-settings: "kern";
+  -ms-font-feature-settings: "kern";
+  -o-font-feature-settings: "kern";
+  font-feature-settings: "kern";
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+
+  &.is-menu-expanded {
+    overflow: hidden;
+    @include breakpoint($tablet-landscape-width + 1) {
+      overflow: visible;
+    }
+
+    @media print {
+      overflow: visible;
+    }
+  }
+}
+
+audio,
+canvas,
+img,
+video {
+  vertical-align: middle;
+}
+
+img {
+  image-rendering: optimizeQuality;
+  vertical-align: middle;
+  max-width: 100%;
+  width: auto\9;
+  height: auto;
+}
+
+ul,
+li,
+ol,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+figure {
+  margin: 0;
+}

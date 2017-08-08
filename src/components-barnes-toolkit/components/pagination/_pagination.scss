@@ -1,0 +1,67 @@
+/***
+
+pagination
+======
+* Class name: `-m-pagination`
+* Modifier classes: `-m-pagination--`
+* Tags used on: `<div>`
+
+Used by shopify hence some non-standard class names on child elements
+
+***/
+
+.m-pagination {
+  @include font-smallprint();
+
+  color: $color__copy--medium;
+  margin: 20px auto 0;
+  text-align: center;
+}
+
+.m-pagination a {
+  color: currentColor;
+  display: block;
+  padding: 0 5px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.m-pagination a:focus:not(.focus-ring) {
+  text-decoration: underline;
+}
+
+.m-pagination .page,
+.m-pagination .current,
+.m-pagination .prev,
+.m-pagination .next {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  min-width: 40px;
+}
+
+.m-pagination .page {
+  border: 1px solid $color__border;
+
+  &:hover {
+    border-color: currentColor;
+  }
+}
+
+.m-pagination .current {
+  border-color: currentColor;
+  color: $color__red--barnes;
+}
+
+.m-pagination .prev,
+.m-pagination .next {
+
+}
+
+.m-pagination .prev {
+  margin-right: 20px;
+}
+
+.m-pagination .next {
+  margin-left: 20px;
+}

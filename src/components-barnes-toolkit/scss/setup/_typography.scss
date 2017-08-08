@@ -1,0 +1,598 @@
+/***
+
+Typography
+===
+* Class names: `font-alpha`, `font-beta`, `font-delta`, `font-epsilon`, `font-zeta`, `font-smallprint`, `page-title`, `font-bold-heading`
+* Modifier classes: `font-m-b`, `color-brand`, `color-light`
+* Tags used on: `<h1-h6>` `<div>` `<span>`, `<p>`
+
+Set different font styles, weights and sizes to copy - specifically headings.
+
+Please note: don’t set a heading’s HTML tag based upon how it looks. A `<h4>`
+should follow on from a `<h3>` which in turn should follow on from a `<h2>`.
+
+[Further reading on headings and page structure](https://www.w3.org/WAI/tutorials/page-structure/headings/)
+
+You can add a bottom margin to a heading by adding the `font-m-b` class.
+
+Try to use classes to determine the size of fonts/headings:
+
+  ```
+  <h1 class="font-alpha">Heading 1</h1>
+  <h1 class="font-alpha color-brand">Heading 1 (red)</h1>
+  <h1 class="font-alpha color-light">Heading 1 (grey)</h1>
+  <h1 class="font-beta">Heading 2</h1>
+  <h1 class="font-gamma">Heading 3</h1>
+  <h1 class="font-delta">Heading 4</h1>
+  <h1 class="font-epsilon">Heading 5</h1>
+  <h1 class="font-zeta">Heading 6 / Label</h1>
+  <h1 class="font-smallprint">Smallprint</h1>
+  <h1 class="font-chapo">Châpo</h1>
+  <h1 class="page-title">Page title</h1>
+  <h1 class="font-bold-heading">Bold heading</h1>
+  <h1 class="font-simple-heading">Bold heading (same font-family as type as its parent)</h1>
+  <div class="rte">
+    <p>Sometimes we can't use our font classes :( e.g. if the user is using a Rich Text Editor in a CMS.</p>
+    <h1>h1</h1>
+    <h2>h2</h2>
+    <h3>h3</h3>
+    <h4>h4</h4>
+    <h5>h5</h5>
+    <h6>h6</h6>
+  </div>
+  ```
+
+***/
+
+/**
+ * @license
+ * MyFonts Webfont Build ID 3381723, 2017-04-28T09:47:16-0400
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: FF Milo Serif Web Text by FontFont
+ * URL: http://www.myfonts.com/fonts/fontfont/milo-serif/ot-text/
+ *
+ * Webfont: FF Milo Serif Web Bold by FontFont
+ * URL: http://www.myfonts.com/fonts/fontfont/milo-serif/ot-bold/
+ *
+ *
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=3381723
+ * Licensed pageviews: 500,000
+ * Webfonts copyright: 2009 Mike Abbink published by FSI FontShop International GmbH
+ *
+ * © 2017 MyFonts Inc
+*/
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/3399db");
+
+@font-face {
+  font-family: 'Calibre';
+  src: url('../fonts/CalibreWeb-Regular.woff2') format('woff2'),
+       url('../fonts/CalibreWeb-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Calibre';
+  src: url('../fonts/CalibreWeb-Medium.woff2') format('woff2'),
+       url('../fonts/CalibreWeb-Medium.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FFMiloSerifWebText';
+  src:  url('../fonts/3399DB_0_0.woff2') format('woff2'),
+        url('../fonts/3399DB_0_0.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FFMiloSerifWebText';
+  src:  url('../fonts/3399DB_1_0.woff2') format('woff2'),
+        url('../fonts/3399DB_1_0.woff') format('woff');
+  font-weight: bold;
+	font-style: normal;
+}
+
+
+// ####################################################
+// Site font stack variables
+//
+// uncomment and complete stack with project fonts
+// xxxxx--loaded variables need a font loader to be activated (see setup/mixins/typography for CSS rule) :
+// https://code.area17.com/mike/a17-js-helpers/wikis/A17-Helpers-fontObservers
+
+$sans-serif: sans-serif;
+$sans-serif--loaded: 'Calibre', sans-serif;
+
+$serif: serif;
+$serif--loaded: 'FFMiloSerifWebText', serif;
+
+
+
+// ####################################################
+// Basic Font styles
+// 1 Set font size here so we can use REMs if we ever want to (spoiler we
+// probably won't use REMs) but it’s nice to have the choice
+// As the designers give us px sized fonts lets just use them.
+
+html {
+  font-size: 18px; /* 1 */
+
+  @include breakpoint('large+') {
+    font-size: 20px;
+  }
+
+  @media print {
+    font-size: 16px;
+  }
+}
+
+// 2 Set the line-height here so we have a basic rule
+// we can overrule it later in the cascade if we need to on specific items
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-family: $serif--loaded;
+  font-size: 100%;
+  font-feature-settings: 'kern';
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  line-height: (26/18); /* 2 */
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  @include breakpoint('large+') {
+   line-height: (30/20);
+  }
+}
+
+strong,
+b {
+  font-weight: bold;
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+// ####################################################
+// Font sizes - mixins and utility classes
+//
+// Create some values that we can use cross site. Let's not rely on <h1>-<h6>
+// to style fonts. If we use greek A-Z names e.g. alpha then maybe we won't feel dirty
+// having something like <h4 class="font-alpha">Big title</h4>
+
+// h1
+@mixin font-alpha() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 45px;
+  line-height: 1;
+
+  @include breakpoint('medium+') {
+    font-size: 60px;
+  }
+
+  @include breakpoint('large+') {
+    font-size: 70px;
+    line-height: (70/75);
+  }
+
+  @media print {
+    font-size: 45px;
+  }
+}
+
+// h2
+@mixin font-beta() {
+  color: $color__copy--dark;
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: (45/40);
+
+  @include breakpoint('medium+') {
+    font-size: 42px;
+    line-height: (55/50);
+  }
+
+  @include breakpoint('large+') {
+    font-size: 48px;
+    line-height: (60/55);
+  }
+
+  @media print {
+    color: inherit;
+    font-size: 40px;
+  }
+}
+
+// h3
+@mixin font-gamma() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 32px;
+  line-height: (35/32);
+
+  @include breakpoint('medium+') {
+    font-size: 38px;
+    line-height: (40/38);
+  }
+
+  @include breakpoint('medium+') {
+    line-height: (45/38);
+  }
+
+  @media print {
+    font-size: 32px;
+  }
+}
+
+// h4
+@mixin font-delta() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 25px;
+  line-height: (30/25);
+}
+
+// h5
+@mixin font-epsilon() {
+  font-family: $sans-serif--loaded;
+  font-size: 19px;
+  line-height: 1.2;
+
+  @include breakpoint('medium+') {
+    font-size: 25px;
+    line-height: (30/25);
+  }
+
+  @media print {
+    font-size: 19px;
+  }
+}
+
+// h6 / Stylised small caps
+@mixin font-zeta() {
+  color: $color__copy--dark;
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: .04em;
+  line-height: (25/16);
+  text-transform: uppercase;
+}
+
+// Hero title
+@mixin font-hero-title() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 36px;
+
+  @include breakpoint('medium+') {
+    font-size: 60px;
+    line-height: (56/60);
+  }
+
+  @include breakpoint('large+') {
+    font-size: 70px;
+    line-height: (70/75);
+  }
+
+  @media print {
+    font-size: 34px;
+    line-height: 36px;
+  }
+}
+
+// Hero supporting (usually a date)
+@mixin font-hero-supporting() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 23px;
+  line-height: (45/32);
+
+  @include breakpoint('medium+') {
+    font-size: 32px;
+    line-height: (45/32);
+  }
+
+  @media print {
+    font-size: 23px;
+    line-height: (45/32);
+  }
+}
+
+// Page title
+@mixin font-page-title() {
+  @include font-alpha();
+}
+
+// Chapô
+@mixin font-chapo() {
+  font-family: $sans-serif--loaded;
+  font-size: 25px;
+  line-height: 1;
+
+  @include breakpoint('medium+') {
+    font-size: 30px;
+    line-height: (40/30);
+  }
+
+  @media print {
+    font-size: 25px;
+    line-height: 1;
+  }
+}
+
+// Bold heading
+@mixin font-bold-heading() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  line-height: (30/19);
+
+  @include breakpoint('large+') {
+    font-size: 20px;
+    line-height: (30/20);
+  }
+
+  @media print {
+    font-size: 100%;
+  }
+}
+
+// Simple bold heading
+@mixin font-simple-heading() {
+  font-weight: bold;
+
+  & + p,
+  & + ul,
+  & + ol {
+    margin-top: 0;
+  }
+}
+
+// Smallprint
+@mixin font-smallprint() {
+  font-family: $sans-serif--loaded;
+  font-size: 17px;
+  line-height: (25/17);
+
+  @include breakpoint('large+') {
+    font-size: 19px;
+    line-height: (25/19);
+  }
+
+  @media print {
+    font-size: 17px;
+    line-height: (25/17);
+  }
+}
+
+// Product title - same as font-gamma() but with different line-heights :(
+@mixin font-product-title() {
+  @include font-gamma();
+
+  line-height: 35px;
+
+  @include breakpoint('medium+') {
+    line-height: 40px;
+  }
+}
+
+// Button
+@mixin font-btn() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 19px;
+
+  @media print {
+    font-size: 1rem;
+  }
+}
+
+// Button - bolder and a bit bigger
+@mixin font-btn-bold() {
+  font-family: $sans-serif--loaded;
+  font-weight: bold;
+  font-size: 20px;
+
+  @media print {
+    font-size: 1rem;
+  }
+}
+
+// Copyright
+@mixin font-copyright() {
+  font-family: $sans-serif--loaded;
+  font-size: 18px;
+
+  @media print {
+    font-size: 1rem;
+  }
+}
+
+// Quote
+@mixin font-quote() {
+  font-family: $sans-serif--loaded;
+  font-weight: 300;
+  font-size: 35px;
+  line-height: (40/35);
+
+  @include breakpoint('medium+') {
+    font-size: 50px;
+    line-height: (65/50);
+  }
+
+  @include breakpoint('large+') {
+    font-size: 60px;
+    line-height: (70/60);
+  }
+
+  @media print {
+    font-size: 35px;
+    line-height: (40/35);
+  }
+}
+
+// Cite
+@mixin font-cite() {
+  font-family: $sans-serif--loaded;
+  font-size: 18px;
+  line-height: 1;
+
+  @media print {
+    font-size: 1rem;
+  }
+}
+
+// Smaller body copy
+@mixin font-smaller-body() {
+  font-family: $serif--loaded;
+  font-size: 19px;
+  line-height: (30/19);
+
+  @media print {
+    font-size: .9rem;
+  }
+}
+
+// Site title
+@mixin font-site-title() {
+  font-family: $sans-serif--loaded;
+  font-size: 20px;
+  line-height: 19px;
+
+  @include breakpoint('medium+') {
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  @media print {
+    font-size: 24px;
+  }
+}
+
+// Ok now add some classes for the above mixins.
+// Sometimes it is pragmatic to use a utility class in the markup like this:
+// <h1 class="alpha">Hey</h1>
+//
+// and sometimes this is better
+// <h1 class="title">Hey</h1>
+// .title { @include alpha(); }
+//
+// Do what's best for the project. There's no *correct* solution
+.font-alpha {
+  @include font-alpha();
+}
+
+.font-beta {
+  @include font-beta();
+}
+
+.font-gamma {
+  @include font-gamma();
+}
+
+.font-delta {
+  @include font-delta();
+}
+
+.font-epsilon {
+  @include font-epsilon();
+}
+
+.font-zeta {
+  @include font-zeta();
+}
+
+.page-title {
+  @include font-page-title();
+
+  text-align: center;
+}
+
+.page-title--shopify {
+  @include font-page-title();
+
+  @include breakpoint('large+') {
+    font-size: 60px;
+    line-height: (70/60);
+  }
+}
+
+.font-chapo {
+  @include font-chapo();
+}
+
+.font-bold-heading {
+  @include font-bold-heading();
+}
+
+.font-simple-heading {
+  @include font-simple-heading();
+}
+
+.font-smallprint {
+  @include font-smallprint();
+}
+
+/**
+ * Add a bottom margin to a heading
+ */
+.font-m-b {
+  margin-bottom: 25px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 31px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 42px;
+  }
+}
+
+
+/**
+ * Sometimes we can't use our font classes :( e.g. if the user is using a
+ * Rich Text Edito (RTE) in a CMS.
+ */
+.rte {
+  h1:not([class*="font-"]) {
+    @include font-alpha();
+  }
+
+  h2:not([class*="font-"]) {
+    @include font-beta();
+  }
+
+  h3:not([class*="font-"]) {
+    @include font-gamma();
+  }
+
+  h4:not([class*="font-"]) {
+    @include font-delta();
+  }
+
+  h5:not([class*="font-"]) {
+    @include font-epsilon();
+  }
+
+  h6:not([class*="font-"]) {
+    @include font-zeta();
+  }
+}

@@ -1,0 +1,159 @@
+/***
+
+Card (Artwork)
+=====
+* Class name: `m-card-artwork`
+* Modifier classes: `m-card-artwork__media--100pc`
+* Tags used on: `<div>` `<article>`
+
+A card for displaying a piece of artwork e.g. an image with a title, a summary
+and a copyright notice.
+
+The card usually takes up the full width of its parent container which is
+usually 50% of the website width but `m-card-artwork__media--100pc` breaks out
+of its 50% width container to be full width.
+
+*Multiple cards:*
+
+Multiple cards should be wrapped in a `<div class="m-card-artwork-list"></div>`
+container which will place the cards into a grid like structure on
+medium-to-large width screens.
+
+The cards in these containers also have extra padding at the bottom to stop them
+touching each other if they span multiple rows.
+
+***/
+
+/**
+ * 1 Account for the 1px margin on the artwork cards when they are inside
+ * this container
+ */
+.m-card-artwork-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: -1px; /* 1 */
+}
+
+.m-card-artwork {
+  @include reset-link-color();
+}
+
+.m-card-artwork-list .m-card-artwork {
+  margin: 0 0 0 1px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 1px);
+  }
+
+  @include breakpoint('large+') {
+    width: calc(33.33% - 1px);
+  }
+}
+
+.m-card-artwork__header {
+  position: relative;
+}
+
+/**
+ * 2 overrule the reset-link-color mixin (which I am regretting writing)
+ */
+.m-card-artwork__header a {
+  display: block;
+  overflow: hidden;
+
+  &:focus:not(.focus-ring) {
+    outline: 2px solid $color__red--barnes !important; /* 2 */
+  }
+}
+
+.m-card-artwork__media {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+/*
+ * 100% width / break out image
+ * We are assuming this element needs to be 100% width of the viewport but it is
+ * sat inside of an element which is only 50% of the viewport width.
+ *
+ * 1 account for the width of the column-gap (30p or 40px)
+ */
+.m-card-artwork__media--100pc {
+  @include breakpoint('medium+') {
+    left: calc(-100% - map-get($outer-gutters, 'medium')); /* 1 */
+    max-width: calc(200% + map-get($outer-gutters, 'medium'));
+    position: relative;
+    width: calc(200% + map-get($outer-gutters, 'medium'));
+  }
+
+  @include breakpoint('xlarge+') {
+    left: calc(-100% - map-get($outer-gutters, 'xlarge')); /* 1 */
+    max-width: calc(200% + map-get($outer-gutters, 'xlarge'));
+    width: calc(200% + map-get($outer-gutters, 'xlarge'));
+  }
+}
+
+.m-card-artwork__body {
+  padding: 19px 18% 0 0;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    padding-top: 17px;
+  }
+
+  @include breakpoint('large+') {
+    padding-top: 16px;
+  }
+}
+
+/**
+ * The cards in these containers also have extra padding at the bottom
+ * to stop them touching each other if they span multiple rows.
+ */
+.m-card-artwork-list .m-card-artwork__body,
+.o-galleries__cards .m-card-artwork__body {
+  padding-bottom: 30px;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 80px;
+  }
+}
+
+.m-card-artwork__title {
+  margin-top: 0;
+}
+
+.m-card-artwork__title  a {
+  display: inline-block;
+}
+
+// Hover state for the title link - make quite specific to override
+// the reset-link-color mixin used above
+.m-card-artwork__title > a:not(.btn):not(.a-brand-link):hover {
+  text-decoration: underline;
+}
+
+.m-card-artwork__summary {
+  color: $color__copy--light;
+  margin-top: 3px;
+
+  // Remove margin on first element
+  p {
+    margin-top: 0;
+  }
+}
+
+.m-card-artwork__copyright {
+  @include font-copyright();
+
+  color: rgba($color__copy--light, .9);
+  margin-top: 2px;
+
+  @include breakpoint('medium+') {
+    margin-top: 7px;
+  }
+}

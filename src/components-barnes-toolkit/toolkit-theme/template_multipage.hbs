@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <title>{{titlecase (strip_num page.title) }} – {{site_title}}</title>
+
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon.ico" rel="shortcut icon" sizes="32x32">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-96.png" rel="icon" sizes="96x96" type="image/png">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-57.png" rel="apple-touch-icon" sizes="57x57">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-72.png" rel="apple-touch-icon" sizes="72x72">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-120.png" rel="apple-touch-icon" sizes="120x120">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-144.png" rel="apple-touch-icon" sizes="144x144">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-152.png" rel="apple-touch-icon" sizes="152x152">
+    <link href="/{{> absroot}}/a17-theme/images/favicons/favicon-180.png" rel="apple-touch-icon-precomposed" sizes="180x180">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/{{> absroot}}/a17-theme/images/favicons/favicon-144.png">
+    <link rel="stylesheet" href="/{{> absroot}}/a17-theme/css/main.css">
+    {{> highlight}}
+
+    <script src="/{{> absroot}}/a17-theme/js/vendor/modernizr-2.8.3.min.js"></script>
+
+  </head>
+  <body class="is-loading is-tpl-page">
+    <div class="progress-bar" data-progress-bar></div>
+
+    <div class="page-wrapper">
+
+      <header class="primary-header" data-behavior="search">
+        <a class="nav-btn nav-btn--hamburger js-menu-toggle" href="#" data-behavior="mobileMenu">
+          <div class="nav-btn__icon"></div>
+        </a>
+
+        <div class="primary-header__slideout">
+          <h1 class="primary-header__title">
+            <span>{{site_title}}</span>
+            <span class="t-current">{{site_title}}</span>
+            <span>{{site_title}}</span>
+          </h1>
+        </div>
+        <!-- #end .primary-header__slideout -->
+
+        <div class="nav-set">
+          <a class="nav-btn js-prev" href="#">
+            <div class="nav-btn__icon">&#8593;</div>
+          </a>
+
+          <a class="nav-btn js-next" href="#">
+            <div class="nav-btn__icon">&#8595;</div>
+          </a>
+        </div>
+      </header>
+
+      <nav class="sidebar">
+
+        <header class="sidebar__header" data-behavior="revealAll">
+          <span class="sidebar__title">{{site_title}}</span>
+          <span class="sidebar__toc">TOC</span>
+        </header>
+        <div class="sidebar__content">
+          <div class="sidebar__wrapper">
+            <ol class="sidebar__list">
+            {{#if readme}}
+              {{#if readme.isIndex}}
+              <li class="sidebar__item"><a href="/{{> absroot}}" data-slug="index">{{titlecase "Overview" }}</a></li>
+              {{/if}}
+            {{/if}}
+
+            {{#each pages}}
+                {{#if isDirectory}}
+                    <li class="sidebar__item"><a {{#each pages}} {{#if @first}}{{#if isFile}} href="/{{href}}" data-slug="{{slug}}" {{/if}}{{/if}} {{/each}} >{{titlecase (strip_num title) }}</a>
+                      <ul class="children">
+                      {{#each pages}}
+                          {{#unless isIndex}}
+                          {{#if isFile}}
+                          <li class="sidebar__item">
+                              <a href="/{{href}}" data-slug="{{slug}}">{{titlecase (strip_num title) }}</a>
+                          </li>
+                          {{/if}}
+                          {{/unless}}
+                      {{/each}}
+                      </ul>
+                    </li>
+                {{/if}}
+                {{#if isFile}}
+                  <li class="sidebar__item"><a href="/{{href}}" data-slug="{{slug}}">{{titlecase (strip_num title) }}</a></li>
+                {{/if}}
+            {{/each}}
+            </ol>
+
+            <footer class="sidebar__footer">
+              <a class="sidebar__logo" href="htt://area17.com">AREA 17</a>
+            </footer>
+          </div>
+        </div>
+      </nav>
+      <!-- #end .sidebar -->
+
+      <main class="content-container" id="pjax">
+        <div class="content-wrapper" >
+
+          <!-- post page -->
+          <article class="post post--single" data-behavior="iframes set_pjax_navigation copy_markup" data-current="{{page.slug}}">
+            <h2 class="post-title has-content">{{titlecase (strip_num page.title) }}</h2>
+
+            {{#if page.intro}}
+                <div class="post-introduction">{{{page.intro}}}</div>
+            {{/if}}
+
+            <div class="post-entry">
+              {{#each page.sections}}
+                <div class="section">
+                    {{#if comment}}
+                        <div class="comment">{{{comment}}}</div>
+                    {{/if}}
+                    {{#if result}}
+                        <div class="result" data-iframes>
+                            <script class="result-placeholder" type="text/html">{{{result}}}</script>
+                        </div>
+                    {{/if}}
+                    {{#if markup}}
+                        <div class="markup">
+                          <h4 class="markup-title" data-behavior="toggleMarkup">Code</h4>
+                          <div class="markup-content" id="copy-target-{{page.slug}}-{{@index}}">{{{markup}}}</div>
+                          <div class="markup-copy js-copy" data-clipboard-target="#copy-target-{{page.slug}}-{{@index}}">Copy</div>
+                        </div>
+                    {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          </article>
+          <!-- #end post page -->
+
+          <script class="result-template" type="text/html">
+              <!DOCTYPE html>
+              <html>
+                  <head>{{> assets}}</head>
+                  <body onload="[[onload]]">
+                    <div style="width:100%; overflow:hidden">
+                      <div id="a17">
+                        <div id="demo">
+                          [[body]]
+                        </div>
+                      </div>
+                    </div>
+                  </body>
+              </html>
+          </script>
+
+        </div>
+      </main>
+      <!-- #end .content-container -->
+
+    </div>
+    <!-- #end .page-wrapper -->
+
+    <footer class="primary-footer">
+      <small class="primary-footer__signature">2017 &copy; AREA 17</small>
+    </footer>
+    <!-- #end .primary-footer -->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/{{> absroot}}/a17-theme/js/vendor/jquery-3.1.1.min.js"><\/script>')</script>
+    <script src="/{{> absroot}}/a17-theme/js/vendor/barba.min.js"></script>
+    <script src="/{{> absroot}}/a17-theme/js/vendor/clipboard.min.js"></script>
+
+    <!-- pjax ftw -->
+    <script src="/{{> absroot}}/a17-theme/js/main.js"></script>
+    <script src="/{{> absroot}}/a17-theme/js/pjax.js"></script>
+  </body>
+</html>

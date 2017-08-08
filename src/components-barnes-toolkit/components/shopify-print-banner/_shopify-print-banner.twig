@@ -1,0 +1,26 @@
+{#
+
+shopify-print-banner component
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Discover the Print Shop' %}
+{% endif %}
+
+{% if summary is empty %}
+  {% set summary = '<p>Visit our Barnes Print Shop to purchase reproductions from the collection!</p><p><a href="#">Shop Now</a></p>' %}
+{% endif %}
+
+<div class="m-shopify-print-banner">
+  <div class="container">
+    <div class="m-shopify-print-banner__copy">
+      <h1 class="font-gamma m-shopify-print-banne__title">{{ title | raw }}</h1>
+      <div class="m-shopify-print-banner__summary">
+        {{ summary | raw }}
+      </div>
+    </div>
+  </div>
+  <img class="m-shopify-print-banner__image" src="//placehold.it/670x350" alt="">
+</div>

@@ -1,0 +1,29 @@
+{#
+
+shopify-404 component
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if title is empty %}
+  {% set title = '404. Don’t be afraid, you are not definitely lost' %}
+{% endif %}
+
+{% if summary is empty %}
+  {% set summary = 'The page you are looking for is not available. It may have expired or moved.<br><a class="a-brand-link" href="/">Click here to continue shopping</a>.' %}
+{% endif %}
+
+<div class="m-shopify-404">
+  <div class="o-hero__inner">
+    <div class="container m-shopify-404__container">
+      <div class="m-shopify-404__copy">
+        <h1 class="font-beta m-shopify-404__title">{{ title | raw }}</h1>
+        <div class="m-shopify-404__summary">
+          <p>{{ summary | raw }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <img class="m-shopify-404__image" src="//placehold.it/1380x570" alt="">
+</div>

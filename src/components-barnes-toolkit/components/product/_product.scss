@@ -1,0 +1,285 @@
+/***
+
+Product (Shop)
+======
+* Class name: `m-product`
+* Tags used on: `<div>`
+
+A product which can be bought. It has an image gallery, title, summary, prices and
+a buy form.
+
+*Accessibility note:*
+
+The component has a _Learn more_ link. For screen-reader users it is
+important that these links are differentiated so they have a `span` tag with a
+class of `visuallyhidden` in there with extra copy to give users a little more
+context.
+
+***/
+
+.m-product {
+  margin-top: 15px;
+
+  @include breakpoint('medium+') {
+    margin-top: 11px;
+  }
+}
+
+.m-product--shopify {
+  margin-top: 30px;
+
+  @include breakpoint('medium+') {
+    margin-top: 26px;
+  }
+}
+
+.m-product-gallery__container {
+  margin: 0;
+  padding: 0;
+}
+
+.m-product-gallery .m-card-artwork {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.no-js .m-product-gallery__stage {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+}
+
+.no-js .m-product-gallery__container {
+  white-space: nowrap;
+}
+
+.m-product__media {
+  display: inline-block;
+  width: 100%;
+
+  img, audio, video, object {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.m-product__gallery {
+  border: 1px solid $color__border;
+  margin-bottom: 32px;
+  padding: 40px 60px 80px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 20px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 15px;
+  }
+}
+
+.m-product__gallery--shopify {
+  padding-bottom: 40px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 15px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 10px;
+  }
+}
+
+.m-product__gallery--shopify img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.m-product-gallery__thumbs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: -20px 0 0 -10px;
+  padding: 0;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+}
+
+.m-product-gallery__thumb {
+  border: 1px solid $color__border;
+  list-style: none;
+  margin: 0 0 10px 10px;
+  padding: 0;
+  position: relative;
+
+  @include breakpoint('small-') {
+    max-width: calc(25% - 10px);
+  }
+}
+
+.m-product-gallery__thumb::after {
+  bottom: 0;
+  content: '';
+  display: block;
+  height: 5px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'productGalleryThumb')};
+}
+
+.m-product-gallery__thumb--active::after {
+  background: $color__red--barnes;
+}
+
+.m-product-gallery__thumb:not(.m-product-gallery__thumb--active):hover::after {
+  background: $color__copy--medium;
+}
+
+.m-product-gallery__thumb a,
+.m-product-gallery__thumb img {
+  display: block;
+}
+
+/**
+ * 1 - 25px is the default value
+ */
+.m-product__gallery .flickity-page-dots {
+  bottom: -45px; /* 1 */
+}
+
+.m-product__category-title {
+  margin-top: -4px;
+
+  @include breakpoint('medium+') {
+    margin-top: -6px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -4px;
+  }
+}
+
+.m-product__title {
+  @include font-product-title();
+  margin-top: -3px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 8px;
+  }
+}
+
+.m-product__actions {
+  align-items: center;
+  border: 1px solid $color__border;
+  border-width: 1px 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 26px 0 12px;
+  padding: 0 0 25px;
+
+  > .m-block__columns {
+    align-items: center;
+  }
+
+  @include breakpoint('medium+') {
+    margin-top: 34px;
+    padding-bottom: 24px;
+  }
+
+  @include breakpoint('large+') {
+    padding-top: 15px;
+  }
+}
+
+.m-product__actions + .m-product__actions {
+  border-top: 0;
+
+  @include breakpoint('large+') {
+    padding-top: 0;
+  }
+}
+
+.m-product__actions--first {
+  @include breakpoint('medium-') {
+    padding-top: 15px;
+  }
+}
+
+.m-product__actions--variants {
+  justify-content: flex-start;
+}
+
+.selector-wrapper {
+   margin-right: 20px;
+}
+
+.m-product__prices {
+  color: $color__red--barnes;
+  margin-top: 21px;
+
+  @include breakpoint('medium+') {
+    margin-top: 18px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 14px;
+  }
+}
+
+.m-product__price {
+  margin-right: 20px;
+}
+
+.m-product__price:not(del) {
+  text-decoration: none;
+}
+
+.m-product__form {
+  margin-top: 25px;
+
+  @include breakpoint('large+') {
+    margin-top: 10px;
+  }
+}
+
+.m-product__summary{
+  margin-top: 28px;
+
+  @include breakpoint('medium+') {
+    margin-top: 24px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 28px;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+.m-product__share {
+  border-top: 1px solid $color__border;
+  margin-top: 40px;
+  padding-top: 30px;
+}
+
+.m-product__share .m-share {
+  text-align: inherit;
+}
+
+.m-product__share .m-share__list {
+  border: 1px solid rgba(black, .2);
+  left: 0;
+  right: auto;
+}

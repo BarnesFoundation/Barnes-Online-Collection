@@ -1,0 +1,71 @@
+/***
+
+Table
+====
+* Class name: `m-table`
+* Tags used on: `<table>`
+
+A standard, simple table.
+
+*Accessibility note:*
+
+Tables have accessibility features like `<caption>` tags - instead of a preceding
+headign like a `<h2>` and the correct attributes on `<th>` tags like `scope="row"
+or _scope="col"_.
+
+[Further reading on HTML tabular data acessibility](http://webaim.org/techniques/tables/data)
+
+***/
+
+.m-table {
+  border-bottom: 1px solid $color__border;
+  font-family: $serif--loaded;
+  margin-top: 23px;
+  margin-bottom: 25px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 45px;
+    margin-top: 60px;
+  }
+}
+
+.m-table:only-child {
+  margin-bottom: 0;
+}
+
+.m-table caption {
+  @include font-delta();
+
+  margin-bottom: 1em;
+  text-align: left;
+}
+
+ /* 1 - 1px below the 20px default body copy */
+.m-table th,
+.m-table td {
+  border-top: 1px solid $color__border;
+  font-size: 19px; /* 1 */
+  line-height: (25/19);
+  padding: 18px 0 17px;
+  text-align: left;
+  width: 50%;
+}
+
+.m-table tr th:first-child,
+.m-table tr td:first-child {
+  padding-right: 15px;
+
+  @include breakpoint('xlarge+') {
+    padding-right: 20px;
+  }
+}
+
+.m-table tr > th:not(:first-child),
+.m-table tr > td:not(:first-child) {
+  padding-left: 15px;
+
+  @include breakpoint('xlarge+') {
+    padding-left: 20px;
+  }
+}

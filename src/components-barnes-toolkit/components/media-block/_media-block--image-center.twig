@@ -1,0 +1,26 @@
+{#
+
+Media Block component
+Show one 50% width image/artwork card inside a centrally-aligned container
+
+See /static/pages/media-cards.php for how the data array works.
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+<div class="m-block m-block--flush-top m-block--no-border m-centered-paragraph">
+  <div class="m-centered-paragraph__container">
+    {#
+
+      MEDIA Just one image
+      ---
+      1 show one 100% width image/artwork card in the centered container
+
+    #}
+    {% include path ~ 'card-artwork/_card-artwork.twig' %}
+  </div>
+</div>

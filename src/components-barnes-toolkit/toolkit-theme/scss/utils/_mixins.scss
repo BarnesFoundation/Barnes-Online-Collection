@@ -1,0 +1,109 @@
+
+//
+// Mixins
+//
+
+/*
+  @mixin breakpoint
+
+  Inserts a media query block
+*/
+@mixin breakpoint($point) {
+  @media (min-width: $point) {
+    @content;
+  }
+}
+
+// Fonts
+@mixin webfont( $font: $baseFont, $size: $baseFontSize, $lineHeight: $baseLineHeight, $letterSpacing: 0 ) {
+  font-family: $font, $baseFallbackFont;
+  font-size: $size;
+  line-height: $lineHeight;
+  letter-spacing: $letterSpacing;
+}
+
+@mixin svg-bg-with-fallback($file_name) {
+  background-repeat: no-repeat;
+  background-image: inline-image('#{$file_name}.svg', image/svg\+xml);
+  html.no-svg & {
+    background-image: generated-image-url('#{$file_name}.png');
+  }
+}
+
+// Utilities
+@mixin debug-colors( $color: transparent ) {
+  @if $devMode {
+    background-color: $color;
+  }
+}
+
+@mixin opacity( $value: 0.5 ) {
+  opacity: $value;
+  $value-ie: $value * 100;
+  filter: alpha(opacity=$value-ie);
+}
+
+@mixin background-alpha( $color, $alpha ) {
+  background-color: $color;
+  background-color: rgba($color, $alpha);
+}
+
+@mixin divide( $property, $value ) {
+  #{$property}: -($value/2);
+}
+
+@mixin align( $value ) {
+  transform: translate(-$value, -$value);
+  left: $value;
+  top: $value;
+}
+
+@mixin vertical-align( $value ) {
+  transform: translateY(-$value);
+  position: relative;
+  top: $value;
+}
+
+@mixin inline-block( $align: middle ) {
+  vertical-align: $align;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+
+// Effects
+@mixin box-shadow( $shadows... ) {
+  $value: $shadows;
+  box-shadow: $value;
+}
+
+@mixin animation( $animate... ) {
+  $max: length($animate);
+  $animations: '';
+
+  @for $i from 1 through $max {
+    $animations: #{$animations + nth($animate, $i)};
+
+    @if $i < $max {
+      $animations: #{$animations + ", "};
+    }
+  }
+
+  animation: $animations;
+}
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}

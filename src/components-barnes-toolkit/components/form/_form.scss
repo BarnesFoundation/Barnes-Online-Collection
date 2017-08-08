@@ -1,0 +1,466 @@
+/***
+
+Forms
+====
+* Class name: various
+
+Base styling for form elements.
+
+*Note:*
+
+For accessibility and user experience (UX) - always ensure that `<label>`
+elements have a `for` attribute that matches the unique `id` attribute of the
+form element e.g. `<label for="input1">Label</label><input name="x" id="input1">`
+don't wrap the form element in the label.
+
+***/
+
+/**
+ * Legend
+ * Only use in a fieldset as a heading for a group of fields
+ */
+legend {
+  @include font-bold-heading();
+}
+
+/**
+ * Form fields
+ * Label
+ * Field
+ * Error
+ */
+.form-field {
+  margin: 0 0 26px;
+  text-align: left;
+}
+
+/**
+ * Form fields (inline)
+ * Label Field
+ * Error
+ */
+.form-field--inline {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  @include breakpoint('large+') {
+    flex-wrap: nowrap;
+  }
+}
+
+/**
+ * Buttons/CTAs
+ * aligned right
+ */
+.form-field--buttons {
+  text-align: right;
+}
+
+/**
+ * Shopify search form
+ */
+.form-shopify-search {
+  margin-bottom: 30px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 60px;
+    margin-top: 40px;
+  }
+}
+
+/**
+ * Labels
+ * Devs: Don't forget the `for` atribute
+ */
+label {
+  @include font-bold-heading();
+
+  display: block;
+  margin-bottom: 11px;
+}
+
+.form-field--inline label {
+  display: block;
+  margin-bottom: 0;
+  margin-right: 20px;
+
+  @include breakpoint('medium+') {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: middle;
+    width: auto;
+  }
+}
+
+/*
+ * Inputs
+ * Not hidden, checkbox, or radio types
+ * 1 Removes box-shadow on iOS
+ * 2 Same as .btn height
+ * 3 If padding-top and padding-bottom are both 20px then text is cut off at the top
+ */
+.input,
+textarea {
+  appearance: none; /* 1 */
+  background: $color__white;
+  border: 2px solid $color__border;
+  border-radius: 0;
+  box-shadow: none;
+  color: $color__copy--light;
+  font-family: $sans-serif--loaded;
+  font-size: 16px;
+  display: block;
+  height: 60px; /* 2 */
+  padding: 10px 10px 15px; /* 3 */
+  position: relative;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    font-size: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+  }
+
+  &::placeholder {
+    color: rgba($color__copy--light, .75);
+    opacity: 1;
+  }
+
+  &:focus {
+    color: $color__copy--dark;
+    border-color: rgba($color__border--dark, .5);
+    outline: 5px auto rgba($color__border--dark, .5);
+  }
+
+  /* Establish desired focus ring appearance for appropriate input modalities */
+  &:focus:not(.focus-ring) {
+    border-color: $color__border--dark;
+    outline: none;
+  }
+
+  &.focus-ring {
+
+  }
+}
+
+.input[disabled] {
+  background-color: $color__white--2;
+}
+
+.input[readonly] {
+  /** TBD **/
+}
+
+.form-field--inline .input,
+.form-field--inline textarea {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  width: auto;
+
+  @include breakpoint('large+') {
+    margin-right: 20px;
+  }
+}
+
+/**
+ * Shopify search
+ */
+.form-field--inline .input--search {
+  margin-bottom: 15px;
+  width: 100%;
+
+  @include breakpoint('small+') {
+    flex: 1 0 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  @include breakpoint('small-') {
+    margin-right: 0;
+  }
+}
+
+/**
+ * 1 Tall enough for 3 rows of text
+ * 2 Allow users to add more rows but not break the layout by making the
+ *   textarea wider
+ */
+textarea {
+  height: auto;
+  min-height: 5.5em; /* 1 */
+  resize: vertical; /* 2 */
+}
+
+
+/**
+ * Number inputs
+ * Hide those goddamn tiny up and down arrows
+ */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  border: 2px solid $color__border;
+}
+
+/**
+ * Range inputs
+ */
+input[type="range"] {
+  border: 2px solid $color__border;
+  width: 100%;
+}
+
+.form-field--inline input[type="range"] {
+  width: auto;
+}
+
+/**
+ * Checkbox / Radio inputs
+ */
+[type="checkbox"],
+[type="radio"]{
+  display: inline-block;
+}
+
+[type="checkbox"] + label,
+[type="radio"] + label {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+/*
+ * Custom <select>
+ * 1 Same as our .btn height
+ */
+.select {
+  border: 2px solid $color__border;
+  font-size: 20px;
+  display: inline-block;
+  height: 60px; /* 1 */
+  position: relative;
+  width: 100%;
+}
+
+.select select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: none;
+  box-sizing: border-box;
+  color: $color__copy--light;
+  font-family: $sans-serif--loaded;
+  font-size: 18px;
+  height: 60px; /* 1 */
+  margin: 0;
+  min-width: 100px;
+  padding: 20px 50px 20px 12px;
+  position: relative;
+  top: -3px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    font-size: 20px;
+    padding-left: 16px;
+  }
+
+  &:focus,
+  &:active {
+    border: none;
+    color: $color__copy--dark;
+  }
+
+  &:focus {
+    outline: 5px auto rgba($color__copy--light, .5);
+  }
+
+  /* Establish desired focus ring appearance for appropriate input modalities */
+  &:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  &.focus-ring {
+    color: $color__copy--dark;
+  }
+
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+.select--number select {
+  padding: 15px 50px 15px 22px;
+  font-size: 24px;
+
+  @include breakpoint('medium+') {
+    padding-left: 16px;
+  }
+}
+
+/**
+ * Down arrow
+ * 2 Use an a base64 encoded SVG so that it is always retina friendly and so we don't
+ *   worry about messing with our SVG sprite. Inline SVG won't work in IE11 so we base64 encode it
+ *   @see http://www.mobilefish.com/services/base64/base64.php
+ */
+.select:not(.field)::after {
+  background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h
+0PSIyMCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9ImN1cnJlbnRDb2xvciI+PHBhdGggZm
+lsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNTYgMzUyTDk2IDE5O
+C40MDYgMTQxLjcyIDE2MCAyNTYgMjc1LjE4OCAzNzAuMjggMTYwIDQxNiAxOTguNDA2IDI1NiAz
+NTJ6Ii8+PC9zdmc+') right center no-repeat; /* 2 */
+  content: '';
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  right: 15px;
+  top: 0;
+  width: 30px;
+}
+
+.form-field--inline .select {
+  display: inline-block;
+  margin-right: 20px;
+  vertical-align: middle;
+  width: auto;
+}
+
+/* <select multiple> */
+.select--multiple {
+  background-position: right 18px;
+  height: auto;
+}
+
+.select--multiple select {
+  height: auto;
+  padding: 20px 10px;
+
+  @include breakpoint('medium+') {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.select--multiple::after {
+  @include breakpoint('xlarge+') {
+    content: none;
+  }
+}
+
+
+/**
+ * Buttons
+ */
+.form-field--inline .btn {
+  @include breakpoint('small-') {
+    display: inline-block;
+    min-width: 1px;
+    width: auto;
+  }
+}
+
+.form-shopify-search .btn {
+  @include breakpoint('small-') {
+    display: block;
+    width: 100%;
+  }
+}
+
+/**
+ * Button label
+ * A link immediately before the CTA button
+ */
+.btn-label {
+  @include font-smallprint();
+
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin-right: 10px;
+  padding: 0;
+  text-decoration: none;
+
+  &:focus:not(.focus-ring) {
+    text-decoration: underline;
+  }
+}
+
+/**
+ * Errors
+ */
+.form-field--error {
+ /** This selector is here just to display structure **/
+}
+
+.form-field__error {
+  @include font-smallprint();
+
+  color: $color__red--barnes;
+}
+
+.form-field__error--summary {
+  margin-bottom: 25px;
+  margin-top: 14px;
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+.form-field__error--summary ul {
+  margin: 0;
+  padding: 0;
+}
+
+.form-field__error--summary li {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.form-field__error--summary a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.form-field__error--summary a:focus:not(.focus-ring) {
+  text-decoration: underline;
+}
+
+.form-field--error .form-field__error {
+  padding-top: 10px;
+}
+
+.form-field--error > .input,
+.form-field--error > textarea,
+.form-field--error > .select {
+  border-color: $color__red--barnes;
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  &.focus-ring {
+    outline: 5px auto rgba($color__red--barnes, .5);
+  }
+}
+
+.form-field--error > .select select {
+  &.focus-ring {
+    outline: 5px auto rgba($color__red--barnes, .5);
+  }
+}
+
+fieldset.form-field--error {
+  border: 2px solid $color__red--barnes;
+}
+

@@ -1,0 +1,211 @@
+/***
+
+Page introduction
+=====
+* Class name: `m-page-intro`
+* Modifier classes: `m-page-intro--has-cta`
+* Tags used on: `<div>`
+
+Page title and summary for the page; This can sit beneath a small hero component.
+
+This component has a few optional elements:
+* the title
+* the breadcrumb and
+* a call to action (CTA) button
+
+When present, the CTA button appears over to the right of the screen and the
+summary appears to the left.
+
+On smaller screens the CTA button appears beneath the summary and both are
+centralised.
+
+If a button is present it is usually preceded by the [hero component](#hero) e.g.
+`<div class="o-hero o-hero--page-title">` whereas the version with a breacrumb
+link should not have a hero component before it.
+
+***/
+
+.m-page-intro {
+  margin: 30px auto 0;
+  padding-bottom: 32px;
+  position: relative;
+  top: 0;
+  text-align: center;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 49px;
+    margin-top: 35px;
+    top: auto;
+    width: 80%;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 46px;
+    margin-top: 43px;
+    max-width: 85%;
+  }
+}
+
+/**
+ * Super specific rule to catch an intro
+ * when that's in the first element on the page e.g. when there is
+ * no `.o-hero` present
+ */
+main > div:first-child > .m-page-intro:first-child {
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+}
+
+.m-page-intro__title {
+  margin-bottom: 13px;
+  margin-top: 29px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 22px;
+    margin-top: -27px;
+  }
+}
+
+.m-page-intro__breadcrumb + .m-page-intro__title {
+  margin-top: 11px;
+}
+
+/**
+ * Super specific rule to catch a title inside an intro
+ * when that's in the first element on the page. e.g. when there is
+ * no `.o-hero` present
+ *
+ * See the similar rule above
+ */
+main > div:first-child > .m-page-intro:first-child .m-page-intro__title {
+  @include breakpoint('medium+') {
+    margin-top: -10px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 36px;
+  }
+}
+
+/**
+ * An even more specific rule to target a title when it follows a <- Back link
+ */
+main > div:first-child > .m-page-intro:first-child .m-page-intro__breadcrumb + .m-page-intro__title {
+  margin-top: 11px;
+}
+
+// Where CMS are concerned style a <div> wrapped around RTE content
+// for sanity’s sake
+.m-page-intro__summary {
+  line-height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    line-height: 36px;
+    margin-top: 14px;
+  }
+
+  @include breakpoint('large+') {
+    line-height: 40px;
+    margin-bottom: 15px;
+    margin-top: 11px;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+.m-page-intro__title + .m-page-intro__summary {
+
+
+  @include breakpoint('large+') {
+    margin-top: -6px;
+  }
+
+}
+
+// When there is a date
+.m-page-intro__date {
+  color: $color__copy--medium;
+  font-family: $sans-serif--loaded;
+  margin-top: 6px;
+}
+
+/**
+ * Breadcrumb trail
+ * (more like a back link with an icon tbh)
+ * @see .a-breadcrumb in scss/atoms
+ */
+.m-page-intro__breadcrumb {
+  @include breakpoint('medium+') {
+    margin-top: 22px;
+  }
+}
+
+/**
+ * CTA Button
+ */
+.m-page-intro__cta {
+  @include breakpoint('medium+') {
+    margin-top: -4px;
+  }
+
+  @include breakpoint('small-') {
+    width: 100%;
+  }
+}
+
+
+/**
+ * Variations
+ */
+
+/**
+ * When there is a CTA present
+ * On bigger screens we need flexbox to create a grid system
+ */
+.m-page-intro--has-cta {
+
+  @include breakpoint('medium+') {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 0;
+    margin-top: 22px;
+    max-width: 100%;
+    min-height: 80px;
+    padding-bottom: 32px;
+    text-align: left;
+    width: 100%;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 32px;
+    min-height: 95px;
+    padding-bottom: 37px;
+  }
+}
+
+/**
+ * Give the CTA button some space
+ */
+.m-page-intro--has-cta .m-page-intro__summary {
+  @include breakpoint('medium+') {
+    margin-left: 0;
+    padding-right: 80px;
+  }
+
+  @include breakpoint('large+') {
+    padding-right: 150px;
+  }
+}

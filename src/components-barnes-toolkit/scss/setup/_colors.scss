@@ -1,0 +1,108 @@
+/***
+
+Colors
+===
+Here are the colour combinations used by the site:
+
+*Accessibility tip: Contrast ratio:*
+
+Don't forget to run colour combinations of background color and text color
+against a [contrast ratio checker](http://webaim.org/resources/contrastchecker/).
+If the contrast ratio is too low, people _will not be able to read it_.
+
+* WCAG level AA requires a contrast ratio of 4.5:1 for normal text and 3:1 for large text
+* WCAG Level AAA requires a contrast ratio of 7:1 for normal text and 4.5:1 for large text
+
+_Large text is defined as 18px+ (if bold) and or 24px+ if not bold._
+
+  ```
+  <div class="color-box font-smallprint" style="background-color: #dcdcdc; border-color: #000">Background: #dcdcdc<br>Foreground: #282828<br>Contrast Ratio: 10.75:1</div>
+  <div class="color-box font-smallprint" style="background-color: #8c8c8c; color: #fff">Background: #8c8c8c<br>Foreground: #ffffff<br>Contrast Ratio: 3.36:1</div>
+  <div class="color-box font-smallprint" style="background-color: #282828; color: #ffffff;">Background: #282828<br>Foreground: #ffffff<br>Contrast Ratio: 14.74:1</div>
+  <div class="color-box font-smallprint" style="background-color: #6e6e6e; color: #ffffff;">Background: #6e6e6e<br>Foreground: #ffffff<br>Contrast Ratio: 5.1:1</div>
+  <div class="color-box font-smallprint" style="background-color: #f0f0f0;">Background: #f0f0f0<br>Foreground: #282828<br>Contrast Ratio: 12.94:1</div>
+  <div class="color-box font-smallprint" style="background-color: #fafafa;">Background: #fafafa<br>Foreground: #282828<br>Contrast Ratio: 14.13:1</div>
+  <div class="color-box font-smallprint" style="background-color: #D64220; color: #ffffff">Background: #D64220<br>Foreground: #ffffff<br>Contrast Ratio: 4.51:1</div>
+  <div class="color-box font-smallprint" style="background-color: #000000; color: #ffffff;">Background: #000000<br>Foreground: #ffffff<br>Contrast Ratio: 21:1</div>
+  <div class="color-box font-smallprint" style="background-color: #ffffff;">Background: #ffffff<br>Foreground: #282828<br>Contrast Ratio: 14.74:1</div>
+  <div class="color-box font-smallprint color-brand" style="background-color: #ffffff;">Background: #ffffff<br>Foreground: #D64220<br>Contrast Ratio: 4.51:1</div>
+  <div class="color-box font-smallprint color-light" style="background-color: #ffffff;">Background: #ffffff<br>Foreground: #8c8c8c<br>Contrast Ratio: 3.36:1</div>
+  ```
+***/
+
+// Main Color List - try not to use
+$color__red: #ee263e;
+$color__green: #0f0;
+$color__logo: #fa4c25;
+$color__red--barnes: #d64220;
+$color__red--barnes-dark: #b3371b;
+
+// Colors - Grayscale
+$color__black: #000;
+$color__black--93: #121212;
+$color__black--91: #171717;
+$color__black--90: #1a1a1a;
+$color__black--89: #1c1c1c;
+$color__black--85: #262626;
+$color__black--80: #333;
+$color__black--72: #474747;
+$color__black--61: #636363;
+$color__black--60: #666;
+$color__black--50: #808080;
+$color__black--49: #828282;
+$color__black--40: #999;
+$color__black--35: #a6a6a6;
+$color__black--30: #b3b3b3;
+$color__black--25: #bfbfbf;
+$color__black--22: #c7c7c7;
+$color__black--20: #ccc;
+$color__black--15: #d9d9d9;
+$color__black--10: #e3e4e5;
+$color__black--5: #f2f2f2;
+$color__black--3-5: #f6f5f4;
+$color__black--3: #f7f7f7;
+$color__black--2: #fbfbfb;
+$color__white: #fff;
+$color__white--off: #f0f0f0;
+$color__white--2: #fafafa;
+
+// TODO clean these up once I understand this %black thing above
+$color__border: #dcdcdc;
+$color__border--dark: #b4b4b4;
+$color__border--light: #e4e4e4;
+$color__copy--dark: #282828;
+$color__copy--light: #8c8c8c;
+$color__copy--medium: #6e6e6e;
+$color__copy--footer: $color__copy--medium;
+$color__copy--button: $color__copy--footer;
+$color__background--accordion: $color__white--2;
+$color__background--print-banner: #304b56;
+$color__nav--hover: #e68e79;
+
+// Colors by usage - use these!
+$color__background: $color__white;
+$color__text: $color__copy--dark;
+$color__error: $color__red;
+$color__separator: $color__black--85;
+
+
+// For above HTML sample
+.color-box {
+  align-items: center;
+  border: 2px solid $color__border;
+  display: flex;
+  float: left;
+  height: 100px;
+  justify-content: center;
+  margin: 0 20px 20px 0;
+  padding: 0 20px;
+  width: calc(33.33% - 20px);
+}
+
+.color-brand {
+  color: $color__red--barnes;
+}
+
+.color-light {
+  color: $color__copy--light;
+}

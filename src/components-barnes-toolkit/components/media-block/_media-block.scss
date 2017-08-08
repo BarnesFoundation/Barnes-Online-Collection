@@ -1,0 +1,24 @@
+/***
+
+Media Block
+====
+* Class name: `m-block--media`
+* Tags used on: `<div>`
+
+This is quite a complex component, at its simplest it is just a wrapper
+for different media types or a component. Those things can be:
+* an `m-card-artwork` component
+* a YouTube `<iframe>`
+* a Soundcloud `<iframe>`
+
+In theory it could handle iframes from other suppliers but YouTube and Soundcloud
+are the ones that have been tested.
+
+There are two types, a media block:
+* with a preceding title and introduction followed by an optional post-media summary
+* which is just the media item on its own
+
+When the using the media block on its own. It is usually book-ended by the
+[standard paragraph component](#standard-paragraph).
+
+***/

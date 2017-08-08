@@ -1,0 +1,23 @@
+/***
+
+Shopify - Product
+======
+* Class name: `-m-shopify-product`
+* Tags used on: `<div>`
+
+Very similar to the [product component](#product). This has some key differences with
+how it displays alternative images compared to that other component; this time
+we have _thumbnails_ which when clicked, swap out the larger image.
+
+There are also more options here as a product could come in different sizes
+and or colors.
+
+Shopify resizes images automatically so provided product images are at least
+460x460 then everything should look great. Try to uplaod images that are square
+for optimal appearance.
+
+***/
+
+.m-shopify-product {
+  /** Just here to convey HTML structure **/
+}

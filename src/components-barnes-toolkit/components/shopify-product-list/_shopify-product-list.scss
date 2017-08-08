@@ -1,0 +1,111 @@
+/***
+
+Shopify - Product List
+======
+* Class name: `-m-shopify-product-list`
+* Tags used on: `<div>`
+
+
+A list of all the products in a given _collection_. Visually a grid.
+
+Images are taken from the product so follow the instructions on the
+[Shopify - Product component](#shopify-product)
+
+***/
+
+.m-shopify-product-list {
+  /** Just here to convey HTML structure **/
+}
+
+.m-shopify-product-list__list {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: -20px;
+  margin-bottom: -20px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: -30px;
+    margin-left: -30px;
+  }
+
+  @include breakpoint('xlarge') {
+    margin-bottom: -40px;
+    margin-left: -40px;
+  }
+}
+
+.m-shopify-product-list__item {
+  list-style: none;
+  margin: 0 0 20px 20px;
+  padding: 0;
+  position: relative;
+  width: calc(50% - 20px);
+
+  @include breakpoint('medium+') {
+    margin-bottom: 30px;
+    margin-left: 30px;
+    width: calc(50% - 30px);
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 30px;
+    width: calc(25% - 30px);
+  }
+
+  @include breakpoint('xlarge') {
+    margin-bottom: 40px;
+    margin-left: 40px;
+    width: calc(25% - 40px);
+  }
+}
+
+/**
+ * 1 force square image container
+ * @see media-embed.scss and .embed-responsive
+ */
+.m-shopify-product-list__image-container {
+  display: block;
+	height: 0;
+	overflow: hidden;
+  padding: 0 0 100%; /* 1 */
+	position: relative;
+}
+
+.m-shopify-product-list__image {
+  display: block;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'shopifyProductListImage')};
+}
+
+.m-shopify-product-list__title {
+  margin-top: 5px;
+}
+
+.m-shopify-product-list__link {
+  color: currentColor;
+  text-decoration: none;
+
+  &:focus:not(.focus-ring),
+  &:hover {
+    outline: none;
+    text-decoration: underline;
+  }
+}
+
+.m-shopify-product-list__price {
+  color: $color__copy--medium;
+  margin: 0;
+}
+
+.m-shopify-product-list__tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: #{map-get($zIndexes, 'shopifyProductListTag')};
+}

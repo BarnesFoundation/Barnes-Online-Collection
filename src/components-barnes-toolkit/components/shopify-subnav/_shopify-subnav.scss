@@ -1,0 +1,57 @@
+/***
+
+Shopify - Subnav
+======
+* Class name: `-m-shopify-subnav`
+* Modifier classes: `-m-shopify-subnav--`
+* Tags used on: `<div>`
+
+Used to list collection tags so we can subcategorise products.
+
+Active links are marked out with the attribute/value combination of
+`aria-current="true"` that is good for accessibility.
+
+
+***/
+
+.m-shopify-subnav {
+  padding: 18px 0 16px;
+  text-align: center;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 26px;
+    padding-top: 28px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 46px;
+    padding-top: 48px;
+  }
+}
+
+.m-shopify-subnav__link {
+  @include font-zeta();
+
+  border-bottom: 2px solid transparent;
+  margin: 0 7px;
+  padding-bottom: 4px;
+  text-decoration: none;
+
+  &:hover {
+    color: $color__red--barnes;
+  }
+
+  &:focus:not(.focus-ring) {
+    color: currentColor;
+    border-bottom-color: currentColor;
+  }
+}
+
+.m-shopify-subnav__link[aria-current="true"] {
+  color: $color__red--barnes;
+  cursor: default;
+
+  &[aria-current="true"] {
+    border-bottom-color: $color__red--barnes;
+  }
+}

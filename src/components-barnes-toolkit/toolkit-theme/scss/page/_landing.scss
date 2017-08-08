@@ -1,0 +1,184 @@
+
+//
+// Landing Page Styles
+//
+
+.is-page-guides .page-wrapper {
+  padding: 15px;
+  @include debug-colors(blue);
+  overflow-x: hidden;
+
+  @include breakpoint($tablet-portrait-width) {
+    @include debug-colors(orange);
+    padding: 30px;
+  }
+
+  @include breakpoint($tablet-landscape-width ) {
+    @include debug-colors(#ccc);
+  }
+}
+
+
+// Landing List
+.landing-list {
+  margin: 0 0 100px;
+  position: relative;
+  font-size: 0;
+
+  @include breakpoint($mobile-landscape-width) {
+    margin-left: -15px;
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    margin-left: -20px;
+  }
+}
+
+.landing-list h2 {
+  font-family: $suisse_regular;
+  color: $color-darkest;
+  font-weight: normal;
+  line-height: 30px;
+  font-size: 23px;
+}
+
+.landing-list__item {
+  background: $color-lightest;
+  @include inline-block;
+
+  margin: 0 0 15px 0;
+  position: relative;
+  min-height: 220px;
+  width: 100%;
+
+  @include breakpoint($mobile-landscape-width) {
+    width: calc(50% - 15px);
+
+    margin-left: 15px;
+  }
+
+  // Padding fix so height and width a fluid and keep aspect ratio
+  // like 16:9 video fix
+  @include breakpoint($tablet-portrait-width) {
+    width: auto;
+    height: auto;
+
+    padding: calc(((100% - 60px) / 6) * 1.35) calc((100% - 60px) / 6);
+
+    margin: 0 0 20px 20px;
+  }
+
+  @include breakpoint($tablet-landscape-width) {
+    padding: calc(((100% - 80px) / 8) * 1.35) calc((100% - 80px) / 8);
+  }
+
+  @include breakpoint($desktop-min-width) {
+    padding: calc(((100% - 100px) / 10) * 1.35) calc((100% - 100px) / 10);
+  }
+
+  @include breakpoint($desktop-max-width) {
+    padding: calc(((100% - 120px) / 12) * 1.35) calc((100% - 120px) / 12);
+  }
+}
+
+.landing-list__item > a,
+.disabled__wrapper {
+  padding: 25px;
+  min-height: 140px;
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @include breakpoint($mobile-landscape-width) {
+    padding: 23px 28px;
+  }
+}
+
+.landing-list__item:not(:first-child):hover a h2 {
+    color: $color-dark;
+}
+
+.landing-list__item:first-child {
+  background: $color-darkest;
+  @include debug-colors(red);
+}
+
+.landing-list__item:first-child h2 {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @extend %image-replacement;
+  color: $color-lightest;
+}
+
+.landing-list__item:first-child p {
+  position: absolute;
+  width: 100%;
+  left: 25px;
+
+  a:hover {
+    color: $color-darker;
+  }
+}
+
+.landing-list__item:first-child h2:before {
+  font-family: $logo-sans;
+  line-height: 45px;
+  margin-top: 3px;
+  font-size: 45px;
+  display: block;
+  content: "A";
+
+  @include breakpoint($tablet-portrait-width) {
+    line-height: 53px;
+    margin-top: 8px;
+    font-size: 53px;
+  }
+}
+
+// .landing-list__item:first-child a,
+// .landing-list__item:first-child a:hover,
+// .landing-list__item:first-child a:hover p {
+//   color: $color-lightest;
+//   cursor: default;
+// }
+
+// .landing-list__item:first-child p,
+// .landing-list__item:first-child a:hover p {
+//   color: $color-darker;
+//   opacity: 1;
+// }
+
+.landing-list p {
+  /* @include transition(opacity 0.2s linear 0s); */
+  transition:opacity 0.2s linear 0s;
+  padding-right: 25px;
+  position: absolute;
+  line-height: 25px;
+  font-size: 16px;
+  bottom: 25px;
+  margin: 0;
+}
+
+
+// CHANGE EVENTUALLY, IN CASE THEY WANT TO REVER TO OLD HOVER STATE
+.landing-list__item:first-child p {
+  opacity: 1;
+}
+
+.landing-list p {
+  opacity: 0;
+}
+
+.landing-list p + p {
+  opacity: 1;
+}
+
+// Disabled card colors
+.landing-list__item--disabled h2,
+.landing-list__item--disabled p {
+  color: $color-medium;
+}

@@ -1,0 +1,20 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'An optional alert can be displayed on the page' %}
+{% endif %}
+
+{#
+If alertMuted is true then we would show a _muted_ alert banner
+e.g. one with a grey background instead of red
+#}
+
+<div class="m-alert font-smallprint{% if alertMuted is defined %} m-alert--muted{% endif %}" data-behavior="Alert" role="alert">
+  <div class="container">
+      <div class="m-alert__copy">
+        {{ title|raw }}
+      </div>
+      <button class="m-alert__btn btn btn--icon-only html4-hidden" type="button" aria-hidden="true">
+        <svg class="icon--close" width="15" height="15"><use xlink:href="#icon--icon_close"/></svg>
+      </button>
+  </div>
+</div>

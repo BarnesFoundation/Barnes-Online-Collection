@@ -1,0 +1,118 @@
+
+//
+// Header Styles
+//
+
+// Primary Navigation
+.primary-header {
+  border-bottom: 1px solid rgba($color-darkest, 0.1);
+  background: $color-lightest;
+  overflow: hidden;
+  z-index: $zIndex-1;
+  background-clip: padding-box;
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  left: 0;
+  top: 0;
+  @include debug-colors(red);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    height: 75px;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+
+// Primary Header - Slideout
+.primary-header__slideout {
+  overflow: hidden;
+  margin-left: 55px;
+  display: block;
+  height: 60px;
+  @include debug-colors(yellow);
+
+  transition:transform $fast cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  transform-style: preserve-3d;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-left: 60px;
+    height: 74px;
+  }
+
+/*  @include breakpoint($tablet-landscape-width + 1) {
+    margin-left: 50px;
+  }*/
+}
+
+.is-loading .primary-header__slideout {
+  @include breakpoint($tablet-landscape-width + 1) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+}
+
+.is-menu-expanded .primary-header__slideout {
+  transform: translate3d($sidebar-mobile-width, 0, 0);
+
+  @include breakpoint(375px)  {
+    transform: translate3d($sidebar-mobile-width-big, 0, 0);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+}
+
+
+// Primary Header - Title
+.primary-header__title {
+  float: left;
+  line-height: 60px;
+  font-family: $suisse_regular;
+  font-weight: normal;
+  font-size: 16px;
+  @include debug-colors(orange);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    line-height: 74px;
+    font-size: 17px;
+  }
+}
+
+.primary-header__title span {
+  display: block;
+}
+
+@media print {
+  .primary-header__title span:first-of-type {
+    display: block !important;
+  }
+
+  .primary-header__title .t-current {
+    display: none;
+  }
+}
+
+
+// Primary Header - Nav-Set
+.primary-header .nav-set {
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 59px;
+
+  @include breakpoint($mobile-small-width) {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    height: 74px;
+  }
+}

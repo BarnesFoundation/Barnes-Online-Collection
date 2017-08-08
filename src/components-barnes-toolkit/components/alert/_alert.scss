@@ -1,0 +1,73 @@
+/***
+
+Alert
+====
+* Class name: `m-alert`
+* Modifier classes: `m-alert--muted`
+* Tags used on: `<div>`
+
+An optional full-width red banner that sits at the bottom of the page and is
+read out first by a screen-reader.
+
+This is an important message. We could use it to say the museum is closed today.
+
+*Note:*
+
+This may not appear below as it would be anchored to the bottom of the screen
+on the website.
+
+***/
+
+.m-alert {
+  background: $color__red--barnes;
+  bottom: 0;
+  color: $color__white;
+  padding: 10px 0 3px;
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'alert')};
+
+  @include breakpoint('medium+') {
+    padding: 15px 0 13px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 18px;
+    padding-top: 17px;
+  }
+}
+
+.m-alert--muted {
+  /** TBD **/
+}
+
+.m-alert__copy {
+  padding-right: 35px;
+
+  @include breakpoint('medium+') {
+    max-width: 45em;
+  }
+}
+
+.m-alert__btn {
+  position: absolute;
+  right: #{map-get($outer-gutters, 'xsmall')};
+  top: 5px;
+
+  @include breakpoint('medium+') {
+    right: #{map-get($outer-gutters, 'medium')};
+  }
+
+  @include breakpoint('large+') {
+    right: #{map-get($outer-gutters, 'large')};
+  }
+
+  @include breakpoint('xlarge+') {
+    right: #{map-get($outer-gutters, 'xlarge')};
+  }
+
+  @include breakpoint('xxlarge') {
+    right: 0;
+  }
+}

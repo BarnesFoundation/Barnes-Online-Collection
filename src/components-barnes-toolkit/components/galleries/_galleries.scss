@@ -1,0 +1,102 @@
+/***
+
+Galleries
+======
+* Class name: `o-galleries`
+* Modifier classes: `o-galleries--2`, `o-galleries--4`
+* Tags used on: `<div>`
+
+A set of `m-card-artwork` components in either a 2 or a 4 column
+format with a title, an intro/summary, and a background
+
+On small screens: The 2 column gallery goes down to 1 column and
+the 4 column galleries switches to a 2 column gallery
+
+***/
+
+.o-galleries {
+  background-color: $color__black;
+  color: $color__white;
+  padding: 25px 0 0;
+
+  @include breakpoint('medium+') {
+    padding: 43px 0 0;
+  }
+
+  @include breakpoint('large+') {
+    padding: 63px 0 0;
+  }
+}
+
+.o-galleries__cards {
+  width: 100%;
+
+  @media print {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.o-galleries__cards .m-card-artwork {
+  margin-left: 0;
+  margin-right: 0;
+
+  @media print {
+    width: calc(50% - 20px);
+  }
+}
+
+.o-galleries__cards .m-card-artwork a.focus-ring {
+  outline: $focus-ring-invert;
+}
+
+
+/**
+ * Variations
+ * .o-galleries__cards--2
+ *    -One column on small screens and two columns on medium sized and up screens
+ *    -This view  uses CSS columns to achieve a masonry style effect
+ * .o-galleries__cards--4
+ *    -Two columns on small screens and four columns  on medium sized and up screens
+ *    -This view uses flexbox to achieve the grid
+ */
+.o-galleries__cards--2 {
+
+  @include breakpoint('medium+') {
+    column-gap: #{map-get($inner-gutters, 'medium')};
+    columns: 2;
+  }
+
+  @include breakpoint('xlarge+') {
+    column-gap: #{map-get($inner-gutters, 'xlarge')};
+  }
+}
+
+/**
+ * 1 Stop the cards from splitting in 2 and straddling the CSS columns
+ */
+.o-galleries__cards--2 .m-card-artwork {
+  break-inside: avoid; /* 1 */
+  page-break-inside: avoid; /* 1 */
+}
+
+.o-galleries__cards--4 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.o-galleries__cards--4 .m-card-artwork {
+  width: calc(50% - 10px);
+
+  @include breakpoint('medium+') {
+    width: calc(25% - 22px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(25% - 30px);
+  }
+}

@@ -1,0 +1,115 @@
+/***
+
+Support (Accordion)
+======
+* Class name: `m-support-accordion`
+* Tags used on: `<div>`
+
+Very similar to the [support component](#support) but inside an accordion.
+
+*Dev note:*
+
+The `[role="tab"]` div must match the values in the `[role="tabcontent"]` and
+these must be unique too.
+
+If you have 2 sets of tabs on the same page e.g.
+`<div id="accordion1" aria-labelledby="accordion1">` can't appear multiple times
+
+***/
+
+.m-support-accordion {
+
+}
+
+.m-support-accordion__title {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+
+  // Remove that annoying margin-top that's on every p, h1, etc
+  > *:first-child {
+    margin-right: auto;
+    margin-top: 0;
+  }
+}
+
+/**
+ * 1 on iOS child elements prevent the accordion button from working
+ */
+.m-support-accordion__title * {
+  pointer-events: none; /* 1 */
+}
+
+.m-support-accordion__btn {
+  @include font-smallprint();
+
+  font-weight: normal;
+  pointer-events: none;
+  text-align: right;
+
+  @media print {
+    display: none;
+  }
+}
+
+.m-support-accordion__toggle--show {
+  color: $color__red--barnes;
+}
+
+.m-support-accordion__toggle--hide {
+  color: $color__copy--light;
+  display: none;
+}
+
+// Display the correct Show or hide message
+.m-support-accordion__title[aria-selected="true"] .m-support-accordion__toggle--show {
+  display: none;
+}
+
+.m-support-accordion__title[aria-selected="true"] .m-support-accordion__toggle--hide {
+  display: block;
+}
+
+.m-support-accordion__body {
+
+}
+
+.m-support-accordion__body[aria-hidden="false"] {
+  margin-top: 20px;
+
+  @include breakpoint('medium+') {
+    margin-top: 30px;
+  }
+}
+
+.m-support-accordion__sidebar {
+  @include font-smallprint();
+
+  color: $color__copy--medium;
+
+  @include breakpoint('medium+') {
+    margin-top: 5px;
+    text-align: right;
+  }
+}
+
+.m-support-accordion__sidebar p {
+  @include breakpoint('medium+') {
+    float: right;
+    max-width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    max-width: calc(50% - 20px);
+  }
+}
+
+

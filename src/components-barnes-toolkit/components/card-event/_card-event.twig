@@ -1,0 +1,37 @@
+{# If some key variables are missing, load in the default content #}
+{% if image is empty %}
+  {% set image = '/dist/images/card-event_01.jpg' %}
+{% endif %}
+{% if link is empty %}
+  {% set link = '/static/pages/event.php' %}
+{% endif %}
+{% if tag is empty %}
+  {% set tag = 'Event tag' %}
+{% endif %}
+{% if type is empty %}
+  {% set type = 'Event type' %}
+{% endif %}
+{% if title is empty %}
+  {% set title = 'The name of the event' %}
+{% endif %}
+{% if date is empty %}
+  {% set date = 'now'|date('l, M j') %}
+{% endif %}
+{% if summary is empty %}
+  {% set summary = '<p>Summary will sit here.</p>' %}
+{% endif %}
+
+<div class="m-card-event vevent">
+  <div class="m-card-event__header">
+    {% if tag is not empty and tagHidden is empty %}<div class="m-card-event__tag a-tag a-tag--black">{{ tag|raw }}</div>{% endif %}
+    <a class="m-card-event__media-link" href="{{ link }}"><img class="m-card-event__media" src="{{ image }}" alt="{{ title|raw }}"></a>
+  </div>
+  <div class="m-card-event__body">
+    <div class="font-zeta m-card-event__type">{{ type|raw }}</div>
+    <h3 class="font-delta m-card-event__title"><a href="{{ link }}">{{ title|raw }}</a></h3>
+    <div class="dtstart font-delta m-card-event__date">{{ date|raw }}</div>
+    <div class="summary m-card-event__summary">
+      {{ summary|raw }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+{#
+
+Sponsor list component
+(in a centrally aligned .m-block)
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{% if sponsors is empty %}
+  {% set sponsors = [
+      {'image': '//placehold.it/130x90', title: '<p>Sponsor name 1</p>'},
+      {'image': '//placehold.it/130x90', title: '<p>A slightly longer sponsor name #CMS</p>'},
+      {'image': '//placehold.it/220x150', title: '<p>Sponsor name 3</p>'}
+  ] %}
+{% endif %}
+
+<div class="m-block m-block--flush-top m-block--no-border m-centered-paragraph">
+  <div class="m-centered-paragraph__container">
+    <div class="m-sponsor-list">
+      {% for sponsor in sponsors %}
+        {% include path ~ "sponsor/_sponsor.twig" with sponsor %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+/**
+ * Header locked hero
+ * This is the scenario where our page has a hero element flush with the
+ * top of the viewport with the header sat on top of it with a higher z-index.
+ * We have gone quite specific with the CSS for this unusual case as we have the
+ * following scenarios and other scenarios to override from higher up the cascade.
+ *
+ * Scenario A - Default/Initial page load:
+ * The header sits *on top* of the hero and is transparent (see _has-hero.scss)
+ *
+ * Scenario B: - User is scrolling 'up'
+ * The header is _locked_ and needs to have a solid colour background
+ * so it’s legible.
+ */
+
+/**
+ * 1 This will set the link and button colours
+ */
+.header-locked-hero.has-hero .g-header,
+.no-js .g-header {
+  background-color: $color__white;
+  color: $color__black; /* 1 */
+}
+
+.header-locked-hero.has-hero .a-logo,
+.no-js .a-logo {
+  color: $color__logo;
+}

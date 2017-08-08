@@ -1,0 +1,252 @@
+/***
+
+Exhibition hero
+======
+* Class name: `o-exhibition-hero`
+* Tags used on: `<div>`
+
+Creates a hero element at the top of the exhibition page.
+
+*Note 1:*
+
+We supply the browser 3 different image sizes. Smaller screens do not need to
+download a 1600px high image so we give smaller screens smaller images.
+
+*Note 2:*
+
+We need to work out the dominant color of the background image and apply it inline in the HTML
+e.g. `<div class="o-exhibition-hero" style="background-color: #123456;">{content}</div>`
+so before it loads we don't have a harsh background
+
+[Color Thief](http://lokeshdhakar.com/projects/color-thief]) is a great online app to do this.
+
+*Note 3:*
+
+When you add the main image to this component via the CMS please remember that this component is self-tinting
+meaning that we add a semi-transculent black layer over the top of the image automatically
+which allows the white/red copy above the image to be legible.
+
+So do not make your image darker in Photoshop/Sketch/Illustrator as then the CSS will make it too dark.
+
+***/
+
+.o-exhibition-hero {
+  background-color: $color__black; /* Override inline/with JavaScript */
+  color: $color__white;
+  display: block;
+  max-height: 760px;
+  overflow: hidden;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+.o-exhibition-hero .focus-ring {
+  outline: $focus-ring-invert;
+}
+
+/**
+ * The automatic tint which allows the white copy above the image to be legible
+ */
+.o-exhibition-hero::after {
+  @include tint();
+
+  z-index: #{map-get($zIndexes, 'exhibitionHeroOverlay')};
+}
+
+.o-exhibition-hero__inner {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'exhibitionHeroCopy')};
+
+  @media print {
+    position: relative;
+  }
+}
+
+.o-exhibition-hero__inner > .container {
+  height: 100%;
+}
+
+.o-exhibition-hero__copy {
+  left: 0;
+  position: relative;
+  top: 245px;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @include breakpoint('medium+') {
+    max-width: 90%;
+    top: 281px;
+  }
+
+  @media screen and (min-width: 768px) {
+    max-width: 75%;
+    top: 305px;
+  }
+
+  @include breakpoint('large+') {
+    margin-left: calc(50% + 15px);
+    max-width: calc(50% - 15px);
+  }
+
+  @media print {
+    margin-left: 0;
+    max-width: 100%;
+    top: 0;
+    position: relative;
+  }
+}
+
+.o-exhibition-hero a {
+  color: currentColor;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.o-exhibition-hero a:focus:not(.focus-ring) {
+  text-decoration: underline;
+}
+
+.o-exhibition-hero__pre-title {
+  color: currentColor;
+  margin-top: 0;
+}
+
+.o-exhibition-hero__title {
+  @include font-hero-title();
+
+  margin-top: 10px;
+
+  @include breakpoint('medium+') {
+    margin-top: 10px;
+  }
+
+  @include breakpoint('xlarge+') {
+    font-size: 85px;
+    line-height: (75/75);
+  }
+}
+
+.o-exhibition-hero__supporting {
+  margin-top: -4px;
+
+  @include breakpoint('medium+') {
+    margin-top: -5px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 21px;
+  }
+}
+
+.o-exhibition-hero__summary {
+  font-family: $sans-serif--loaded;
+  font-size: 25px;
+  line-height: (30/25);
+  margin-top: 32px;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @include breakpoint('medium+') {
+    margin-top: 108px;
+  }
+
+  @media screen and (min-width: 768px) {
+    font-size: 36px;
+    line-height: (47/36);
+  }
+
+  @include breakpoint('large+') {
+    font-size: 40px;
+    line-height: (47/40);
+    margin-left: calc(-100% - 30px);
+    margin-top: 198px;
+    max-width: calc(100% - 5px);
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-top: 260px;
+  }
+
+  @media print {
+    font-size: 25px;
+    margin-left: 0;
+    margin-top: 80px;
+    max-width: 100%;
+  }
+
+  > p {
+    margin-top: 0;
+  }
+}
+
+/**
+ * `Extras`
+ * Different hero types have different `extras` like:
+ * - Slide 2 of 2
+ * - Social Share links
+ * - Hashtag link/details
+ */
+.o-exhibition-hero__extras {
+  bottom: 27px;
+  left: 25px;
+  pointer-events: auto;
+  position: absolute;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @include breakpoint('medium+') {
+    bottom: 32px;
+    left: 35px;
+  }
+
+  @include breakpoint('large+') {
+    bottom: 75px;
+    left: auto;
+    right: map-get($outer-gutters, 'large');
+  }
+
+  @include breakpoint('xlarge+') {
+    right: map-get($outer-gutters, 'xlarge');
+  }
+
+  @include breakpoint('xxlarge') {
+    right: 0;
+  }
+
+}
+
+.o-exhibition-hero__hashtag {
+  color: currentColor;
+  margin-left: 30px;
+  text-decoration: none;
+
+  &:hover {
+    color: currentColor;
+    text-decoration: underline;
+  }
+
+  @include breakpoint('large+') {
+    display: block;
+    margin-left: 0;
+    margin-top: 12px;
+    text-align: right;
+  }
+}
+
+.o-exhibition-hero__image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+
+  @media print {
+    display: none;
+  }
+}

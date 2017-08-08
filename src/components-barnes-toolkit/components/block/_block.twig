@@ -1,0 +1,67 @@
+{#
+  Block component
+  ===
+
+  Options:
+  ---
+  * m-block--no-border: removes border-top
+  * m-block--flush: removes padding-top and padding-bottom
+  * m-block--flush-bottom: removes padding-bottom only
+  * m-block--flush-top: removes padding-top
+  * m-block--shallow: reduces the padding-bottom and padding-top [1]
+  * m-block--up: add a negative margin-top to 'move up' the block
+  * m-block--brand: makes the block white copy on a red background [2]
+  * m-block--alt: gives the block a grey background [2]
+
+  1 see the if statement below on the title
+  2 if you use these - make sure there is <div class="container"> inside the component - not around it
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'A block with 50% width columns' %}
+{% endif %}
+
+{% if content is empty %}
+  {% set content = ['<p>And a keyline above it</p>'] %}
+{% endif %}
+
+<div class="m-block{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}{% if blockBrand is defined %} m-block--brand{% elseif blockAlt is defined %} m-block--alt{% endif %}{% if blockShallow is defined %} m-block--shallow{% endif %}{% if blockMoveUp is defined %} m-block--up{% endif %}">
+  {% if blockAlt is defined or blockBrand is defined %}<div class="container">{% endif %}
+  <div class="m-block__columns{% if blockReverse is defined %} m-block__columns--reverse{% endif %}">
+    <div class="m-block__column">
+
+      {% if noTitle is empty %}
+        <h2 class="{% if blockShallow is defined %}font-delta m-block__shallow-title{% else %}font-gamma m-block__title{% endif %}">
+          {% if link is defined %}
+            <a class="m-block__link" href="{{ link }}">{{ title }}</a>
+          {% else %}
+            {{ title }}
+          {% endif %}
+        </h2>
+
+        {% if date is defined %}
+          <div class="font-delta color-light m-block__subtitle">{{ date }}</div>
+        {% elseif subtitle is defined %}
+          <div class="font-delta color-light m-block__subtitle">{{ subtitle }}</div>
+        {% endif %}
+
+      {% endif %}
+
+    </div>
+    <div class="m-block__column">
+      {% if noContent is empty %}
+        {% for p in content %}
+          {{ p|raw }}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  {% if blockAlt is defined or blockBrand is defined %}</div>{% endif %}
+</div>

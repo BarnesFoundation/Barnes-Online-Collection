@@ -1,0 +1,36 @@
+
+html,
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  //@include sans-serif();
+  background: $color__background;
+  color: $color__text;
+
+  &::after {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 1px;
+    height: 1px;
+    margin: -1px 0 0 -1px;
+    color: transparent;
+    font: 0/0 a;
+    text-shadow: none;
+  }
+}
+
+@each $name, $point in $breakpoints {
+  @include breakpoint('#{$name}') {
+    head {
+      font-family: '#{$name}';
+    }
+
+    body::after {
+      content: '#{$name}';
+    }
+  }
+}

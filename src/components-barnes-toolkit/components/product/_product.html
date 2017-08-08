@@ -1,0 +1,51 @@
+<div class="m-block">
+  <div class="m-product m-block__columns">
+    <div class="m-block__column">
+      <div class="m-product__gallery">
+        <div class="m-product-gallery__stage">
+          <ul class="m-product-gallery__container" data-behavior="ProductGallery">
+            <li class="m-product__media">
+              <img src="//placehold.it/380x380" alt="">
+            </li>
+            <li class="m-product__media">
+              <img src="//placehold.it/380x380" alt="">
+            </li>
+            <li class="m-product__media">
+              <img src="//placehold.it/380x380" alt="">
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="m-block__column">
+      <div class="m-product__head">
+        <h2 class="font-zeta m-product__category-title">Product category</h2>
+        <h3 class="font-gamma m-product__title">Masterworks of the Barnes</h3>
+      </div>
+      <div class="m-product__actions">
+        <div class="font-delta m-product__prices">
+          <del class="m-product__price">$59.99</del>  <ins class="m-product__price">$49.99</ins>
+        </div>
+        <form class="m-product__form" action="https://shop.barnesfoundation.org/cart/add" method="post" enctype="multipart/form-data">
+          <div class="form-field--inline">
+            <label class="visuallyhidden" for="select1">Select quantity</label>
+            <div class="select select--number">
+              <select name="quantity" class="select__select" id="select1" required>
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" type="submit">Add to cart</button>
+            <input type="hidden" name="id" value="38716856274">
+          </div>
+        </form>
+      </div>
+      <div class="m-product__summary">
+        <p>Product summary should be one to two paragraphs. Product summary should be one to two paragraphs</p>
+        <p><a href="#" class="a-brand-link">Learn more <span class="visuallyhidden">about Masterworks of the Barnes</span></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

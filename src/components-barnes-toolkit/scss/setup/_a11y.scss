@@ -1,0 +1,102 @@
+/***
+
+Some accessibility (a11y) related helper classes
+===
+* Class name: `visuallyhidden`
+* Attribute name: `hidden`
+* Tags used on: Any but especially `<div>` and `<span>`
+
+*Hidden text:*
+
+Sometimes it is necessary to have content on your webpage that is hidden from view to:
+* people who are not using screen-readers
+* everyone
+
+You may for instance have a page with multiple product cards showing:
+each with a title, an image and a button that says _Click here to buy_
+and for non-visually-impaired people that works well;  they see a big button and
+they click it... but for visually-impaired people who use screen-readers (but who
+can't physically see the buttons) then for those people having a list of links
+read out aloud to them that all say _click here_ will not make a lot of sense.
+
+But what if you could read out to them something like _Click here to buy (product X)_
+or _Click here to buy (product Y)_
+
+A better, more modern solution, would be to associate your link with its
+repetitive link text with a `id` attribute on a relevant heading and an
+`aria-labelledby` attribute that matches it.
+
+Sadly, with a Content Management System this is not very easy to achieve.
+
+*Heading order:*
+
+Sometimes it is necessary to show headings (e.g. `<h3> or <h4>`) in one order
+visually and another order programmatically i.e. for a screen-reader. Our
+`a-heading-order` class on a div around a heading group allows us to do that.
+
+*Note:*
+
+Some of the content will not appear below so please take a look at the _code_
+box to learn how the classes/attrbutes work to hide content in the right context.
+
+  ```
+  <div class="m-btn-group">
+    <a href="#" class="btn btn--primary">Click here to buy <span class="visuallyhidden">product X</span></a>
+    <a href="#" class="btn btn--primary">Click here to buy <span class="visuallyhidden">product Y</span></a>
+  </div>
+  <div>
+    <h2 class="font-zeta" id="a11y-heading">Product name 1</h2>
+    <a href="#" class="btn btn--primary" aria-labelledby="a11y-heading1">Click here to buy</a>
+  </div>
+  <div>This text is visible to everyone <span class="visuallyhidden">This text is only visible to screen-readers</span></div>
+  <div hidden>This text is hidden to everyone (well, in a modern browser anyway)</div>
+  <div class="a-heading-order">
+    <h3 class="font-delta"><a href="#">Visually this title is second</a></h3>
+    <h4 class="font-zeta">Visually this title is first</h4>
+  </div>
+  ```
+***/
+
+/* Hidden but visible to screenreaders */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+/**
+ * We don't need display: noen to hide things and classes like .hidden
+ * we should just be able to use <div hidden>THis is hidden</div>
+ * but not all browsers support it so this rule helps those browsers a litt
+ */
+[hidden],
+.hidden {
+  display: none;
+}
+
+
+/**
+ * Heading order
+ * Placing a <h4> before a <h3> is a problem but visually it needs to happen
+ * sometimes. So we wrap our two headings in this container so visually
+ * they are in the right order and also in source order.
+ */
+.a-heading-order {
+  display: flex;
+  flex-direction: column-reverse;
+}

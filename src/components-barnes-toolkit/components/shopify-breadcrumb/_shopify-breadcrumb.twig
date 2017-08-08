@@ -1,0 +1,21 @@
+{#
+
+shopify-breadcrumb component
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+{% if continue is empty %}
+  {% set continue = { link: 'collections/all', copy: 'Continue shopping' } %}
+{% endif %}
+
+<div class="m-shopify-breadcrumb">
+  <nav class="m-shopify-breadcrumb__nav">
+    <a href="#" class="m-shopify-breadcrumb__link">Home</a>
+    <a href="#" class="m-shopify-breadcrumb__link">Parent page</a>
+    <a href="#" class="m-shopify-breadcrumb__link">Child page</a>
+  </nav>
+  {% if noContinue is empty %}
+    <a href="{{ continue.link }}" class="a-brand-link m-shopify-breadcrumb__continue">{{ continue.copy }}</a>
+  {% endif %}
+</div>

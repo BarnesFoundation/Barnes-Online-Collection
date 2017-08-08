@@ -1,0 +1,213 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../../components/' %}
+{% endif %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US" class="shopify-html no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Barnes Foundation - Online Store (Shopify)</title>
+  [script]document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');[/script]
+  <!-- CSS *before any blocking scripts -->
+  <link href="/dist/styles/app.css" rel="stylesheet">
+  <!-- Main Favicon -->
+  <link rel="shortcut icon" href="/dist/images/favicons/favicon.ico">
+  <!-- Apple Touch Icons (ipad/iphone standard+retina) -->
+  <link rel="apple-touch-icon" href="/dist/images/favicons/favicon-152.png"> <!-- General use iOS/Android icon, auto-downscaled by devices. -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-120.png" sizes="120x120"> <!-- iPhone retina touch icon -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-76.png" sizes="76x76"> <!-- iPad home screen icons -->
+  <!-- Favicon Fallbacks for old browsers that don't read .ico -->
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-16.png" sizes="16x16">
+
+  <!-- Insert HTML5 shiv for older browsers like Internet Explorer 8,7 or 6 -->
+  <!--[if lt IE 9]>
+    [script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"][/script]
+  <![endif]-->
+  <!-- insert head.js - ideally minified and inline and not linked like this -->
+  [script src="/dist/scripts/head.js"][/script]
+</head>
+
+<body>
+<div id="a17">
+
+  <!-- Skip links for accessibility reasons (keyboard users need them) -->
+	<a class="a-skip" href="#content">Skip to content</a>
+	<a class="a-skip" href="#footer">Skip to footer</a>
+	<!--/ Skip links -->
+
+  <!-- Header -->
+  <header class="g-header g-header--shopify" data-behavior="header">
+    <div class="container g-header__top-bar">
+      <a class="g-header__home" href="#">BarnesFoundation.org</a>
+
+      <div class="g-header__auxiliary">
+          <div class="g-header__search">
+            <a href="#search"><span id="search-label" class="visuallyhidden">Search</span>
+              <svg width="18" height="18" aria-labelledby="search-label">
+                <use xlink:href="#icon--icon_search"></use>
+              </svg>
+            </a>
+          </div>
+          <div class="g-header__cart">
+            <a href="/cart" class="site-header__cart">
+              <span class="visuallyhidden" id="cart-label">Cart</span>
+              <div id="CartCount" class="site-header__cart-count site-header__cart-count--empty" aria-labelledby="cart-label">
+                <span>1</span>
+              </div>
+            </a>
+          </div>
+          <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="nav-open-title">
+          <svg width="26" height="26"><title id="nav-open-title">Menu</title><use xlink:href="#icon--icon_menu"></use></svg>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <!-- Logo -->
+      {% if homepage is defined %}
+      <h1 class="a-logo g-header__logo">
+        <span class="html4-label">Barnes</span>
+        <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+          <title id="logo-title">Barnes</title>
+          <use xlink:href="#icon--logo-s"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-m"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-l"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-xl"></use>
+        </svg>
+      </h1>
+      {% else %}
+      <a class="a-logo g-header__logo" href="/static/">
+        <span class="html4-label">Barnes</span>
+        <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+          <title id="logo-title">Barnes</title>
+          <use xlink:href="#icon--logo-s"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-m"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-l"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-xl"></use>
+        </svg>
+      </a>
+      {% endif %}
+      <!--/ Logo -->
+
+      <!-- Site title -->
+      <div class="g-header__site">
+        Online Shop
+      </div>
+      <!--/ Site title -->
+    </div>
+    <!-- Nav -->
+    {% include path ~ "shopify-nav/_shopify-nav.twig" %}
+    <!--/ Nav -->
+  </header>
+  <!--/ Header -->
+
+  <!-- Nav (off-canvas) -->
+  {% include path ~ "nav/_nav--shopify.twig" %}
+  <!--/ Nav -->
+
+  <!--
+    Main
+    by setting tabindex="-1" on this we can ensure that users sent here via the Skip to content link
+    will have their :focus sent here too
+  -->
+  <main id="content" tabindex="-1">
+    [COMPONENTS]
+  </main>
+  <!--/ Main -->
+
+  <!--
+    Footer
+    by setting tabindex="-1" on this we can ensure that users sent here via the SKip to footer link
+    will have their :focus sent here too
+  -->
+  <footer id="footer" class="g-footer g-footer--shopify{% if flushTop is defined %} g-footer--flush-top{% endif %}" tabindex="-1">
+    <div class="container">
+      <!-- Footer actions -->
+      <div class="g-footer__actions">
+
+        <div class="g-footer__col g-footer__details">
+          <div class="vcard g-footer__address">
+            <h2 class="font-zeta">Location</h2>
+            <p class="adr">
+              <span class="street-address">2025 Benjamin Franklin Parkway</span><br>
+              <span class="locality">Philadelphia</span>, <span class="region">PA</span> <span class="postcode">19130</span><br>
+              Phone: <span class="tel">215-278-7000</span>
+              <a class="a-brand-link g-footer__address__link" href="https://www.google.com/maps?cid=5415126767940621792">Map <span class="visuallyhidden"> of Barnes</span></a>
+            </p>
+          </div>
+          <div class="g-footer__hours">
+            <h2 class="font-zeta">Hours</h2>
+            <p>Wed — Mon: 10am &ndash; 5pm<br>
+            First Friday: 6 &ndash; 9pm<br>
+            Tuesday closed</p>
+          </div>
+        </div>
+
+        <div class="g-footer__col">
+          <!-- Footer info link -->
+          <div class="g-footer__subscribe">
+            <h2 class="font-zeta" id="footer-nav-title">Info</h2>
+            <nav class="g-footer__info-links" aria-labelledby="footer-nav-title">
+              <a href="#" class="g-footer__info-links__item">Link items</a>
+              <a href="#" class="g-footer__info-links__item">are managed</a>
+              <a href="#" class="g-footer__info-links__item">By Shopify's</a>
+              <a href="#" class="g-footer__info-links__item">Navigation feature</a>
+            </nav>
+          </div>
+          <!--/ Footer info link -->
+        </div>
+
+      </div>
+      <!--/ Footer actions -->
+
+      <!-- Footer auxiliary -->
+      <div class="g-footer__auxiliary">
+          <div class="g-footer__social-container">
+            <div class="">
+              &copy;2017 The Barnes Foundation
+            </div>
+            <nav class="g-footer__social" aria-labelledby="socialnav-heading">
+              <h2 id="socialnav-heading" class="visuallyhidden">Find us on social media</h2>
+              <a class="g-footer__social__link" href="https://twitter.com/the_barnes">
+                <svg width="20" height="20"><title>Twitter</title><use xlink:href="#icon--icon_twitter"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.facebook.com/barnesfoundation">
+                <svg width="20" height="20"><title>Facebook</title><use xlink:href="#icon--icon_facebook"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.youtube.com/barnesfoundation">
+                <svg width="20" height="20"><title>YouTube</title><use xlink:href="#icon--icon_youtube"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="https://instagram.com/barnesfoundation/">
+                <svg width="20" height="20"><title>Instagram</title><use xlink:href="#icon--icon_instagram"></use></svg>
+              </a>
+            </nav>
+          </div>
+      </div>
+      <!--/ Footer auxiliary -->
+    </div>
+  </footer>
+  <!--/ Footer -->
+</div>
+[script src="/dist/scripts/app.js"][/script]
+</body>
+</html>
