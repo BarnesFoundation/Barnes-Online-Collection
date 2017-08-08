@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as QueryActions from '../../actions/query';
+
+import * as QueriesActions from '../../actions/queries';
 import * as ObjectsActions from '../../actions/objects';
 
 import './searchInput.css';
@@ -10,30 +13,33 @@ class SearchInput extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {value: ''};
+    this.state = {
+      value: ''
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
-    // this.props.setQuery(event.target.value);
     this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    this.props.setQuery(this.state.value);
-    this.props.findObjectsByKeyword(this.state.value);
-    // this.props.findObjectsByKeyword(this.props.query);
+    const query = ['match', '_all', this.state.value];
+    this.props.appendToQueries(query);
+
+    this.props.findObjectsByQueries(this.props.queries);
+
     this.setState({value: ''});
   }
 
   componentWillUpdate(nextProps) {
-    // if (this.props.query !== nextProps.query) {
-    //   // this.props.findObjectsByKeyword(nextProps.query);
-    // }
+    if (this.props.queries !== nextProps.queries) {
+      this.props.findObjectsByQueries(nextProps.queries);
+    }
   }
 
   render() {
@@ -43,7 +49,6 @@ class SearchInput extends Component {
           <input
             type="text"
             autoFocus="true"
-            // value={this.props.query}
             value={this.state.value}
             onChange={this.handleChange}
             className="searchbar__input"
@@ -54,15 +59,22 @@ class SearchInput extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    query: state.query
-  };
+SearchInput.propTypes = {
+  queries: PropTypes.array
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},ObjectsActions, QueryActions),
-    dispatch);
+const mapStateToProps = state => {
+  return {
+    queries: state.queries
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign(
+    {},
+    ObjectsActions,
+    QueriesActions
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchInput);

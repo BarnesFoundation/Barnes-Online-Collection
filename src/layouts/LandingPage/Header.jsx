@@ -4,10 +4,6 @@ import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HeaderText from '../../components/HeaderText/HeaderText';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>

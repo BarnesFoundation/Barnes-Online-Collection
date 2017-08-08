@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 import SiteHeaderMenuItems from './SiteHeaderMenuItems';
 import SiteHeaderMenuToggle from './SiteHeaderMenuToggle';
@@ -8,10 +6,6 @@ import SiteSearchToggle from './SiteSearchToggle';
 import SiteSearchInput from './SiteSearchInput';
 
 class SiteHeaderMenu extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
