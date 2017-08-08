@@ -49,7 +49,10 @@ strong {
   font-family: $suisse_semibold;
   font-weight: normal;
 }
-$font_path: '../fonts/';
+
+// #styleguideOverride: the create-react-app restricts relative imports. Use this instead
+$font_path: '/fonts/';
+
 // Web Fonts
 @font-face {
   font-family: 'area17mainlogo';
