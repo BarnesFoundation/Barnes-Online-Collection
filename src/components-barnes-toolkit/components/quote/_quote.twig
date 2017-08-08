@@ -1,0 +1,19 @@
+{# If some key variables are missing, load in the default content #}
+{% if quote is empty %}
+  {%
+    set quote = '<p>The exceptional path of a woman who defied the social norms of her time to join the Parisian avant-garde.</p>'
+  %}
+{% endif %}
+
+{% if citation is empty %}
+  {% set citation = 'Citation Name. 1851&ndash;1913' %}
+{% endif %}
+
+<div class="m-quote">
+  <div class="container">
+    <blockquote class="m-quote__blockquote">
+        {{ quote|raw }}
+      <cite class="m-quote__cite">{{ citation|raw }}</cite>
+    </blockquote>
+  </div>
+</div>

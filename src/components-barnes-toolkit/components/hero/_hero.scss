@@ -1,0 +1,311 @@
+/***
+
+Hero
+======
+* Class name: `o-hero`
+* Modifier classes: `o-hero--page-title`,  `o-hero--event`
+* Tags used on: `<div>` `<section>`
+
+Creates a hero element at the top of the page.
+
+*Note 1:*
+
+We supply the browser 3 different image sizes. Smaller screens do not need to
+download a huge image so we give smaller screens smaller images.
+
+
+*Note 2:*
+
+We need to work out the dominant color of the background image and apply it inline in the HTML
+e.g. `<div class="o-hero" style="background-color: #123456;">{content}</div>`
+so before it loads we don't have a harsh background
+
+[Color Thief](http://lokeshdhakar.com/projects/color-thief/) is a great online app to do this.
+
+*Note 3:*
+
+When you add the main image to this component via the CMS please remember that this component is self-tinting
+meaning that we add a semi-transculent black layer over the top of the image automatically
+which allows the white/red copy above the image to be legible.
+
+So do not make your image darker in Photoshop/Sketch/Illustrator as then the CSS will make it too dark.
+
+***/
+
+.o-hero {
+  background-color: $color__black; /* Override inline/with JavaScript */
+  color: $color__white;
+  display: block;
+  position: relative;
+}
+
+.o-hero .focus-ring {
+  outline: $focus-ring-invert;
+}
+
+/**
+ * The automatic tint which allows the white copy above the image to be legible
+ */
+.o-hero::after {
+  @include tint();
+
+  z-index: #{map-get($zIndexes, 'heroOverlay')};
+}
+
+.o-hero__inner {
+  height: 100%;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @media print {
+    position: relative;
+  }
+}
+
+.o-hero__inner > .container {
+  height: 100%;
+}
+
+.o-hero__copy {
+  bottom: 69px;
+  pointer-events: auto;
+  position: absolute;
+  width: 81%;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @include breakpoint('medium+') {
+    bottom: 65px;
+    width: 68%;
+  }
+
+  @include breakpoint('large+') {
+    bottom: 63px;
+  }
+
+  @media print {
+    bottom: auto;
+    position: relative;
+    width: 80%;
+  }
+}
+
+.o-hero__copy a {
+  color: currentColor;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.o-hero__copy a:focus:not(.focus-ring) {
+  text-decoration: underline;
+}
+
+.o-hero--event .o-hero__copy {
+  @include breakpoint('medium+') {
+    width: 50%;
+  }
+
+  @media print {
+    width: 80%;
+  }
+}
+
+.o-hero__pre-title {
+  color: currentColor;
+  margin-top: 0;
+}
+
+.o-hero__title {
+  @include font-hero-title();
+
+  margin-top: 3px;
+
+  @include breakpoint('medium+') {
+    margin-top: 9px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 18px;
+  }
+
+}
+
+.o-hero__supporting {
+  @include font-hero-supporting();
+
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    margin-top: -3px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 15px;
+  }
+}
+
+/**
+ * Extras
+ * Different hero types have different `extras` like:
+ * - Social Share links
+ * - Hashtag link/details
+ */
+.o-hero__extras {
+  bottom: 18px;
+  pointer-events: auto;
+  position: absolute;
+  z-index: #{map-get($zIndexes, 'heroCopy')};
+
+  @include breakpoint('medium+') {
+    bottom: 21px;
+  }
+
+  @include breakpoint('large+') {
+    bottom: 71px;
+    right: map-get($outer-gutters, 'large');
+  }
+
+  @include breakpoint('xlarge+') {
+    right: map-get($outer-gutters, 'xlarge');
+  }
+
+  @include breakpoint('xxlarge') {
+    right: 0;
+  }
+}
+
+.o-hero__hashtag {
+  color: currentColor;
+  margin-left: 30px;
+  text-decoration: none;
+
+  &:hover {
+    color: currentColor;
+    text-decoration: underline;
+  }
+
+  @include breakpoint('large+') {
+    display: block;
+    margin-left: 0;
+    margin-top: 12px;
+    text-align: right;
+  }
+}
+
+.o-hero__image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+
+  @media screen and (min-height: 700px) and (min-width: 400px) {
+    max-height: 100vh;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+/**
+ * Caption (optional)
+ */
+.o-hero__caption {
+  background: $color__black--3;
+  color: $color__copy--dark;
+  padding: 10px 0;
+}
+
+/**
+ * VARIATION:
+ * Homepage hero - 100% width/height
+ */
+.o-hero--home {
+  overflow: hidden;
+  transition: none;
+  min-width: 100%;
+
+  @include breakpoint('large+') {
+    height: 100vh;
+    width: 100%;
+  }
+}
+
+.o-hero--home:first-child {
+  min-height: 1px;
+
+  @include breakpoint('medium+') {
+    min-height: 100vh;
+    max-height: none;
+  }
+
+  @include breakpoint('large+') {
+    height: 100vh;
+  }
+}
+
+.o-hero--home .o-hero__image {
+  height: auto;
+  min-height: 100vh;
+  min-width: 100%;
+  transition: none;
+  width: auto;
+
+  @include breakpoint('small-') {
+    height: 100%;
+    max-height: none;
+    min-height: 1px;
+  }
+}
+
+.js .o-hero--home .o-hero__image {
+  cursor: pointer;
+}
+
+.o-hero--home:first-child .o-hero__copy {
+  @include breakpoint('small-') {
+    bottom: 100px;
+  }
+}
+
+/**
+ * VARIATION:
+ * Hero on an Event/Class detail page - with a limited height
+ */
+.o-hero--event {
+  max-height: 798px;
+  overflow: hidden;
+}
+
+/**
+ * VARIATION:
+ * Hero with a page title
+ */
+
+.o-hero--page-title .o-hero__inner > .container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.o-hero--page-title .page-title {
+  margin-top: 0;
+
+  @include breakpoint('large+') {
+    margin-top: 19px;
+  }
+}
+
+.o-hero--page-title {
+  @include breakpoint('large+') {
+    max-height: 350px;
+    overflow: hidden;
+  }
+  @include breakpoint('xlarge+') {
+    max-height: 400px;
+  }
+}

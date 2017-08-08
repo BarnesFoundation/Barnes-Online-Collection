@@ -1,0 +1,100 @@
+{# If some key variables are missing, load in the default content #}
+
+{% if id is empty %}
+  {% set id = '38716856274' %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '#' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Masterworks of the Barnes' %}
+{% endif %}
+
+{% if category is empty %}
+  {% set category = 'Product category' %}
+{% endif %}
+
+{% if prices is empty %}
+  {% set prices = { was: '$59.99', now: '$49.99' } %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Product summary should be one to two paragraphs. Product summary should be one to two paragraphs</p>'
+    ]
+  %}
+{% endif %}
+
+{% if images is empty %}
+{%
+  set images = [
+    {
+      image: '//placehold.it/380x380',
+      alt: ''
+    },
+    {
+      image: '//placehold.it/380x380',
+      alt: ''
+    },
+    {
+      image: '//placehold.it/380x380',
+      alt: ''
+    }
+  ]
+%}
+{% endif %}
+
+
+
+<div class="m-block{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}">
+  <div class="m-product m-block__columns">
+    <div class="m-block__column">
+      <div class="m-product__gallery">
+        <div class="m-product-gallery__stage">
+          <ul class="m-product-gallery__container" data-behavior="ProductGallery">
+            {% for image in images %}
+            <li class="m-product__media">
+              <img src="{{ image.image }}" alt="{{ image.alt }}">
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="m-block__column">
+      <div class="m-product__head">
+        <h2 class="font-zeta m-product__category-title">{{ category }}</h2>
+        <h3 class="font-gamma m-product__title">{{ title }}</h3>
+      </div>
+      <div class="m-product__actions">
+        <div class="font-delta m-product__prices">
+          <del class="m-product__price">{{ prices.was }}</del> <ins class="m-product__price">{{ prices.now }}</ins>
+        </div>
+        <form class="m-product__form" action="https://shop.barnesfoundation.org/cart/add" method="post" enctype="multipart/form-data">
+          <div class="form-field--inline">
+            <label class="visuallyhidden" for="select1">Select quantity</label>
+            <div class="select select--number">
+              <select name="quantity" class="select__select" id="select1" required>
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" type="submit">Add to cart</button>
+            {# Hidden fields for the shop form e.g. SKU or something required by the store #}
+            <input type="hidden" name="id" value="{{ id }}">
+          </div>
+        </form>
+      </div>
+      <div class="m-product__summary">
+        {% for p in summary %}
+          {{ p|raw }}
+        {% endfor %}
+        <p><a href="{{ link }}" class="a-brand-link">Learn more <span class="visuallyhidden">about {{ title }}</span></a></p>
+      </div>
+    </div>
+  </div>
+</div>

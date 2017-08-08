@@ -1,0 +1,108 @@
+/***
+
+Shopify - Collection
+======
+* Class name: `-m-shopify-collection`
+* Modifier classes: `-m-shopify-collection--`
+* Tags used on: `<div>`
+
+Shopify calls a group of products a _collection_. Other ecommerce site may refer
+to this as a category.
+
+Visually a grid of images representing the collection along with the title
+sat atop. Images should be 460x460 preferrably with a grey (#efefef) background
+with plenty of white-space which caters for the fact that the title is in the
+top left corner.
+
+***/
+
+.m-shopify-collection {
+  /** Just here to convey HTML structure **/
+}
+
+.m-shopify-collection__list {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -20px;
+  margin-left: -20px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: -30px;
+    margin-left: -30px;
+  }
+
+  @include breakpoint('xlarge') {
+    margin-bottom: -40px;
+    margin-left: -40px;
+  }
+}
+
+.m-shopify-collection__item {
+  list-style: none;
+  margin: 0 0 20px 20px;
+  padding: 0;
+  position: relative;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 20px);
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 30px;
+    margin-left: 30px;
+    width: calc(33.33% - 30px);
+  }
+
+  @include breakpoint('xlarge') {
+    margin-bottom: 40px;
+    margin-left: 40px;
+    width: calc(33.33% - 40px);
+  }
+}
+
+.m-shopify-collection__title {
+  color: $color__copy--dark;
+  position: absolute;
+  left: 0;
+  margin: 0;
+  max-width: 70%;
+  top: 0;
+  z-index: #{map-get($zIndexes, 'shopifyCollectionTitle')};
+}
+
+.m-shopify-collection__link {
+  color: currentColor;
+  display: block;
+  padding: 25px;
+  text-decoration: none;
+
+  &:focus:not(.focus-ring),
+  &:hover {
+    outline: none;
+    text-decoration: underline;
+  }
+}
+
+/**
+ * 1 force the container to be a square
+ */
+.m-shopify-collection__image-container {
+  display: block;
+  height: 0; /* 1 */
+  list-style: none;
+  overflow: hidden;
+  padding: 0 0 100%; /* 1 */
+  position: relative;
+}
+
+.m-shopify-collection__image {
+  display: block;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}

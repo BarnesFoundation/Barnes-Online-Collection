@@ -1,0 +1,92 @@
+/***
+
+Shopify - Print Banner
+======
+* Class name: `-m-shopify-print-banner`
+* Tags used on: `<div>`
+
+Print banner used to drive traffic from the main Shopify site to the Print
+store but could be used for other banners.
+
+***/
+
+.m-shopify-print-banner {
+  background: $color__background--print-banner;
+  color: $color__white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1600px;
+
+  @include breakpoint('large+') {
+    flex-direction: row;
+  }
+}
+
+.m-shopify-print-banner a.focus-ring {
+  outline: $focus-ring-invert;
+}
+
+.m-shopify-print-banner > .container {
+  order: 2;
+
+  @include breakpoint('large+') {
+    order: 1;
+  }
+
+  // Override the default .container behaviour on xlarge because we don't want it full width
+  @include breakpoint('xlarge+') {
+    padding-left: #{map-get($outer-gutters, 'xlarge')};
+    padding-right: #{map-get($outer-gutters, 'xlarge')};
+    width: auto;
+  }
+}
+
+.m-shopify-print-banner__copy {
+  font-family: $sans-serif--loaded;
+  font-size: 20px;
+  padding: 0 0 60px;
+
+  @include breakpoint('medium+') {
+    max-width: 380px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 100px;
+    padding-top: 40px;
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-left: 105px;
+    padding-right: 110px;
+    max-width: none;
+  }
+
+  @include breakpoint('xxlarge') {
+    padding-left: 120px;
+    padding-right: 120px;
+  }
+}
+
+.m-shopify-print-banner__summary a {
+  color: $color__white;
+  text-decoration: underline;
+
+  &:focus:not(.focus-ring) {
+    background: $color__white;
+    color: $color__copy--dark;
+    text-decoration: none;
+  }
+}
+
+.m-shopify-print-banner__image {
+  order: 1;
+
+  @include breakpoint('large+') {
+    order: 2;
+    width: 50%;
+  }
+}
+

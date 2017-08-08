@@ -1,0 +1,23 @@
+<div class="m-search-bar" data-behavior="SearchBar" aria-hidden="true">
+  <div class="container">
+    <form class="m-search-bar__form" action="/static/pages/search.php" method="get" novalidate data-behavior="FormValidate">
+      <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+        <h3 class="font-bold-heading">Please correct your errors</h3>
+      </div>
+      <div class="form-field m-search-bar__form-field">
+        <label class="visuallyhidden" for="search">Search</label>
+        <input class="input" type="search" name="q" id="search" placeholder="Search" required aria-required="true" aria-describedby="searcherror1">
+        <button class="btn btn--primary" type="submit">
+          Search
+        </button>
+        <div aria-hidden="true" class="form-field__error hidden" tabindex="-1" id="searcherror1">Enter a search term</div>
+      </div>
+    </form>
+    <button class="m-search-bar__close btn btn--icon-only html4-hidden" type="button" data-search-hide aria-labelledby="search-close-title">
+      <svg class="icon--close" width="20" height="20">
+        <title id="search-close-title">Close search</title>
+        <use xlink:href="#icon--icon_close" />
+      </svg>
+    </button>
+  </div>
+</div>

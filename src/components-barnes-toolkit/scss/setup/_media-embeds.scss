@@ -1,0 +1,69 @@
+/***
+
+Video Player Embeds
+====
+* Class name: `embed-responsive`
+* Tags used on: `<div>`
+
+When including a YouTube/Vimeo etc video on your page it can look odd on
+different devices e.g. by default if you include a YouTube `<iframe>` on a webpage
+it can look too tall on a small-screen device - like an iPhone.
+
+These helper classes allow you to preserve the aspect ratio of the video.
+
+So use these classes as a wrapper for the `<iframe>` tag like so:
+
+```
+<div class="embed-responsive" data-behavior="EmbedResponsive">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/iwHsCXHT14c" frameborder="0" allowfullscreen></iframe>
+</div>
+
+```
+
+***/
+
+/*
+	Responsive media embeds
+	Credit: Nicolas Gallagher and SUIT CSS.
+*/
+.embed-responsive {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+
+	.embed-responsive-item,
+	iframe,
+	embed,
+	object,
+	video {
+		border: 0;
+		bottom: 0;
+		height: 100%;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	// Modifier class for 1440x550 aspect ratio
+	&--video {
+		padding-bottom: (550/1440)*100%;
+	}
+
+	// Modifier class for 16:9 aspect ratio
+	&--16by9 {
+		padding-bottom: 56.25%;
+	}
+
+	// Modifier class for 6.32:3 aspect ratio
+	&--6by3 {
+		padding-bottom: 47.55%;
+	}
+
+	// Modifier class for 4:3 aspect ratio
+	&--4by3 {
+		padding-bottom: 75%;
+	}
+}

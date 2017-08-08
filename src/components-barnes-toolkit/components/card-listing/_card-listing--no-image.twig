@@ -1,0 +1,39 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Listing title' %}
+{% endif %}
+
+{% if date is empty %}
+  {% set date = 'now'|date('l, M j') %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '#' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Summary will sit here.</p>'
+    ]
+  %}
+{% endif %}
+
+
+<div class="m-card-listing m-card-listing--no-image">
+  <div class="m-card-listing__body">
+    <h3 class="font-delta m-card-listing__title">{{ title }}</h3>
+    {% if hideDate is empty %}
+      <div class="font-epsilon m-card-listing__date">{{ date }}</div>
+    {% endif %}
+    {% if hideSummary is empty %}
+      <div class="m-card-listing__summary">
+        <p>Summary will sit here.</p>
+      </div>
+    {% endif %}
+    {# Remember to add context to the link by putting something in the `<span class="visuallyhidden">` container #}
+    <div class="m-card-listing__link">
+      <a class="a-brand-link" href="{{ link }}">Learn more<span class="visuallyhidden"> about {{ title }}</span></a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,164 @@
+
+//
+// Placeholders
+//
+
+// Positioning
+%vertical-align {
+  transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+}
+
+
+// Display
+%table {
+  display: table;
+}
+
+%table-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+%center {
+  margin: {
+    right: auto;
+    left: auto;
+  }
+}
+
+%clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+%image-replacement {
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+}
+
+%line-break {
+  &:after {
+    display: block;
+    content: "\a";
+    white-space: pre;
+    line-height: 0.5;
+  }
+}
+
+%appearance {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+
+// Visibility
+%hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+%invisible {
+  visibility: hidden;
+}
+
+%visible {
+  visibility: visible;
+}
+
+%remove-tap-color {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent; // For some Androids
+}
+
+
+// Effects
+%hardware-accel {
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+
+//
+// Utility Styles
+//
+
+// Text
+.u-text-center {
+  text-align: center;
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+.u-text-left {
+  text-align: left;
+}
+
+
+// Floats
+.u-pull-right {
+  float: right;
+}
+
+.u-pull-left {
+  float: left;
+}
+
+
+// Center
+.u-align-center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+
+// Size
+.u-full-width {
+  width: 100%;
+}
+
+.u-full-max-width {
+  max-width: $desktop-max-width;
+}
+
+.u-full-height {
+  height: 100%;
+}
+
+.u-overflow-hidden {
+  overflow: hidden !important;
+}
+
+
+// Wordpress Core Styles
+.alignnone {
+  margin: 0;
+}
+
+.aligncenter {
+  @extend .u-align-center;
+  display: block;
+}
+
+.alignright {
+  @extend .u-pull-right;
+  margin: 0;
+}
+
+.alignleft {
+  @extend .u-pull-left;
+  margin: 0;
+}
+

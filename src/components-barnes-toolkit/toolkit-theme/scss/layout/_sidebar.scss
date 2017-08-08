@@ -1,0 +1,323 @@
+
+//
+// Sidebar Styles
+//
+
+.sidebar {
+  transform-style: preserve-3d;
+  transition: transform $fast cubic-bezier(.4,0,.2,1) .1s;
+
+  background: $color-darkest;
+  position: fixed;
+  height: 100%;
+  width: $sidebar-mobile-width;
+  margin-left: -$sidebar-mobile-width;
+
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+
+  z-index: $zIndex-2;
+  @include debug-colors(red);
+
+  @include breakpoint(375px)  {
+      width: $sidebar-mobile-width-big;
+      margin-left: -$sidebar-mobile-width-big;
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    width: $sidebar-width;
+    margin-left: -$sidebar-width;
+  }
+
+}
+
+.is-menu-expanded .sidebar {
+  transform: translate3d($sidebar-mobile-width, 0, 0);
+
+  @include breakpoint(375px)  {
+    transform: translate3d($sidebar-mobile-width-big, 0, 0);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+
+  @media print {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.sidebar__content {
+  height: calc(100% - 50px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    height: calc(100% - 70px);
+  }
+  @include breakpoint($tablet-landscape-width + 1) {
+    height: calc(100% - 75px);
+  }
+}
+.sidebar__wrapper {
+  position: relative;
+  min-height: 100%;
+
+  padding: 0 0 82px;
+
+  @include breakpoint($tablet-landscape-width + 1) {
+    padding: 0 0 102px;
+    margin-right: -20px;
+  }
+}
+
+.is-loading .sidebar {
+  @include breakpoint($tablet-landscape-width + 1) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+}
+
+
+
+// Sidebar - Header
+.sidebar__header {
+  border-bottom: 1px solid rgba(28, 28, 28, 0.95);
+  background: $color-darkest;
+  z-index: $zIndex-1;
+  cursor: pointer;
+  height: 60px;
+  top: 0;
+
+  @include debug-colors(blue);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    height: 75px;
+  }
+}
+
+.is-contents-expanded .sidebar__header {
+    background-color: #1c1c1c;
+}
+
+.sidebar__header:hover {
+  @include breakpoint($tablet-landscape-width + 1) {
+    background-color: #1c1c1c;
+  }
+}
+
+.is-wide-title .sidebar__header {
+  height: 80px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    height: 105px;
+  }
+}
+
+.sidebar__title {
+  font-family: $suisse_regular;
+  color: $color-lightest;
+  font-weight: normal;
+  margin: 15px 0 0 25px;
+  line-height: 30px;
+  font-size: 16px;
+  display: block;
+  float: left;
+  max-width: $sidebar-mobile-width - 95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include debug-colors(green);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin: 22px 0 0 30px;
+    font-size: 17px;
+    max-width: $sidebar-width - 155;
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    max-width: $sidebar-width - 110;
+  }
+}
+
+.is-wide-title .sidebar__title {
+  margin-right: 50px;
+  line-height: 26px;
+  max-width: 160px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-right: 30px;
+    line-height: 30px;
+    max-width: 200px;
+  }
+}
+
+.sidebar__toc {
+  @include debug-colors(orange);
+  position: absolute;
+  top: 24px;
+  right: 25px;
+  color: $color-darker;
+  font-size: 11px;
+  opacity: 1;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    top: 31px;
+    right: 30px;
+    font-size: 12px;
+  }
+
+  @include breakpoint($tablet-landscape-width + 1) {
+    opacity: 0;
+  }
+}
+
+.is-contents-expanded .sidebar__toc,
+.sidebar__header:hover .sidebar__toc {
+  opacity: 1;
+}
+
+
+// Sidebar - List
+.sidebar__list {
+  -webkit-overflow-scrolling: touch;
+  padding: 22px 25px 45px;
+  counter-reset: chapter;
+  z-index: $zIndex-1;
+  overflow-y: scroll;
+  line-height: 40px;
+  font-size: 16px;
+  bottom: 82px;
+  width: 100%;
+  top: 55px;
+
+  @include debug-colors(greenyellow);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 60px;
+    font-size: 17px;
+  }
+  @include breakpoint($tablet-landscape-width + 1) {
+    padding-right: 50px;
+  }
+}
+
+.is-wide-title .sidebar__list {
+  top: 80px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    top: 105px;
+  }
+}
+
+.sidebar__item {
+  position: relative;
+  color: $color-darker;
+  .sidebar__list > & {
+    padding-bottom: 15px;
+  }
+}
+
+.sidebar__list > .sidebar__item:before {
+  content: counter(chapter) ". ";
+  counter-increment: chapter;
+  position: absolute;
+  z-index: -$zIndex-1;
+  top: -2px;
+  left: 0;
+}
+
+.sidebar__list > .sidebar__item:not(.current_page_item):hover,
+.sidebar__list > .sidebar__item:not(.current_page_item):hover > a,
+.sidebar__list > .sidebar__item .children li:not(.current_page_item) a:hover {
+    color: $color-dark;
+}
+
+.sidebar__item a {
+  padding: 6px 0 6px 31px;
+  color: $color-darker;
+  display: block;
+  line-height: 25px;
+}
+
+.sidebar__item.current_page_item > a,
+.sidebar__item.current_page_parent > a,
+.sidebar__item.current_page_item:before,
+.sidebar__item.current_page_parent:before {
+  color: $color-lightest;
+}
+
+.children {
+  margin-bottom: 10px;
+  padding-left: 12px;
+  display: none;
+  li.sidebar__item {
+    margin-bottom: 10px;
+    &:first-child {
+      padding-top: 10px;
+    }
+  }
+
+  li[data-type*="index-"]:first-child + li.sidebar__item {
+    padding-top: 10px;
+  }
+}
+
+.children:empty {
+  display:none;
+}
+
+.sidebar__item[data-type*="index-"] {
+  display:none;
+}
+
+.children a {
+  padding-bottom: 0;
+  padding-top: 0;
+  line-height: 25px;
+}
+
+.is-contents-expanded,
+.current_page_item,
+.current_page_ancestor {
+  .children {
+    display: block;
+  }
+
+  .children:empty {
+    display:none;
+  }
+}
+
+
+// Sidebar - Footer
+.sidebar__footer {
+  @include debug-colors(blue);
+  position: absolute;
+  bottom: 26px;
+  left: 25px;
+
+  @include breakpoint($tablet-landscape-width + 1) {
+    bottom: 21px;
+  }
+}
+
+
+// Sidebar - Logo
+.sidebar__logo {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @extend %image-replacement;
+  @include debug-colors(blue);
+  color: $color-lightest;
+}
+
+.sidebar__logo:before {
+  display: inline-block;
+  font: 53px/53px $logo-sans;
+  content: "A";
+}

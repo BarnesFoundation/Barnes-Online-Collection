@@ -1,0 +1,43 @@
+/***
+
+Breadcrumb
+====
+* Class used: `a-breadcrumb`
+* Tags used on: `<a>`
+
+Breadcrumb trail. Consists of an icon and a label.
+
+For accessibilty reasons: Resist the urge to use the word _Back_ as the label...
+no matter how tempting! Links must always make sense when they are isolated so
+the word _Back_ on its own can be confusing to visually-impaired people who
+have links read out to them out of context.
+
+```
+<a class="font-smallprint a-breadcrumb m-page-intro__breadcrumb" href="{{ backLink }}">
+  <svg width="27" height="10" class="a-breadcrumb__icon">
+    <use xlink:href="#icon--icon_arrow-back"></use>
+  </svg>
+  <span class="a-breadcrumb__label">Former page title</span>
+</a>
+```
+***/
+
+.a-breadcrumb {
+  color: $color__copy--light;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.a-breadcrumb__icon {
+  display: inline-block;
+  fill: currentColor;
+  margin-right: 13px;
+}
+
+.a-breadcrumb__label {
+  display: inline-block;
+}
+
+a:focus:not(.focus-ring) .a-breadcrumb__label {
+  text-decoration: underline;
+}

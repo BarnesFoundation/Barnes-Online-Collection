@@ -1,0 +1,52 @@
+{#
+
+Story list component
+(inside a centrally-aligned .m-block)
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Stories' %}
+{% endif %}
+
+{% if stories is empty %}
+  {%
+    set stories = [
+      {
+        quote: 'This is the quote for story number one it is a little longer than the second quote and it is intended to show the copy breaking onto multiples lines so we can test it on different devices.',
+        image: '//placehold.it/85x85',
+        name: 'Person number one',
+        subtitle: 'Student',
+        summary: [
+          '<p>This is the summary for story number one.</p>'
+        ]
+      },
+      {
+        quote: 'This is the quote. It is very short.',
+        image: '//placehold.it/85x85',
+        name: 'Person number two',
+        subtitle: 'Donor',
+        summary: [
+          '<p>This is the summary for story number two it is a little longer than the first summary and it is intended to show the copy breaking onto multiples lines so we can test it on different devices.</p>'
+        ]
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block--flush-top m-block--no-border m-centered-paragraph">
+  <div class="m-centered-paragraph__container">
+    <div class="m-story-list">
+    {% for story in stories %}
+      {% include path ~ "story/_story.twig" with story %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+

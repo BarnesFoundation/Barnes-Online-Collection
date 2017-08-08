@@ -1,0 +1,52 @@
+/***
+
+Shopify - Breadcrumb
+======
+* Class name: `-m-shopify-breadcrumb`
+* Tags used on: `<div>`
+
+A breacrumb trail for the shopify website. Hidden on small screens.
+
+***/
+
+.m-shopify-breadcrumb {
+  color: $color__copy--medium;
+  display: flex;
+  flex-direction: row;
+  font-family: $sans-serif--loaded;
+  font-size: 18px;
+  justify-content: space-between;
+  margin-top: 30px;
+
+  @include breakpoint('small-') {
+    display: none;
+  }
+}
+
+.m-shopify-breadcrumb__link {
+  color: currentColor;
+  line-height: 1;
+  overflow: hidden;
+  text-decoration: none;
+
+  &:hover {
+    color: $color__copy--dark;
+  }
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+}
+
+
+
+.m-shopify-breadcrumb__link:not(:first-child)::before {
+  content: ' > ';
+  display: inline-block;
+  margin: 0 20px;
+}
+
+.m-shopify-breadcrumb__continue {
+  /** Just here to convey HTML structure **/
+}

@@ -1,0 +1,35 @@
+/***
+
+Basic Link
+=====
+* Class name: `a-basic-link`
+* Tags used on: `<a>`
+
+Most links on the Barnes website are grey and underlined - however there are
+occasions where we need to show a link that looks like it isn't a link.
+
+```
+<a href="#">This link</a> is the default style whereas <br>
+<a class="a-basic-link" href="#">this link</a>
+is whatever colour its surrounding copy is
+  ```
+***/
+
+.a-basic-link {
+  color: currentColor;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    text-decoration: underline;
+  }
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  &.focus-ring {
+
+  }
+}

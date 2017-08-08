@@ -1,0 +1,29 @@
+{#
+
+Speaker component
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+{% if name is empty %}
+  {% set image = '//placehold.it/140x140' %}
+  {% set name = 'Name of Speaker' %}
+  {% set job = 'Job of Speaker' %}
+  {% set summary = ['<p>Speaker summary.</p>'] %}
+{% endif %}
+
+
+<div class="m-speaker">
+  <div class="m-speaker__header">
+    <img class="m-speaker__image" src="{{ image }}" alt="">
+    <div class="m-speaker__synopsis">
+      <h3 class="font-delta m-speaker__title">{{ name }}</h3>
+      <div class="font-delta m-speaker__subtitle">{{ job }}</div>
+    </div>
+  </div>
+  <div class="m-speaker__summary">
+    {% for p in summary %}
+      {{ p|raw }}
+    {% endfor %}
+  </div>
+</div>

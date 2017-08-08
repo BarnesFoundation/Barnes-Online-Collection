@@ -1,0 +1,39 @@
+/***
+
+Centered paragraph
+======
+* Class name: `m-centered-paragraph`
+* Tags used on: `<div>`
+
+A simple centralised block of content. Usually just a paragraph but could be
+lists, headings etc.
+
+This is the system's attempt to control the *measure* on simple pages.
+
+Measure (or sometimes "The Measure") in typography is the length of a line of
+text. For a single-column design measure should ideally lie between 40 and
+80 characters. Many typographers consider the perfect measure to be
+65 characters.
+
+***/
+
+.m-centered-paragraph {
+  /** Here to indicate HTML structure **/
+}
+
+.m-centered-paragraph__container {
+  margin: 0 auto;
+
+  @include breakpoint('medium+') {
+    max-width: 65%;
+  }
+
+  @include breakpoint('large+') {
+    max-width: 50%;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}

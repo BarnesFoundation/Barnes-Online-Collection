@@ -1,0 +1,37 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Landing Door' %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '#' %}
+{% endif %}
+
+{% if image is empty %}
+  {% set image = '//placehold.it/592x332' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Summary will sit here.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="m-landing-door-alt">
+  <div class="m-landing-door-alt__header">
+    <a href="{{ link }}"><img class="m-landing-door-alt__media" src="{{ image }}" alt="{{ title }}"></a>
+  </div>
+  <div class="m-landing-door-alt__body">
+    <h3 class="font-gamma m-landing-door-alt__title">{{ title }}</h3>
+    <div class="m-landing-door-alt__summary">
+      {% for p in summary %}
+        {{ p|raw }}
+      {% endfor %}
+    </div>
+    <div class="m-landing-door-alt__link">
+      <a class="a-brand-link" href="{{ link }}">Know more<span class="visuallyhidden"> about {{ title }}</span></a>
+    </div>
+  </div>
+</div>

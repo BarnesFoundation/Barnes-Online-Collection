@@ -1,0 +1,158 @@
+{#
+
+shopify-product component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if id is empty %}
+  {% set id = '12345' %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '#' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Masterworks of the Barnes' %}
+{% endif %}
+
+{% if category is empty %}
+  {% set category = 'Product category' %}
+{% endif %}
+
+{% if prices is empty %}
+  {% set prices = { was: '$59.99', now: '$49.99' } %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Product summary should be one to two paragraphs. Product summary should be one to two paragraphs</p>',
+      '<p>Product summary should be one to two paragraphs. Product summary should be one to two paragraphs</p>'
+    ]
+  %}
+{% endif %}
+
+{% if images is empty %}
+{%
+  set images = [
+    {
+      image: '//placehold.it/380x380',
+      thumb: '//placehold.it/90x90',
+      alt: ''
+    },
+    {
+      image: '//placehold.it/375x375',
+      thumb: '//placehold.it/90x90',
+      alt: ''
+    },
+    {
+      image: '//placehold.it/390x390',
+      thumb: '//placehold.it/90x90',
+      alt: ''
+    }
+  ]
+%}
+{% endif %}
+
+{% set mainImage = images[0] %}
+
+
+<div class="m-block m-block--flush-top m-block--no-border">
+  <div class="m-product m-product--shopify m-block__columns">
+    <div class="m-block__column" data-behavior="ProductGalleryThumbs">
+      <div class="m-product__gallery m-product__gallery--shopify">
+        <img src="{{ mainImage.image }}" alt="{{ mainImage.alt }}">
+      </div>
+      <ul class="m-product-gallery__thumbs">
+        {% for image in images %}
+        <li class="m-product-gallery__thumb">
+          <a href="{{ image.image }}"><img src="{{ image.thumb }}" alt="{{ image.alt }}"></a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="m-block__column">
+      <div class="m-product__head">
+        <h1 class="font-gamma m-product__title">{{ title }}</h1>
+      </div>
+      <div class="font-delta m-product__prices">
+        <del class="m-product__price">{{ prices.was }}</del> <ins class="m-product__price">{{ prices.now }}</ins>
+      </div>
+      {% if hasVariants is defined %}
+      <div class="m-product__actions m-product__actions--first m-product__actions--variants">
+          <div class="selector-wrapper js">
+            <label for="SingleOptionSelector-0">
+                Size
+            </label>
+            <div class="select">
+              <select id="SingleOptionSelector-0" data-single-option-selector="" data-index="option1">
+                  <option value="Small" selected="selected">
+                      Small
+                  </option>
+                  <option value="Medium">
+                      Medium
+                  </option>
+                  <option value="Large">
+                      Large
+                  </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="selector-wrapper js">
+            <label for="SingleOptionSelector-1">
+                Color
+            </label>
+
+            <div class="select">
+              <select id="SingleOptionSelector-1" data-single-option-selector="" data-index="option2">
+                  <option value="Red" selected="selected">
+                      Red
+                  </option>
+                  <option value="White">
+                      White
+                  </option>
+                  <option value="Gold">
+                      Gold
+                  </option>
+              </select>
+            </div>
+          </div>
+      </div>
+      {% endif %}
+      <div class="m-product__actions{% if hasVariants is empty %} m-product__actions--first{% endif %}">
+        <form class="m-product__form" action="/" method="post">
+          <div class="form-field--inline">
+            <label class="visuallyhidden" for="select1">Select quantity</label>
+            <div class="select select--number_form.ht">
+              <select class="select__select" id="select1" required>
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" type="submit">Add to cart</button>
+            {# Hidden fields for the shop form e.g. SKU or something required by the store #}
+            <input type="hidden" name="product_id" value="{{ id }}">
+          </div>
+        </form>
+      </div>
+      <div class="m-product__summary">
+        {% for p in summary %}
+          {{ p|raw }}
+        {% endfor %}
+      </div>
+      <div class="m-product__share">
+        {% include path ~ 'share/_share.twig' %}
+      </div>
+    </div>
+  </div>
+</div>

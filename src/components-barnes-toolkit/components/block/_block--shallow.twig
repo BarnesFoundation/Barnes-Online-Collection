@@ -1,0 +1,39 @@
+{#
+  Block component (with shallower padding)
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Shallow block' %}
+{% endif %}
+
+{% if content is empty %}
+  {% set content = ['<p>Content</p>'] %}
+{% endif %}
+
+<div class="m-block m-block--shallow m-block__columns">
+  <div class="m-block__column">
+
+    <h2 class="font-delta m-block__shallow-title">
+      {% if link is defined %}
+        <a class="m-block__link" href="{{ link }}">{{ title }}</a>
+      {% else %}
+        {{ title }}
+      {% endif %}
+    </h2>
+
+    {% if date is defined %}
+      <div class="font-delta color-light m-block__subtitle">{{ date }}</div>
+    {% endif %}
+  </div>
+  <div class="m-block__column">
+    {% for p in content %}
+      {{ p|raw }}
+    {% endfor %}
+  </div>
+</div>

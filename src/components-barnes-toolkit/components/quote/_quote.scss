@@ -1,0 +1,61 @@
+/***
+
+Quote
+===
+* Class name: `m-quote`
+* Tags used on: `<div>`
+
+A pullquote with a citation.
+
+
+***/
+
+.m-quote {
+  background-color: $color__border--dark;
+  color: $color__white;
+  padding: 27px 0 42px;
+
+  @include breakpoint('medium+') {
+    padding: 49px 0 57px;
+  }
+
+  @include breakpoint('large+') {
+    padding: 63px 0 87px;
+  }
+}
+
+/**
+ * <blockquote>
+ */
+.m-quote__blockquote {
+  @include font-quote();
+
+  > p {
+    margin-top: 0;
+  }
+
+  p {
+    max-width: 1100px;
+  }
+}
+
+/**
+ * <cite>
+ */
+.m-quote__cite {
+  @include font-cite();
+
+  display: block;
+  margin-top: 18px;
+  text-align: right;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+
+  @include breakpoint('medium+') {
+    margin-top: 29px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 70px;
+  }
+}

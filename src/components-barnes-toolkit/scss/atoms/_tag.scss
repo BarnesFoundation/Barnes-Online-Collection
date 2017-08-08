@@ -1,0 +1,148 @@
+/***
+
+Tag
+======
+* Class name: `a-tag`
+* Modifier classes: `a-tag--black`, `a-tag--light`
+* Tags used on: `<a>`
+
+Tags are links that look a little bit like buttons and are either:
+* red
+* black
+* white (or _light_)
+
+They have an active style determined by adding the accessibility-friendly `aria-current="true"` attribute.
+If the tag is _active_ then it will not have a hover state.
+
+_NOTE:_ Tags that are _active_ below have a tick next to them - but a tick will not be
+present on the website. It is just for show here.
+
+  ```
+  <a class="a-tag" href="#">Tag</a>
+  <a class="a-tag" href="#" aria-current="true">Tag &#10004;</a>
+  <a class="a-tag a-tag--black" href="#">Dark tag</a>
+  <a class="a-tag a-tag--black" href="#" aria-current="true">Dark tag &#10004;</a>
+  <a class="a-tag a-tag--light" href="#">Light tag</a>
+  <a class="a-tag a-tag--light" href="#" aria-current="true">Light tag &#10004;</a>
+  <a class="a-tag a-tag--sale" href="#">SALE tag</a>
+
+  ```
+
+***/
+
+/**
+ * Default style tags
+ */
+.a-tag {
+  @include font-zeta();
+
+  background-color: transparent;
+  border: 2px solid $color__border;
+  color: $color__copy--medium;
+  display: inline-block;
+  height: 50px;
+  line-height: 46px;
+  padding: 0 18px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms ease 100ms;
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  &:hover:not([aria-current]):not(span):not(div),
+  &:active,
+  &.focus-ring {
+    border-color: $color__border--dark;
+    color: $color__copy--dark;
+  }
+}
+
+/**
+ * Default and Dark/Black tags that are active/selected
+ */
+.a-tag[aria-current],
+.a-tag--dark[aria-current] {
+  background-color: $color__red--barnes;
+  color: $color__white;
+  cursor: default;
+  border-color: $color__red--barnes;
+  padding-left: 17px;
+  padding-right: 17px;
+
+  &:active,
+  &.focus-ring {
+    background-color: $color__red--barnes-dark;
+    border-color: $color__red--barnes-dark;
+    color: $color__white;
+  }
+}
+
+/**
+ * Dark/Black tags that are active/selected
+ */
+.a-tag--black,
+.a-tag--dark {
+  background-color: rgba($color__black, .75);
+  color: $color__white;
+  border-color: rgba($color__black, .75);
+
+  &:hover:not([aria-current]):not(span):not(div),
+  &:active,
+  &.focus-ring {
+    background-color: rgba($color__red--barnes, .75);
+    color: $color__white;
+    border-color: rgba($color__red--barnes, .75);
+  }
+}
+
+/**
+ * Light tags
+ */
+.a-tag--light {
+  background-color: $color__white;
+  color: $color__copy--dark;
+  border-color: $color__border;
+
+  &:hover:not([aria-current]):not(span):not(div),
+  &:active,
+  &.focus-ring {
+    border-color: $color__border--dark;
+    color: $color__copy--dark;
+  }
+}
+
+/**
+ * Light tags that are active/selected
+ */
+.a-tag--light[aria-current] {
+  background-color: $color__black;
+  border-color: $color__black;
+  color: $color__white;
+
+  &:active,
+  &.focus-ring {
+    background-color: $color__white;
+    border-color: $color__border--dark;
+    color: $color__copy--dark;
+  }
+}
+
+/**
+ * Red sales/new tags
+ */
+.a-tag--sale {
+  background-color: $color__red--barnes;
+  border-color: transparent;
+  color: $color__white;
+
+  &:hover:not([aria-current]):not(span):not(div),
+  &:active,
+  &.focus-ring {
+    background-color: $color__white;
+    border-color: transparent;
+    color: $color__red--barnes;
+  }
+}

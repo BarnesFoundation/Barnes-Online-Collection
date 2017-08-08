@@ -1,0 +1,352 @@
+/**
+ Footer
+**/
+
+.g-footer {
+  @include keyline-full(top, $color__border);
+
+  font-family: $sans-serif--loaded;
+  font-size: 19px;
+  line-height: 30px;
+  margin-bottom: 36px;
+  padding-top: 47px;
+
+  @include breakpoint('medium+') {
+    padding-top: 55px;
+  }
+
+  @include breakpoint('large+') {
+    padding-top: 85px;
+  }
+}
+
+.g-footer--flush-top {
+  margin-top: 0;
+}
+
+.g-footer--flush-top::before,
+.g-footer--no-border::before {
+  border-top: none;
+}
+
+.g-footer__actions {
+
+  @include breakpoint('large+') {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.g-footer__col {
+  color: $color__copy--footer;
+
+  @include breakpoint('large+') {
+    width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - 20px);
+  }
+
+  *:first-child:not(.g-footer__subscribe) {
+    margin-top: 0;
+  }
+}
+
+.g-footer__cta {
+  max-width: 380px;
+
+  .m-btn-group {
+
+    @include breakpoint('large+') {
+      margin-top: 32px;
+    }
+  }
+
+  .btn {
+    @media print {
+      display: block;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+}
+
+.g-footer__cta-title {
+  color: $color__copy--dark;
+}
+
+.g-footer__details {
+  margin-top: 50px;
+
+  @include breakpoint('small+') {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 0;
+  }
+}
+
+.g-footer__address {
+
+  > p {
+    margin-top: 15px;
+  }
+
+  @include breakpoint('small+') {
+    width: calc(50% - 10px);
+  }
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - 20px);
+  }
+}
+
+.g-footer__address__link {
+  display: block;
+}
+
+.g-footer__address__link a {
+  @extend .a-brand-link;
+}
+
+.g-footer__hours {
+  margin-top: 40px;
+
+  > p {
+    margin-top: 15px;
+  }
+
+  @include breakpoint('small+') {
+    margin-top: 0;
+    width: calc(50% - 10px);
+  }
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 15px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - 20px);
+  }
+}
+
+.g-footer__subscribe {
+  margin-top: 35px;
+  width: 100%;
+
+  .m-newsletter {
+    margin-top: 15px;
+  }
+
+  @include breakpoint('medium+') {
+    margin-top: 32px;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.g-footer__info-links {
+  @include reset-link-color();
+
+  column-count: 2;
+  column-gap: 20px;
+  column-width: 50%;
+  margin-top: 15px;
+
+  @include breakpoint('medium+') {
+    column-gap: 30px;
+  }
+
+  @include breakpoint('xlarge+') {
+    column-gap: 40px;
+  }
+
+  a:hover:not(.btn):not(.band-link) {
+    color: $color__copy--dark;
+  }
+
+  a:focus(.focus-ring) {
+    text-decoration: underline;
+  }
+}
+
+/**
+ * 1 Stop the links from splitting in 2 and straddling the CSS columns
+ */
+.g-footer__info-links__item {
+  break-inside: avoid; /* 1 */
+  display: block;
+  page-break-inside: avoid; /* 1 */
+}
+
+
+// Auxiliary = 2nd row of footer content
+.g-footer__auxiliary {
+  border-top: 1px solid $color__border--light;
+  color: $color__copy--medium;
+  font-size: 18px;
+  margin-top: 37px;
+  padding-top: 30px;
+
+  @include breakpoint('medium+') {
+    margin-top: 60px;
+    padding-top: 38px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 90px;
+    padding-top: 39px;
+  }
+
+  @include breakpoint('xlarge+') {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  // Links
+  a {
+    color: currentColor;
+    text-decoration: none;
+
+    &:hover {
+      color: $color__copy--dark;
+    }
+
+    &:focus:not(.focus-ring) {
+      text-decoration: underline;
+    }
+  }
+}
+
+.g-footer__nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 -10px 30px;
+
+  @include breakpoint('small+') {
+    max-width: 80%;
+  }
+
+  @include breakpoint('medium+') {
+    margin-bottom: 25px;
+    max-width: none;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-bottom: 0;
+  }
+}
+
+.g-footer__nav__link {
+  margin: 0 10px 5px;
+  white-space: nowrap;
+}
+
+.g-footer__social-container {
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  @include breakpoint('large+') {
+    justify-content: space-between;
+  }
+
+  @media print {
+    flex-wrap: wrap;
+  }
+}
+
+.g-footer__social {
+  align-items: center;
+  color: $color__copy--light;
+  display: flex;
+  flex-direction: row;
+  margin: 0 15px 0 -15px;
+
+  @include breakpoint('large+') {
+    align-self: flex-end;
+  }
+}
+
+.g-footer__social__link {
+  margin: 0 15px;
+  position: relative;
+  top: -5px;
+
+  svg {
+    display: block;
+  }
+}
+
+.g-footer__social__link:focus:not(.focus-ring) {
+  color: $color__copy--dark;
+}
+
+.g-footer__a17 {
+  display: block;
+  margin-top: 10px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+    position: relative;
+    top: -7px;
+  }
+
+  @include breakpoint('large+') {
+    top: -3px;
+  }
+
+  @media print {
+    display: block;
+    top: 0;
+    width: 100%;
+  }
+}
+
+/**
+ * VARIATIONS
+ */
+
+.g-footer--shopify .g-footer__social-container {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.g-footer--shopify .g-footer__social {
+  margin-right: 0;
+  margin-top: 15px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+}
+
+.g-footer--shopify .g-footer__subscribe {
+  @include breakpoint('large+') {
+    margin-top: 0;
+  }
+}
+
+.g-footer--shopify .g-footer__social__link:last-child {
+  margin-right: 0;
+}

@@ -1,0 +1,162 @@
+/***
+
+Accordion Tabs
+======
+* Class name: `m-accordion-tabs`
+* Tags used on: `<div>`
+
+Expanding/Collapsing content
+
+*Dev note:*
+
+The `[role="tab"]` div must match the values in the `[role="tabcontent"]` and these must be unique too.
+
+If you have 2 sets of tabs on the same page e.g.
+`<div id="accordion1" aria-labelledby="accordion1">` can't appear multiple times
+
+***/
+
+[role="tabpanel"] {
+  display: none;
+  overflow: hidden;
+  transition: .4s linear max-height; // We can animate max-height transition or no.
+
+  @media print {
+    display: block;
+    max-height: none !important;
+    overflow: visible;
+  }
+}
+
+.no-js [role="tabpanel"] {
+  display: block;
+  overflow: visible;
+}
+
+.m-accordion-tabs {
+  border: 1px solid $color__border;
+  border-width: 0 1px 1px;
+  margin-top: 25px;
+}
+
+.m-accordion-tabs__title {
+  appearance: none;
+  background: transparent;
+  border: 1px solid $color__border;
+  border-radius: none;
+  border-width: 1px 0;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  padding: 22px 70px 22px 20px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+
+  @include breakpoint('small-') {
+    font-size: 20px;
+  }
+
+  @include breakpoint('medium+') {
+    padding-left: 30px;
+  }
+
+  // Focus states - only show for keyboard users with our ::focus-ring polyfill class
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline !important;
+  }
+
+  &.focus-ring {
+    z-index: #{map-get($zIndexes, 'accordionTabFocus')};
+  }
+}
+
+.m-accordion-tabs__title:not([aria-selected="true"]) {
+  background: $color__background--accordion;
+  border-bottom-width: 0;
+  color: $color__copy--dark;
+}
+
+.m-accordion-tabs__title:hover {
+  background: transparent;
+  color: $color__copy--dark;
+}
+
+/**
+ * 1 Allow only .m-accordion-tabs__title to be clickable
+ */
+.m-accordion-tabs__icon {
+  pointer-events: none; /* 1 */
+  position: absolute;
+  right: 18px;
+  top: 25px;
+
+  @include breakpoint('medium+') {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.m-accordion-tabs__icon svg {
+  display: block;
+  height: 21px;
+  transform: rotate(0);
+  transition: transform 500ms ease 50ms;
+  width: 30px;
+}
+
+.m-accordion-tabs__title[aria-selected="true"] .m-accordion-tabs__icon svg{
+  transform: rotate(180deg);
+  transform-origin: center center;
+}
+
+.m-accordion-tabs__body {
+  /** this selector is here just to show structure **/
+}
+
+.m-accordion-tabs__inner {
+  padding: 25px 20px 25px;
+
+  @include breakpoint('medium+') {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+
+/**
+ * Allow for content inside our tabs
+ * Inside a tab there is less space so we may need to modify other components here
+ * I wish we had component level media queries :(
+ */
+
+/**
+ * Listing cards
+ * Note: This does not effect listing cards without images because their layout does not break
+ */
+.m-accordion-tabs__body .m-card-listing:not(.m-card-listing--no-image) .m-card-listing__header {
+  @include breakpoint('medium-') {
+    width: 90px;
+  }
+
+  @include breakpoint('small-') {
+    width: 120px;
+  }
+}
+
+.m-accordion-tabs__body .m-card-listing:not(.m-card-listing--no-image) .m-card-listing__body {
+
+  @include breakpoint('medium-') {
+    max-width: calc(100% - 90px);
+  }
+
+  @include breakpoint('small-') {
+    max-width: calc(100% - 120px);
+  }
+}

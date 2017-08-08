@@ -1,0 +1,181 @@
+
+//
+// Markup
+//
+
+pre, code {
+    font-family: 'Monaco', courier, monospace;
+}
+
+/* inline code */
+li > code,
+p > code {
+    font-size: 15px;
+    color: #666;
+    background-color: #F2F2F2;
+    border: 1px solid #D9D9D9;
+    border-radius: 2px;
+    padding: 2px 6px 2px 6px;
+}
+
+.colors li > code {
+  background-color: transparent;
+  border: 0 none;
+  padding: 0;
+  font-size: 10px;
+  line-height: 20px;
+  color: #333;
+}
+
+pre {
+    background: #272822; /* base03 */
+    word-wrap: break-word;
+    margin: 0px;
+    padding: 0px;
+    padding: 40px;
+    color: #f8f8f2; /* base0 */
+    margin-bottom: 40px;
+    font-size: 15px;
+    line-height: 25px;
+}
+
+
+.markup {
+  background:$color-light;
+  margin-bottom:40px;
+  overflow:hidden;
+  max-width: $max-width;
+
+  @media print {
+    max-width: 75vw;
+  }
+
+  pre {
+    margin-bottom:0;
+  }
+
+  .hljs {
+    max-width: $max-width;
+    padding:1em;
+
+    @media print {
+      max-width: 100%;
+      padding-left: 0;
+      white-space: pre-wrap;
+    }
+  }
+}
+
+.markup-title {
+  padding: 8px 15px;
+  margin: 0;
+  cursor:pointer;
+  font-size: 15px;
+  font-weight:normal;
+  color:$color-dark;
+  position:relative;
+
+  &:after,
+  &:before {
+    content: '';
+    position: absolute;
+    background: $color-dark;
+
+    @media print {
+      display: none;
+    }
+  }
+
+  &:after {
+    right: 22px;
+    top: 15px;
+    background: $color-dark;
+    height: 14px;
+    width: 2px;
+
+    @include breakpoint($mobile-landscape-width + 1) {
+      right: 23px;
+      top: 16px;
+    }
+  }
+
+  &:before {
+    right: 16px;
+    top: 50%;
+    height: 2px;
+    width: 14px;
+    margin-top: -1px;
+
+    @include breakpoint($mobile-landscape-width + 1) {
+      right: 17px;
+    }
+  }
+
+  &:hover {
+    color:$color-darker;
+
+    &:after,
+    &:before {
+      background: $color-darker;
+    }
+  }
+
+  @media print {
+    padding-left: 0;
+  }
+}
+
+.markup-content {
+  display:none;
+  max-height: 500px;
+  overflow: auto;
+
+  @media print {
+    display: block;
+    overflow: visible;
+  }
+}
+
+.markup-copy {
+  display: none;
+  bottom: 0;
+  padding-right: 15px;
+  text-align: right;
+  font-size: 15px;
+  color:$color-dark;
+  cursor:pointer;
+
+  @media print {
+    display: none;
+  }
+}
+
+.markup-copy code {
+  @media print {
+    white-space: pre-wrap;
+    width: 100%;
+  }
+}
+
+.markup-active {
+  .markup-title {
+    color:$color-darker;
+
+    &:after,
+    &:before {
+      background: $color-darker;
+    }
+
+    &:after {
+      display:none;
+    }
+  }
+
+  .markup-content {
+    display:block;
+  }
+
+  .markup-copy {
+    display: block;
+  }
+}

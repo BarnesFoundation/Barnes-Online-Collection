@@ -1,0 +1,61 @@
+{#
+
+Support (in an accordion) component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Support block (toggle)' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>',
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block--shallow m-support-accordion">
+  {% set tabId = random(2000) %}
+  <button type="button"
+    class="font-delta m-block__shallow-title m-support-accordion__title"
+    aria-selected="false"
+    role="tab"
+    tabindex="0"
+    aria-controls="accordion{{ tabId }}"
+    aria-expanded="false"
+  >
+    <h3>{{ title|raw }} <span class="color-light m-block__shallow-title-price">{{ price|raw }}</span></h3>
+    <span class="m-support-accordion__btn">
+      <span class="m-support-accordion__toggle--show">Show details</span>
+      <span class="m-support-accordion__toggle--hide">Hide details</span>
+    </span>
+  </button>
+  <div
+      id="accordion{{ tabId }}"
+      class="m-support-accordion__body"
+      aria-labelledby="accordion{{ tabId }}"
+      aria-hidden="true"
+      role="tabpanel"
+    >
+      <div class="m-block__columns">
+        <div class="m-block__column">
+          {% for p in summary %}
+            {{ p|raw }}
+          {% endfor %}
+        </div>
+        <div class="m-block__column m-support-accordion__sidebar">
+          <p>{{ sidebar }}</p>
+        </div>
+      </div>
+  </div>
+</div>

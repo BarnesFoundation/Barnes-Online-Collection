@@ -1,0 +1,223 @@
+<form class="" action="" method="post" novalidate data-behavior="FormValidate">
+  <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+    <h3 class="font-bold-heading">Please correct your errors</h3>
+  </div>
+  <div class="form-field">
+    <label>Text input</label>
+    <input class="input" type="text">
+  </div>
+  <div class="form-field">
+    <label>Text input</label>
+    <input class="input" type="text" placeholder="With a Placeholder">
+  </div>
+  <div class="form-field">
+    <label>Text input</label>
+    <input class="input" type="text" value="With a default value">
+  </div>
+  <div class="form-field">
+    <label>Text input (readonly)</label>
+    <input class="input" type="text" value="Readonly" readonly>
+  </div>
+  <div class="form-field">
+    <label>Text input (disabled)</label>
+    <input class="input" type="text" value="Disabled" disabled>
+  </div>
+  <div class="form-field">
+    <label>Number input</label>
+    <input class="input" type="number" min="1" max="10" step="1">
+  </div>
+  <div class="form-field">
+    <label>Range input</label>
+    <input type="range" min="1" max="100">
+  </div>
+  <div class="form-field">
+    <label>Email input</label>
+    <input class="input" type="email">
+  </div>
+  <div class="form-field">
+    <label>Telephone input</label>
+    <input class="input" type="tel">
+  </div>
+  <div class="form-field">
+    <label>URL (Web address) input</label>
+    <input class="input" type="url">
+  </div>
+  <div class="form-field">
+    <label>Date input (not well supported)</label>
+    <input class="input" type="date">
+  </div>
+  <div class="form-field">
+    <label>Datetime input (not well supported)</label>
+    <input class="input" type="datetime">
+  </div>
+  <div class="form-field">
+    <label>Datetime (local) input (not well supported)</label>
+    <input class="input" type="datetime-local">
+  </div>
+  <div class="form-field">
+    <label>Week input (not well supported)</label>
+    <input class="input" type="week">
+  </div>
+  <div class="form-field">
+    <label>Month input (not well supported)</label>
+    <input class="input" type="month">
+  </div>
+  <div class="form-field">
+    <label>Time input (not well supported)</label>
+    <input class="input" type="time">
+  </div>
+  <div class="form-field">
+    <label>Color input (not well supported)</label>
+    <input type="color">
+  </div>
+  <div class="form-field form-field--inline">
+    <label>Inline text input</label>
+    <input class="input" type="text">
+  </div>
+  <div class="form-field form-field--inline">
+    <label class="visuallyhidden">Search</label>
+    <input class="input" type="search">
+    <button class="btn btn--primary" type="submit">Go</button>
+  </div>
+  <div class="form-field">
+    <label>Text input (required)</label>
+    <input class="input" type="text" id="form-error" required aria-required="true" aria-describedby="form-field-error-text">
+    <div aria-hidden="false" class="form-field__error" tabindex="-1" id="form-eld-error-text">Form field error</div>
+  </div>
+  <div class="form-field form-field--error">
+    <label>Text input error</label>
+    <input class="input" type="text">
+    <div aria-hidden="false" class="form-field__error" tabindex="-1">Form field error</div>
+  </div>
+  <div class="form-field">
+    <label>Textarea</label>
+    <textarea></textarea>
+  </div>
+  <div class="form-field form-field--error">
+    <label>Textarea error</label>
+    <textarea></textarea>
+    <div aria-hidden="false" class="form-field__error" tabindex="-1">Form field error</div>
+  </div>
+  <div class="form-field">
+    <label>Select</label>
+    <div class="select">
+      <select>
+        <option value="">Please choose</option>
+        <option>Option 1</option>
+        <option>Option 2</option>
+        <option>Option 3</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-field">
+    <label>Select (numbers only)</label>
+    <div class="select select--number">
+      <select>
+        <option value="">Please choose</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-field form-field--error">
+    <label>Select</label>
+    <div class="select">
+      <select aria-describedby="formerror1">
+        <option value="">Please choose</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+    <div aria-hidden="false" class="form-field__error" tabindex="-1" id="formerror1">Form field error</div>
+  </div>
+  <div class="form-field">
+    <label>Select - multiple</label>
+    <div class="select select--multiple">
+      <select multiple>
+        <option value="">Please choose</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-field form-field--error">
+    <label>Select - multiple</label>
+    <div class="select select--multiple" aria-describedby="formerror2">
+      <select multiple>
+        <option value="">Please choose</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+    <div aria-hidden="false" class="form-field__error" tabindex="-1" id="formerror2">Form field error</div>
+  </div>
+  <fieldset class="form-field">
+    <legend>Checkboxes</legend>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+  </fieldset>
+  <fieldset class="form-field form-field--error">
+    <legend>Checkboxes with error</legend>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="checkbox" name="checkbox[]">
+      <label>Checkbox</label>
+    </div>
+    <div aria-hidden="false" class="form-field__error" tabindex="-1" id="formerror3">Form field error</div>
+  </fieldset>
+  <fieldset class="form-field">
+    <legend>Radio buttons</legend>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+  </fieldset>
+  <fieldset class="form-field form-field--error">
+    <legend>Radio buttons with error</legend>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+    <div class="form-field--checkbox">
+      <input type="radio" name="radio">
+      <label>Radio button</label>
+    </div>
+    <div aria-hidden="false" class="form-field__error" tabindex="-1" id="formerror4">Form field error</div>
+  </fieldset>
+  <div class="form-field form-field--buttons">
+    <button class="btn btn--primary" type="submit">Submit button</button>
+  </div>
+</form>

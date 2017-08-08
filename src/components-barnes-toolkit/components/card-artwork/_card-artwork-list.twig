@@ -1,0 +1,16 @@
+{#
+
+Artwork cards list component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+<div class="m-card-artwork-list">
+  {% for i in 0..2 %}
+    {% include path ~ "card-artwork/_card-artwork.twig" %}
+  {% endfor %}
+</div>

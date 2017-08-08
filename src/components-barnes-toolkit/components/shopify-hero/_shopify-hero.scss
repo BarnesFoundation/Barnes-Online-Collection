@@ -1,0 +1,29 @@
+/**
+
+Shopify - Hero
+======
+* Class name: `-m-shopify-hero`
+* Modifier classes: `-m-shopify-hero--`
+* Tags used on: `<div>`
+
+The Hero banner seen on the Shopify home-page. This displays the title of the store
+or a message encouraging people to buy.
+
+The image should be 1380x280. A mobile-friendly image should also be
+used that is 649x649 to make better use of space on small-devices.
+
+**/
+
+.m-shopify-hero {
+  /** Just here to convey HTML structure **/
+}
+
+.m-shopify-hero__ {
+  /** Just here to convey HTML structure **/
+}
+
+.m-shopify-hero .page-title--shopify {
+  @include breakpoint('medium') {
+    font-size: 45px;
+  }
+}

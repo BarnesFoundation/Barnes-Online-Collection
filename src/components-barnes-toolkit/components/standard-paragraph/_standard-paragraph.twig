@@ -1,0 +1,36 @@
+{#
+
+  Standard paragraph component
+
+  This is the same as a block component so see that please
+
+#}
+
+
+{% if title is empty %}
+  {% set title = 'Standard paragraph' %}
+{% endif %}
+
+{% if content is empty %}
+  {%
+    set content = [
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>',
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="m-block{% if blockAlt is defined %} m-block--alt{% endif %}{% if blockBrand is defined %} m-block--brand{% endif %}{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}{% if blockMoveUp is defined %} m-block--up{% endif %}">
+  {% if blockAlt is defined or blockBrand is defined %}<div class="container">{% endif %}
+  <div class="m-block__columns">
+    <div class="m-block__column">
+      {% if noTitle is empty %}<h2 class="font-gamma m-block__title">{{ title }}</h2>{% endif %}
+    </div>
+    <div class="m-block__column">
+      {% for p in content %}
+        {{ p|raw }}
+      {% endfor %}
+    </div>
+  </div>
+  {% if blockAlt is defined or blockBrand is defined %}</div>{% endif %}
+</div>

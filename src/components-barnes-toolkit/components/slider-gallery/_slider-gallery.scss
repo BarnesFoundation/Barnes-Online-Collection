@@ -1,0 +1,103 @@
+/***
+
+Slider gallery
+======
+* Class name: `o-slider-gallery`
+* Tags used on: `<div>`
+
+
+A sliderable/swipable carousel of artwork cards.
+
+It uses the [Flickity JavaScript library](https://flickity.metafizzy.co/)
+
+Because this gallery is very dependent upon JavaScript, you must be very careful
+with the image sizes. They are set with inline `<style>` blocks in the that set
+a fixed width of each image based upon their proportions.
+
+The images are either:
+* 240px high on mobile
+* 340px high on tablet
+* 450px high on larger screens
+
+but they can be any width - so it is important that their aspect ratio is
+preserved.
+
+So in the `<style>` tags each image needs to have its width calculated and applied.
+
+***/
+
+.o-slider-gallery {
+  background-color: $color__black--90;
+  color: $color__white;
+  padding: 25px 0 33px;
+
+  @include breakpoint('medium+') {
+    padding: 61px 0 49px;
+  }
+
+  @include breakpoint('large+') {
+    padding: 78px 0 81px;
+  }
+}
+
+.o-slider-gallery .m-card-artwork a.focus-ring {
+  outline: $focus-ring-invert;
+}
+
+.o-slider-gallery .m-card-artwork__media {
+  height: 270px;
+  max-width: none;
+  min-width: none;
+  width: auto;
+
+  @include breakpoint('medium+') {
+    height: 340px;
+  }
+
+  @include breakpoint('large+') {
+    height: 450px;
+  }
+}
+
+.o-slider-gallery .m-card-artwork {
+  margin-left: 1px;
+}
+
+.o-slider-gallery .m-card-artwork__body {
+  padding-right: none;
+}
+
+/* Flickity */
+.o-slider-gallery .flickity-viewport {
+  overflow: visible;
+}
+
+
+/**
+ * When JavaScript isn't present (which is unlikely)
+ * lets still have a very simple overflowing gallery that a mobile user
+ * can drag
+ * 1 Always show a hint of the next slide
+ */
+.no-js .o-slider-gallery .m-card-artwork {
+  color: $color__white;
+  display: inline-block;
+  margin-left: 0;
+  max-width: calc(100vw - 100px); // 1
+  vertical-align: top;
+}
+
+.no-js .o-slider-gallery .m-card-artwork__media {
+  min-width: 100%;
+}
+
+.no-js .o-slider-gallery .o-slider-gallery__stage {
+  cursor: all-scroll;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.no-js .o-slider-gallery .o-slider-gallery__container {
+  white-space: nowrap;
+}

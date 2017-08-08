@@ -1,0 +1,127 @@
+/***
+
+General styles
+===
+Here are some basic stylings for copy.
+
+  ```
+  <p>This is a basic paragraph of copy.</p>
+  <p>And here is another basic paragraph of copy <strong>some of which</strong> is bold.</p>
+  <ol>
+    <li>And here is a</li>
+    <li>Numbered list</li>
+  </ol>
+  <ul>
+    <li>And here is a</li>
+    <li>bullet-pointed list</li>
+  </ul>
+  <p class="a-centered">And here is some centered copy.</p>
+  <p>Suspendisse id leo porta, dignissim leo id, aliquet massa. Mauris ut mauris at dui laoreet interdum vel aliquam nunc. Nullam id felis purus. Vestibulum justo diam, dignissim in ex vel, iaculis aliquam nisi. Vivamus diam dolor, vestibulum a aliquet eget, congue congue enim. Donec rhoncus vitae odio quis volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas et rutrum metus. Nunc placerat eu nisl sit amet sollicitudin. <strong>Vestibulum ante ipsum primis</strong> in faucibus orci luctus et ultrices posuere cubilia Curae; </p>
+  <p>Suspendisse id leo porta, dignissim leo id, aliquet massa. Mauris ut mauris at dui laoreet interdum vel aliquam nunc. Nullam id felis purus. Vestibulum justo diam, dignissim in ex vel, iaculis aliquam nisi. Vivamus diam dolor, vestibulum a aliquet eget, congue congue enim. Donec rhoncus vitae odio quis volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas et rutrum metus. Nunc placerat eu nisl sit amet sollicitudin. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; </p>
+
+  ```
+
+***/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+dl,
+table,
+form {
+  // @include sans-serif(16, 25);
+  margin-top: 25px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 50px;
+}
+
+li {
+  list-style-type: disc;
+  margin-left: .85em;
+}
+
+ol li {
+  list-style-type: decimal;
+  margin-left: 1em;
+}
+
+img {
+  border: 0 none;
+  max-width: 100%;
+}
+
+.js-hide {
+  display: none;
+}
+
+.js-show {
+  display: block;
+}
+
+/**
+ * Some presentational classes
+ */
+.a-centered,
+.a-centred {
+ text-align: center;
+}
+
+/**
+ * Block image
+ */
+.block-image {
+  display: block;
+  width: 100%;
+}
+
+/**
+ * Google Map
+ */
+.gmap {
+ height: 300px;
+}
+
+/**
+ * HTML 4 (only) labels
+ * When we need to add a label just for HTML4 browsers
+ * e.g. some alt text for an SVG
+ * We need to hide it on HTML5+ browsers
+ */
+.html4-label {
+  display: none;
+}
+
+.no-js .html4-label {
+  display: block;
+}
+
+
+/**
+ * Horizontal rule
+ */
+hr {
+  background: $color__border;
+  border: 0;
+  height: 1px;
+  margin: #{map-get($outer-gutters, 'xsmall')} 0;
+
+  @include breakpoint('medium+') {
+    margin: #{map-get($outer-gutters, 'medium')} 0;
+  }
+
+  @include breakpoint('large+') {
+    margin: #{map-get($outer-gutters, 'large')} 0;
+  }
+}

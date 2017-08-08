@@ -1,0 +1,57 @@
+{#
+  Block component (with an image column and sponsors)
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Image block with sponsors' %}
+{% endif %}
+
+{% if image is empty %}
+  {% set image = '//placehold.it/276x180' %}
+{% endif %}
+
+{% if content is empty %}
+  {% set content = ['<p>Content</p>'] %}
+{% endif %}
+
+{% if sponsors is empty %}
+  {% set sponsors = [
+      {'image': '//placehold.it/130x90', title: '<p>Sponsor name 1</p>'},
+      {'image': '//placehold.it/220x150', title: '<p>A slightly longer sponsor name #CMS</p>'},
+      {'image': '//placehold.it/220x150', title: '<p>Sponsor name 3</p>'}
+  ] %}
+{% endif %}
+
+<div class="m-block m-block--shallow">
+  <div class="m-block__columns">
+    <div class="m-block__column m-block__columns">
+      <div class="m-block__column">
+        <img class="m-block__image" src="{{ image }}" alt="">
+      </div>
+      <div class="m-block__column">
+        <h2 class="font-delta m-block__shallow-title">{{ title }}</h2>
+      </div>
+    </div>
+    <div class="m-block__column">
+      {% for p in content %}
+        {{ p|raw }}
+      {% endfor %}
+
+      {# Sponsor list - optional #}
+      {% if sponsors is defined %}
+        <div class="m-sponsor-list">
+        {% for sponsor in sponsors %}
+          {% include path ~ "sponsor/_sponsor.twig" with sponsor %}
+        {% endfor %}
+        </div>
+       {% endif %}
+       {# END of Sponsor list #}
+    </div>
+  </div>
+</div>

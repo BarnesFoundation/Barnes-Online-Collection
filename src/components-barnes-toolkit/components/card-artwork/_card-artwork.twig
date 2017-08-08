@@ -1,0 +1,73 @@
+{#
+
+Artwork card component
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Artwork title' %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '/static/pages/exhibition.php' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Summary will sit here.</p>',
+      '<p>Summary will sit here.</p>'
+    ]
+  %}
+{% endif %}
+
+{% if copyright is empty %}
+  {% set copyright = '&copy; 2017 Name of someone' %}
+{% endif %}
+
+
+{% set imageHeights = [250, 350, 275, 300, 260, 202, 220, 305, 300] %}
+
+{# Show some randomly varying height/width image sizes #}
+{% if randomHeight is defined %}
+  {% set imageHeights = [270, 290, 300, 330, 350, 380] %}
+  {% set rand = imageHeights[random(5)] %}
+{% elseif randomWidth is defined %}
+  {% set imageWidths = [280, 290, 300, 330, 350, 380] %}
+  {% set rand = imageWidths[random(5)] %}
+{% endif %}
+
+<div class="m-card-artwork"{% if id is defined %} id="{{id}}"{% endif %}>
+  <div class="m-card-artwork__header">
+
+    <a href="{{ link }}">
+    {% if imageWidth is defined %}
+      <img class="m-card-artwork__media" src="//placehold.it/{{ imageWidth }}x450" alt="{{ title }}">
+    {% elseif randomHeight is defined %}
+      <img class="m-card-artwork__media" src="//placehold.it/300x{{ rand }}" alt="{{ title }}" width="300" height="{{ rand }}">
+    {% elseif randomWidth is defined %}
+      {# Show varying width image sizes #}
+      <img class="m-card-artwork__media" src="//placehold.it/{{ rand }}x450" alt="{{ title }}">
+    {% else %}
+      <img class="m-card-artwork__media" src="//placehold.it/410x300" alt="{{ title }}">
+    {% endif %}
+    </a>
+
+  </div>
+  <div class="m-card-artwork__body">
+    <h3 class="font-bold-heading m-card-artwork__title">
+      {% if link %}
+        <a href="{{ link }}">{{ title }}</a>
+      {% else %}
+        {{ title }}
+      {% endif %}
+    </h3>
+    <div class="m-card-artwork__summary font-smallprint">
+      {% for p in summary %}
+        {{ p|raw }}
+      {% endfor %}
+    </div>
+    <div class="m-card-artwork__copyright font-smallprint">&copy; {{ copyright|raw }}</div>
+  </div>
+</div>

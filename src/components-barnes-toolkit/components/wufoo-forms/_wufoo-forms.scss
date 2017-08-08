@@ -1,0 +1,438 @@
+/***
+
+Wufoo Forms
+======
+Forms on Barnes website use wufoo.com. Here is an example form which has not yet
+been styled the same as the other components.
+
+***/
+
+form.wufoo {
+  color: $color__text;
+  font-family: $serif--loaded;
+  font-size: 100%;
+  letter-spacing: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  padding: 0;
+  position: relative;
+
+  @each $name, $point in $breakpoints {
+    @include breakpoint('#{$name}') {
+      @if (map-get($main-col-widths, $name) == 'fluid') {
+        width: auto;
+        padding-right: map-get($outer-gutters, $name);
+        padding-left: map-get($outer-gutters, $name);
+      } @else {
+        width: map-get($main-col-widths, $name);
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.wufoo li.section h3,
+.wufoo li.section div {
+  padding-left: 0;
+}
+
+.wufoo .section h3,
+.wufoo .captcha,
+#payment .paging-context {
+  border-top: none;
+}
+
+.wufoo .info {
+  border-bottom: none;
+}
+
+.wufoo .info div {
+  font-size: inherit;
+}
+
+.info {
+  padding-left: 0;
+}
+
+.info div {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+header.info h2 + div {
+  margin-top: 15px;
+}
+
+#container {
+  width: 100%;
+}
+
+.wufoo input.text,
+.wufoo textarea.textarea {
+  appearance: none;
+}
+
+.wufoo input.text,
+.wufoo textarea.textarea,
+.wufoo select.select {
+  background: $color__white;
+  border: 2px solid $color__border;
+  border-radius: 0;
+  box-shadow: none;
+  color: $color__copy--light;
+  font-family: $sans-serif--loaded;
+  font-size: 16px;
+  padding: 10px 10px 15px;
+  position: relative;
+
+  @media screen and (min-width: 650px) {
+    font-size: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+  }
+
+  &::placeholder {
+    color: rgba($color__copy--light, .75);
+    opacity: 1;
+  }
+
+  &:focus {
+    color: $color__copy--dark;
+    outline: 5px auto rgba($color__border--dark, .5);
+  }
+}
+
+.wufoo input.text,
+.wufoo select.select {
+  height: 60px;
+}
+
+.wufoo select.select {
+  appearance: none;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9ImN1cnJlbnRDb2xvciI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNTYgMzUyTDk2IDE5OC40MDYgMTQxLjcyIDE2MCAyNTYgMjc1LjE4OCAzNzAuMjggMTYwIDQxNiAxOTguNDA2IDI1NiAzNTJ6Ii8+PC9zdmc+);
+  background-position: calc(100% - 10px) center;
+  background-repeat: no-repeat;
+  padding-right: 20px;
+  padding-top: 15px;
+
+  @include breakpoint('medium+') {
+    padding-left: 10px;
+  }
+}
+
+.wufoo input.file {
+  border: 2px solid $color__border--light;
+  padding: 15px 10px;
+}
+
+/* Typography */
+.wufoo .info h2 {
+  @include font-gamma();
+}
+
+
+.wufoo .section:not(.first) {
+  border-top: 1px solid $color__border;
+}
+
+.wufoo .section h3 {
+  @include font-delta();
+
+  color: currentColor;
+}
+
+.wufoo .section div {
+  color: currentColor;
+  font-size: 100%;
+}
+
+.wufoo label.desc,
+.wufoo legend.desc {
+  color: currentColor !important;
+  font-family: $sans-serif--loaded;
+  font-size: 100%;
+  display: block;
+  margin-bottom: 11px;
+}
+
+.wufoo legend.desc {
+  @include font-bold-heading();
+}
+
+/* Form field */
+.wufoo li {
+  list-style: none;
+  margin: 0 0 26px;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.wufoo li div label,
+.wufoo li span label {
+  @include font-smallprint();
+
+  color: $color__copy--light;
+}
+
+/* Radios + Checkboxes */
+input.checkbox,
+input.radio {
+  display: inline-block;
+}
+
+.wufoo label.choice {
+  color: currentColor;
+  display: inline-block;
+  font-family: $sans-serif--loaded;
+  font-size: 100%;
+  margin-left: 5px;
+}
+
+.wufoo .instruct {
+  background-color: $color__white--2;
+  color: $color__copy--dark;
+  position: relative;
+  height: 0;
+  margin: 10px 0 0;
+  overflow: hidden;
+  padding: 0;
+  transition: opacity 50ms ease-in 50ms;
+  width: 100%;
+}
+
+.wufoo .instruct small {
+  color: currentColor;
+  display: block;
+  padding: 10px;
+}
+
+form li.focused .instruct,
+form li:hover .instruct {
+  height: auto;
+  left: 0;
+  transition-duration: 500ms;
+  transition-timing-function: ease-out;
+}
+
+form li:hover .instruct {
+  transition-delay: 500ms;
+}
+
+.wufoo .icon {
+  position: relative;
+  top: 15px;
+}
+
+.wufoo li.buttons {
+  padding-left: 0;
+  padding-right: 0;
+
+  @include breakpoint('small+') {
+    text-align: right;
+  }
+}
+.wufoo .buttons input {
+  @extend .btn;
+
+  margin-right: 0;
+
+  @include breakpoint('small+') {
+    margin-left: 10px;
+  }
+}
+
+.wufoo .buttons .submit {
+  @extend .btn--primary;
+}
+
+.wufoo button.link {
+  @include breakpoint('xsmall') {
+    display: block;
+    margin-top: 20px;
+  }
+}
+
+
+/**
+ * slashes inbetween date fields.
+ * 1 make same height as input fields
+ */
+span.symbol {
+  line-height: 60px; /* 1 */
+}
+
+/**
+ * 2 we can't add a line-height to datepicker so add a margin to line it up
+ */
+.wufoo li .datepicker {
+  margin-top: 22px; /* 2 */
+}
+
+/**
+ * Confrimation page
+ */
+.confirm h2{
+  @include font-gamma();
+
+  color: currentColor;
+}
+
+.confirm a {
+  @extend .a-brand-link;
+}
+
+.confirm [type="button"] {
+  @extend .btn;
+}
+
+
+/**
+ * Paging/tabbed forms
+ */
+.wufoo li.paging-context {
+  @include font-delta();
+
+  border-bottom: 1px solid $color__border;
+  color: $color__copy--light;
+  margin: 0 0 40px;
+  padding: 0;
+
+  @include breakpoint('xsmall') {
+    font-size: 100%;
+  }
+}
+
+.pgStyle1 td {
+  padding-bottom: 10px;
+}
+
+.pgStyle1 td.c {
+  border-left: 1px solid $color__border;
+  padding-left: 10px;
+}
+
+.pgStyle1 td.t {
+  padding: 0 10px 10px;
+}
+
+.pgStyle1 td.c:first-of-type {
+  border-left: none;
+  padding-left: 0;
+}
+
+.pgStyle1 b {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.pgStyle1 var,
+.pgStyle2 var,
+.pgStyle2 em,
+.page1 .pgStyle2 var,
+.pgStyle1 b,
+.wufoo .buttons .marker {
+  color: currentColor;
+}
+
+.pgStyle1 var {
+  background-color: $color__copy--light;
+  border-color: $color__copy--light;
+  border-radius: 50%;
+  box-shadow: none;
+  color: $color__white;
+  font-size: 100%;
+  height: 30px;
+  line-height: 1;
+  width: 30px;
+
+  @include breakpoint('xsmall') {
+    height: 24px;
+    line-height: 1;
+    width: 24px;
+  }
+}
+
+/**
+ * Paging/tabbed forms - active tab numbered circle
+ */
+.pgStyle1 .selected var,
+.pgStyle2 var,
+.pgStyle2 var em {
+  background-color: $color__copy--dark;
+  border-color: $color__copy--dark;
+  color: $color__white;
+}
+
+.pgStyle1 .selected + .t {
+  color: $color__copy--dark;
+}
+
+/**
+ * Datepicker
+ */
+div.datepicker td,
+div.datepicker th {
+  @include font-smallprint();
+
+  border-radius: 0;
+  height: 30px;
+  width: 30px;
+}
+
+div.datepicker td.active,
+div.datepicker td.active:hover {
+ background-color: $color__red--barnes;
+ border-color: $color__red--barnes;
+ color: $color__white;
+}
+
+/**
+ * Errors
+ */
+#errorLi,
+.error-container {
+  border-radius: 0;
+  font-family: $sans-serif--loaded;
+  font-size: 100%;
+  margin-bottom: 40px;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 20px;
+  text-align: left;
+}
+
+.errorLi {
+  font-size: inherit;
+}
+
+#errorMsgLbl {
+  @include font-bold-heading();
+}
+
+#errorMsg {
+  color: currentColor;
+}
+
+#errorMsg b {
+  border-radius: 0;
+}
+
+.wufoo li.error {
+  background: transparent !important;
+  margin-bottom: 26px !important;
+  padding: 0;
+}
+
+/**
+ * 1 not sure why but this !important is needed
+ */
+.wufoo p.error {
+  @include font-smallprint();
+
+  font-weight: inherit;
+  padding-top: 12px !important /* 1 */;
+}

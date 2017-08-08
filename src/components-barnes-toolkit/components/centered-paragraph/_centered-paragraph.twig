@@ -1,0 +1,37 @@
+{#
+
+Centered paragraph component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Centralised block of copy' %}
+{% endif %}
+
+{% if content is empty %}
+  {%
+    set content = [
+      '<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-centered-paragraph{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}{% if blockMoveUp is defined %} m-block--up{% endif %}">
+  <div class="m-centered-paragraph__container">
+    {% if title is defined and noTitle is not defined %}
+      <h2 class="font-gamma m-block__title">{{ title }}</h2>
+    {% endif %}
+
+    {% if content is defined %}
+      {% for p in content %}
+        {{ p|raw }}
+      {% endfor %}
+    {% endif %}
+    </div>
+</div>

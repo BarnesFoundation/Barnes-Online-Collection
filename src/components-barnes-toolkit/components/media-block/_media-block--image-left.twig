@@ -1,0 +1,29 @@
+{#
+
+Media Block component
+Show one 50% width image/artwork card on left side of container
+
+See /static/pages/media-cards.php for how the data array works.
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+<div class="m-block m-block--no-border m-block--flush-top">
+  {#
+
+    MEDIA Just one image
+    ---
+    1 show one 50% width image/artwork card on left side of container
+
+  #}
+  <div class="m-block__columns m-block__columns--reverse">
+    <div class="m-block__column">&nbsp;</div>
+    <div class="m-block__column">
+      {% include path ~ 'card-artwork/_card-artwork.twig' %}
+    </div>
+  </div>
+</div>

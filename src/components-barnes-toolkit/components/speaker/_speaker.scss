@@ -1,0 +1,213 @@
+/***
+
+Speaker
+======
+* Class name: `m-speaker`
+* Tags used on: `<div>`
+
+The speaker component belongs inside an `m-block` component.
+
+It's a card with an image and the speaker's details next to it; it should be
+used inside of an `m-speaker-list` container.
+
+*Note:*
+
+It looks a little odd when it is on its own - but that is because this component
+belongs inside an `m-block` component.
+
+***/
+
+$speaker-image-offset-medium: 180px;
+$speaker-image-offset-xlarge: 315px;
+$speaker-image-offset-print: 105px;
+
+/**
+ * A container for multiple speaker components
+ */
+.m-speaker-list {
+  margin-bottom: 45px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 93px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 84px;
+  }
+}
+
+/**
+ * A single speaker component
+ */
+.m-speaker {
+  border-bottom: 1px solid $color__border;
+  min-height: 60px;
+  padding-bottom: 31px;
+  position: relative;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    clear: both;
+    float: left;
+    min-height: 192px;
+    padding-bottom: 45px;
+  }
+
+  @include breakpoint('large+') {
+    min-height: 325px;
+  }
+
+  @media print {
+    min-height: 200px;
+  }
+}
+
+/**
+ * A single speaker component on its own e.g. only 1 in the list
+ */
+.m-speaker:only-child,
+.m-speaker:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/**
+ * The first component has slightly different spacing to the others
+ * so account for that here
+ */
+.m-speaker:first-child {
+  margin-top: 33px;
+
+  @include breakpoint('medium+') {
+    margin-top: 23px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 0;
+  }
+}
+
+/**
+ * Components following on from the first one
+ */
+.m-speaker + .m-speaker {
+  margin-top: 35px;
+
+  @include breakpoint('large+') {
+    margin-top: 45px;
+  }
+}
+
+/**
+ * On mobile the layout is slightly different so we need flexbox
+ * to get the image sat to the left of the name+job title
+ */
+.m-speaker__header {
+  @include breakpoint('small-') {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.m-speaker__image {
+  display: block;
+  width: 60px;
+
+  @include breakpoint('medium+') {
+    float: left;
+    left: 0;
+    position: relative;
+    top: 8px;
+    width: 140px;
+  }
+
+  @include breakpoint('large+') {
+    top: 8px;
+  }
+
+  @include breakpoint('xlarge+') {
+    width: 275px;
+  }
+
+  @media print {
+    height: auto;
+    width: 85px;
+  }
+}
+
+.m-speaker__synopsis {
+  margin-top: -3px;
+  max-width: calc(100% - 80px);
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+    max-width: none;
+  }
+}
+
+.m-speaker__title {
+  margin-top: 0;
+
+  @include breakpoint('medium+') {
+    padding-left: $speaker-image-offset-medium;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -10px;
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-left: $speaker-image-offset-xlarge;
+  }
+
+  @media print {
+    padding-left: $speaker-image-offset-print;
+  }
+}
+
+.m-speaker__subtitle {
+  color: $color__copy--medium;
+  margin-top: 0;
+
+  @include breakpoint('medium+') {
+    padding-left: $speaker-image-offset-medium;
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-left: $speaker-image-offset-xlarge;
+  }
+
+  @media print {
+    padding-left: $speaker-image-offset-print;
+  }
+}
+
+/**
+ * Assuming this will containing WYSIWYG content from CMS here with
+ * multiple <p> tags
+ * 1 Measure from the bottom of the image
+ */
+.m-speaker__summary {
+  margin-top: 17px; /* 1*/
+
+  @include breakpoint('medium+') {
+    margin-top: 12px;
+    padding-left: $speaker-image-offset-medium;
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-left: $speaker-image-offset-xlarge;
+  }
+
+  @media print {
+    padding-left: $speaker-image-offset-print;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}

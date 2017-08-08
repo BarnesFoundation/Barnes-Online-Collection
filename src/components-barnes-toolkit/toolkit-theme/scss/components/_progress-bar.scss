@@ -1,0 +1,22 @@
+
+//
+// Progress bar
+//
+
+.progress-bar {
+  height:3px;
+  background:rgba(180,180,180,0.5);
+  width:100%;
+  max-width:0;
+  transform: translate3d(0,-100%,0);
+  transition: transform .3s ease, max-width 2s cubic-bezier(0.19, 1, 0.22, 1);
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:$zIndex-10;
+}
+
+.html--loading .progress-bar {
+  transform: translate3d(0,0,0);
+  max-width:100%;
+}

@@ -1,0 +1,95 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Media videoblock' %}
+{% endif %}
+
+{% if intro is empty %}
+  {%
+    set intro = [
+      '<p>An opening intro to the media block sits directly above the actual media which is 100% width.</p>'
+    ]
+  %}
+{% endif %}
+
+{% if media is empty %}
+  {%
+    set media = [
+      {
+        id: 1,
+        source: '<iframe width="560" height="315" src="https://www.youtube.com/embed/iwHsCXHT14c" frameborder="0" allowfullscreen></iframe>'
+      }
+    ]
+  %}
+{% endif %}
+
+{% if summary is empty and showSummary is defined %}
+  {%
+    set summary = [
+      '<p>An optional comment beneath the media.</p>'
+    ]
+  %}
+{% endif %}
+
+
+<div class="m-block m-block--media{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top {% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}">
+  <div class="m-block__columns">
+    <div class="m-block__column">
+      <h2 class="font-gamma m-block__title">{{ title }}</h2>
+    </div>
+    <div class="m-block__column">
+      {% for p in intro %}
+        {{ p|raw }}
+      {% endfor %}
+
+      {# MEDIA show one 50% width image/artwork card #}
+      {% if artwork is defined and media|length < 2 %}
+      <div class="m-block__media">
+        {% for item in media %}
+          {% include path ~ 'card-artwork/_card-artwork.twig' %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {#
+    MEDIA alternative style - We ned to break out of our
+    <div class="columns" /> to display correctly
+
+    Like the following:
+    1 - a full-width (e.g. 100%) image/artwork card
+    2 - 2 x 50% width image/artwork card
+    3 - a video ro audio file (an iframe basically)
+  #}
+  {% if artwork is empty or media|length > 1 %}
+  <div class="m-block__media{% if artwork is defined and media|length > 1 %} m-block__columns{% endif %}">
+    {% for item in media %}
+      {% if artwork is defined %}
+        {% if item.fullWidth is defined %}
+          {% include path ~ 'card-artwork/_card-artwork--100pc.twig' %}
+        {% else %}
+          {% if media|length > 1 %}<div class="m-block__column">{% endif %}
+          {% include path ~ 'card-artwork/_card-artwork.twig' %}
+          {% if media|length > 1 %}</div>{% endif %}
+        {% endif %}
+      {% else %}
+        <div class="embed-responsive" data-behavior="EmbedResponsive">
+          {{ item.source|raw }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# Show a summary after the media if we want #}
+  {% if showSummary is defined and summary is defined %}
+    <div class="m-block__columns m-block__media-summary">
+      <div class="m-block__column"></div>
+      <div class="m-block__column">
+        {% for p in summary %}
+          {{ p|raw }}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
