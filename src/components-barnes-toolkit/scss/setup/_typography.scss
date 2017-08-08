@@ -71,34 +71,38 @@ Try to use classes to determine the size of fonts/headings:
 /* @import must be at top of file, otherwise CSS will not work */
 @import url("//hello.myfonts.net/count/3399db");
 
+// #styleguideOverride: the create-react-app restricts relative imports. Use this instead
+// $font_path: '../fonts/';
+$font_path: '/fonts/';
+
 @font-face {
   font-family: 'Calibre';
-  src: url('../fonts/CalibreWeb-Regular.woff2') format('woff2'),
-       url('../fonts/CalibreWeb-Regular.woff') format('woff');
+  src: url($font_path + 'CalibreWeb-Regular.woff2') format('woff2'),
+       url($font_path + 'CalibreWeb-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Calibre';
-  src: url('../fonts/CalibreWeb-Medium.woff2') format('woff2'),
-       url('../fonts/CalibreWeb-Medium.woff') format('woff');
+  src: url($font_path + 'CalibreWeb-Medium.woff2') format('woff2'),
+       url($font_path + 'CalibreWeb-Medium.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FFMiloSerifWebText';
-  src:  url('../fonts/3399DB_0_0.woff2') format('woff2'),
-        url('../fonts/3399DB_0_0.woff') format('woff');
+  src:  url($font_path + '3399DB_0_0.woff2') format('woff2'),
+        url($font_path + '3399DB_0_0.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FFMiloSerifWebText';
-  src:  url('../fonts/3399DB_1_0.woff2') format('woff2'),
-        url('../fonts/3399DB_1_0.woff') format('woff');
+  src:  url($font_path + '3399DB_1_0.woff2') format('woff2'),
+        url($font_path + '3399DB_1_0.woff') format('woff');
   font-weight: bold;
 	font-style: normal;
 }
