@@ -9,10 +9,6 @@ import CollectionFiltersPanel from '../../components/CollectionFilters/Collectio
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import Footer from '../../components/Footer/Footer';
 
-// import * as QueryActions from '../../actions/query';
-// import * as QueriesActions from '../../actions/queries';
-// import * as ObjectsActions from '../../actions/objects';
-
 class LandingPage extends Component {
   render() {
     return (
@@ -38,9 +34,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    // ObjectsActions,
-    // QueryActions,
-    // QueriesActions
   ), dispatch);
 }
 

@@ -31,13 +31,11 @@ class SearchInput extends Component {
     const query = ['match', '_all', this.state.value];
     this.props.appendToQueries(query);
 
-    this.props.findObjectsByQueries(this.props.queries);
-
     this.setState({value: ''});
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.queries !== nextProps.queries) {
+    if (this.props.queries.length !== nextProps.queries.length) {
       this.props.findObjectsByQueries(nextProps.queries);
     }
   }
