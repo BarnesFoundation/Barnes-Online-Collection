@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const classNames = {
   navActive: 'nav-active',
@@ -6,7 +7,7 @@ const classNames = {
 
 class HtmlClassManager extends Component {
   static propTypes = {
-    navActive: React.PropTypes.bool,
+    navActive: PropTypes.bool,
   }
   static defaultProps = {
     navActive: false,

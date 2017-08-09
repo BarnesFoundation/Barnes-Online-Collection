@@ -54,17 +54,17 @@ class SiteHeader extends Component {
           </div>
           <div className="m-search-bar" data-behavior="SearchBar" aria-hidden="true">
             <div className="container">
-              <form className="m-search-bar__form" action="/static/pages/search.php" method="get" novalidate data-behavior="FormValidate">
-                <div className="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+              <form className="m-search-bar__form" action="/static/pages/search.php" method="get" noValidate data-behavior="FormValidate">
+                <div className="form-field__error form-field__error--summary hidden" tabIndex="-1" aria-hidden="true">
                   <h3 className="font-bold-heading">Please correct your errors</h3>
                 </div>
                 <div className="form-field m-search-bar__form-field">
-                  <label className="visuallyhidden" for="search">Search</label>
+                  <label className="visuallyhidden" htmlFor="search">Search</label>
                   <input className="input" type="search" name="q" id="search" placeholder="Search" required aria-required="true" aria-describedby="searcherror1" />
                   <button className="btn btn--primary" type="submit">
                     Search
                   </button>
-                  <div aria-hidden="true" className="form-field__error hidden" tabindex="-1" id="searcherror1">Enter a search term</div>
+                  <div aria-hidden="true" className="form-field__error hidden" tabIndex="-1" id="searcherror1">Enter a search term</div>
                 </div>
               </form>
               <button className="m-search-bar__close btn btn--icon-only html4-hidden" type="button" data-search-hide aria-labelledby="search-close-title">
