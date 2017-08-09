@@ -13,16 +13,6 @@ import * as FiltersActions from '../../actions/filters';
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
-  constructor(props) {
-    super(props);
-    this.selectFilter = this.selectFilter.bind(this);
-  }
-
-  selectFilter(filterName) {
-    const slug = filterName.toLowerCase();
-    this.props.selectFilterSet(slug);
-  }
-
   setVisibleFilter(slug) {
     switch(slug) {
       case 'search':
@@ -31,8 +21,7 @@ class CollectionFiltersPanel extends Component {
       case 'lines':
       case 'light':
       case 'space':
-        return <CollectionFiltersSet visibleFilterSet={slug} title={slug} />;
-        break;
+        return <CollectionFiltersSet />;
       case 'shuffle':
       default:
         return null;
@@ -40,14 +29,10 @@ class CollectionFiltersPanel extends Component {
   }
 
   render() {
-    const visibleFilterSet = this.props.filters.visibleFilterSet;
     return (
       <div>
-        <CollectionFiltersMenu
-          visibleFilterSet={visibleFilterSet}
-          selectFilter={this.selectFilter}
-        />
-        {this.setVisibleFilter(visibleFilterSet)}
+        <CollectionFiltersMenu />
+        {this.setVisibleFilter(this.props.filters.visibleFilterSet)}
         <CollectionFiltersApplied />
       </div>
     );
@@ -61,9 +46,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    FiltersActions,
-  ), dispatch);
+  return bindActionCreators(Object.assign({}), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersPanel);
