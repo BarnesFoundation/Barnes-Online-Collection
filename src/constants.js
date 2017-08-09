@@ -12,6 +12,9 @@ export const APPEND_TO_QUERY = 'APPEND_TO_QUERY';
 export const SET_QUERIES = 'SET_QUERIES';
 export const APPEND_TO_QUERIES = 'APPEND_TO_QUERIES';
 
+//filters
+export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
+
 //searchtags
 export const RESET_SEARCHTAGS = 'RESET_SEARCHTAGS';
 export const REMOVE_SEARCHTAG = 'REMOVE_SEARCHTAG';

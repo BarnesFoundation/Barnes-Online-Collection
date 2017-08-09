@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Header from './Header';
@@ -23,18 +20,4 @@ class LandingPage extends Component {
   }
 }
 
-LandingPage.propTypes = {
-  children: PropTypes.element
-};
-
-const mapStateToProps = state => {
-  return state;
-}
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-  ), dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);
+export default connect()(LandingPage);

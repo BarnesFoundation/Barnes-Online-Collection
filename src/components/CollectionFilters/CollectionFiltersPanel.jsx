@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersSet from './CollectionFiltersSet';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
+
+import * as FiltersActions from '../../actions/filters';
 
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedFilter: null,
-    };
-
     this.selectFilter = this.selectFilter.bind(this);
   }
 
   selectFilter(filterName) {
     const slug = filterName.toLowerCase();
-    this.setState({ selectedFilter: slug });
+    this.props.selectFilterSet(slug);
   }
 
   render() {
+    var visibleFilterSet = this.props.filters.visibleFilterSet,
+      visibleFilter;
 
-    var selectedFilter = this.state.selectedFilter, visibleFilter;
-
-    switch(selectedFilter) {
+    switch(visibleFilterSet) {
       case 'search':
         visibleFilter = <SearchInput />;
         break;
@@ -35,7 +35,7 @@ class CollectionFiltersPanel extends Component {
       case 'lines':
       case 'light':
       case 'space':
-        visibleFilter = <CollectionFiltersSet selectedFilter={selectedFilter} title={selectedFilter} />;
+        visibleFilter = <CollectionFiltersSet visibleFilterSet={visibleFilterSet} title={visibleFilterSet} />;
         break;
       case 'shuffle':
       default:
@@ -45,7 +45,10 @@ class CollectionFiltersPanel extends Component {
 
     return (
       <div>
-        <CollectionFiltersMenu selectedFilter={selectedFilter} selectFilter={this.selectFilter} />
+        <CollectionFiltersMenu
+          visibleFilterSet={visibleFilterSet}
+          selectFilter={this.selectFilter}
+        />
         {visibleFilter}
         <CollectionFiltersApplied />
       </div>
@@ -53,4 +56,16 @@ class CollectionFiltersPanel extends Component {
   }
 }
 
-export default CollectionFiltersPanel;
+const mapStateToProps = state => {
+  return {
+    filters: state.filters
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign({},
+    FiltersActions,
+  ), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersPanel);
