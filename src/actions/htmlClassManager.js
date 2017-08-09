@@ -21,8 +21,9 @@ export function htmlClassesToggle(className) {
   }
 }
 
-export function htmlClassesReset(className) {
+export function htmlClassesReset(classListArr) {
   return {
     type: ActionTypes.HTML_CLASSES_RESET,
+    payload: classListArr
   }
 }

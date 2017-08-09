@@ -20,7 +20,7 @@ const toggleClass = (state, action) => {
 const htmlClassManager = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.HTML_CLASSES_RESET:
-      return initialState;
+      return action.payload || initialState;
     case ActionTypes.HTML_CLASSES_ADD:
       return addClass(state, action);
     case ActionTypes.HTML_CLASSES_TOGGLE:
