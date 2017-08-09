@@ -3,10 +3,6 @@ import React, { Component } from 'react';
 import HeaderText from '../../components/HeaderText/HeaderText';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
