@@ -312,11 +312,11 @@ input[type="range"] {
  *   @see http://www.mobilefish.com/services/base64/base64.php
  */
 .select:not(.field)::after {
-  background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h
-0PSIyMCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9ImN1cnJlbnRDb2xvciI+PHBhdGggZm
-lsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNTYgMzUyTDk2IDE5O
-C40MDYgMTQxLjcyIDE2MCAyNTYgMjc1LjE4OCAzNzAuMjggMTYwIDQxNiAxOTguNDA2IDI1NiAz
-NTJ6Ii8+PC9zdmc+') right center no-repeat; /* 2 */
+//   background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h
+// 0PSIyMCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9ImN1cnJlbnRDb2xvciI+PHBhdGggZm
+// lsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNTYgMzUyTDk2IDE5O
+// C40MDYgMTQxLjcyIDE2MCAyNTYgMjc1LjE4OCAzNzAuMjggMTYwIDQxNiAxOTguNDA2IDI1NiAz
+// NTJ6Ii8+PC9zdmc+') right center no-repeat; /* 2 */
   content: '';
   height: 100%;
   pointer-events: none;
