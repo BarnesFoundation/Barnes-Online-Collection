@@ -23,6 +23,12 @@ export const REMOVE_SEARCHTAG = 'REMOVE_SEARCHTAG';
 //prints
 export const SET_PRINTS = 'SET_PRINTS';
 
+//htmlClassManager
+export const HTML_CLASSES_RESET = 'HTML_CLASSES_RESET';
+export const HTML_CLASSES_ADD = 'HTML_CLASSES_ADD';
+export const HTML_CLASSES_TOGGLE = 'HTML_CLASSES_TOGGLE';
+export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
+
 //ui
 export const SHOW_ZOOM_OVERLAY = 'SHOW_ZOOM_OVERLAY';
 export const HIDE_ZOOM_OVERLAY = 'HIDE_ZOOM_OVERLAY';
