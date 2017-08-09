@@ -7,14 +7,14 @@ import * as QueriesActions from '../../actions/queries';
 
 class CollectionFiltersApplied extends Component {
   render() {
-    const queries = this.props.queries.map((query, index) =>
-      <li key={index}>{query[2]}</li>
+    const queries = this.props.queries;
+    const queryTags = queries.map((query, index) =>
+      <button key={index}>{query[2]}</button>
     );
 
     return (
       <div>
-        <p>Filters Applied:</p>
-        <ul>{queries}</ul>
+        {queryTags}
       </div>
     );
   }
@@ -22,7 +22,8 @@ class CollectionFiltersApplied extends Component {
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries
+    queries: state.queries,
+    filters: state.filters
   }
 };
 
