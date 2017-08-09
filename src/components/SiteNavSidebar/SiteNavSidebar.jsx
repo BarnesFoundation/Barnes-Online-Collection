@@ -4,20 +4,50 @@ import { connect } from 'react-redux';
 
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 
+const CLASSNAME_NAV_ACTIVE = 'nav-active';
+
 class SiteHeader extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleNavCloseBtnClick = this.handleNavCloseBtnClick.bind(this);
+  }
 
   handleNavCloseBtnClick(e) {
     e.preventDefault();
-    this.props.htmlClassesRemove('nav-active');
+    this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
+  }
+
+  // todo: consider using a single global key watcher instead
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnMount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown(event) {
+    // esc
+    if (event.keyCode === 27) {
+      console.log(this.props);
+      this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
+    }
   }
 
   render() {
     return (
       <div>
-        <div className="g-nav" data-behavior="nav" tabIndex={-1}>
+        <div
+          onKeyUp={this.handleKeyDown}
+          className="g-nav"
+          data-behavior="nav"
+          tabIndex={-1}
+        >
           <div className="g-nav__inner">
             <button
-              onClick={this.handleNavCloseBtnClick.bind(this)}
+              onClick={this.handleNavCloseBtnClick}
               className="g-nav__close btn btn--icon-only html4-hidden"
               type="button"
               aria-labelledby="nav-close-title"
@@ -62,7 +92,11 @@ class SiteHeader extends Component {
             </nav>
           </div>
         </div>
-        <div className="g-nav-overlay" data-nav-overlay></div>
+        <div
+          onClick={this.handleNavCloseBtnClick}
+          className="g-nav-overlay"
+          data-nav-overlay
+        ></div>
       </div>
     );
   }
