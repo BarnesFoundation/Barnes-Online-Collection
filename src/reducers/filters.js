@@ -1,7 +1,39 @@
 import * as ActionTypes from '../constants';
 
 const initialState = {
-  visibleFilterSet: null
+  visibleFilterSet: null,
+  filterOptions: {
+    colors: {
+      title: "Colors",
+      slug: "colors",
+      type: "checkbox"
+    },
+    lines: {
+      title: "Lines",
+      slug: "lines",
+      type: "radio"
+    },
+    light: {
+      title: "Light",
+      slug: "light",
+      type: "slider"
+    },
+    space: {
+      title: "Space",
+      slug: "space",
+      type: "slider"
+    },
+    shuffle: {
+      title: "Shuffle",
+      slug: "shuffle",
+      type: "shuffle"
+    },
+    search: {
+      title: "Search",
+      slug: "search",
+      type: "search"
+    }
+  }
 };
 
 const filters = (state = initialState, action) => {
