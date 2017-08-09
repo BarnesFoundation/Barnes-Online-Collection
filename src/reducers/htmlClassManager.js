@@ -24,7 +24,6 @@ const htmlClassManager = (state = initialState, action) => {
     case ActionTypes.HTML_CLASSES_ADD:
       return addClass(state, action);
     case ActionTypes.HTML_CLASSES_TOGGLE:
-      debugger;
       return toggleClass(state, action);
     case ActionTypes.HTML_CLASSES_REMOVE:
       return removeClass(state, action);
