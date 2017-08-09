@@ -7,7 +7,8 @@ import * as UIActions from '../../actions/ui';
 import './artObjectPage.css';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
+import SiteHeader from '../../components/SiteHeader/SiteHeader';
+import HtmlClassManager from '../../components/HtmlClassManager';
 import TabbedContent from './TabbedContent/TabbedContent';
 
 const copyrightMap = {
@@ -101,23 +102,28 @@ class ArtObjectPage extends Component {
 
   render() {
     return (
-      <section className="art-object" onKeyUp={this.handleKeyUp}>
+      <div className="app">
         <Helmet>
           <meta property="og:title" content={`${this.props.culture || this.props.people} - ${this.props.title}`} />
           <meta property="og:type" content="website" />
           <meta property="og:url" content={window.location.href} />
           <meta property="og:image" content={this.props.imageUrlLarge} />
         </Helmet>
-        <div className="art-object__tabbed-content-test">
-          <TabbedContent
-            slug={this.state.panelSlug}
-            baseUrl={this.state.baseUrl}
-          />
-        </div>
+        <HtmlClassManager />
+        <SiteHeader />
+        <h1>Art Object Page</h1>
+        <section className="art-object" onKeyUp={this.handleKeyUp}>
+          <div className="art-object__tabbed-content-test">
+            <TabbedContent
+              slug={this.state.panelSlug}
+              baseUrl={this.state.baseUrl}
+            />
+          </div>
+        </section>
         <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>
         </footer>
-      </section>
+      </div>
     );
   }
 }
