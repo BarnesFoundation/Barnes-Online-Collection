@@ -5,7 +5,9 @@
 
 body {
   margin: 0;
-  padding: 0;
+  // padding: 0;
+  // Temp padding adjustment until we get more styles in here.
+  padding: 30px;
   font-family: $font-family;
   color: $color-site;
 }
@@ -15,7 +17,3 @@ li {
   list-style: none;
 }
 
-div {
-  border: 1px dotted blue;
-  padding: 10px;
-}
