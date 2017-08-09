@@ -38,7 +38,7 @@ class SiteHeader extends Component {
             </a>
             <nav className="g-header__nav">
               <a className="g-header__nav__link" href="#">What’s On</a>
-              <a className="g-header__nav__link" href="#">Plan your Visit</a>
+              <a className="g-header__nav__link" href="#">Plan Your Visit</a>
               <a className="g-header__nav__link" href="#">Our Collection</a>
               <a className="g-header__nav__link" href="/static/pages/class.php">Take a Class</a>
               <button
