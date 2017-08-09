@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Header from './Header';
+import PageHeader from './Header';
+import SiteHeader from '../../components/SiteHeader/SiteHeader';
+import HtmlClassManager from '../../components/HtmlClassManager';
 import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import Footer from '../../components/Footer/Footer';
@@ -26,8 +28,10 @@ class LandingPage extends Component {
     console.log(this.props.history);
     return (
       <div className="app">
+        <HtmlClassManager />
+        <SiteHeader />
         <h1>LandingPage</h1>
-        <Header />
+        <PageHeader />
         <CollectionFiltersPanel />
         <ArtObjectGrid history={this.props.history}/>
         <Footer />
