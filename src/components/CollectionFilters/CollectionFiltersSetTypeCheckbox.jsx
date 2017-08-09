@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as QueriesActions from '../../actions/queries';
-import * as FiltersActions from '../../actions/filters';
+import CollectionFiltersCheckbox  from './CollectionFiltersCheckbox';
 
 class CollectionFiltersSetTypeCheckbox extends Component {
   buildCheckboxes(filterOptions) {
-    return Object.values(filterOptions).map((option, index) => {
-      <button key={index} value={option.slug}>{option.slug}</button>
+    return filterOptions.map((option, index) => {
+      return <CollectionFiltersCheckbox key={index} value={option.slug} query={option.query}/>
     });
   }
 
@@ -30,10 +29,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    QueriesActions,
-    FiltersActions
-  ), dispatch);
+  return bindActionCreators(Object.assign({}), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersSetTypeCheckbox);

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import QueryTag from './QueryTag';
 
 import * as QueriesActions from '../../actions/queries';
+import * as ObjectsActions from '../../actions/objects';
 
 class CollectionFiltersApplied extends Component {
   buildQueryTags(queries) {
@@ -14,10 +15,23 @@ class CollectionFiltersApplied extends Component {
     );
   }
 
+  buildFilterTags(filters) {
+    return filters.map((filter, index) =>
+      <QueryTag key={index} index={index} value={filter[2]} />
+    );
+  }
+
+  componentWillUpdate(nextProps) {
+    if (this.props.queries.length !== nextProps.queries.length || this.props.filters.filtersApplied.length !== nextProps.filters.filtersApplied.length) {
+      this.props.findFilteredObjects(nextProps.queries, nextProps.filters);
+    }
+  }
+
   render() {
     return (
       <div>
         {this.buildQueryTags(this.props.queries)}
+        {this.buildFilterTags(this.props.filters.filtersApplied)}
       </div>
     );
   }
@@ -26,11 +40,15 @@ class CollectionFiltersApplied extends Component {
 const mapStateToProps = state => {
   return {
     queries: state.queries,
+    filters: state.filters,
   }
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, QueriesActions), dispatch);
+  return bindActionCreators(Object.assign({},
+    QueriesActions,
+    ObjectsActions
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersApplied);

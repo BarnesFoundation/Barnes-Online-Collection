@@ -29,16 +29,16 @@ class SearchInput extends Component {
     event.preventDefault();
 
     const query = ['match', '_all', this.state.value];
-    this.props.appendToQueries(query);
+    this.props.addToQueries(query);
 
     this.setState({value: ''});
   }
 
-  componentWillUpdate(nextProps) {
-    if (this.props.queries.length !== nextProps.queries.length) {
-      this.props.findObjectsByQueries(nextProps.queries);
-    }
-  }
+  // componentWillUpdate(nextProps) {
+  //   if (this.props.queries.length !== nextProps.queries.length) {
+  //     this.props.findFilteredObjects(nextProps.queries, nextProps.filters);
+  //   }
+  // }
 
   render() {
     return (
@@ -63,7 +63,8 @@ SearchInput.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries
+    queries: state.queries,
+    filters: state.filters
   }
 }
 

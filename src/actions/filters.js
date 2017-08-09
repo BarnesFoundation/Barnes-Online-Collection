@@ -6,3 +6,10 @@ export function selectFilterSet(slug) {
     slug: slug
   }
 }
+
+export function addToFilters(filter) {
+  return {
+    type: ActionTypes.ADD_TO_FILTERS,
+    filter: filter
+  }
+}

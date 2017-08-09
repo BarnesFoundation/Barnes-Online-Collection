@@ -7,17 +7,20 @@ const initialState = {
       title: "Colors",
       slug: "colors",
       type: "checkbox",
-      options: {
-        red: {
-          slug: 'red'
+      options: [
+        {
+          slug: 'red',
+          query: ['match', '_all', 'red']
         },
-        blue: {
-          slug: 'blue'
+        {
+          slug: 'blue',
+          query: ['match', '_all', 'blue']
         },
-        yellow: {
-          slug: 'yellow'
+        {
+          slug: 'yellow',
+          query: ['match', '_all', 'yellow']
         }
-      }
+      ],
     },
     lines: {
       title: "Lines",
@@ -34,6 +37,7 @@ const initialState = {
       slug: "space",
       type: "slider"
     },
+    // These aren't filters, so this gets a little muddy; should probably refactor.
     shuffle: {
       title: "Shuffle",
       slug: "shuffle",
@@ -44,13 +48,17 @@ const initialState = {
       slug: "search",
       type: "search"
     }
-  }
+  },
+  filtersApplied: []
 };
 
 const filters = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.SELECT_FILTER_SET:
       return Object.assign({}, state, { visibleFilterSet: action.slug });
+    case ActionTypes.ADD_TO_FILTERS:
+      return Object.assign({}, state, { filtersApplied: [...state.filtersApplied, action.filter] });
+    case ActionTypes.REMOVE_FROM_FILTERS:
     default:
       return state;
   }

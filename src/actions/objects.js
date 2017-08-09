@@ -1,7 +1,6 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { resetSearchTags } from './searchTags';
 
 const buildRequestBody = () => {
   let body = bodybuilder()
@@ -22,7 +21,6 @@ export const getObjects = () => {
   let body = buildRequestBody().build();
 
   return (dispatch) => {
-    dispatch(resetSearchTags());
     axios.get('/api/search', {
       params: {
         body: body,
@@ -54,15 +52,20 @@ export const findObjectsByKeyword = (query) => {
   }
 }
 
-export const findObjectsByQueries = (queries) => {
+export const findFilteredObjects = (queries, filters) => {
   return (dispatch) => {
-    if (queries === '') {
+    const filtersApplied = filters.filtersApplied;
+    if (queries === '' && filtersApplied.length === 0) {
       return getObjects()(dispatch);
     }
 
     let body = buildRequestBody();
     for (let i = 0; i < queries.length; i++) {
       body = body.query(queries[i][0], queries[i][1], queries[i][2]);
+    }
+    for (let i = 0; i < filtersApplied.length; i++) {
+      const filter = filtersApplied[i];
+      body = body.query(filter[0], filter[1], filter[2]);
     }
     body = body.build();
 
