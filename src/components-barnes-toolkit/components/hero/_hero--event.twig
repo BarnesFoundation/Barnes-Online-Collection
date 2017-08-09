@@ -1,0 +1,63 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if type is empty %}
+  {% set type = 'Nightlife / Performance' %}
+{% endif %}
+{% if title is empty %}
+  {% set title = 'Solo series concert: the modern violin' %}
+{% endif %}
+{% if date is empty %}
+  {% set date = 'Monday, April 3. 2&ndash;2:30pm' %}
+{% endif %}
+{% if hashtagLink is empty %}
+  {% set hashtagLink = '#' %}
+{% endif %}
+{% if hashtag is empty %}
+  {% set hashtag = '#KimHarris' %}
+{% endif %}
+{% if caption is empty %}
+  {% set caption = 'Image caption' %}
+{% endif %}
+{% if images is empty %}
+  {# Responsive images #}
+  {%
+    set images = {
+      mobile: '/dist/images/cover-event_m.jpg',
+      tablet: '/dist/images/cover-event_t.jpg',
+      desktop: '/dist/images/cover-event_d.jpg'
+    }
+  %}
+{% endif %}
+
+<div class="o-hero o-hero--event">
+  <div class="o-hero__inner">
+    <div class="container">
+      <div class="o-hero__copy">
+        <div class="o-hero__pre-title font-zeta">{{ type|raw }}</div>
+        <h1 class="o-hero__title"><a href="{{ link }}">{{ title|raw }}</a></h1>
+        <p class="o-hero__supporting gamma">{{ date|raw }}</p>
+      </div>
+      <div class="o-hero__extras font-smallprint">
+        {% include path ~ 'share/_share.twig' %}
+        <a class="o-hero__hashtag" href="{{ hashtagLink }}">{{ hashtag|raw }}</a>
+      </div>
+    </div>
+  </div>
+  <picture>
+    <source media="(min-width: 990px)" srcset="{{ images.desktop }}" type="image/jpeg">
+    <source media="(min-width: 650px)" srcset="{{ images.tablet }}" type="image/jpeg">
+    <img class="o-hero__image" src="{{ images.mobile }}" alt="">
+  </picture>
+</div>
+{% if caption is defined %}
+<div class="o-hero__caption font-smallprint">
+  <div class="container">
+    {{ caption|raw }}
+  </div>
+</div>
+{% endif %}

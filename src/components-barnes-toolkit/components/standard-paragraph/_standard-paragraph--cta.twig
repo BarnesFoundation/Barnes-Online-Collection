@@ -1,0 +1,35 @@
+{% if title is empty %}
+  {% set title = 'Standard paragraph' %}
+{% endif %}
+{% if content is empty %}
+  {%
+    set content = [
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>',
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>'
+    ]
+  %}
+{% endif %}
+{% if link is empty %}
+  {# Screen-readers may need extra context added to the link if the client enters generic text like 'Click me' to the link's copy value #}
+  {% set link = { href: '#', copy: 'Click me', accessibility: 'to find out about X'} %}
+{% endif %}
+
+<div class="m-block{% if blockAlt is defined %} m-block--alt{% endif %}{% if blockBrand is defined %} m-block--brand{% endif %}{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}">
+  {% if blockAlt is defined or blockBrand is defined %}<div class="container">{% endif %}
+  <div class="m-block__columns">
+    <div class="m-block__column">
+      {% if noTitle is empty %}<h2 class="font-gamma m-block__title">{{ title }}</h2>{% endif %}
+    </div>
+    <div class="m-block__column">
+      {% for p in content %}
+        {{ p|raw }}
+      {% endfor %}
+      {% if link is defined %}
+      <p>
+        <a class="btn btn--primary" href="{{ link.href }}">{{ link.copy }}{% if link.accessibility is defined %}<span class="visuallyhidden">{{ link.accessibility }}</span>{% endif %}</a>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% if blockAlt is defined or blockBrand is defined %}</div>{% endif %}
+</div>

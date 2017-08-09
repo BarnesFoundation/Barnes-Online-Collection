@@ -1,0 +1,27 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if title is empty %}
+  {% set type = 'Exhibition' %}
+  {% set title = 'Ellen Harvey: Metal Painting' %}
+  {% set date = 'September 19, 2015&ndash;January 4, 2016' %}
+  {% set image = '/dist/images/cover-event-past.jpg' %}
+{% endif %}
+
+<div class="o-hero-event-past m-block__columns">
+  <div class="o-hero-event-past__copy m-block__column">
+    <h2 class="o-hero-event-past__pre-title font-zeta">{{ type|raw }}</h2>
+    <h1 class="o-hero-event-past__title"><a href="{{ link }}">{{ title|raw }}</a></h1>
+    <h2 class="o-hero-event-past__supporting gamma">{{ date|raw }}</h2>
+    <div class="o-hero-event-past__extras">
+      {% include path ~ 'share/_share.twig' %}
+    </div>
+  </div>
+  <div class="o-hero-event-past__media m-block__column">
+    <img class="o-hero-event-past__image" src="{{ image }}" alt="">
+  </div>
+</div>

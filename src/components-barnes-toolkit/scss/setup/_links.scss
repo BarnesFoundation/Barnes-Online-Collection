@@ -1,0 +1,30 @@
+a {
+  color: $color__copy--light;
+  text-decoration: underline;
+
+  &:hover {
+    color: $color__copy--dark;
+  }
+
+  &:focus:not(.focus-ring){
+    // TBD
+  }
+
+  &.focus-ring {
+    // TBD
+  }
+}
+
+// Focus ring
+$focus-ring: 5px auto rgba($color__copy--light, .75);
+$focus-ring-invert: 5px auto $color__white;
+
+:focus {
+  outline: $focus-ring;
+}
+
+:focus:not(.focus-ring){
+  outline: none;
+}
+
+

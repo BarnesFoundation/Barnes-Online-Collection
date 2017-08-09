@@ -1,0 +1,60 @@
+/***
+
+Shopify - Payment
+======
+* Class name: `-m-shopify-payment`
+* Tags used on: `<div>`
+
+A list of payment methods for an online store which appear on the basket/cart
+page.
+
+*Note:* Shopify uses inline SVGs for logos.
+
+***/
+
+.m-shopify-payment {
+  border-top: 1px solid $color__border;
+  padding: 25px 0 10px;
+  text-align: center;
+}
+
+.m-shopify-payment__list {
+  margin: 0;
+  padding: 0;
+}
+
+.m-shopify-payment__item {
+  color: $color__copy--light;
+  display: inline-block;
+  list-style: none;
+  margin: 0 8px 5px;
+  padding: 0;
+  vertical-align: middle;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 15px;
+  }
+}
+
+.m-shopify-payment__item img,
+.m-shopify-payment__item svg {
+  display: block;
+  max-width: 40px;
+}
+
+.m-shopify-payment__item img {
+  border: 1px solid $color__border;
+  border-radius: 2px;
+
+  @include breakpoint('medium+') {
+    max-width: none;
+  }
+}
+
+.m-shopify-payment__item svg {
+
+  @include breakpoint('medium+') {
+    max-height: 35px;
+    max-width: 70px;
+  }
+}

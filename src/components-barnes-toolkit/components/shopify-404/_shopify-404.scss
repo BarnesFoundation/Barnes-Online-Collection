@@ -1,0 +1,99 @@
+/***
+
+Shopify - 404 banner
+======
+* Class name: `-m-shopify-404`
+* Tags used on: `<div>`
+
+A 404 error message banner (that could be used in other situations).
+
+On small screens the text sits above the image on a dark blue background.
+
+*Note:*
+
+This component is self-tinting meaning that we add a semi-transculent black
+layer over the top of the image automatically which allows the white/red copy
+above the image to be legible.
+
+So do not make your image darker in Photoshop/Sketch/Illustrator as then the
+CSS will make it too dark.
+
+***/
+
+.m-shopify-404 {
+  background: $color__background--print-banner;
+  color: $color__white;
+  position: relative;
+}
+
+/**
+ * The automatic tint which allows the white copy above the image to be legible
+ */
+.m-shopify-404::after {
+  @include tint();
+
+  z-index: #{map-get($zIndexes, 'heroOverlay')};
+}
+
+.m-shopify-404 .o-hero__inner {
+  pointer-events: auto;
+}
+
+.m-shopify-404 a.focus-ring {
+  outline: $focus-ring-invert;
+}
+
+.m-shopify-404 .o-hero__inner {
+
+  @include breakpoint('small-') {
+    position: relative;
+  }
+}
+
+.m-shopify-404__container {
+
+  @include breakpoint('medium+') {
+    height: 100%;
+  }
+}
+
+.m-shopify-404__copy {
+  padding-bottom: 40px;
+  padding-top: 5px;
+
+  @include breakpoint('medium+') {
+    left: 0;
+    max-width: 470px;
+    padding-bottom: 0;
+    padding-left: 106px;
+    padding-top: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: #{map-get($zIndexes, 'FourOhFourCopy')};
+  }
+}
+
+.m-shopify-404__title {
+  color: currentColor;
+}
+
+.m-shopify-404__summary {
+  /** Just here to convey HTML structure **/
+}
+
+.m-shopify-404__summary a {
+  color: $color__white;
+  text-decoration: underline;
+
+  &:focus:not(.focus-ring) {
+    background: $color__white;
+    color: $color__copy--dark;
+    text-decoration: none;
+  }
+}
+
+.m-shopify-404__image {
+  display: block;
+  width: 100%;
+}

@@ -1,0 +1,77 @@
+/***
+
+search-bar
+======
+* Class name: `-m-search-bar`
+* Modifier classes: `-m-search-bar--`
+* Tags used on: `<div>`
+
+
+***/
+
+.m-search-bar,
+.m-search-bar-overlay {
+  display: none;
+}
+
+
+/**
+ * 1 position the serahc bar beneath the header
+ */
+.m-search-bar {
+  background-color: $color__white;
+  display: none;
+  left: 0;
+  margin-top: -30px;
+  padding: 15px 0 20px;
+  position: relative;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'nav')};
+}
+
+.m-search-bar-overlay {
+  background: rgba($color__black, .2);
+  height: calc(100vh - 225px);
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 225px;
+  transition: opacity 300ms ease 0;
+  width: 0;
+  z-index: #{map-get($zIndexes, 'navClose')};
+
+  @include breakpoint('xlarge+') {
+    height: calc(100vh - 245px);
+    top: 245px;
+  }
+}
+
+.m-search-bar__form-field {
+  display: flex;
+}
+
+.m-search-bar__form-field .input {
+ margin-right: 20px;
+}
+
+/**
+ * Close button in header nav is hidden but
+ * it'll be shown when the search bar is open
+ */
+.g-header__nav [data-search-hide] {
+  display: none;
+}
+
+/**
+ * Close button  in form is hidden
+ */
+.m-search-bar__close {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.m-search-bar__close:focus {
+  opacity: 1;
+}

@@ -1,0 +1,45 @@
+/***
+
+Skip Link
+====
+* Class name: `a-skip`
+* Tags used on: `a`
+
+Okay this is a *really* cool accessibility feature. Most people will never see
+this but keyboard users i.e. people who may have motor disabilities and rely
+upon their keyboard’s tab key _instead_ of a mouse will see this link display
+when they first hit their tab key and it will allow them to skip to content of
+the page and avoid having to hit their tab key tens/hundreds of times on each
+page view to get past all the menu links.
+
+Because skips links are hidden and only triggered by keyboard they may not
+appear in the box below:
+
+  ```
+  <a class="a-skip" href="#content">Skip to content</a>
+  <a class="a-skip" href="#footer">Skip to footer</a>
+  ```
+
+***/
+
+.a-skip {
+  background: $color__white;
+  color: $color__copy--medium;
+  font-family: $sans-serif--loaded;
+  left: 50%;
+  opacity: 0;
+  padding: 5px 10px;
+  position: fixed;
+  top: 0;
+  text-decoration: none;
+  transform: translateX(-50%);
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  &.focus-ring {
+    opacity: 1;
+    z-index: #{map-get($zIndexes, 'skip')};
+  }
+}

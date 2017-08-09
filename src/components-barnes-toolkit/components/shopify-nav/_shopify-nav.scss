@@ -1,0 +1,70 @@
+/***
+
+Shopify - Nav
+======
+* Class name: `-m-shopify-nav`
+* Modifier classes: `-m-shopify-nav--`
+* Tags used on: `<div>`
+
+This sits inside the header.
+
+***/
+
+.m-shopify-nav {
+  border: 1px solid $color__border;
+  border-width: 1px 0;
+  overflow: auto;
+  padding: 18px 0 20px;
+  text-align: center;
+  white-space: nowrap;
+
+  @include breakpoint('large-') {
+    display: none;
+  }
+}
+
+.m-shopify-nav__link {
+  @include font-bold-heading();
+
+  border-bottom: 2px solid transparent;
+  color: currentColor;
+  font-size: 21px;
+  margin: 0 7px;
+  padding-bottom: 4px;
+  text-decoration: none;
+
+  &:hover,
+  &[aria-current="true"] {
+    color: $color__red--barnes;
+  }
+
+  &[aria-current="true"] {
+    border-bottom-color: $color__red--barnes;
+  }
+
+  &:focus:not(.focus-ring) {
+    color: currentColor;
+    border-bottom-color: currentColor;
+  }
+}
+
+
+/**
+ * Print shop link
+ * target last-child in case we cannot add a class with Shopify
+ */
+.m-shopify-nav__link--print,
+.m-shopify-nav__link:last-child {
+  border-left: 1px solid $color__border;
+  margin-left: 5px;
+  padding-left: 15px;
+
+  @include breakpoint('xlarge+') {
+    margin-left: 15px;
+    padding-left: 25px;
+  }
+}
+
+.m-shopify-nav__link svg {
+  margin-left: 6px;
+}

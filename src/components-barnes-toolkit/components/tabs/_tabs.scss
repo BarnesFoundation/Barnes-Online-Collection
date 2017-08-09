@@ -1,0 +1,122 @@
+/***
+
+Tabs
+======
+* Class name: `m-tabs`
+* Modifier classes: `m-tabs--post-cta`
+* Tags used on: `<nav>`
+
+Used to link to child pages in a section.
+
+The active link is marked out by the accessible `aria-current="true"`
+attribute/value combination.
+
+This component should ideally be followed by an `<div class="m-block">` component.
+
+On small screens the tab menu becomes scrollable thanks to the
+[Flickity JavaScript library](https://flickity.metafizzy.co/) to center the
+active tab and to allow the tabs to scroll left/right - if they are wider than
+the browser itself.
+
+***/
+
+.m-tabs {
+  border-bottom: 1px solid $color__border;
+  margin: -11px -#{map-get($outer-gutters, 'xsmall')} -1px;
+  position: relative;
+  text-align: center;
+  width: calc(100% + 50px);
+  z-index: #{map-get($zIndexes, 'tabs')};
+
+  @include breakpoint('medium+') {
+    margin: -8px -#{map-get($outer-gutters, 'medium')} -1px;
+    width: calc(100% + 80px);
+  }
+
+  @include breakpoint('large+') {
+    border-bottom: none;
+    margin: -29px 0 -1px;
+    width: 100%;
+  }
+}
+
+/*
+  situation when tabs follow a m-page-intro__summary component
+*/
+.m-tabs--post-cta {
+  @include breakpoint('large+') {
+    margin-top: -14px;
+  }
+}
+
+/**
+ * If there is no JavaScript
+ * then fallback to a simple scrolling feature
+ */
+.no-js .m-tabs__list {
+
+  @include breakpoint('medium-') {
+    cursor: all-scroll;
+    overflow: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+}
+
+.m-tabs__list {
+  padding-left: 10px;
+  padding-right: 10px;
+
+  @include breakpoint('medium+') {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  @include breakpoint('large+') {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.m-tabs__item {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.m-tabs__link {
+  @include font-zeta();
+
+  border-bottom: 5px solid transparent;
+  color: $color__copy--light;
+  display: block;
+  font-size: 18px;
+  margin: 0 15px;
+  padding: 10px 0 11px;
+  text-decoration: none;
+
+  @include breakpoint('medium+') {
+    font-size: 18px;
+    margin: 0 10px;
+    padding: 12px 0 22px;
+  }
+
+  @include breakpoint('large+') {
+    margin: 0 15px;
+    padding: 22px 0;
+  }
+
+  &:focus:not(.focus-ring) {
+    border-color: currentColor;
+  }
+}
+
+/**
+ * Active tab
+ */
+.m-tabs__link[aria-current="true"] {
+  color: $color__red--barnes;
+  border-color: currentColor;
+}

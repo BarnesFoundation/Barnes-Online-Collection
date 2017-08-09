@@ -1,0 +1,50 @@
+{#
+
+search-result component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Results for `X`' %}
+{% endif %}
+
+{% if count is empty %}
+  {% set count = '7 Results' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if results is empty %}
+  {%
+    set results = [
+      {
+        title: 'Search result title',
+        summary: 'Your support help research and conservation at Barnes, so we can present our exhibitions and events.',
+        url: 'http://www.barnesfoundation.org/page-url'
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block--no-border m-block--shallow m-block__columns">
+  <div class="m-block__column m-block__column--two-thirds">
+    <h1 class="font-gamma m-block__title">{{ title }}</h1>
+  </div>
+  <div class="m-block__column m-block__column--one-third m-search-result-count font-smallprint">
+    {{ count }}
+  </div>
+</div>
+<div class="m-block m-block--shallow">
+  <div class="m-search-results">
+    {% for result in results %}
+      {% include path ~ "search-result/_search-result.twig" with result %}
+    {% endfor %}
+  </div>
+</div>
+<div class="m-block m-block--no-border">
+  {% include path ~ "pagination/_pagination.twig" %}
+</div>

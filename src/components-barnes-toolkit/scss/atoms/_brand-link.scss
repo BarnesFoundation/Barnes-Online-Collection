@@ -1,0 +1,38 @@
+/***
+
+Brand Link
+=====
+* Class name: `a-brand-link`
+* Tags used on: `<a>`
+
+Most links on the Barnes website are grey and underlined - however there are
+occasions where we need to show a red, no-underlined link or what we call a
+_branded_ link. Why _branded_? because it’s on-brand
+
+  ```
+  <a href="#">This link</a> is the default style whereas <a class="a-brand-link" href="#">this link</a> is Barnes brand colour
+  ```
+***/
+
+.a-brand-link {
+  color: $color__red--barnes;
+  text-decoration: none;
+
+  &:visited {
+    color: darken($color__red--barnes, 10%);
+  }
+
+  &:hover,
+  &:active {
+    color: $color__red--barnes-dark;
+  }
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  &.focus-ring {
+
+  }
+}

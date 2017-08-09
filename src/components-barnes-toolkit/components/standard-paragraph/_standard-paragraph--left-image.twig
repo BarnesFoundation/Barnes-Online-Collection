@@ -1,0 +1,37 @@
+{#
+
+  Standard paragraph component (left-aligned)
+
+  This is the same as a block component so see that please
+
+#}
+
+{% if image is empty %}
+  {% set image = '//placehold.it/500x300' %}
+{% endif %}
+
+{% if content is empty %}
+  {%
+    set content = [
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>',
+      '<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="m-block{% if blockAlt is defined %} m-block--alt{% endif %}{% if blockBrand is defined %} m-block--brand{% endif %}{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}{% if blockMoveUp is defined %} m-block--up{% endif %}">
+  {% if blockAlt is defined or blockBrand is defined %}<div class="container">{% endif %}
+  <div class="m-block__columns m-block__columns--reverse">
+    <div class="m-block__column">
+      {% if image %}
+      <img class="m-block__image" src="{{ image }}" alt="">
+      {% endif %}
+    </div>
+    <div class="m-block__column">
+      {% for p in content %}
+        {{ p|raw }}
+      {% endfor %}
+    </div>
+  </div>
+  {% if blockAlt is defined or blockBrand is defined %}</div>{% endif %}
+</div>

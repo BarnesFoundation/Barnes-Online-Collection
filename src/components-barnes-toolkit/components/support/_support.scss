@@ -1,0 +1,60 @@
+/***
+
+Support
+======
+* Class name: `-m-support`
+* Modifier classes: `-m-support--`
+* Tags used on: `<div>`
+
+A simple block of content on the left and 3 call to action buttons on the right
+
+***/
+
+.m-support {
+
+}
+
+.m-support__content {
+  margin-top: 20px;
+
+  @include breakpoint('medium+') {
+    margin-top: 30px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 40px;
+  }
+}
+
+/**
+ * 1 counteract the margin-bottom on the child .btn elements which we need b/c
+ * the buttons can break onto multiple lines
+ */
+.m-support__btn-group {
+  margin-bottom: -20px; /* 1 */
+
+  @include breakpoint('medium+') {
+    margin-left: 0;
+    text-align: right;
+  }
+}
+
+.m-support__btn-group > .btn {
+  margin-bottom: 20px;
+
+  @include breakpoint('medium') {
+    display: block;
+    margin-left: auto;
+    max-width: 12em;
+  }
+
+  @include breakpoint('large+') {
+    display: inline-block;
+  }
+}
+
+.m-support__btn-group > .btn:first-child {
+  @include breakpoint('small-') {
+    margin-top: 28px;
+  }
+}

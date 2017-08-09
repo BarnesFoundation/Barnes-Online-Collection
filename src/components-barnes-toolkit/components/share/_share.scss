@@ -1,0 +1,142 @@
+/***
+
+Share
+=======
+* Class name: `m-share`
+* Tags used on: `<div>`
+
+A share feature that lets users click to show share options at which point
+they can share something via some social sites.
+
+The reason the URL is displayed beneath the 'Copy URL' link is that it must be
+visibile of else the copy function with JavaScript will not work.
+
+*Accessibility*
+
+Notice that the share links are `<button>`s as opposed to `<a>` links. [This is for
+accessibility reasons](https://marcysutton.com/links-vs-buttons-in-modern-web-applications/)
+
+Also we have some `aria` attributes on the menu.
+[Further details on this can be seen here](https://inclusive-components.design/menus-menu-buttons/)
+
+*Note*
+
+This may not work in the code sample below, but it will work in
+the [hero component](#hero) above.
+
+
+***/
+
+.m-share {
+  display: inline-block;
+  position: relative;
+
+  @include breakpoint('large+') {
+    display: block;
+    text-align: right;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.no-js .m-share {
+  display: none;
+}
+
+.m-share__btn {
+
+  svg {
+    display: inline-block;
+    margin-right: 5px;
+    position: relative;
+    top: -2px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.m-share__list {
+  background: $color__white;
+  bottom: calc(100% + 14px);
+  color: $color__copy--light;
+  left: 0;
+  padding: 26px 15px 0;
+  position: absolute;
+  text-align: left;
+  width: 170px;
+
+  @include breakpoint('medium+') {
+    bottom: calc(100% + 19px);
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  @include breakpoint('large+') {
+    bottom: calc(100% + 29px);
+    left: auto;
+    right: 0;
+    padding: 24px 25px 0 30px;
+  }
+}
+
+.m-share__list > li {
+  list-style: none;
+  margin-left: 0;
+}
+
+.m-share__list br {
+  display: none;
+}
+
+.m-share__link {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  font-family: $sans-serif--loaded;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 1px 0;
+  text-align: left;
+  text-decoration: none;
+
+  &:hover {
+    color: $color__red--barnes;
+  }
+
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  &.focus-ring {
+
+  }
+}
+
+button.m-share__link {
+  margin-left: -1px;
+}
+
+.m-share__label {
+  margin-top: 10px;
+}
+
+/**
+ * Our permalink.
+ * This must _not_ be type="hidden" and must not be display: none otherwise the
+ * copy function with JavaScript will not work
+ */
+.m-share__hidden-input {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0;
+  width: 100px;
+}

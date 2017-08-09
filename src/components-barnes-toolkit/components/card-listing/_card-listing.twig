@@ -1,0 +1,45 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Listing title' %}
+{% endif %}
+
+{% if date is empty %}
+  {% set date = 'now'|date('l, M j') %}
+{% endif %}
+
+{% if link is empty %}
+  {% set link = '#' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>Summary will sit here.</p>'
+    ]
+  %}
+{% endif %}
+
+{% if image is empty %}
+  {% set image = '//placehold.it/170x112' %}
+{% endif %}
+
+<div class="m-card-listing">
+  <div class="m-card-listing__header">
+    <a class="m-card-listing__media-link" href="{{ link }}">
+      <img class="m-card-listing__media" src="{{ image }}" alt="{{ title }}">
+    </a>
+  </div>
+  <div class="m-card-listing__body">
+    <h3 class="font-delta m-card-listing__title">{{ title }}</h3>
+    <div class="font-epsilon m-card-listing__date">{{ date }}</div>
+    <div class="m-card-listing__summary">
+      {% for p in summary %}
+        {{ p|raw }}
+      {% endfor %}
+    </div>
+    {# Remember to add context to the link by putting something in the `<span class="visuallyhidden">` container #}
+    <div class="m-card-listing__link">
+      <a class="a-brand-link" href="{{ link }}">Learn more<span class="visuallyhidden"> about {{ title }}</span></a>
+    </div>
+  </div>
+</div>

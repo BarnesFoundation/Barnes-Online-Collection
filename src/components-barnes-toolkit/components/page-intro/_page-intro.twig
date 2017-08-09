@@ -1,0 +1,37 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Page title' %}
+{% endif %}
+
+{% if summary is empty %}
+  {% set summary = '<p>The art of the page summary: convince people in a small paragraph that the rest of the page is worth reading&hellip;</p>' %}
+{% endif %}
+
+{% if backLink is empty %}
+  {% set backLink = '/pages/whats-on.php' %}
+{% endif %}
+
+{% if backLabel is empty %}
+  {% set backLabel = 'Back' %}
+{% endif %}
+
+<div class="m-page-intro">
+  {% if noBreadcrumb is empty %}
+    <a class="font-smallprint a-breadcrumb m-page-intro__breadcrumb" href="{{ backLink }}">
+      <svg width="27" height="10" class="a-breadcrumb__icon"><use xlink:href="#icon--icon_arrow-back"></use></svg>
+      <span class="a-breadcrumb__label">{{ backLabel }}</span>
+    </a>
+  {% endif %}
+  <h1 class="page-title m-page-intro__title">{{ title }}</h1>
+  {% if noSummary is empty %}
+  <div class="m-page-intro__summary font-chapo">
+    {{ summary|raw }}
+  </div>
+  {% endif %}
+  {% if date is defined %}
+  <div class="m-page-intro__date">
+    {{ date|raw }}
+  </div>
+  {% endif %}
+</div>
+

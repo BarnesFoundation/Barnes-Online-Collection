@@ -1,0 +1,25 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Page title' %}
+{% endif %}
+
+{% if summary is empty %}
+  {% set summary = '<p>The art of the page summary: convince people in a small paragraph that the rest of the page is worth reading&hellip;</p>' %}
+{% endif %}
+
+{% if backLink is empty %}
+  {% set backLink = '/pages/whats-on.php' %}
+{% endif %}
+
+{% if cta is empty %}
+  {% set cta = { copy: 'DO something', link: '#' } %}
+{% endif %}
+
+<div class="container">
+  <div class="m-page-intro m-page-intro--has-cta">
+    <div class="m-page-intro__summary font-chapo">
+      {{ summary|raw }}
+    </div>
+    <p><a class="btn btn--primary m-page-intro__cta" href="{{ cta.link }}">{{ cta.copy }}</a></p>
+  </div>
+</div>

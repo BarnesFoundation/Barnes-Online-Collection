@@ -1,0 +1,26 @@
+{#
+
+Sponsor component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set image = '//placehold.it/130x90' %}
+  {% set title =  'A slightly longer sponsor name #CMS' %}
+{% endif %}
+
+{# Image has empty alt text because the partnerName will always convey the content as the logo/wordmark #}
+<div class="m-sponsor">
+  <div class="m-sponsor__media">
+    <img src="{{ image }}" alt="">
+  </div>
+  <div class="m-sponsor__summary">
+    <p>{{ title|raw }}</p>
+  </div>
+</div>

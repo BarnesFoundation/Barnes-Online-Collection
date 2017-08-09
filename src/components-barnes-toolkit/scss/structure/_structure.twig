@@ -1,0 +1,232 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../../components/' %}
+{% endif %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US" class="no-js{% if hasHero is defined %} has-hero{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Barnes Foundation</title>
+  [script]document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');[/script]
+  <!-- CSS *before any blocking scripts -->
+  <link rel="stlyesheet" href="/dist/scripts/app.css">
+  <!-- Main Favicon -->
+  <link rel="shortcut icon" href="/dist/images/favicons/favicon.ico">
+  <!-- Apple Touch Icons (ipad/iphone standard+retina) -->
+  <link rel="apple-touch-icon" href="/dist/images/favicons/favicon-152.png"> <!-- General use iOS/Android icon, auto-downscaled by devices. -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-120.png" sizes="120x120"> <!-- iPhone retina touch icon -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-76.png" sizes="76x76"> <!-- iPad home screen icons -->
+  <!-- Favicon Fallbacks for old browsers that don't read .ico -->
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-16.png" sizes="16x16">
+
+  <!-- Insert HTML5 shiv for older browsers like Internet Explorer 8,7 or 6 -->
+  <!--[if lt IE 9]>
+    [script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"][/script]
+  <![endif]-->
+  <!-- insert head.js - ideally minified and inline and not linked like this -->
+  [script src="/dist/scripts/head.js"][/script]
+  </head>
+
+<body>
+<div id="a17">
+
+  <!-- Skip links for accessibility reasons (keyboard users need them) -->
+	<a class="a-skip" href="#content">Skip to content</a>
+	<a class="a-skip" href="#footer">Skip to footer</a>
+	<!--/ Skip links -->
+
+  <!-- Header -->
+  <header class="g-header" data-behavior="header">
+    <div class="container">
+      <!-- Logo -->
+      {% if homePage is defined %}
+      <h1 class="a-logo g-header__logo">
+        <span class="html4-label">Barnes</span>
+        <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+          <title id="logo-title">Barnes</title>
+          <use xlink:href="#icon--logo-s"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-m"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-l"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-xl"></use>
+        </svg>
+      </h1>
+      {% else %}
+      <a class="a-logo g-header__logo" href="/">
+        <span class="html4-label">Barnes</span>
+        <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+          <title id="logo-title">Barnes</title>
+          <use xlink:href="#icon--logo-s"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-m"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-l"></use>
+        </svg>
+        <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+          <title>Barnes</title>
+          <use xlink:href="#icon--logo-xl"></use>
+        </svg>
+      </a>
+      {% endif %}
+      <!--/ Logo -->
+
+      <!-- Mini-nav -->
+      <nav class="g-header__nav">
+        <a class="g-header__nav__link" href="#">What’s On</a>
+        <a class="g-header__nav__link" href="#" aria-current="true">Plan your Visit</a>
+        <a class="g-header__nav__link" href="#">Our Collection</a>
+        <a class="g-header__nav__link" href="/static/pages/class.php">Take a Class</a>
+        <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="search-open-title">
+          <svg width="26" height="26">
+            <title id="search-open-title">Search</title>
+            <use xlink:href="#icon--icon_search"></use>
+          </svg>
+        </button>
+        <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-search-hide type="button" aria-labelledby="search-hide-title">
+          <svg width="26" height="26">
+            <title id="search-hide-title">Hide Search</title>
+            <use xlink:href="#icon--icon_search"></use>
+          </svg>
+        </button>
+        <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="nav-open-title">
+          <svg width="26" height="26">
+            <title id="nav-open-title">Menu</title>
+            <use xlink:href="#icon--icon_menu"></use>
+          </svg>
+        </button>
+      </nav>
+      <!--/ Mini-nav -->
+    </div>
+
+    <!-- Search (off-canvas) -->
+    {% include path ~ "search-bar/_search-bar.twig" %}
+    <!--/ Search -->
+  </header>
+  <div class="m-search-bar-overlay" data-search-overlay></div>
+  <!--/ Header -->
+
+  <!-- Nav (off-canvas) -->
+  {% include path ~ "nav/_nav.twig" %}
+  <!--/ Nav -->
+
+  <!-- Mobile only quick nav -->
+  {% include path ~ "mobile-options/_mobile-options.twig" %}
+  <!--/ Mobile only quick nav -->
+
+	<!--
+    Main
+    by setting tabindex="-1" on this we can ensure that users sent here via the Skip to content link
+    will have their :focus sent here too
+  -->
+  <main id="content" tabindex="-1">
+    [COMPONENTS]
+  </main>
+  <!--/ Main -->
+
+  <!--
+    Footer
+    by setting tabindex="-1" on this we can ensure that users sent here via the SKip to footer link
+    will have their :focus sent here too
+  -->
+  <footer id="footer" class="g-footer{% if noBorder is defined %} g-footer--no-border{% endif %}{% if flushTop is defined %} g-footer--flush-top{% endif %}" tabindex="-1">
+    <div class="container">
+      <!-- Footer actions -->
+      <div class="g-footer__actions">
+
+        <div class="g-footer__col">
+          <div class="g-footer__cta">
+            <div class="font-delta g-footer__cta-title">Your support help research and conservation at Barnes, so we can present our exhibitions and events.</div>
+
+            <div class="m-btn-group">
+              <a class="btn" href="#">Donate</a>
+              <a class="btn" href="#">Become a Member</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="g-footer__col g-footer__details">
+          <div class="vcard g-footer__address">
+            <h2 class="font-zeta">Location</h2>
+            <div>
+              <p class="adr">
+                <span class="street-address">2025 Benjamin Franklin Parkway</span><br>
+                <span class="locality">Philadelphia</span>, <span class="region">PA</span> <span class="postcode">19130</span><br>
+                Phone: <span class="tel">215-278-7000</span>
+              </p>
+            </div>
+            <div class="g-footer__address__link">
+              <p><a href="https://www.google.com/maps?cid=5415126767940621792">Get directions</a></p>
+            </div>
+          </div>
+          <div class="g-footer__hours">
+            <h2 class="font-zeta">Hours</h2>
+            <p>Wed — Mon: 10am &ndash; 5pm<br>
+            First Friday: 6 &ndash; 9pm<br>
+            Tuesday closed</p>
+          </div>
+
+          <!-- Newsletter subscription form -->
+          <div class="g-footer__subscribe">
+            <h2 class="font-zeta">Newsletter</h2>
+            {% include path ~ "newsletter/_newsletter.twig" %}
+          </div>
+          <!--/ Newsletter subscription form -->
+        </div>
+
+      </div>
+      <!--/ Footer actions -->
+
+      <!-- Footer auxiliary -->
+      <div class="g-footer__auxiliary">
+          <nav class="g-footer__nav" aria-labelledby="footernav-heading">
+            <h2 id="footernav-heading" class="visuallyhidden">Useful links</h2>
+            <a class="g-footer__nav__link" href="#">&copy; The Barnes Foundation</a>
+            <a class="g-footer__nav__link" href="#">Terms &amp; Conditions</a>
+            <a class="g-footer__nav__link" href="#">Privacy Statement</a>
+            <a class="g-footer__nav__link" href="#">Accessibility</a>
+            <a class="g-footer__nav__link" href="#">Contact</a>
+          </nav>
+
+          <div class="g-footer__social-container">
+            <nav class="g-footer__social" aria-labelledby="socialnav-heading">
+              <h2 id="socialnav-heading" class="visuallyhidden">Find us on social media</h2>
+              <a class="g-footer__social__link" href="https://twitter.com/the_barnes">
+                <svg width="20" height="20"><title>Twitter</title><use xlink:href="#icon--icon_twitter"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.facebook.com/barnesfoundation">
+                <svg width="20" height="20"><title>Facebook</title><use xlink:href="#icon--icon_facebook"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.youtube.com/barnesfoundation">
+                <svg width="20" height="20"><title>YouTube</title><use xlink:href="#icon--icon_youtube"></use></svg>
+              </a>
+              <a class="g-footer__social__link" href="https://instagram.com/barnesfoundation/">
+                <svg width="20" height="20"><title>Instagram</title><use xlink:href="#icon--icon_instagram"></use></svg>
+              </a>
+            </nav>
+            <a class="g-footer__a17" href="http://area17.com/?utm_source=<?php echo urlencode('http://www.barnesfoundation.org/'); ?>&amp;utm_medium=referral&amp;utm_campaign=footer-credit-2016">Site by AREA 17</a>
+          </div>
+      </div>
+      <!--/ Footer auxiliary -->
+    </div>
+  </footer>
+  <!--/ Footer -->
+</div>
+<!-- insert app.js -->
+[script src="/dist/scripts/app.js"][/script]
+</body>
+</html>

@@ -1,0 +1,69 @@
+
+//
+// Block Styles
+//
+
+
+// Page Wrapper
+.page-wrapper {
+  margin-bottom: -55px;
+  min-height: 100%;
+  @include debug-colors(green);
+}
+
+
+// Content Container
+.content-container {
+  @include debug-colors(yellowgreen);
+  transform: translate3d(0, 0, 0);
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  padding: 14px 25px;
+
+  transition: transform $fast cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  transform-style: preserve-3d;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    padding: 23px 30px;
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    padding-right: 44px;
+    padding-left: 44px;
+  }
+
+  @include breakpoint($tablet-landscape-width) {
+    padding-left: 50px;
+  }
+}
+
+.is-menu-expanded .content-container {
+  transform: translate3d($sidebar-mobile-width, 0, 0);
+  @include debug-colors(orange);
+
+  @include breakpoint(375px)  {
+    transform: translate3d($sidebar-mobile-width-big, 0, 0);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+
+  @media print {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.is-loading .content-container,
+.is-menu-expanded .content-container {
+  @include breakpoint($breakpoint-max-width) {
+    transform: translate3d(($sidebar-width / 2), 0, 0);
+  }
+
+  @media print {
+    transform: translate3d(0, 0, 0);
+  }
+}

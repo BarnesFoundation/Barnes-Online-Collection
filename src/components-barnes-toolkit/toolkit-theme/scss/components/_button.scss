@@ -1,0 +1,126 @@
+
+//
+// Button Styles
+//
+
+
+// Nav Button
+.nav-btn {
+  border-left: 1px solid $color-light;
+  @include debug-colors(green);
+  @extend %remove-tap-color;
+  @include inline-block(top);
+  z-index: $zIndex-1;
+  padding: 27px 22px;
+  cursor: pointer;
+  height: 60px;
+  width: 55px;
+
+  transition: transform $fast cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  transform-style: preserve-3d;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    padding: 37px 30px;
+    height: 32px;
+    width: 60px;
+  }
+}
+
+.desktop .nav-btn:hover {
+  // background-color: #f9f9f9;
+  color: #808080;
+}
+
+.nav-btn.is-disabled,
+.desktop .nav-btn.is-disabled:hover {
+  transition: none;
+  cursor: default;
+  color: #ccc;
+}
+
+
+// Nav Button - Icon
+.nav-btn__icon {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 18px;
+  margin-left: 0;
+  margin-top: -11px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-left: -5px;
+  }
+}
+
+
+// Nav Button - Hamburger
+.nav-btn--hamburger {
+  position: absolute;
+  border-left: none;
+  display: inherit;
+  left: 0;
+
+  @media print {
+    display: none;
+  }
+}
+
+.is-loading .nav-btn--hamburger {
+  @include breakpoint($tablet-landscape-width + 1) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+}
+
+.is-menu-expanded .nav-btn--hamburger {
+  transform: translate3d($sidebar-mobile-width, 0, 0);
+
+  @include breakpoint(375px)  {
+    transform: translate3d($sidebar-mobile-width-big, 0, 0);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    transform: translate3d($sidebar-width, 0, 0);
+  }
+}
+
+
+// Nav Button - Hamburger Icon
+.nav-btn--hamburger .nav-btn__icon,
+.nav-btn--hamburger .nav-btn__icon:before,
+.nav-btn--hamburger .nav-btn__icon:after {
+  background-color: #bfbfbf;
+  position: absolute;
+  content: "";
+  height: 2px;
+  width: 16px;
+}
+
+.desktop .nav-btn--hamburger:hover .nav-btn__icon,
+.desktop .nav-btn--hamburger:hover .nav-btn__icon:before,
+.desktop .nav-btn--hamburger:hover .nav-btn__icon:after {
+  background-color: #808080;
+}
+
+.nav-btn--hamburger .nav-btn__icon {
+  margin: 2px 0 0;
+  left: 19px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    left: 24px;
+    margin-top: -1px;
+  }
+}
+
+.nav-btn--hamburger .nav-btn__icon:before {
+  top: -5px;
+}
+
+.nav-btn--hamburger .nav-btn__icon:after {
+  bottom: -5px;
+}
+
+
+// Nav Set
+.nav-set {
+  font-size: 0;
+}

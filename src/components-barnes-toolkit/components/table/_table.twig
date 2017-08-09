@@ -1,0 +1,34 @@
+{# If some key variables are missing, load in the default content #}
+
+{% if rows is empty %}
+{%
+  set rows = [
+    {
+      th: 'Monday &ndash; Sunday',
+      td: '10am &ndash; 5pm'
+    },
+    {
+      th: 'Tuesday:',
+      td: 'Closed'
+    },
+    {
+      th: 'Extended hours',
+      td: 'Every 1st Friday 6pm &ndash; 9pm'
+    }
+  ]
+%}
+{% endif %}
+
+<table class="m-table">
+  {% if caption is defined %}
+    <caption>{{ caption }}</caption>
+  {% endif %}
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <th scope="row">{{ row.th|raw }}</th>
+      <td>{{ row.td|raw }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

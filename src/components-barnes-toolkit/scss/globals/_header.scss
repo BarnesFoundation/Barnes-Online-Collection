@@ -1,0 +1,402 @@
+/**
+
+Header
+
+*Note*: The active page is marked out by the `aria-current="true"`
+attribute/value pair which is good for accessibility purposes.
+
+Note2
+
+This CSS has descended into a bit of a breakpoint mess with
+position: absolutes everwyhere. This is because the designer significantly
+changed the layout 3 times.
+
+**/
+
+
+/**
+ * 1 the height is set in the variables file. This makes things so much easier
+ * and we can use the value across the site’s CSS
+ */
+.g-header {
+  background-color: $color__white;
+  color: $color__black;
+  height: #{map-get($headerHeights, 'xsmall')}; /* 1 */
+  left: 0;
+  padding: 3px 0 0;
+  position: fixed;
+  top: 0;
+  transform: translate3d(0, 0, 0);
+  transition: background 250ms ease, transform 300ms ease;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'header')};
+
+  @include breakpoint('medium+') {
+    height: #{map-get($headerHeights, 'medium')}; /* 1 */
+  }
+
+  @include breakpoint('large+') {
+    height: #{map-get($headerHeights, 'large')}; /* 1 */
+    padding-top: 0;
+  }
+
+  @include breakpoint('xlarge+') {
+    height: #{map-get($headerHeights, 'xlarge')}; /* 1 */
+    padding-top: 2px;
+  }
+
+  @media print {
+    color: $color__copy--dark !important;
+    position: relative;
+  }
+}
+
+.g-header > .container {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/**
+ * List of page links
+ */
+.g-header__nav {
+  align-items: center;
+  display: flex;
+  font-family: $sans-serif--loaded;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @media print {
+    display: none;
+  }
+}
+
+/**
+ * Page links
+ */
+.g-header__nav__link {
+  border-bottom: 2px solid transparent;
+  color: currentColor;
+  font-size: 22px;
+  margin: 2px 10px 0;
+  text-decoration: none;
+  transition: color 150ms ease 50ms;
+
+  @include breakpoint('large-') {
+    margin-top: 0;
+  }
+
+  @include breakpoint('medium-') {
+    display: none;
+  }
+
+  // Active page
+  &[aria-current] {
+    color: $color__red--barnes;
+    border-bottom-color: currentColor;
+  }
+
+  &:focus:not(.focus-ring) {
+    border-bottom-color: currentColor;
+  }
+
+  &:hover {
+    color: $color__red--barnes;
+  }
+
+  &:focus:hover {
+    color: currentColor;
+  }
+}
+
+/**
+ * Button e.g. for clicking to show the menu or search option
+ */
+.g-header__nav__btn {
+  color: currentColor;
+  margin: 0;
+  position: relative;
+  top: -2px;
+  transition: color 250ms ease-in;
+
+  @include breakpoint('large+') {
+    top: 2px;
+  }
+
+  &:hover {
+    color: $color__red--barnes;
+  }
+
+  &:focus:not(.focus-ring) {
+    color: $color__red--barnes;
+    outline: none;
+  }
+}
+
+.no-js .g-header__nav__btn {
+  display: none;
+}
+
+/**
+ * Tweak the positioning/spacing of these buttons for utter perfection ;)
+ */
+.g-header__nav__btn:not(:last-of-type) {
+  @include breakpoint('medium-') {
+    display: none;
+  }
+}
+
+.g-header__nav__btn:first-of-type,
+.g-header__nav__btn + .g-header__nav__btn {
+  margin-left: 30px;
+}
+
+.g-header__nav__btn:last-of-type {
+  margin-left: 30px;
+  margin-right: -2px;
+}
+
+.g-header__nav__btn + .g-header__nav__btn {
+  margin-top: 0;
+}
+
+/**
+ * Set the colour of the logo when it appears in the header
+ * this is overruled in one of our _state_ scss files e.g. /frontend/scss/state/has-hero.scss
+ */
+.g-header .a-logo {
+  color: $color__logo;
+
+  @media print {
+    color: $color__copy--dark !important;
+  }
+}
+
+
+/**
+ * Site title
+ */
+.g-header__site {
+  @include font-site-title();
+
+  color: $color__red--barnes;
+
+  @include breakpoint('medium') {
+    margin-right: 50px;
+    position: relative;
+    top: 7px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 25px;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-bottom: 0;
+  }
+
+  @include breakpoint('small-') {
+    margin-left: 15px;
+    max-width: 50px;
+    position: relative;
+    top: 4px;
+  }
+}
+
+/**
+ * Shopify header
+ */
+
+.g-header--shopify {
+  border-bottom: 1px solid $color__border;
+  height: #{map-get($headerHeightsShopify, 'xsmall')};
+  padding-top: 0;
+
+  @include breakpoint('medium+') {
+    height: #{map-get($headerHeightsShopify, 'medium')};
+  }
+
+  @include breakpoint('large+') {
+    height: #{map-get($headerHeightsShopify, 'large')};
+  }
+
+  @include breakpoint('xlarge+') {
+    border-bottom: none;
+    height: #{map-get($headerHeightsShopify, 'xlarge')};
+  }
+
+  @include breakpoint('xxlarge') {
+    height: #{map-get($headerHeightsShopify, 'xxlarge')};
+  }
+}
+
+.g-header--print {
+  @include breakpoint('xlarge+') {
+    border-bottom: none;
+    height: #{map-get($headerHeights, 'xlarge')};
+  }
+
+  @include breakpoint('xxlarge') {
+    height: #{map-get($headerHeights, 'xxlarge')};
+  }
+}
+
+.g-header--shopify > .container {
+  height: auto;
+
+  @include breakpoint('small-') {
+    justify-content: flex-start;
+  }
+}
+
+.g-header--shopify .a-logo {
+  margin: 17px 0 11px;
+
+  @include breakpoint('medium') {
+    margin-top: -5px;
+  }
+
+  @include breakpoint('large') {
+    position: relative;
+    top: -25px;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-bottom: 30px;
+    margin-top: -1px;
+  }
+}
+
+.g-header__top-bar {
+  @include reset-link-color();
+
+  color: $color__copy--medium;
+  font-family: $sans-serif--loaded;
+  font-size: 18px;
+  justify-content: flex-end !important;
+
+  @include breakpoint('small-') {
+    right: 0;
+    position: absolute;
+    top: 13px;
+  }
+
+  @include breakpoint('medium') {
+    position: relative;
+    top: 3px;
+  }
+
+  @include breakpoint('xlarge+') {
+    position: relative;
+    top: 15px;
+    z-index: #{map-get($zIndexes, 'headerTopBar')}
+  }
+
+  a:focus:not(.focus-ring),
+  a:not(.btn):not(.a-brand-link):hover {
+    color: $color__copy--dark;
+  }
+
+  a:focus {
+    text-decoration: underline;
+  }
+}
+
+.g-header__top-bar .g-header__nav__btn {
+  color: $color__copy--dark;
+  display: block;
+  margin-left: 15px;
+  margin-top: 10px;
+
+  @include breakpoint('small-') {
+    margin-left: 30px;
+    position: relative;
+    top: -3px;
+    z-index: #{map-get($zIndexes, 'shopifyHeaderButton')};
+  }
+
+  @include breakpoint('medium') {
+    bottom: -82px;
+    position: absolute;
+    right: 40px;
+    z-index: #{map-get($zIndexes, 'shopifyHeaderButton')};
+  }
+
+  @include breakpoint('large+') {
+    position: relative;
+    top: -1px;
+  }
+
+  @include breakpoint('xlarge') {
+    display: none;
+  }
+}
+
+.g-header__home {
+  padding-right: 20px;
+  padding-top: 10px;
+
+  @include breakpoint('small-') {
+    display: none;
+  }
+}
+
+.g-header__auxiliary {
+  display: flex;
+  width: auto;
+}
+
+.g-header__search {
+  padding-right: 20px;
+  padding-top: 10px;
+
+  @include breakpoint('small-') {
+    display: none;
+  }
+}
+
+.g-header__cart {
+  padding-top: 10px;
+
+  @include breakpoint('small-') {
+    margin-right: -17px;
+    padding-top: 7px;
+  }
+}
+
+.g-header__auxiliary svg {
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  vertical-align: middle;
+}
+
+.g-header__search svg {
+  top: 0;
+}
+
+.g-header__cart svg {
+  margin-right: 5px;
+  top: -1px;
+}
+
+.site-header__cart-count {
+  background-color: $color__red--barnes;
+  border-radius: 50%;
+  color: $color__white;
+  display: inline-block;
+  font-family: $sans-serif--loaded;
+  font-size: 13px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  width: 20px;
+}
+
+.site-header__cart-count--empty {
+  background-color: $color__copy--medium;
+}

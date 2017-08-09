@@ -1,0 +1,112 @@
+/**
+
+Variables
+===
+
+**/
+
+// Max widths the main column can run to over the breakpoints
+// values can either be 'fluid' or a pixel value
+// recommended xxlarge is a px value and xsmall is fluid
+$main-col-widths: (
+  xxlarge: 1440px,
+  xlarge: 'fluid',
+  large: 'fluid',
+  medium: 'fluid',
+  small: 'fluid',
+  xsmall: 'fluid'
+);
+
+// Inner gutters, in px or vw, of each breakpoint
+$inner-gutters: (
+  xxlarge: 40px,
+  xlarge: 40px,
+  large: 30px,
+  medium: 30px,
+  small: 20px,
+  xsmall: 20px
+);
+
+// Outer gutters, in px or vw, of each breakpoint
+$outer-gutters: (
+  xxlarge: 80px,
+  xlarge: 80px,
+  large: 60px,
+  medium: 40px,
+  small: 25px,
+  xsmall: 25px
+);
+
+// How many columns are in each breakpoint
+$column-count: (
+  xxlarge: 12,
+  xlarge: 12,
+  large: 12,
+  medium: 6,
+  small: 2,
+  xsmall: 2
+);
+
+// Breakpoint information, where each starts and stops
+// if a breakpoint is not fluid, then the start value is equal to the main col value plus 2x the gutter at this breakpoint
+$breakpoints: (
+  xsmall: (start: null, end: 413),
+  small: (start: 414, end: 649),
+  medium: (start: 650, end: 989),
+  large: (start: 990, end: 1199),
+  xlarge: (start: 1200, end: 1599),
+  xxlarge: (start: 1600, end: null)
+);
+
+// Uniform border radius
+$border-radius: 2px;
+
+// Some easing functions
+$bezier--bounce: cubic-bezier(.5, -.6, .5, 1.6);
+$bezier--ease-in-out: cubic-bezier(.5, 0, .5, 0);
+
+// Z-index
+// Lets avoid z-index hell by keeping a map here
+$zIndexes: (
+  skip: 6,
+  nav: 5,
+  navClose: 4,
+  shopifyHeaderButton: 4,
+  alert: 3,
+  headerTopBar: 4,
+  header: 3,
+  chapterCopy: 2,
+  exhibitionHeroCopy: 2,
+  navNoJS: 2,
+  heroCopy: 1,
+  chapterOverlay: 1,
+  exhibitionHeroOverlay: 1,
+  tabs: 1,
+  tagListDropdown: 1,
+  shopifyCollectionTitle: 1,
+  productGalleryThumb: 1,
+  FourOhFourCopy: 1,
+  accordionTabFocus: 1,
+  shopifyProductListTag: 1,
+  shopifyProductListImage: 0
+);
+
+// Header heights
+$headerHeights: (
+  xxlarge: 130px,
+  xlarge: 130px,
+  large: 110px,
+  medium: 100px,
+  small: 70px,
+  xsmall: 70px
+);
+
+// Header heights (for Shopify header)
+$headerHeightsShopify: (
+  xxlarge: 201px,
+  xlarge: 198px,
+  large: 110px,
+  medium: 110px,
+  small: 70px,
+  xsmall: 70px
+);

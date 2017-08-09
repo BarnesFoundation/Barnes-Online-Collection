@@ -1,0 +1,71 @@
+{#
+  Timeline component
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Program in detail' %}
+{% endif %}
+
+{% if timelines is empty %}
+  {%
+    set timelines = [
+      {
+        time: '7.15pm',
+        title: 'Pre-concert lecture with Spencer Topel',
+        summary: [
+          '<p>A one sentence/paragraph summary for the timeline piece.</p>'
+        ],
+        artwork: {
+          id: 1,
+          title: 'Timeline artwork title'
+        }
+      },
+      {
+        time: '9.30pm',
+        title: 'Concert with Pauline Kim harris and Spencer Topel',
+        summary: [
+          '<p>A one sentence/paragraph summary for the timeline piece.</p>'
+        ]
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block__columns">
+  <div class="m-block__column">
+    <h2 class="font-gamma m-block__title">{{ title }}</h2>
+  </div>
+  <div class="m-block__column">
+    {% for timeline in timelines %}
+      <div class="m-timeline">
+        <h3 class="font-delta">
+          <span class="m-timeline__pre-title">{{ timeline.time }}</span>
+          <span class="m-timeline__title">{{ timeline.title }}</span>
+        </h3>
+        <div class="m-timeline__summary">
+          {% for p in timeline.summary %}
+            {{ p|raw }}
+          {% endfor %}
+        </div>
+        {% if timeline.button is defined %}
+        <div class="m-timeline__cta">
+          <p>
+            <a class="btn btn--primary" href="{{ timeline.button.href }}">{{ timeline.button.copy }} <span class="visuallyhidden"> for {{ title }}</span></a>
+          </p>
+        </div>
+        {% endif %}
+        {% if timeline.artwork is defined %}
+        <div class="m-timeline__media">
+          {% include path ~ 'card-artwork/_card-artwork.twig' with timeline.artwork %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

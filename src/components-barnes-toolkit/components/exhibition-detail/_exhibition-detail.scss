@@ -1,0 +1,140 @@
+/***
+
+Exhibition detail
+====
+* Class used: `m-exhibition-detail`
+* Modifier classes: `m-exhibition-detail--less`
+* Tags used on: `<div>`
+
+Underneath the `o-exhibition-hero` (or `o-hero--event`) sits a details block
+with prices, metadata and a couple of call to action buttons.
+
+If may contain a red 'Buy' button or a greyed-out button to indicate the show is
+sold out or free. A greyed out button should be a `<span>` tag and not an `<a>`
+tag as that would be clickable.
+
+It may also omit the second column's copy - although its HTML structure will
+stay in place.
+
+***/
+
+.m-exhibition-detail {
+  padding: 20px 0 30px;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 45px;
+    padding-top: 40px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 55px;
+    padding-top: 59px;
+  }
+}
+
+.m-exhibition-detail__prices {
+  color: $color__copy--medium;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 15px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 0;
+    top: 5px;
+  }
+
+  @include breakpoint('xlarge+') {
+    max-width: 200px;
+  }
+
+  a:not(.btn) {
+    color: currentColor;
+    text-decoration: underline;
+  }
+
+  a:not(.btn):hover {
+    text-decoration: none;
+  }
+}
+
+.m-exhibition-detail__meta {
+  color: $color__copy--medium;
+  position: relative;
+
+  &:empty {
+    @include breakpoint('medium-') {
+      display: none;
+    }
+  }
+
+  @include breakpoint('large+') {
+    top: 5px;
+  }
+}
+
+/**
+ * Button container
+ */
+.m-exhibition-detail__cta {
+  margin-top: 2px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 0;
+  }
+}
+
+/**
+ * Increase the specificity of this rule to override
+ * the rules earlier in the stylesheet to do with `m-block-columns` and
+ * `m-block-column`
+ */
+.m-exhibition-detail__cta.m-exhibition-detail__cta {
+  margin-top: 2px;
+
+  @include breakpoint('medium+') {
+    margin-top: 22px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 0;
+  }
+}
+
+/**
+ * Buttons
+ * We want these 50% width (minus gutters) on all screens medium and up
+ */
+.m-exhibition-detail__cta .btn {
+  @include font-btn-bold();
+
+  margin-top: 20px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-left: 0;
+    margin-top: 0;
+    max-width: calc(50% - #{map-get($inner-gutters, 'medium')} / 2);
+    min-width: calc(50% - #{map-get($inner-gutters, 'medium')} / 2);
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-left: 0;
+    min-width: 1px;
+    width: calc(50% - #{map-get($inner-gutters, 'xlarge')} / 2);
+  }
+
+  @include breakpoint('small-') {
+    margin-left: 0;
+  }
+}

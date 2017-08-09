@@ -1,0 +1,88 @@
+{#
+
+Media Block component
+
+Notes:
+The `m-block--no-border` and `m-block--flush-top` classes hide the top border
+and remove the padding-top.
+
+There are two view options below. Sorry, that is because of the way I structured
+the data array :(
+
+See /static/pages/media-cards.php for how the data array works.
+
+The `mediaDone` boolean will stop the 2nd option from running and a 100% width
+image showing twice.
+
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{% if media is empty %}
+  {%
+    set media = [
+      {
+        id: 1
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block m-block--media m-block--no-border m-block--flush-top">
+  {#
+
+    MEDIA Just one image
+    ---
+    1 show one 100% width image
+    2 show one 50% width image/artwork card on right side of container
+
+  #}
+  {% if artwork is defined and media|length < 2 %}
+  {% set mediaDone = true %}
+    {% for item in media %}
+      {% if item.fullWidth is defined %}
+        {% include path ~ 'card-artwork/_card-artwork--100pc.twig' with item %}
+      {% else %}
+          <div class="m-block__columns">
+            <div class="m-block__column">&nbsp;</div>
+            <div class="m-block__column">
+              {% include path ~ 'card-artwork/_card-artwork.twig' with item %}
+            </div>
+          </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {#
+
+    MEDIA one or many images (or an embed)
+    ---
+    1 - show one or more full-width image/artwork card
+    2 - show two x 50% width image/artwork card (show columns)
+    3 - show one video or audio file (it's an iframe basically)
+
+  #}
+  {% if artwork is empty or media|length > 1 and mediaDone is empty %}
+  <div class="{% if artwork is defined and media|length > 1 %} m-block__columns{% endif %}">
+    {% for item in media %}
+      {% if artwork is defined %}
+        {% if item.fullWidth is defined %}
+          {% include path ~ 'card-artwork/_card-artwork--100pc.twig' %}
+        {% else %}
+          {% if media|length > 1 %}<div class="m-block__column">{% endif %}
+          {% include path ~ 'card-artwork/_card-artwork.twig' with item %}
+          {% if media|length > 1 %}</div>{% endif %}
+        {% endif %}
+      {% else %}
+        <div class="embed-responsive" data-behavior="EmbedResponsive">
+          {{ item.source|raw }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

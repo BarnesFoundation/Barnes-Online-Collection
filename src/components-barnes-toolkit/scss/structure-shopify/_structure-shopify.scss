@@ -1,0 +1,19 @@
+/***
+
+Structure (Shopify)
+=====
+Shopify sites have a slightly different structure.
+The header and the footer differ.
+
+The class `shopify-html` on the `HTML` tag caters for the Shopify site having a
+menu beneath the logo on large screens.
+
+For Shopify sites without that menu add this class `print-shop-html` instead.
+
+*Note*:
+
+This HTML code is not meant to be copied and pasted to have an instant
+Shopify theme, it will still need integration work if used in a dynamic site
+like Shopify or Craft.
+
+***/

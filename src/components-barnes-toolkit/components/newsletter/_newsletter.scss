@@ -1,0 +1,141 @@
+/***
+
+Newsletter subscribe form
+====
+* Class name: `m-newsletter`
+* Tags used on: `<form>`
+
+
+The newsletter sign-up form normally sits inside the footer but can in theory
+live anywhere on the page.
+
+*Integration:*
+
+Do not forget to ensure the newsletter sign-up form is integrated with the
+correct `action` attribute on the `form` tag and also the `<input>` _name_
+attribute values and the _value_ attribute values match those supplied by the
+newsletter service e.g. mailchimp, campaign monitor, silverpop or wufoo.
+
+*Accessibility note:*
+
+Please ensure that the `<input` field is `type="email"` and not `type="text"` this
+will be a great help for iPad/iPhone users who will see the right keyboard popup
+for them.
+
+***/
+
+/**
+ * 1 override an .form-field rule
+ */
+.m-newsletter__field {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 0; /* 1 */
+}
+
+/**
+ * Email input field
+ * should be [type="email"]
+ */
+.m-newsletter__input {
+  appearance: none;
+  border: 2px solid $color__border;
+  border-width: 2px 0 2px 2px;
+  border-radius: 0;
+  color: $color__copy--light;
+  display: block;
+  font-size: 16px;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 22px;
+  width: calc(100% - 60px);
+
+  &::placeholder {
+    color: $color__copy--light;
+    opacity: 1;
+  }
+
+  &:focus {
+    color: $color__copy--dark;
+  }
+
+  /* Establish desired focus ring appearance for appropriate input modalities */
+  &:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  &.focus-ring {
+    border-color: $color__border--dark;
+    outline: none;
+  }
+
+  &:invalid {
+    box-shadow: none;
+    outline: none;
+  }
+
+  @include breakpoint('small+') {
+    font-size: 18px;
+    width: calc(100% - 140px);
+  }
+
+  @include breakpoint('large+') {
+    border-right-color: transparent;
+    border-width: 2px;
+  }
+}
+
+/**
+ * Submit button
+ * For space reasons, this is simply an arrow on very small screens
+ */
+.m-newsletter__btn {
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 -1px;
+  min-width: 1px;
+  width: 60px;
+
+  /* establish desired focus ring appearance for appropriate input modalities */
+  &:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  &.focus-ring {
+    border-color: $color__border--dark;
+    outline: none;
+  }
+
+  @include breakpoint('small+') {
+    width: 140px;
+  }
+}
+
+.m-newsletter__wording {
+  display: none;
+
+  @include breakpoint('small+') {
+    display: block;
+  }
+}
+
+.m-newsletter__icon {
+  display: block;
+  position: relative;
+  top: -3px;
+
+  @include breakpoint('small+') {
+    display: none;
+  }
+}
+
+.m-newsletter__loading {
+  /** here to convey structure ***/
+}
+
+.m-newsletter__success {
+  /** here to convey structure ***/
+}
+
+

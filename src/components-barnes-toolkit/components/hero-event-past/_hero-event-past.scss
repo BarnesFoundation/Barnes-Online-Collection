@@ -1,0 +1,128 @@
+/***
+
+Hero (Event Past)
+======
+* Class name: `o-hero-event-past`
+* Tags used on: `<div>`
+
+A hero element, similar to other hero compoents but for past events.
+Barnes do not have the imagery/content to fit the 2017 Event/Exhition detail
+template so this simpler hero component has been created.
+
+Notice how the share component has a light grey border around it (when active)
+this is so it can be seen against a white background.
+
+
+***/
+
+.o-hero-event-past {
+  padding-bottom: 40px;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 60px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 90px;
+  }
+
+  @include breakpoint('medium-') {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    padding-top: 30px;
+  }
+}
+
+/**
+ * Overide the default column behaviour on medium sized screens and kick
+ * into the linear layout earlier than usual
+ */
+.o-hero-event-past .m-block__column {
+  @include breakpoint('medium-') {
+    width: 100%;
+  }
+}
+
+.o-hero-event-past__copy {
+  @include reset-link-color();
+}
+
+.o-hero-event-past__pre-title {
+  color: currentColor;
+  margin-top: 0;
+}
+
+.o-hero-event-past__title {
+  @include font-hero-title();
+
+  margin-top: 4px;
+
+  @include breakpoint('medium+') {
+    margin-top: 9px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 18px;
+  }
+
+}
+
+.o-hero-event-past__title a {
+ display: inline-block;
+}
+
+.o-hero-event-past__supporting {
+  @include font-hero-supporting();
+
+  color: $color__red--barnes;
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    margin-top: -3px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 15px;
+  }
+}
+
+.o-hero-event-past__extras {
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    margin-top: 10px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 17px;
+  }
+}
+
+.o-hero-event-past__media {
+  margin-bottom: 20px;
+
+  @include breakpoint('large+') {
+    margin-bottom: 0;
+  }
+}
+
+.o-hero-event-past__image {
+  display: block;
+  width: 100%;
+}
+
+/**
+ * Share list overlay
+ * Override specificity of default .m-share__list
+ * because we need it on the left side of the screen
+ */
+.o-hero-event-past .m-share {
+  text-align: inherit;
+}
+
+.o-hero-event-past .m-share__list {
+  border: 1px solid rgba(black, .2);
+  left: 0;
+  right: auto;
+}

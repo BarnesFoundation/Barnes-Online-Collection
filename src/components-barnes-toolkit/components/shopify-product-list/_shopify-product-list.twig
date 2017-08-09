@@ -1,0 +1,83 @@
+{#
+
+shopify-product-list component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Collection title' %}
+{% endif %}
+
+{% if products is empty %}
+  {%
+    set products = [
+      {
+        'title': 'Product name 1',
+        'price':  '$19.99',
+        'image': '//placehold.it/380x380',
+        'link': '#',
+        'new':  true
+      },
+      {
+        'title': 'Accessories &amp; Apparel',
+        'price':  '$19.99',
+        'image': '//placehold.it/320x400',
+        'link': '#'
+      },
+      {
+        'title': 'Gifts &amp; Home',
+        'price':  '$19.99',
+        'image': '//placehold.it/380x380',
+        'link': '#',
+        'new':  true
+      },
+      {
+        'title': 'Product name 4',
+        'price':  '$19.99',
+        'image': '//placehold.it/380x380',
+        'link': '#',
+        'new':  true
+      },
+      {
+        'title': 'Accessories &amp; Apparel',
+        'price':  '$19.99',
+        'image': '//placehold.it/380x100',
+        'link': '#'
+      },
+      {
+        'title': 'Gifts &amp; Home',
+        'price':  '$19.99',
+        'image': '//placehold.it/400x400',
+        'link': '#',
+        'new':  true
+      }
+    ]
+  %}
+{% endif %}
+
+<div class="m-block{% if noBorder is defined %} m-block--no-border{% endif %}{% if flushTop is defined %} m-block--flush-top{% endif %}{% if flushBottom is defined %} m-block--flush-bottom{% endif %}{% if blockBrand is defined %} m-block--brand{% elseif blockAlt is defined %} m-block--alt{% endif %}{% if blockShallow is defined %} m-block--shallow{% endif %}{% if blockMoveUp is defined %} m-block--up{% endif %} m-shopify-product-list">
+  {% if noTitle is empty %}
+    <h1 class="font-gamma m-block__title">{{ title }}</h1>
+  {% endif %}
+  <ul class="m-shopify-product-list__list">
+    {% for product in products %}
+    <li class="m-shopify-product-list__item">
+      {% if product.new is defined %}<span class="a-tag a-tag--sale m-shopify-product-list__tag">New</span>{% endif %}
+      <a href="{{ product.link }}" class="m-shopify-product-list__image-container">
+        <img class="m-shopify-product-list__image" src="{{ product.image }}" alt="{{ product.title|escape }}">
+      </a>
+      <div>
+        <h3 class="font-bold-heading m-shopify-product-list__title">
+          <a href="{{ product.link }}" class="m-shopify-product-list__link">{{ product.title|raw }}</a>
+        </h3>
+        <p class="font-smallprint m-shopify-product-list__price">{{ product.price }}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

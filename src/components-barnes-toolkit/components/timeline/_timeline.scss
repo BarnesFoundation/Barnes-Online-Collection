@@ -1,0 +1,61 @@
+/***
+
+Timeline
+======
+* Class name: `m-timeline`
+* Tags used on: `<div>`
+
+A timeline is a list of content used for say an event or comncert which has
+strict timings.
+
+It can contain [artwork cards](#card-artwork) and [buttons](#btn) too.
+
+***/
+
+.m-timeline {
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/**
+ * Add padding and borders between multiple stacked components
+ */
+.m-timeline:not(:first-child) {
+  border-top: 1px solid $color__border;
+  margin-top: 30px;
+  padding-top: 30px;
+
+  @include breakpoint('medium+') {
+    margin-top: 40px;
+    padding-top: 41px;
+  }
+}
+
+.m-timeline__pre-title {
+  color: $color__copy--medium;
+  display: block;
+}
+
+.m-timeline__title {
+  margin-top: 4px;
+  display: block;
+}
+
+.m-timeline__media {
+  margin-top: 40px;
+}
+
+.m-timeline__summary {
+  margin-top: 16px;
+
+  @include breakpoint('large+') {
+    margin-top: 11px;
+  }
+
+  > *:first-child {
+    margin-top: 0;
+  }
+}

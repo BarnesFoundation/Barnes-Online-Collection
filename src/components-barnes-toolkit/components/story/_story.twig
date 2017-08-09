@@ -1,0 +1,38 @@
+{#
+
+Story component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if name is empty %}
+  {% set quote = 'Quote.' %}
+  {% set image = '//placehold.it/85x85' %}
+  {% set name = 'Name of Story-teller' %}
+  {% set subtitle = 'Role' %}
+  {% set summary = ['<p>Story-teller summary.</p>'] %}
+{% endif %}
+
+<div class="m-story">
+  <blockquote class="m-story__quote">
+    <p>“{{ quote|raw }}”</p>
+  </blockquote>
+  <div class="m-story__person">
+    <div class="m-story__media">
+      <img class="m-story__image" src="{{ image }}" alt="">
+    </div>
+    <div class="m-story__supporting">
+      <h3 class="font-bold-heading m-story__name">{{ name|raw }} <span class="m-story__role">{{ subtitle|raw }}</span></h3>
+      <div class="m-story__summary">
+        {% for p in summary %}
+          {{ p|raw }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

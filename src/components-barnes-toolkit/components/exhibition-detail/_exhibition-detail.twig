@@ -1,0 +1,58 @@
+{#
+
+Exhibition detail component
+Comes after a o-hero--event or o-exhibition-hero
+
+#}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if prices is empty %}
+  {% set prices = 'Adults $25 - Students $10 - Members $0 - <a href="#">More prices</a>' %}
+{% endif %}
+
+{% if meta is empty %}
+  {% set meta = ' Most busy 10am&ndash;2pm<br><span>10 days left</span>' %}
+{% endif %}
+
+{% if buttons is empty %}
+  {% set buttons = [
+      {
+        title: 'Become a Member',
+        link: '#'
+      },
+      {
+        title: 'Buy Tickets',
+        link: '#',
+        primary: true
+      }
+    ] %}
+{% endif %}
+
+<div class="m-block m-block--no-border m-block__columns m-block__columns--sm-linear m-exhibition-detail">
+  <div class="m-block__column m-block__columns">
+    <!-- Prices -->
+    <div class="m-block__column m-exhibition-detail__prices font-smallprint">
+      {{ prices|raw }}
+    </div>
+    <!--/ Prices -->
+
+    <!-- Meta  -->
+    <div class="m-block__column m-exhibition-detail__meta font-smallprint">
+     {{ meta|raw }}
+    </div>
+    <!--/ Meta -->
+  </div>
+
+  <!-- CTAs -->
+  <div class="m-block__column m-exhibition-detail__cta">
+    {% for button in buttons %}
+      {% if button.disabled is defined %}
+        <span class="btn{% if button.primary is defined %} btn--primary{% elseif button.disabled is defined %} btn--disabled{% endif %}">{{ button.title|raw }}</span>
+      {% else %}
+        <a class="btn{% if button.primary is defined %} btn--primary{% endif %}" href="{{ button.link }}">{{ button.title|raw }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <!--/ CTAs -->
+</div>

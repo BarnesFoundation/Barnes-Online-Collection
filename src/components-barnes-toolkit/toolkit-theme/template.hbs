@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <title>{{site_title}}</title>
+
+    <link href="/{{> absroot}}/images/favicons/favicon.ico" rel="shortcut icon" sizes="32x32">
+    <link href="/{{> absroot}}/images/favicons/favicon-16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="/{{> absroot}}/images/favicons/favicon-32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="/{{> absroot}}/images/favicons/favicon-96.png" rel="icon" sizes="96x96" type="image/png">
+    <link href="/{{> absroot}}/images/favicons/favicon-57.png" rel="apple-touch-icon" sizes="57x57">
+    <link href="/{{> absroot}}/images/favicons/favicon-72.png" rel="apple-touch-icon" sizes="72x72">
+    <link href="/{{> absroot}}/images/favicons/favicon-120.png" rel="apple-touch-icon" sizes="120x120">
+    <link href="/{{> absroot}}/images/favicons/favicon-144.png" rel="apple-touch-icon" sizes="144x144">
+    <link href="/{{> absroot}}/images/favicons/favicon-152.png" rel="apple-touch-icon" sizes="152x152">
+    <link href="/{{> absroot}}/images/favicons/favicon-180.png" rel="apple-touch-icon-precomposed" sizes="180x180">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="/{{> absroot}}/images/favicons/favicon-144.png">
+    <link rel="stylesheet" href="/{{> absroot}}/css/main.css">
+    {{> highlight}}
+
+    <script src="/{{> absroot}}/js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="/{{> absroot}}/js/vendor/clipboard.min.js"></script>
+
+  </head>
+  <body class="is-loading is-tpl-page" data-behavior="scroll_to_start_target">
+
+    <div class="page-wrapper">
+
+      <header class="primary-header" data-behavior="search">
+        <a class="nav-btn nav-btn--hamburger js-menu-toggle" href="#" data-behavior="mobileMenu">
+          <div class="nav-btn__icon"></div>
+        </a>
+
+        <div class="primary-header__slideout">
+          <h1 class="primary-header__title">
+            <span>{{site_title}}</span>
+            <span class="t-current">{{site_title}}</span>
+            <span>{{site_title}}</span>
+          </h1>
+        </div>
+        <!-- #end .primary-header__slideout -->
+
+        <div class="nav-set" data-behavior="navigate">
+          <a class="nav-btn js-prev" href="#">
+            <div class="nav-btn__icon">&#8593;</div>
+          </a>
+
+          <a class="nav-btn js-next" href="#">
+            <div class="nav-btn__icon">&#8595;</div>
+          </a>
+        </div>
+
+      </header>
+
+      <nav class="sidebar">
+
+        <header class="sidebar__header" data-behavior="revealAll">
+          <span class="sidebar__title">{{site_title}}</span>
+          <span class="sidebar__toc">TOC</span>
+        </header>
+        <div class="sidebar__content">
+          <div class="sidebar__wrapper">
+            <ol class="sidebar__list" data-behavior="scrollToAnchors scrollSpy" data-scrollspy-on="h2, h3">
+
+            {{#if readme}}
+              {{#if readme.isIndex}}
+              <li class="sidebar__item"><a href="#{{urlify readme.title }}">{{titlecase "Overview" }}</a></li>
+              {{/if}}
+            {{/if}}
+
+            {{#each pages}}
+                {{#if isDirectory}}
+
+                    <li class="sidebar__item" data-type="{{slug}}">
+                      <a href="#{{urlify slug }}" data-name="{{title}}">
+                        {{titlecase (strip_num title) }}
+                      </a>
+                      <ul class="children">
+                          {{#each pages}}
+                            {{#if isDirectory}}
+                              {{#each pages}}
+                                <li class="sidebar__item" data-type="{{slug}}">
+                                  <a href="#{{urlify slug }}" data-name="{{title}}">{{titlecase (strip_num title) }}</a>
+                                </li>
+                              {{/each}}
+                            {{/if}}
+                          {{/each}}
+                      </ul>
+                    </li>
+                {{/if}}
+            {{/each}}
+            </ol>
+
+            <footer class="sidebar__footer">
+              <a class="sidebar__logo" href="htt://area17.com">AREA 17</a>
+            </footer>
+          </div>
+        </div>
+      </nav>
+      <!-- #end .sidebar -->
+
+      <main class="content-container" data-behavior="scroll copy_markup">
+        <div class="content-wrapper">
+
+          <!-- Readme page -->
+          {{#if readme}}
+              {{#if readme.isIndex}}
+                  <article class="post">
+                      <h2 id="{{urlify readme.title }}" class="post-title has-content is-active">{{titlecase (strip_num readme.title) }}</h2>
+
+                      {{#if readme.sections}}
+                      <div class="post-entry">
+                          {{#each readme.sections}}
+                              {{#if comment}}
+                                  <div class="comment">{{{comment}}}</div>
+                              {{/if}}
+                          {{/each}}
+                      </div>
+                      {{/if}}
+                  </article>
+              {{/if}}
+          {{/if}}
+          <!-- #end Readme page -->
+
+          {{#each pages}}
+              {{#if isDirectory}}
+                  <article class="post">
+                    <h2 id="{{urlify slug }}" class="post-title has-content">
+                      {{titlecase (strip_num title) }}
+                    </h2>
+
+                    {{#if intro}}
+                        <div class="post-introduction">{{{intro}}}</div>
+                    {{/if}}
+
+                    {{#each pages}}
+                        {{#unless isIndex}}
+                        {{#if isFile}}
+                            <h3 id="{{urlify slug }}" class="post-title has-content">{{titlecase (strip_num title) }}</h3>
+                        {{/if}}
+
+                        {{#if intro}}
+                            <div class="post-introduction">{{{intro}}}</div>
+                        {{/if}}
+
+                        <div class="post-entry">
+
+                            {{#each sections}}
+                            <div class="section">
+                                {{#if comment}}
+                                    <div class="comment">{{{comment}}}</div>
+                                {{/if}}
+                                {{#if result}}
+                                    <div class="result" data-iframes>
+                                        <script class="result-placeholder" type="text/html">{{{result}}}</script>
+                                    </div>
+                                {{/if}}
+                                {{#if markup}}
+                                    <div class="markup">
+                                      <h4 class="markup-title" data-behavior="toggleMarkup">Code</h4>
+                                      <div class="markup-content" id="copy-target-{{../slug}}-{{@index}}">{{{markup}}}</div>
+                                      <div class="markup-copy js-copy" data-clipboard-target="#copy-target-{{../slug}}-{{@index}}">Copy</div>
+                                    </div>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+
+                        </div>
+
+                        {{/unless}}
+
+                        {{#if isDirectory}}
+                          {{#each pages}}
+                              {{#if isFile}}
+                                <h3 id="{{urlify slug }}" class="post-title has-content">{{titlecase (strip_num title) }}</h3>
+                              {{/if}}
+
+                            {{#if intro}}
+                                <div class="post-introduction">{{{intro}}}</div>
+                            {{/if}}
+                            <div class="post-entry">
+
+                              {{#each sections}}
+                              <div class="section">
+                                  {{#if comment}}
+                                      <div class="comment">{{{comment}}}</div>
+                                  {{/if}}
+                                  {{#if result}}
+                                      <div class="result" data-iframes>
+                                          <div class="result__resizenav" role="menu" aria-labelledby="{{{urlify slug }}}--resize" data-behavior="resizeIframeWidth">
+                                            <h4 id="{{{urlify slug }}}--resize" class="result__resize-title">Responsive:</h4>
+                                          </div>
+                                          <script class="result-placeholder" type="text/html">{{{result}}}</script>
+                                      </div>
+                                  {{/if}}
+                                  {{#if markup}}
+                                      <div class="markup">
+                                        <h4 class="markup-title" data-behavior="toggleMarkup">Code</h4>
+                                        <div class="markup-content" id="copy-target-{{../slug}}-{{@index}}">{{{markup}}}</div>
+                                        <div class="markup-copy js-copy" data-clipboard-target="#copy-target-{{../slug}}-{{@index}}">Copy</div>
+                                      </div>
+                                  {{/if}}
+                              </div>
+                              {{/each}}
+
+                            </div>
+                            {{/each}}
+
+                        {{/if}}
+
+                    {{/each}}
+                  </article>
+              {{/if}}
+          {{/each}}
+
+        </div>
+      </main>
+      <!-- #end .content-container -->
+
+    </div>
+    <!-- #end .page-wrapper -->
+
+    <footer class="primary-footer">
+      <small class="primary-footer__signature">2017 &copy; AREA 17</small>
+    </footer>
+    <!-- #end .primary-footer -->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/{{> absroot}}/js/vendor/jquery-3.1.1.min.js"><\/script>')</script>
+    <script src="/{{> absroot}}/js/main.js"></script>
+
+
+    <script class="result-template" type="text/html">
+        <!DOCTYPE html>
+        <html>
+            <head>{{> assets}}</head>
+            <body onload="[[onload]]">
+              <div style="width:100%; overflow:hidden">
+                <div id="a17">
+                  <div id="demo">
+                    [[body]]
+                  </div>
+                </div>
+              </div>
+            </body>
+        </html>
+    </script>
+  </body>
+</html>

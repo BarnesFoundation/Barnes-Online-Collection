@@ -1,0 +1,34 @@
+/***
+
+Structure
+=====
+Here is the basic structure of each page.
+
+Take this code copy and paste it into a new HTML file.
+
+Then find the component(s) you need and copy and paste them into
+the space where it says _COMPONENTS_ in the order you want them to appear.
+
+*Note about assets:*
+
+Make sure all `<link>` and `<script>` tags `href` and `src` attributes point
+to the correct path. They are all set to _/dist/images/_ or _/dist/styles/_
+but if your assets aren't stored in a directory called _dist_ at the root of
+your website then please update these values.
+
+*Note about script tags:*
+
+This toolkit struggles with `<script>` tags in HTML so they have been modified
+to use square insitead of angular brackets.
+
+Please swap the 3 instances of `[script src=""][/script]` with
+`<script src=""></script>`.
+
+*Finally:*
+
+Apologies for the appearance of the HTML in the _code_ example below. It may be
+wise to run this HTML through a [code beautifier](http://www.cleancss.com/html-beautify/)
+before pasting it into your HTML file.
+
+
+***/

@@ -1,0 +1,40 @@
+/***
+
+Landing Door
+====
+* Class name: `m-landing-door`
+* Tags used on: `<div>`
+
+Used on landing pages - this is a pretty simple component.
+It’s a big 100% width image which is followed by some copy underneath.
+
+***/
+
+.m-landing-door {
+  /** This selector is here purely for showing structure **/
+}
+
+.m-landing-door__media {
+  display: block;
+  width: 100%;
+}
+
+.m-landing-door__title {
+  margin-top: 8px;
+
+  @include breakpoint('medium+') {
+    margin-top: 28px;
+  }
+}
+
+.m-landing-door__summary {
+  margin-top: -25px;
+
+  @include breakpoint('medium+') {
+    margin-top: -5px;
+  }
+}
+
+.m-landing-door__link {
+  margin-top: 5px;
+}

@@ -1,0 +1,69 @@
+/**
+ * Header unlocked
+ * When .header-unlocked is applied to html or body then the .g-header
+ * menu becomes hidden. JavaScript determines when to toggle this class
+ */
+
+/*
+ * Use the selector `html:not([class=""])` instead of just header
+ * because otherwise it breaks our Toolkit :|
+ * 1 Make space for header
+ */
+html:not([class=""]) {
+  padding-top: #{map-get($headerHeights, 'xsmall')}; /* 1 */
+
+  @include breakpoint('medium+') {
+    padding-top: #{map-get($headerHeights, 'medium')}; /* 1 */
+  }
+
+  @include breakpoint('large+') {
+    padding-top: #{map-get($headerHeights, 'large')}; /* 1 */
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-top: #{map-get($headerHeights, 'xlarge')}; /* 1 */
+  }
+}
+
+html.shopify-html {
+  padding-top: #{map-get($headerHeightsShopify, 'xsmall')}; /* 1 */
+
+  @include breakpoint('medium+') {
+    padding-top: #{map-get($headerHeightsShopify, 'medium')}; /* 1 */
+  }
+
+  @include breakpoint('large+') {
+    padding-top: #{map-get($headerHeightsShopify, 'large')}; /* 1 */
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-top: #{map-get($headerHeightsShopify, 'xlarge')}; /* 1 */
+  }
+
+  @include breakpoint('xxlarge') {
+    padding-top: #{map-get($headerHeightsShopify, 'xxlarge')}; /* 1 */
+  }
+}
+
+/**
+ * 2 move the header up _higher_ than it needs to be to take into account
+ * the search bar which may/may not be active
+ *
+ */
+.header-unlocked .g-header {
+  background-color: transparent;
+  transform: translate3d(0, -200%, 0); /* 2 */
+
+  @media print {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.header-unlocked.has-hero .g-header {
+  background-color: transparent;
+  color: $color__white;
+}
+
+.header-unlocked .m-search-bar-overlay {
+  display: none !important;
+}

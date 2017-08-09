@@ -1,0 +1,24 @@
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Chapter title' %}
+{% endif %}
+
+{% if preTitle is empty %}
+  {% set preTitle = 'Chapter 01' %}
+{% endif %}
+
+{% if image is empty %}
+  {% set image = '//placehold.it/1440x550' %}
+{% endif %}
+
+<div class="m-block m-chapter" style="background-image: url({{ image}});">
+  <div class="container">
+    <div class=" m-block__columns">
+      <div class="m-block__column"></div>
+      <div class="m-block__column m-chapter__copy">
+        <div class="font-zeta m-chapter__pre-title">{{ preTitle }}</div>
+        <h2 class="font-alpha m-chapter__title">{{ title }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
