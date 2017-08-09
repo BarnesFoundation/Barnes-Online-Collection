@@ -3,18 +3,21 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import QueryTag from './QueryTag';
+
 import * as QueriesActions from '../../actions/queries';
 
 class CollectionFiltersApplied extends Component {
-  render() {
-    const queries = this.props.queries;
-    const queryTags = queries.map((query, index) =>
-      <button key={index}>{query[2]}</button>
+  buildQueryTags(queries) {
+    return queries.map((query, index) =>
+      <QueryTag key={index} index={index} value={query[2]} />
     );
+  }
 
+  render() {
     return (
       <div>
-        {queryTags}
+        {this.buildQueryTags(this.props.queries)}
       </div>
     );
   }

@@ -11,11 +11,6 @@ class CollectionFiltersMenuItem extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  // selectFilter(filterName) {
-  //   const slug = filterName.toLowerCase();
-  //   this.props.selectFilterSet(slug);
-  // }
-
   handleClick(event) {
     const slug = this.props.name;
     this.props.selectFilterSet(slug);
