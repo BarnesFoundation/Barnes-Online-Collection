@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as Actions from '../../actions/htmlClassManager';
+import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 
 class SiteHeader extends Component {
 
@@ -77,7 +77,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    Actions
+    HtmlClassManagerActions
   ), dispatch);
 }
 

@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-const CLASS_NAMES = {
-  navActive: 'nav-active',
-}
+import * as HtmlClassManagerActions from '../actions/htmlClassManager';
 
 const updateHtmlClassList = list => {
   // the <html> element
   document.documentElement.classList = list.join(' ');
 };
+
+const getLiveClassList = () => {
+  // the <html> element
+  return document.documentElement.classList.value.split(' ');
+};
+
+var origClasslist = null;
 
 class HtmlClassManager extends Component {
   static propTypes = {
@@ -20,7 +24,8 @@ class HtmlClassManager extends Component {
   }
 
   componentDidMount() {
-    updateHtmlClassList(this.props.classNameList);
+    origClasslist = getLiveClassList();
+    this.props.htmlClassesReset(origClasslist);
   }
 
   componentWillUpdate(nextProps) {
@@ -28,7 +33,7 @@ class HtmlClassManager extends Component {
   }
 
   componentWillUnmount() {
-    updateHtmlClassList([]);
+    updateHtmlClassList(origClasslist);
   }
 
   render() {
@@ -45,6 +50,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
+    HtmlClassManagerActions
   ), dispatch);
 }
 
