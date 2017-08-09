@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as QueriesActions from '../../actions/queries';
-import * as ObjectsActions from '../../actions/objects';
 
 class QueryTag extends Component {
   constructor(props) {
@@ -32,7 +31,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    ObjectsActions,
     QueriesActions
   ), dispatch);
 }

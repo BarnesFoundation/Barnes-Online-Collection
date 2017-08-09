@@ -26,7 +26,6 @@ class CollectionFiltersApplied extends Component {
 const mapStateToProps = state => {
   return {
     queries: state.queries,
-    filters: state.filters
   }
 };
 
