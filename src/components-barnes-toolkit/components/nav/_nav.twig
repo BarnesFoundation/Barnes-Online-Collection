@@ -1,0 +1,43 @@
+<!-- Nav - hidden by default and shown by JS. tabindex set to allow focus for a11y -->
+<div class="g-nav" data-behavior="nav" tabindex="-1">
+  <div class="g-nav__inner">
+    <button class="g-nav__close btn btn--icon-only html4-hidden" type="button" data-nav-hide aria-labelledby="nav-close-title">
+      <svg class="icon--close" width="20" height="20"><title id="nav-close-title">Close menu</title><use xlink:href="#icon--icon_close"/></svg>
+    </button>
+    <form class="g-nav__search" action="/static/pages/search.php" method="get" novalidate data-behavior="FormValidate">
+      <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+        <h3 class="font-bold-heading visuallyhidden">Please correct your errors</h3>
+      </div>
+      <div class="form-field g-nav__search__form-field">
+          <label class="visuallyhidden" for="search">Search</label>
+          <input type="search" name="q" id="search" placeholder="Search" required aria-required="true" aria-describedby="searcherror1">
+          <button class="btn btn--icon-only" type="submit">
+            <span class="visuallyhidden">Go</span>
+            <svg width="26" height="26"><use xlink:href="#icon--icon_search"></use></svg>
+          </button>
+          <div aria-hidden="true" class="form-field__error hidden" tabindex="-1" id="searcherror1">Please enter a search term</div>
+      </div>
+    </form>
+
+    <h2 class="visuallyhidden" id="g-nav__title">Main menu</h2>
+    <nav class="g-nav__links" aria-labelledby="g-nav__title">
+      <div class="g-nav__important-links">
+        <a class="g-nav__link g-nav__link--important" href="/static/pages/whats-on.php"><span>What’s On</span></a>
+        <a class="g-nav__link g-nav__link--important" aria-current="true" href="/static/pages/plan-your-visit.php"><span>Plan your Visit</span></a>
+        <a class="g-nav__link g-nav__link--important" href="#"><span>Our Collection</span></a>
+        <a class="g-nav__link g-nav__link--important" href="/static/pages/class.php"><span>Take a Class</span></a>
+      </div>
+
+      <a class="g-nav__link" href="/static/pages/about.php"><span>About</span></a>
+      <a class="g-nav__link" href="/static/pages/support-individual.php"><span>Join</span></a>
+      <a class="g-nav__link" aria-current="true" href="#"><span>Give</span></a>
+      <a class="g-nav__link" href="/static/pages/teachers-landing.php"><span>Teachers</span></a>
+      <a class="g-nav__link" href="/static/pages/press-landing.php"><span>Press</span></a>
+      <a class="g-nav__link" href="#"><span>Shop</span></a>
+      <a class="g-nav__link" href="/static/pages/host-an-event.php"><span>Facility Rental</span></a>
+      <a class="g-nav__link" href="#"><span>Arboretum</span></a>
+    </nav>
+  </div>
+</div>
+<div class="g-nav-overlay" data-nav-overlay></div>
+<!--/ Nav -->

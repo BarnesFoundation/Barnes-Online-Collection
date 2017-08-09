@@ -1,0 +1,41 @@
+{# If some key variables are missing, load in the default content #}
+
+{% if messages is empty %}
+  {%
+    set messages = [
+      {
+        copy: 'Buy tickets',
+        link: '#'
+      },
+      {
+        copy: 'Visit',
+        link: '#'
+      }
+    ]
+  %}
+{% endif %}
+
+{% if welcomeMessage is empty %}
+  {% set welcomeMessage = 'Open today' %}
+{% endif %}
+
+<!-- Map + Daily opening times (small screen only) -->
+<div class="m-mobile-options font-smallprint">
+  <div class="container">
+    {% if welcomeMessage is defined %}
+    <div class="m-mobile-options__welcome">
+      {{ welcomeMessage }}
+    </div>
+    {% endif %}
+    <div class="m-mobile-options__links">
+    {% for message in messages %}
+      {% if message.link is defined %}
+        <a class="a-brand-link m-mobile-options__link" href="{{ message.link }}">{{ message.copy }}</a>
+      {% else %}
+        {{ message.copy }}
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+<!--/ Map + Daily opening times (small screen only) -->

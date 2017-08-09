@@ -1,0 +1,31 @@
+{# If some key variables are missing, load in the default content #}
+{% if caption is empty %}
+{%
+  set caption = 'General admission'
+%}
+{% endif %}
+
+{% if rows is empty %}
+{%
+  set rows = [
+    {
+      th: 'Adults',
+      td: '$25'
+    }
+  ]
+%}
+{% endif %}
+
+<table class="m-table">
+  {% if caption is defined %}
+    <caption>{{ caption }}</caption>
+  {% endif %}
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <th scope="row">{{ row.th|raw }}</th>
+      <td>{{ row.td|raw }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

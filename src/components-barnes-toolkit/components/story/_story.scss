@@ -1,0 +1,131 @@
+/***
+
+Story
+======
+* Class name: `m-story`
+* Tags used on: `<div>`
+
+It's a card with a quote (or a _story_) then the quotee's details consisting of
+an image their name, role and a summary.
+
+The Story component belongs inside an `m-block` component and preferrably as
+part of a list of stories - rather than on its own - inside a `m-story-list`.
+
+***/
+
+.m-story-list {
+  margin: 0 0 25px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 0;
+  }
+}
+
+.m-story {
+  padding: 0 0 60px;
+
+  @include breakpoint('medium+') {
+    padding: 0 0 95px;
+  }
+
+  @include breakpoint('large+') {
+    padding: 0 0 70px;
+  }
+}
+
+.m-story + .m-story {
+  border-top: 1px solid $color__border;
+  padding-top: 30px;
+
+  @include breakpoint('medium+') {
+    padding-top: 50px;
+  }
+}
+
+.m-story:first-child {
+  margin-top: 15px;
+
+  @include breakpoint('medium+') {
+    margin-top: 18px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -11px;
+  }
+}
+
+.m-story__quote {
+  color: $color__copy--medium;
+  font-family: $sans-serif--loaded;
+  font-size: 25px;
+  line-height: 35px;
+
+  @include breakpoint('medium+') {
+    font-size: 34px;
+    letter-spacing: -0.015em;
+    line-height: 40px;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+.m-story__person {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  @include breakpoint('medium+') {
+    margin-top: 30px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 40px;
+  }
+}
+
+.m-story__media {
+  width: 80px;
+
+  @include breakpoint('medium+') {
+    width: 120px;
+  }
+}
+
+.m-story__image {
+  display: block;
+  width: 60px;
+
+  @include breakpoint('medium+') {
+    width: 85px;
+  }
+}
+
+.m-story__supporting {
+  flex: 1 0 0;
+}
+
+.m-story__name {
+  margin-top: 0;
+}
+
+.m-story__role {
+  color: $color__copy--medium;
+  margin-left: .25em;
+}
+
+.m-story__summary {
+  @include font-smallprint();
+
+  color: $color__copy--medium;
+
+  // Remove margin on first element (usually a <h2> or a <p2>
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+

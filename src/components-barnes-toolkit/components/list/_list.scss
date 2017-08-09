@@ -1,0 +1,59 @@
+/***
+
+List
+======
+* Class name: `-m-list`
+* Tags used on: `<ul>`
+
+A simple list.
+
+***/
+
+/**
+ * List container
+ */
+.m-list {
+  border-bottom: 1px solid $color__border;
+  margin-bottom: 50px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 75px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 65px;
+  }
+}
+
+/**
+ * List item
+ */
+.m-list__item {
+  font-family: $sans-serif--loaded;
+  border-top: 1px solid $color__border;
+  display: block;
+  margin: 0;
+  padding: 14px 0 13px;
+
+  @include breakpoint('large+') {
+    padding: 12px 0 11px;
+  }
+}
+
+/**
+ * First item in the list
+ * We style this because our .m-block element has a very specific rule that
+ * squashes margin-top on the first child of an `m-block__column` which
+ * effects `m-list`
+ */
+.m-list__item:first-child {
+  margin-top: 13px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 10px;
+  }
+}

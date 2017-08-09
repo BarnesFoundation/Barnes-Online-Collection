@@ -1,0 +1,131 @@
+/***
+
+Logo
+======
+* Class name: `a-logo`
+* Tags used on: `<h1>` `<a>` `<span>` `<div>`
+
+For SEO reasons the logo is a `<h1>` tag on the homepage and an all others pages
+it is an `<a>` tag that links back to the homepage.
+
+On the homepage we do not want the logo to be a link because that could confuse
+users... Besides which, were would it link to - the same page that the user is
+already looking at?
+
+*Sidenote:* We use an SVG for the logo because:
+* SVGs have a small filesize (usually) and because
+* SVGs look sharp on lots of different screen sizes e.g. smartphones, laptops and 4K screens
+* JPG/GIFs/PNGs with red in them can sometimes render poorly on screen
+
+*Please note:* this `<SVG>` references an SVG sprite file. This file is needed for
+the logo to display. This SVG sprite file will be included via JavaScript if you
+use the [Structure files](#structure).
+
+We use 4 different logos - to ensure the logo stays sharp on all screen sizes.
+
+  ```
+  <h1 class="a-logo">
+    <span class="html4-label">Barnes</span>
+    <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+      <title id="logo-title">Barnes</title>
+      <use xlink:href="#icon--logo-s"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-m"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-l"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-xl"></use>
+    </svg>
+  </h1>
+  <a class="a-logo" href="/">
+    <span class="html4-label">Barnes</span>
+    <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+      <title id="logo-title">Barnes</title>
+      <use xlink:href="#icon--logo-s"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-m"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-l"></use>
+    </svg>
+    <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+      <title>Barnes</title>
+      <use xlink:href="#icon--logo-xl"></use>
+    </svg>
+  </a>
+  ```
+
+***/
+
+.a-logo {
+  display: block;
+  font-family: $sans-serif--loaded;
+  font-size: 36px;
+  margin: 0;
+  transition: color 150ms ease 50ms;
+  text-decoration: none;
+}
+
+a.a-logo {
+
+  &:hover {
+    color: $color__logo;
+  }
+}
+
+.a-logo__svg {
+  fill: currentColor;
+}
+
+.a-logo__svg--s {
+  display: block;
+
+  @include breakpoint('medium+') {
+    display: none;
+  }
+}
+
+.a-logo__svg--m {
+  display: none;
+
+  @include breakpoint('medium+') {
+    display: block;
+  }
+
+  @include breakpoint('large+') {
+    display: none;
+  }
+}
+
+.a-logo__svg--l {
+  display: none;
+
+  @include breakpoint('large+') {
+    display: block;
+  }
+
+  @include breakpoint('xlarge+') {
+    display: none;
+  }
+}
+
+.a-logo__svg--xl {
+  display: none;
+
+  @include breakpoint('xlarge+') {
+    display: block;
+  }
+}
+
+.no-js .a-logo__svg {
+  display: none;
+}

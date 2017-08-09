@@ -1,0 +1,120 @@
+/***
+
+Card (Listing)
+=====
+* Class name: `m-card-listing`
+* Modifier classes: `m-card-listing--no-image`
+* Tags used on: `<div>` `<article>`
+
+A listing card has an image on the left, copy on the right.
+They sit one per row.
+
+The `m-card-listing--no-image` modifier class is used for listings that do not
+require an image.
+
+Both date and summary are optional on the image-less version of the card.
+
+*Accessibility note:*
+
+The cards below all have a _Learn more_ link. For screen-reader users it is
+important that these links are differentiated so they have a `span` tag with a
+class of `visuallyhidden` in there with extra copy to give users a little more
+context.
+
+***/
+.m-card-listing {
+  @include reset-link-color();
+
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding-bottom: 30px;
+}
+
+/**
+ * We do not need flexbox/grid if we do not have an image
+ */
+.m-card-listing--no-image {
+  display: block;
+}
+
+/**
+ * Put some vertical space between multiple cards
+ */
+.m-card-listing + .m-card-listing {
+  border-top: 1px solid $color__border;
+  padding-top: 30px;
+}
+
+.m-card-listing:last-child {
+  padding-bottom: 0;
+}
+
+.m-card-listing__header {
+  position: relative;
+  width: 90px;
+
+  @include breakpoint('small+') {
+    width: 170px;
+  }
+}
+
+.m-card-listing__media-link {
+  display: block;
+  overflow: hidden;
+}
+
+.m-card-listing__media {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.m-card-listing__body {
+  flex: 1 0 auto;
+  padding: 0 25px;
+  position: relative;
+  max-width: calc(100% - 90px);
+
+  @include breakpoint('small+') {
+    max-width: calc(100% - 170px);
+  }
+}
+
+/**
+ * If there is no image, then there is no m-card-listing__header tag
+ * so the m-card-listing__bo can be full-width as it isn't competing for
+ * space with anything
+ */
+.m-card-listing--no-image .m-card-listing__body {
+  flex: none;
+  padding-left: 0;
+  max-width: none;
+}
+
+.m-card-listing__title {
+  margin-top: 0;
+}
+
+.m-card-listing__date {
+  color: $color__copy--medium;
+  margin-top: 0;
+}
+
+.m-card-listing__summary {
+  margin-top: 15px;
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/**
+ * A container for our block-level link
+ */
+.m-card-listing__link {
+  /** Here just to convey structure **/
+}

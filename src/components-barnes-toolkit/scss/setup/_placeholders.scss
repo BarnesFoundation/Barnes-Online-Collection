@@ -1,0 +1,56 @@
+/***
+
+Container
+===
+* Class name: `container`
+* Tags used on: `div`
+
+This helper class stops a block of content from going full-bleed e.g. touching
+the left/right edges of the screen.
+
+In most cases we want the content to stop before it hits the edges but sometimes
+we need the be full-bleed e.g. if it has a background color.
+
+  ```
+  <div>
+    <p>This content butts up against the edges of the screen</p>
+  </div>
+  <div style="background-color: black; color: white;">
+    <p>This content butts up against the edges of the screen with a background color that goes edge to edge on the screen.</p>
+  </div>
+  <div class="container">
+    <p>This content is inside a container</p>
+  </div>
+  <div style="background-color: black; color: white;">
+    <div class="container">
+      <p>This content is inside a container with a background color that goes edge to edge on the screen.</p>
+    </div>
+  </div>
+  ```
+
+***/
+
+.container,
+%container {
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+
+  @each $name, $point in $breakpoints {
+    @include breakpoint('#{$name}') {
+      @if (map-get($main-col-widths, $name) == 'fluid') {
+        width: auto;
+        padding-right: map-get($outer-gutters, $name);
+        padding-left: map-get($outer-gutters, $name);
+      } @else {
+        width: map-get($main-col-widths, $name);
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
+  }
+
+  @media print {
+    max-width: 100%;
+  }
+}

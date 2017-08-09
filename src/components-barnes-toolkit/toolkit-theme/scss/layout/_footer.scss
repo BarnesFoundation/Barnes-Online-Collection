@@ -1,0 +1,46 @@
+
+//
+// Footer Styles
+//
+
+// Primary Footer
+.primary-footer {
+  @include debug-colors(royalblue);
+  padding: 0px 40px;
+  height: 55px;
+  width: 100%;
+}
+
+
+// Primary Footer - Signature
+.primary-footer__signature {
+  @include debug-colors(green);
+  color: $color-dark;
+  font-size: 15px;
+}
+
+
+.is-menu-expanded.is-tpl-page .primary-footer__signature {
+  padding-left: $sidebar-width + 6;
+  line-height: 30px;
+
+  @media print {
+    padding-left: 6px;
+  }
+}
+
+
+// Page Template - Primary Footer
+.is-tpl-page .primary-footer {
+  transform: translate3d(0, 0, 0);
+  padding-left: 25px;
+  @include debug-colors(#ccc);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    padding-left: 30px;
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    padding-left: 45px;
+  }
+}

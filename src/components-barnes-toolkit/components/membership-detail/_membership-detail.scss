@@ -1,0 +1,80 @@
+/***
+
+Membership Detail
+======
+* Class name: `m-membership-detail`
+* Modifier classes: `m-membership-detail--has-image`
+* Tags used on: `<div>`
+
+There are two variations of this component. One with an image and one without.
+
+***/
+
+.m-membership-detail {
+
+  @include breakpoint('medium+') {
+    margin-top: 10px;
+    padding-top: 35px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 25px;
+    padding-top: 51px;
+  }
+}
+
+.m-membership-detail__content:not(.m-block__column) {
+  @include breakpoint('medium+') {
+    margin: -24px auto 0;
+    max-width: 80%;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -26px;
+    max-width: 50%;
+  }
+}
+
+.m-membership-detail__btn-group > .btn {
+  margin-top: 10px;
+
+  @include breakpoint('medium+') {
+    margin-top: 20px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 30px;
+  }
+}
+
+.m-membership-detail__post-summary {
+  @include font-smallprint();
+}
+
+
+/**
+ * Artwork
+ */
+.m-membership-detail__media {
+
+}
+
+.m-membership-detail__image {
+  display: block;
+}
+
+.m-membership-detail__media-title {
+  font-family: $sans-serif--loaded;
+  margin-top: 6px;
+}
+
+.m-membership-detail__media-copyright {
+  color: $color__copy--light;
+}
+
+/**
+ * Variations
+ */
+.m-membership-detail--has-image {
+
+}

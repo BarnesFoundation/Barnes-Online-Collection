@@ -1,0 +1,373 @@
+/**
+
+shopify-basket
+======
+* Class name: `-m-shopify-basket`
+* Modifier classes: `-m-shopify-basket--`
+* Tags used on: `<div>`
+
+A slight mess of CSS because Shopify has lots of HTML and it's easier to keep
+some of it and just add in little bits of our own. Rather than throw it all
+out.
+
+Not display in Toolkit as it's not very helpful.
+
+**/
+.m-shopify-basket {
+  position: relative;
+}
+
+.cart {
+  @include font-smallprint();
+
+  margin: 0 auto 50px;
+  max-width: 800px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 140px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  table {
+    margin: 70px auto 0;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 0;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    @include font-zeta();
+
+    border-bottom: 1px solid $color__border;
+  }
+
+  td {
+    padding: 10px 0;
+
+    @include breakpoint('medium+') {
+      border-bottom: 1px solid $color__border;
+      padding: 30px 0;
+    }
+
+  }
+
+  th {
+    padding: 10px 0;
+  }
+
+  .cart__meta {
+    padding-right: 15px;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-right:not(:last-child) {
+    margin-right: 5px;
+  }
+}
+
+.cart__meta p {
+  margin-top: 5px;
+}
+
+.list-view-item__title {
+  @include font-bold-heading();
+
+  @include breakpoint('medium+') {
+    margin-top: 9px;
+  }
+}
+
+.list-view-item__title a {
+  color: currentColor;
+}
+
+.cart__meta-text {
+  padding: 5px 0;
+}
+
+.cart__qty-label {
+
+}
+
+.cart__qty-input {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+  width: 40px;
+
+  @include breakpoint('small-') {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+}
+
+.cart__edit {
+  margin-top: 10px;
+}
+
+.cart__edit-text--cancel {
+  .cart__edit--active & {
+    display: none;
+  }
+}
+
+.cart__edit-text--edit {
+  display: none;
+
+  .cart__edit--active & {
+    display: block;
+  }
+}
+
+.cart__edit-text--cancel,
+.cart__edit-text--edit {
+  pointer-events: none;
+}
+
+.cart__row {
+  p {
+    margin-bottom: 0;
+
+    + p {
+      margin-top: 10px;
+    }
+  }
+}
+
+.cart__subtotal-title {
+
+}
+
+.cart__subtotal {
+  @include font-delta();
+  padding-left: 10px;
+
+  @include breakpoint('medium+') {
+    padding-left: 20px;
+    min-width: 150px;
+    display: inline-block;
+  }
+}
+
+.cart__savings {
+  padding-top: 18px;
+}
+
+.cart__savings-amount {
+  padding-left: 10px;
+
+  @include breakpoint('medium+') {
+    padding-left: 10px;
+    min-width: 150px;
+    display: inline-block;
+  }
+}
+
+.cart__footer {
+  padding-top: 20px;
+
+  @include breakpoint('medium+') {
+    .grid {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .grid__item {
+      width: 50%;
+    }
+  }
+}
+
+.cart__remove,
+.cart__update {
+  @include font-smallprint();
+
+  appearance: none;
+  background: transparent;
+  border: none;
+  line-height: inherit;
+  margin-bottom: 20px;
+  padding: 0;
+  text-align: right;
+}
+
+.cart__update--large {
+
+}
+
+.cart__continue--large {
+
+}
+
+.cart__shipping {
+  padding: 18px 0 20px;
+}
+
+.cart-note__label,
+.cart-note__input {
+  display: block;
+
+  @include breakpoint('small-') {
+    margin: 0 auto;
+  }
+}
+
+.cart-item__original-price,
+.cart-item__price,
+.cart-item__discount {
+  @include font-smallprint();
+
+  color: $color__copy--medium;
+}
+
+.cart-note__label {
+  @include font-smallprint();
+
+  color: $color__copy--medium;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.cart-note__input {
+  border-width: 1px;
+  min-height: 50px;
+  width: 100%;
+
+  @include breakpoint('small-') {
+    margin-bottom: 40px;
+  }
+}
+
+.cart__image {
+  max-height: 120px;
+}
+
+.cart__image-wrapper {
+    width: 163px;
+}
+
+.cart__image-wrapper a {
+  display: block;
+  padding-right: 20px;
+
+  @include breakpoint('medium+') {
+    padding-right: 20px;
+  }
+}
+
+.cart__continue-btn {
+  .cart--no-cookies & {
+    display: none;
+  }
+}
+
+.cart--empty-message {
+  .cart--no-cookies & {
+    display: none;
+  }
+}
+
+.cookie-message {
+  display: none;
+  padding-bottom: 25px;
+
+  .cart--no-cookies & {
+    display: block;
+  }
+}
+
+.additional-checkout-buttons {
+  margin-top: 10px;
+
+  // reset for paypal button
+  input[type="image"] {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+}
+
+
+@include breakpoint('medium+') {
+  .medium-up--hide {
+    display: none;
+  }
+}
+
+
+@include breakpoint('small-') {
+  .cart__header {
+    display: none;
+  }
+
+  .cart-flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .cart__image-wrapper {
+    width: 100%;
+  }
+
+  .cart__meta {
+    width: calc(70%);
+  }
+
+  .cart__update-wrapper {
+    width: 100%;
+  }
+
+  .cart-flex td:last-child {
+    order: 3;
+    width: 30%;
+  }
+
+  .cart__update-wrapper {
+    background: $color__background--accordion;
+    color: $color__copy--dark;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    order: 4;
+  }
+
+  .cart__qty,
+  .cart__update,
+  .cart__remove {
+    height: auto;
+    text-align: center;
+  }
+
+  .cart__qty label {
+    display: none;
+  }
+
+  .cart-flex .cart__update,
+  .cart-flex .cart__remove {
+    color: currentColor;
+    margin: 0;
+  }
+
+  .cart__meta .cart__remove,
+  .cart__update--large {
+    display: none;
+  }
+
+  .cart-flex + .cart-flex {
+    margin-top: 15px;
+  }
+
+}

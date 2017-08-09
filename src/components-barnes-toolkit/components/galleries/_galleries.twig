@@ -1,0 +1,46 @@
+{% if totalCards is empty %}
+  {% set totalCards = 4 %}
+{% endif %}
+
+{% if cols is empty %}
+  {% set cols = 2 %}
+{% endif %}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Gallery' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>This is a gallery that has 2 columns in a brick-work effect on larger screens and on smaller screens the images sit one per row.</p>'
+    ]
+  %}
+{% endif %}
+
+<div class="o-galleries">
+  <div class="container">
+    <div class="m-block__columns">
+      <div class="m-block__column">
+        <h2 class="font-gamma m-block__title">{{ title }}</h2>
+      </div>
+      <div class="m-block__column">
+        {% for p in summary %}
+          {{ p|raw }}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="m-block__media o-galleries__cards o-galleries__cards--{{ cols }}">
+      {% for i in 0..totalCards %}
+        {% set randomHeight = true %}
+        {% set title = 'Artwork title ' ~ i %}
+        {% include path ~ 'card-artwork/_card-artwork.twig' %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

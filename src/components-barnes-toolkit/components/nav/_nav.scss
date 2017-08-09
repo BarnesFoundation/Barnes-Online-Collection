@@ -1,0 +1,285 @@
+/**
+
+Nav (Main off-canvas navigation)
+
+**/
+
+.g-nav {
+  color: $color__white;
+  font-family: $sans-serif--loaded;
+  height: 100vh;
+  overflow: hidden;
+  padding-left: 50px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: transform 500ms ease 50ms;
+  transform: translate3d(100%, 0, 0);
+  width: calc(100% - 20px);
+  z-index: #{map-get($zIndexes, 'nav')};
+
+  @include breakpoint('medium+') {
+    width: 440px;
+  }
+}
+
+/**
+ * If there is no JavaScript then show the nav
+ */
+.no-js .g-nav {
+  height: auto;
+  padding-left: 0;
+  position: relative;
+  transform: none;
+  width: 100%;
+  z-index: #{map-get($zIndexes, 'navNoJS')};
+}
+
+.g-nav__inner {
+  background-color: $color__red--barnes;
+  height: 100%;
+  overflow: auto;
+  padding: 28px 30px;
+  -webkit-overflow-scrolling: touch;
+
+  @include breakpoint('medium+') {
+    padding: 30px 40px 28px;
+  }
+
+  @include breakpoint('large+') {
+    padding-top: 45px;
+  }
+
+  @include breakpoint('xlarge+') {
+    padding-top: 55px;
+  }
+
+}
+
+.no-js .g-nav__inner {
+  @include breakpoint('large+') {
+    padding-left: #{map-get($outer-gutters, 'large')};
+  }
+
+}
+
+.g-nav__links {
+  margin-top: 10px;
+
+  @include breakpoint('medium+') {
+    margin-top: 10px;
+  }
+}
+
+.g-nav__link {
+  color: currentColor;
+  display: block;
+  font-size: 19px;
+  line-height: 35px;
+  text-decoration: none;
+
+  @include breakpoint('medium+') {
+    font-size: 22px;
+    line-height: 40px;
+  }
+
+  &:hover {
+    color: $color__nav--hover;
+  }
+
+  /* establish desired focus ring appearance for appropriate input modalities */
+  &:focus:not(.focus-ring) {
+    outline: none;
+    text-decoration: underline;
+  }
+
+  &.focus-ring {
+    outline: $focus-ring-invert;
+  }
+}
+
+.g-nav__link[aria-current="true"] span {
+  border-bottom: 2px solid currentColor;
+}
+
+.g-nav__link[aria-current="true"]:focus:not(.focus-ring) span {
+  border-bottom-color: transparent;
+}
+
+.g-nav__link--important {
+  font-size: 24px;
+  line-height: 36px;
+
+  @include breakpoint('medium+') {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  @include breakpoint('large+') {
+    font-size: 38px;
+    line-height: 50px;
+  }
+}
+
+.g-nav__important-links {
+  border-top: 1px solid rgba($color__white, .2);
+  margin: 0;
+  padding: 15px 0 10px;
+
+  @include breakpoint('large+') {
+    border: none;
+    margin-bottom: 0;
+    padding: 13px 0 19px;
+  }
+}
+
+.g-nav__important-links + .g-nav__important-links {
+  border-top-width: 0;
+  margin-top: -15px;
+}
+
+.g-nav__search {
+  color: rgba($color__white, .8);
+  font-size: 26px;
+  margin-top: 0;
+
+  @include breakpoint('large+') {
+    display: none;
+  }
+
+  input,
+  .btn {
+    display: inline-block;
+  }
+
+  /**
+   * Search keyword input
+   * 1 Leave only enough room for the button
+   */
+  input {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    font-family: $sans-serif--loaded;
+    font-size: 26px;
+    max-width: calc(100% - 50px); /* 1 */
+    padding-left: 0;
+
+    @include breakpoint('medium+') {
+      font-size: 32px;
+    }
+
+    @include breakpoint('large+') {
+      font-size: 36px;
+    }
+  }
+
+  input::placeholder {
+    color: currentColor;
+    opacity: 1;
+  }
+
+  // Remove Safari padding
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  input,
+  .btn {
+    color: currentColor;
+  }
+
+  input:focus,
+  .btn:focus {
+    color: $color__white;
+  }
+
+  /* Establish desired focus ring appearance for appropriate input modalities */
+  input:focus:not(.focus-ring),
+  button:focus:not(.focus-ring) {
+    outline: none;
+  }
+
+  .focus-ring {
+    overflow: hidden;
+    outline: 5px auto rgba(white, .5);
+  }
+
+  /*
+    2 Ensure right edge of button lines up with keyline below
+  */
+  .btn {
+    position: relative;
+    right: -15px; /* 2 */
+    top: 4px;
+  }
+
+  .focus-ring + .btn,
+  input:focus + .btn {
+    color: $color__white;
+  }
+
+  .form-field__error {
+    color: currentColor;
+  }
+}
+
+/**
+ * 1 override an .form-field rule
+ */
+.g-nav__search__form-field {
+  margin-bottom: 0; /* 1 */
+}
+
+/**
+ * Black out the rest of the screen when the nav is showing
+ */
+.g-nav-overlay {
+  background: rgba($color__black, .2);
+  height: 100vh;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  transition: opacity 300ms ease 0;
+  width: 0;
+  z-index: #{map-get($zIndexes, 'navClose')};
+}
+
+/**
+ * Close button
+ */
+.g-nav__close {
+  left: 0;
+  position: relative; /* 3 */
+  top: -10px;
+
+  @include breakpoint('large+') {
+    top: 0;
+  }
+
+  &.focus-ring {
+    outline: none;
+  }
+}
+
+/**
+ * If there is no JavaScript then hide the close button
+ */
+.no-js .g-nav__close {
+  display: none;
+}
+
+/* Establish desired focus ring appearance for appropriate input modalities */
+.g-nav__close:focus:not(.focus-ring) {
+  outline: none;
+}
+
+.g-nav__close.focus-ring > svg {
+  outline: 5px auto rgba($color__white, .5);
+  overflow: hidden;
+}

@@ -1,0 +1,39 @@
+
+//
+// Iframes
+//
+
+.result {
+  background: $color-light;
+  min-height:50px;
+
+  iframe {
+    border: 1px solid $color-light;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    background:white;
+    overflow-x: hidden;
+    transition: all 500ms ease-out 50ms;
+  }
+}
+
+.is-menu-expanded .result iframe {
+  max-width: calc(100% - #{$sidebar-mobile-width} + 25px);
+
+  @include breakpoint(375px)  {
+    max-width: calc(100% - #{$sidebar-mobile-width-big} + 30px);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    max-width: 100%;
+  }
+}
+
+.is-loading .result iframe,
+.is-menu-expanded .result iframe {
+  @include breakpoint($breakpoint-max-width) {
+    max-width: $max-width;
+  }
+}

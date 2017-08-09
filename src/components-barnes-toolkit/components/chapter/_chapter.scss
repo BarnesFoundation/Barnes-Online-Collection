@@ -1,0 +1,74 @@
+/***
+
+Chapter
+====
+* Class name: `m-chapter`
+* Tags used on: `<div>`
+
+A chapter has a title and a pre-title along with a background image. This
+background image needs to be set inline in the HTML - without doing this the
+component will just appear with a black background and white copy.
+
+*Note:*
+
+When adding a background image, please remember that this component is
+self-tinting; meaning that we add a semi-transculent black layer over the top of
+the image automatically which allows the white copy above the image to be legible.
+
+So do not make your image darker in Photoshop/Sketch/Illustrator as then the
+CSS will make it too dark.
+
+***/
+.m-chapter {
+  background-color: $color__black;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-top: none;
+  color: $color__white;
+  height: 300px;
+  padding-top: 20px;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    height: 410px;
+    padding-top: 66px;
+  }
+
+  @include breakpoint('large+') {
+    height: 550px;
+    padding-top: 84px;
+  }
+
+  @media print {
+    height: auto;
+    padding-bottom: 40px;
+    padding-top: 84px
+  }
+}
+
+/**
+ * The automatic tint which allows the white copy above the image to be legible
+ */
+.m-chapter::after {
+  @include tint();
+
+  z-index: #{map-get($zIndexes, 'chapterOverlay')};
+}
+
+.m-chapter__copy {
+  position: relative;
+  z-index: #{map-get($zIndexes, 'chapterCopy')};
+}
+
+.m-chapter__pre-title {
+  color: currentColor;
+}
+
+.m-chapter__title {
+  margin-top: 15px;
+
+  @include breakpoint('large+') {
+    margin-top: 20px;
+  }
+}

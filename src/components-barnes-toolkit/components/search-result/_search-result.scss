@@ -1,0 +1,42 @@
+/***
+
+Search results
+======
+* Class name: `-m-search-result`
+* Tags used on: `<div>`
+
+Search result listings and accompnaying information e.g. title and number of
+results. This is mostly just used on Shopify sites but could be used on a
+non-Shopify site in theory.
+
+***/
+
+.m-search-results {
+  margin: 0 auto;
+  max-width: 768px;
+}
+
+.m-search-result:first-child .m-search-result__title {
+  margin-top: 25px;
+}
+
+.m-search-result__title {
+  @include reset-link-color();
+}
+
+.m-search-result__summary {
+  margin-top: 5px;
+}
+
+.m-search-result__link {
+  /** Just here to convey HTML structure **/
+}
+
+.m-search-result-count {
+  margin-top: 5px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+    text-align: right;
+  }
+}

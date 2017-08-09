@@ -1,0 +1,84 @@
+/**
+ * Search Bar (is) Active
+ * When .search-bar-active is on the <html> or <body> it means the red side menu is
+ * visible
+ */
+
+
+.search-bar-active,
+.search-bar-active body {
+
+  @include breakpoint('medium+') {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  @media print {
+    overflow: visible;
+    height: auto;
+  }
+}
+
+/**
+ * 1 Force vertical scrollbar to fix Crhome/Firefox on Windows jump
+ */
+html.search-bar-active {
+  overflow-y: scroll; /* 1 */
+}
+
+.search-bar-active .m-search-bar {
+  display: block;
+
+  @media print {
+    display: none;
+  }
+
+  @include breakpoint('medium-') {
+    display: none;
+  }
+}
+
+.search-bar-active .m-search-bar-overlay {
+
+  @include breakpoint('medium+') {
+    display: block;
+    opacity: 1;
+    width: 100%;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.search-bar-active .g-header__nav [data-search-show] {
+  display: none;
+}
+
+.search-bar-active .g-header__nav [data-search-hide] {
+  display: block;
+}
+
+/**
+ * 1 This will set the link and button colours
+ */
+.search-bar-active .g-header {
+  background-color: $color__white;
+  color: $color__black; /* 1 */
+  transform: none;
+  transition: none;
+}
+
+.search-bar-active .a-logo{
+  color: $color__logo;
+  transition: none;
+}
+
+.search-bar-active .g-header__nav__link {
+  transition: none;
+}
+
+.search-bar-active [data-search-show],
+.search-bar-active [data-search-hide] {
+  color: $color__red--barnes;
+}

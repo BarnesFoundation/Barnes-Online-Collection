@@ -1,0 +1,40 @@
+<!-- Nav - hidden by default and shown by JS. tabindex set to allow focus for a11y -->
+<div class="g-nav" data-behavior="nav" tabindex="-1">
+  <button class="g-nav__close btn btn--icon-only html4-hidden" type="button" data-nav-hide aria-labelledby="nav-close-title">
+    <svg class="icon--close" width="26" height="26">
+      <title id="nav-close-title">Close</title>
+      <use xlink:href="#icon--icon_close" />
+    </svg>
+  </button>
+  <div class="g-nav__inner">
+    <form class="g-nav__search" action="/search/" method="get">
+      <div>
+        <label class="visuallyhidden" for="search">Shop search</label>
+        <input class="" type="search" name="q" id="search" placeholder="Search" required>
+        <button class="btn btn--icon-only" type="submit">
+          <span class="visuallyhidden">Go</span>
+          <svg width="26" height="26">
+            <use xlink:href="#icon--icon_search"></use>
+          </svg>
+        </button>
+      </div>
+    </form>
+    <h2 class="visuallyhidden" id="g-nav__title">Main menu</h2>
+    <nav class="g-nav__links" aria-labelledby="g-nav__title">
+      <div class="g-nav__important-links">
+        <a class="g-nav__link g-nav__link--important" href="/collections/x"><span>Collection</span></a>
+        <a class="g-nav__link g-nav__link--important" href="/collections/x" aria-current="true"><span>Collection</span></a>
+        <a class="g-nav__link g-nav__link--important" href="/collections/x"><span>Collection</span></a>
+        <a class="g-nav__link g-nav__link--important" href="/collections/x"><span>Collection</span></a>
+      </div>
+      <div class="g-nav__important-links">
+        <a class="g-nav__link" href="#">barnesfoundation.org</a>
+      </div>
+      <div class="g-nav__important-links">
+        <a class="g-nav__link" href="#">Log in</a>
+      </div>
+    </nav>
+  </div>
+</div>
+<div class="g-nav-overlay" data-nav-overlay></div>
+<!--/ Nav -->

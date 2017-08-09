@@ -1,0 +1,88 @@
+{#
+
+Exhibition hero component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if type is empty %}
+  {% set type = 'Exhibition type' %}
+{% endif %}
+
+{% if title is empty %}
+  {% set title = 'Solo series concert: the modern violin' %}
+{% endif %}
+
+{% if date is empty %}
+  {% set date = 'Friday, March 31' %}
+{% endif %}
+
+{% if hashtagLink is empty %}
+  {% set hashtagLink = '#' %}
+{% endif %}
+
+{% if hashtag is empty %}
+  {% set hashtag = '#KimHarris' %}
+{% endif %}
+
+{% if caption is empty %}
+  {% set caption = 'Image caption' %}
+{% endif %}
+
+{% if summary is empty %}
+  {%
+    set summary = [
+      '<p>The exceptional path of a woman who defied the social norms of her time to join the Parisian avant-garde.</p>'
+    ]
+  %}
+{% endif %}
+
+{# Responsive images #}
+{% if images is empty %}
+  {%
+    set images = {
+      mobile: '/dist/images/cover-exhibition_m.jpg',
+      tablet: '/dist/images/cover-exhibition_t.jpg',
+      desktop: '/dist/images/cover-exhibition_d.jpg'
+    }
+  %}
+{% endif %}
+
+<div class="o-exhibition-hero">
+  <div class="o-exhibition-hero__inner">
+    <div class="container">
+      <div class="o-exhibition-hero__copy">
+        <div class="o-exhibition-hero__pre-title font-zeta">{{ type }}</div>
+        <h1 class="o-exhibition-hero__title">{{ title }}</h1>
+        <p class="o-exhibition-hero__supporting font-gamma">{{ date }}</p>
+        <div class="o-exhibition-hero__summary font-epsilon">
+          {% for p in summary %}
+            {{ p|raw }}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="o-exhibition-hero__extras font-smallprint">
+        {% include path ~ 'share/_share.twig' %}
+        <a class="o-hero__hashtag" href="{{ hashtagLink }}">{{ hashtag }}</a>
+      </div>
+    </div>
+  </div>
+  <picture>
+    <source media="(min-width: 990px)" srcset="{{ images.desktop }}" type="image/jpeg">
+    <source media="(min-width: 650px)" srcset="{{ images.tablet }}" type="image/jpeg">
+    <img class="o-exhibition-hero__image" src="{{ images.mobile }}" alt="">
+  </picture>
+</div>
+{% if caption is defined %}
+<div class="o-hero__caption font-smallprint">
+  <div class="container">
+    {{ caption }}
+  </div>
+</div>
+{% endif %}

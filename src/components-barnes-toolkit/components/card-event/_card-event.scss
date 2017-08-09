@@ -1,0 +1,182 @@
+/***
+
+Card (Event)
+=====
+* Class name: `m-card-event`
+* Tags used on: `<div>` `<article>`
+
+A card for displaying an event e.g. an image with a title, a summary and a link
+
+An event can double as a card for a class. When it is a class then the event
+tag is not shown.
+
+*Note:*
+Multiple cards should be wrapped in a `<div class="m-card-event-list"></div>`
+container which will place the cards into a grid like structure on
+medium-to-large width screens.
+
+The cards in these containers also have extra padding at the bottom to stop
+them touching each other if they span multiple rows.
+
+Event images should be 406x300
+
+***/
+
+/* 1 - Counteract the padding-bottom of .m-card-event__body  */
+.m-card-event-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -35px; /* 1 */
+  margin-left: -1px;
+  margin-top: 20px;
+
+  @include breakpoint('medium+') {
+    margin-bottom: -55px; /* 1 */
+    margin-top: 30px;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: -80px; /* 1 */
+    margin-top: 40px;
+  }
+}
+
+.m-card-event-list:first-child {
+  margin-top: 0;
+}
+
+.m-card-event-list .m-card-event {
+  margin: 0 0 0 1px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    width: calc(50% - 1px);
+  }
+
+  @include breakpoint('large+') {
+    width: calc(33.33% - 1px);
+  }
+}
+
+.m-card-event-list--4 {
+  margin-left: 0;
+  justify-content: space-between;
+}
+
+.m-card-event-list--4 .m-card-event {
+  @include breakpoint('large+') {
+    margin-left: 0;
+    width: calc(25% - 20px);
+  }
+}
+
+.m-card-event {
+  @include reset-link-color();
+}
+
+.m-card-event__header {
+  position: relative;
+}
+
+.m-card-event__tag {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+/**
+ * 2 Force the image block to be a set ratio
+ * based on images ideally being 406x300
+ */
+.m-card-event__media-link {
+  display: block;
+  height: 0; /* 2 */
+  overflow: hidden;
+  padding-bottom: 73.89%; /* 2 */
+}
+
+/**
+ * 3 overrule the reset-link-color mixin (which I am regretting writing)
+ */
+.m-card-event__media-link:focus:not(.focus-ring) {
+  outline: 2px solid $color__red--barnes !important; /* 3 */
+}
+
+.m-card-event__media {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.m-card-event__media:empty {
+  background: $color__white--2;
+  color: $color__copy--medium;
+  padding-bottom: 67.5%;
+}
+
+.m-card-event__body {
+  padding: 23px 18% 61px 0;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 65px;
+    padding-top: 23px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 80px;
+    padding-top: 25px;
+  }
+}
+
+.m-card-event__title {
+  margin-top: 8px;
+}
+
+.m-card-event__title a {
+  display: inline-block;
+}
+
+// Hover state for the title link - make quite specific to override
+// the reset-link-color mixin used above
+.m-card-event__title a:not(.a-brand-link):hover {
+  text-decoration: underline;
+}
+
+.m-card-event__type {
+  color: $color__copy--medium;
+  margin-top: 0;
+}
+
+.m-card-event__date {
+  color: $color__red--barnes;
+}
+
+.m-card-event__summary {
+  @include font-smaller-body();
+
+  margin-top: 12px;
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/**
+ * View more button
+ */
+.m-card-event-list__more {
+  margin-top: 20px;
+
+  @include breakpoint('medium+') {
+    margin-top: 40px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 70px;
+  }
+}
+

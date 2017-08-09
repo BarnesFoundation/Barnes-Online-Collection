@@ -1,0 +1,281 @@
+
+//
+// Page Styles
+//
+
+.is-tpl-page .page-wrapper {
+  background-color: $color-lightest;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  max-width: $max-width;
+  margin: auto auto 125px;
+  overflow: hidden;
+}
+
+.is-menu-expanded .content-wrapper {
+  margin-left: 0;
+  max-width: calc(100% - #{$sidebar-mobile-width} + 25px);
+
+  @include breakpoint(375px)  {
+    max-width: calc(100% - #{$sidebar-mobile-width-big} + 30px);
+  }
+
+  @include breakpoint($tablet-portrait-width) {
+    max-width: calc(100% - #{$sidebar-width} + 30px);
+  }
+
+  @media print {
+    max-width: 100%;
+  }
+}
+
+// Post
+.post {
+  @extend %clearfix;
+  position: relative;
+  font-size: 16px;
+  line-height: 25px;
+  margin-bottom: 100px;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+
+  @include debug-colors(red);
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    font-size: 17px;
+    line-height: 30px;
+
+    margin-bottom: 188px;
+  }
+
+  @include breakpoint($tablet-landscape-width + 1) {
+    // margin-right: -20px;
+  }
+}
+
+.post--single {
+  margin-top: 125px;
+}
+
+
+// Temporary
+.post:last-child {
+  margin-bottom: 0px;
+  min-height: calc(100vh - 120px);
+}
+
+// Post - Entry
+// To account for posts with no children, make sure margin-bottom doesn't change
+// Last child's margin bottom
+.post-entry:not(:last-child) {
+  margin-bottom: 96px;
+
+  @include breakpoint($mobile-landscape-width) {
+    margin-bottom: 100px;
+  }
+}
+
+.post-entry a {
+  position: relative;
+  background-color: $color-highlighter;
+  color: $color-darkest;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.3);
+}
+
+.post-entry a:hover {
+  border-bottom: 1px solid rgba(26, 26, 26, 1);
+}
+
+
+// Post - Title
+.post-title {
+  font-weight: normal;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    white-space: nowrap;
+  }
+}
+
+h2.post-title {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #E4E4E4;
+  font-family: $suisse_book;
+  font-size: 23px;
+  line-height: 30px;
+  opacity: 1;
+
+  &:first-child {
+    border-bottom: 0;
+  }
+
+  /* @include transition(opacity 200ms ease); */
+  transition:opacity 200ms ease;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    font-size: 30px;
+    line-height: 40px;
+  }
+
+  @media print {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+  }
+}
+
+h2.post-title.is-active {
+  opacity: 0;
+
+  @media print {
+    opacity: 1;
+  }
+}
+
+h3.post-title {
+  font-family: $suisse_semibold;
+  font-size: 16px;
+  line-height: 25px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    font-size: 17px;
+    line-height: 30px;
+  }
+}
+
+.post p {
+  max-width: 650px;
+  margin: 28px 0;
+  clear: both;
+}
+
+.post img {
+  margin-bottom: 15px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-bottom: 23px;
+
+    //max-width: $max-width;
+    max-width: 90vw;
+  }
+
+  @media print {
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+.is-menu-expanded .post img {
+  height: auto;
+  max-width: calc(85vw - #{$sidebar-mobile-width});
+
+  @media print {
+    max-width: 100%;
+  }
+}
+
+
+// Post - Caption
+.post-caption {
+  margin-bottom: 30px;
+  margin-top: 45px;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-bottom: 50px;
+
+    padding-bottom: 2px;
+  }
+}
+
+.post-caption + p > img {
+  margin-top: -5px;
+}
+
+.post-caption.alignleft {
+  text-align: center;
+  margin-right: 0;
+  float: none;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    float: left;
+    margin: 0 40px 40px 0;
+  }
+}
+
+.post-caption__text {
+  text-align: left;
+  font-size: 12px;
+  line-height: 20px;
+  color: $color-dark;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    font-size: 13px;
+    line-height: 25px;
+    padding-right: 20px;
+  }
+}
+
+
+// Post - Ordered Lists
+.post ol, .post ul {
+  margin-bottom: 45px;
+  max-width: 650px;
+  padding-left: 25px;
+
+  li {
+    position: relative;
+    //margin-bottom: 30px;
+  }
+
+  li:before {
+    position: absolute;
+    left: -25px;
+    content: "— ";
+  }
+}
+
+
+// Remove margin bottom of last thing in the post-entry
+.post-entry > *:last-child {
+  margin-bottom: 0;
+}
+
+// resize-nav
+.result__resizenav {
+  padding: 18px 15px;
+
+  @media print {
+    display: none;
+  }
+}
+
+.result__resize-title {
+  color: $color-dark;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
+
+.result__resizenav button {
+  appearance: none;
+  background: $color-lightest;
+  border: 1px solid $color-dark;
+  border-radius: 2px;
+  color: black;
+  font-size: 15px;
+  font-weight: normal;
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+
+.result__resizenav button[aria-current="true"]{
+  background: $color-darkest;
+  color: $color-lightest;
+}
+

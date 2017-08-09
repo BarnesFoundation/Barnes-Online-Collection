@@ -1,0 +1,88 @@
+{#
+
+Membership Detail component
+Can have an image or be narrow and centred
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if content is empty %}
+  {%
+    set content = [
+      '<p>As the Barnes Foundation nears its 100th anniversary, we are looking forward to our next century and all the exciting things we have planned. Here is information about how you can help support us.</p>',
+      '<ul>
+        <li>Unlimited admission for two individuals and any children in your household</li>
+        <li>Free admission for your guests</li>
+        <li>Exclusive programs and lectures to expand your understanding of the collection</li>
+        <li>Invitations to exhibition previews</li>
+        <li>An invitation to the annual Circles Soirée</li>
+        <li>20% discount in the Barnes Shop</li>
+        <li>Inclusion in donor recognition materials, including the Circles member list and Annual Report</li>
+        <li>A dedicated Circles phone line for personal handling of tour arrangements and other VIP services</li>
+        <li>Exclusive day trips and regional travel opportunities, as available</li>
+      </ul>'
+    ]
+  %}
+{% endif %}
+
+{% if btns is empty %}
+  {%
+    set btns = [
+      {
+        copy: 'Give a Gift',
+        link: '#'
+      },
+      {
+        copy: 'Renew',
+        link: '#'
+      },
+      {
+        copy: 'Join',
+        link: '#',
+        primary: true
+      }
+    ]
+  %}
+{% endif %}
+
+{% if postSummary is empty %}
+  {% set postSummary = 'Already a member? <a class="a-brand-link" href="#">Verify membership</a>' %}
+{% endif %}
+
+<div class="m-block m-membership-detail {% if artwork is defined %} m-block__columns m-membership-detail--has-image{% endif %}">
+  <div class="m-membership-detail__content{% if artwork is defined %} m-block__column{% endif %}">
+    {% for p in content %}
+      {{ p|raw }}
+    {% endfor %}
+
+    {% if btns is defined %}
+    <div class="m-btn-group m-membership-detail__btn-group">
+      {% for btn in btns %}
+        <a class="btn{% if btn.primary is defined %} btn--primary{% endif %}" href="{{ btn.link }}">{{ btn.copy|raw }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if postSummary is defined %}
+    <div class="m-membership-detail__post-summary">
+      <p>{{ postSummary|raw }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if artwork is defined %}
+    <div class="m-block__column m-membership-detail__media">
+      <img class="m-membership-detail__image" src="{{ artwork.image }}" alt="{{ artwork.title }}">
+
+      <div class="m-membership-detail__media-title">
+        {{ artwork.title|raw }}
+      </div>
+      <div class="m-membership-detail__media-copyright font-smallprint">{{ artwork.copyright|raw }}</div>
+    </div>
+  {% endif %}
+</div>

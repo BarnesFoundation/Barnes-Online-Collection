@@ -1,0 +1,41 @@
+{# If some key variables are missing, load in the default content #}
+{% if backgroundColor is empty %}
+  {% set backgroundColor = '#123456' %}
+{% endif %}
+{% if title is empty %}
+  {% set title = 'This is the page title' %}
+{% endif %}
+{% if summary is empty and noSummary is empty %}
+  {% set summary = '<p>The art of the page summary: convince people in a small paragraph that the rest of the page is worth reading...</p>' %}
+{% endif %}
+{% if cta is empty %}
+  {% set cta = {copy: 'Contact Us', link: '#'} %}
+{% endif %}
+{% if images is empty %}
+  {% set images = {mobile: '/dist/images/cover-plan-your-visit_m.jpg', tablet: '/dist/images/cover-plan-your-visit_t.jpg', desktop: '/dist/images/cover-plan-your-visit_d.jpg'} %}
+{% endif %}
+
+<div class="o-hero o-hero--page-title" style="background-color: {{ backgroundColor }}">
+  <div class="o-hero__inner">
+    <div class="container">
+      <h1 class="page-title">{{ title }}</h1>
+    </div>
+  </div>
+  <picture>
+    <source class="o-hero__image" media="(min-width: 990px)" srcset="{{ images.desktop }}" type="image/jpeg">
+    <source class="o-hero__image" media="(min-width: 650px)" srcset="{{ images.tablet }}" type="image/jpeg">
+    <img class="o-hero__image" src="{{ images.mobile }}" alt="">
+  </picture>
+</div>
+{% if summary is defined %}
+<div class="container">
+  <div class="m-page-intro{% if cta is defined %} m-page-intro--has-cta{% endif %}">
+    <div class="m-page-intro__summary font-chapo">
+      {{ summary|raw }}
+    </div>
+    {% if cta is defined %}
+    <p><a class="btn btn--primary m-page-intro__cta" href="{{ cta.link }}">{{ cta.copy }}</a></p>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

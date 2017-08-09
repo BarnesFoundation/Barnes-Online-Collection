@@ -1,0 +1,103 @@
+
+//
+// Typography Styles
+//
+
+// Base
+html,
+button,
+input,
+select,
+textarea {
+  color: $color-darkest;
+}
+
+body {
+  font: {
+    family: $suisse_regular;
+    size: 100%;
+  }
+  text: {
+    shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+    rendering: optimizeLegibility;
+    size-adjust: 100%;
+  }
+}
+
+::selection {
+  background: #ccc;
+  text-shadow: none;
+}
+
+a {
+  text-decoration: none;
+  color: $color-dark;
+  outline: 0;
+}
+
+a:hover {
+  color: $color-dark;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+strong {
+  font-family: $suisse_semibold;
+  font-weight: normal;
+}
+
+// #styleguideOverride: the create-react-app restricts relative imports. Use this instead
+$font_path: '/fonts/';
+
+// Web Fonts
+@font-face {
+  font-family: 'area17mainlogo';
+  src: url($font_path + 'area17mainlogo-webfont.eot');
+  src: url($font_path + 'area17mainlogo-webfont.eot?#iefix') format('embedded-opentype'),
+       url($font_path + 'area17mainlogo-webfont.woff2') format('woff2'),
+       url($font_path + 'area17mainlogo-webfont.woff') format('woff'),
+       url($font_path + 'area17mainlogo-webfont.ttf') format('truetype'),
+       url($font_path + 'area17mainlogo-webfont.svg#area17mainlogo') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SuisseIntl';
+  src: url($font_path + 'SuisseIntl-Regular.otf');
+  src: url($font_path + 'SuisseIntl-Regular-WebXL.eot') format('embedded-opentype'),
+       url($font_path + 'SuisseIntl-Regular-WebXL.woff2') format('woff2'),
+       url($font_path + 'SuisseIntl-Regular-WebXL.woff') format('woff'),
+       url($font_path + 'SuisseIntl-Regular-WebXL.ttf') format('truetype'),
+       url($font_path + 'SuisseIntl-Regular-WebXL.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SuisseIntl-Semibold';
+  src: url($font_path + 'SuisseIntl-SemiBold.otf');
+  src: url($font_path + 'SuisseIntl-SemiBold-WebS.eot') format('embedded-opentype'),
+       url($font_path + 'SuisseIntl-SemiBold-WebS.woff2') format('woff2'),
+       url($font_path + 'SuisseIntl-SemiBold-WebS.woff') format('woff'),
+       url($font_path + 'SuisseIntl-SemiBold-WebS.ttf') format('truetype'),
+       url($font_path + 'SuisseIntl-SemiBold-WebS.svg') format('svg');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SuisseIntl-Book';
+  src: url($font_path + 'SuisseIntl-Book.otf');
+  src: url($font_path + 'SuisseIntl-Book-WebS.eot') format('embedded-opentype'),
+       url($font_path + 'SuisseIntl-Book-WebS.woff2') format('woff2'),
+       url($font_path + 'SuisseIntl-Book-WebS.woff') format('woff'),
+       url($font_path + 'SuisseIntl-Book-WebS.ttf') format('truetype'),
+       url($font_path + 'SuisseIntl-Book-WebS.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

@@ -1,0 +1,37 @@
+{#
+
+List component
+A simple list
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if artists is empty %}
+  {%
+    set items = [
+      'Angella Dewalt',
+      'Ezra Gordillo',
+      'Cherrie Bement',
+      'Maudie Klee',
+      'Cornelia Meachum',
+      'Kristeen Degenhardt',
+      'Kareen Limberg',
+      'Melda Hammack',
+      'Daniela Hagins',
+      'Kirstin Bessler'
+    ]
+  %}
+{% endif %}
+
+<ul class="m-list">
+  {% for item in items %}
+  <li class="m-list__item">
+    {{ item|raw }}
+  </li>
+  {% endfor %}
+</ul>

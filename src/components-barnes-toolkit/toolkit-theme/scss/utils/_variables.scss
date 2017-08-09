@@ -1,0 +1,65 @@
+
+//
+// Variables
+//
+
+// Environment
+$devMode:                   false !default;
+
+
+// Base Colors
+$color-lightest:            rgba(255, 255, 255, 0.97);
+$color-lighter:             #d3bea5;
+$color-light:               #f2f2f2;
+$color-medium:              #dadada;
+$color-darkest:             #000;
+$color-darker:              #585858;
+$color-dark:                #999999;
+$color-highlighter:         #FFFFD9;
+$bg-404:                    #fffd38;
+
+// Font Families
+$suisse_regular:            'SuisseIntl', Helvetica, Arial, sans-serif;
+$suisse_book:               'SuisseIntl-Book', $suisse_regular;
+$suisse_semibold:           'SuisseIntl-Semibold', $suisse_book;
+$logo-sans:                 "area17mainlogo";
+
+
+// Breakpoints ( 320, 480, 768, 992, 1200 )
+$desktop-max-width:         1600px;
+$desktop-min-width:         1279px;
+$tablet-landscape-width:    1120px;
+$tablet-portrait-width:     768px;
+$mobile-landscape-width:    568px;
+$mobile-small-width:        480px;
+$mobile-portrait-width:     320px;
+
+$desktop:                   $desktop-max-width $tablet-landscape-width;
+$tablet:                    $tablet-landscape-width $tablet-portrait-width;
+$mobile:                    $mobile-landscape-width $mobile-portrait-width;
+
+
+// Dimensions
+$sidebar-width:             350px;
+$sidebar-mobile-width-big:  300px;
+$sidebar-mobile-width:      265px;
+$max-width:                 1460px;
+$breakpoint-max-width:      $max-width + 1 + $sidebar-width + 40px;
+
+
+// Z-Index
+$zIndex-1:                  1;
+$zIndex-2:                  2;
+$zIndex-3:                  3;
+$zIndex-4:                  4;
+$zIndex-5:                  5;
+$zIndex-6:                  6;
+$zIndex-7:                  7;
+$zIndex-8:                  8;
+$zIndex-9:                  9;
+$zIndex-10:                 10;
+
+
+// Timing
+$slow:                      0.4s;
+$fast:                      0.3s;

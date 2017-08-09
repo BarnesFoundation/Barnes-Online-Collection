@@ -1,0 +1,63 @@
+{# If some key variables are missing, load in the default content #}
+{% if tags is empty %}
+  {% set tags = [
+    {
+      title: 'All Type',
+      link: '/static/pages/homepage.php',
+      selected: true
+    },
+    {
+      title: 'Families',
+      link: '/static/pages/class.php'
+    },
+    {
+      title: 'School',
+      link: '/static/pages/event.php'
+    },
+    {
+      title: 'Members Only',
+      link: '#'
+    },
+    {
+      title: 'Music',
+      link: '#'
+    },
+    {
+      title: 'Lectures',
+      link: '#'
+    },
+    {
+      title: 'Nightlife',
+      link: '#'
+    },
+    {
+      title: 'Exhibitions',
+      link: '#'
+    },
+    {
+      title: 'Free',
+      link: '#'
+    }
+  ] %}
+{% endif %}
+
+<div class="m-tag-list {% if postCTA is defined %}m-tag-list--post-cta{% endif %}" data-behavior="TagList">
+  <!-- Small screen = <select>. Use JS to navigate -->
+  <div class="m-tag-list__select select">
+    {# Give this <select> a name and a unique id that matches the <label> #}
+    <label class="visuallyhidden" for="tagid1" id="tagid1-label">Filter events</label>
+    <select name="taglist" id="tagid1" class="html4-hidden">
+      {% for tag in tags %}
+        <option value="{{ tag.link }}" {% if tag.selected is defined %} selected{% endif %}>{{ tag.title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <!-- Large screen = list of links -->
+  <ul class="m-tag-list__list" aria-labelledby="tagid1-label">
+    {% for tag in tags %}
+      <li class="m-tag-list__item">
+        <a class="a-tag{% if tagsLight is defined %} a-tag--light{% endif %}" href="{{ tag.link }}" {% if tag.selected is defined %} aria-current="true"{% endif %}>{{ tag.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

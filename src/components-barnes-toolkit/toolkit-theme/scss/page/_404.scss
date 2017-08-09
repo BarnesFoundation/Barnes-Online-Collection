@@ -1,0 +1,32 @@
+.is-404 {
+  background-color: $bg-404;
+  opacity: 1;
+  .page-wrapper {
+    background-color: transparent !important;
+    padding: 23px 30px;
+  }
+  .primary-footer__signature {
+    display: none;
+  }
+  h1, p {
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: normal;
+  }
+  h1 {
+    padding-bottom: 48px;
+  }
+  p {
+    margin: 0;
+    &:last-child {
+      margin-top: 48px;
+    }
+  }
+  a {
+    color: $color-darkest;
+    border-bottom: 1px solid rgba(26,26,26,.3);
+    &:hover {
+      border-bottom-color: $color-darkest;
+    }
+  }
+}

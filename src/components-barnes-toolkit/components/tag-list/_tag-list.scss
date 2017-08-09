@@ -1,0 +1,154 @@
+/***
+
+Tag List
+====
+* Class name: `m-tag-list`
+* Modifier classes: `m-tag-list--post-cta`
+* Tags used on: `<div>`
+
+A list of tags which appears as little buttons on bigger screens
+and a drop down list on mobile.
+
+*Note:*
+
+Give this `<select>` a name and a _unique_ id that matches the `<label>` tag
+
+***/
+
+.m-tag-list {
+  padding-bottom: 35px;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 45px;
+  }
+
+  // When we hit large+ we not showing the <select> any more
+  @include breakpoint('large+') {
+    padding-bottom: 47px;
+    margin-bottom: 0;
+  }
+}
+
+/* Note: This rule is useless in Craft because of dev restraints with the code :( */
+.m-page-intro + .m-tag-list {
+  margin-top: -13px;
+
+  @include breakpoint('medium+') {
+    margin-top: -11px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -17px;
+  }
+}
+
+.m-tag-list__select {
+  display: block;
+  height: 46px;
+
+  @include breakpoint('medium+') {
+    height: 50px;
+  }
+
+  @include breakpoint('large+') {
+    display: none;
+  }
+}
+
+.m-tag-list__select select {
+  @include font-zeta();
+
+  color: $color__copy--medium;
+  padding-top: 10px;
+
+  @include breakpoint('medium+') {
+    padding-top: 12px;
+  }
+}
+
+.m-tag-list .a-tag {
+  display: block;
+
+  @include breakpoint('large+') {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}
+
+.m-tag-list__btn {
+  display: block;
+  text-align: left;
+  position: relative;
+  width: 100%;
+
+  @include breakpoint('large+') {
+    display: none;
+  }
+}
+
+/**
+ * 1 Allow only .m-tag-list__select to be clickable
+ */
+.m-tag-list__icon {
+  pointer-events: none; /* 1 */
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.m-tag-list__icon svg {
+  display: block;
+  height: 21px;
+  transform: rotate(0);
+  transition: all 500ms ease 50ms;
+  width: 30px;
+}
+
+.m-tag-list__list {
+  display: none;
+  margin-top: 0;
+
+  @include breakpoint('large+') {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+}
+
+.m-tag-list__list.m-tag-list__list--active {
+  @include breakpoint('large-') {
+    background: $color__white;
+    left: 0;
+    display: block;
+    position: absolute;
+    width: 100%;
+    z-index: #{map-get($zIndexes, 'tagListDropdown')};
+  }
+}
+
+.m-tag-list__item {
+  list-style: none;
+  margin-left: 0;
+  margin-top: 10px;
+}
+
+/**
+ * Modifier for when the tag list follows on from a .m-page-intro--has-cta component
+ */
+.m-tag-list--post-cta {
+  margin-top: -13px;
+
+  @include breakpoint('medium+') {
+    margin-top: -11px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -17px;
+  }
+}

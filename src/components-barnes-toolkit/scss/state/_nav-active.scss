@@ -1,0 +1,40 @@
+/**
+ * Nav-active
+ * When .nav-active is on the <html> or <body> it means the red side menu is
+ * visible
+ */
+
+.nav-active,
+.nav-active body {
+  overflow: hidden;
+  height: 100vh;
+
+  @media print {
+    overflow: visible;
+    height: auto;
+  }
+}
+
+/**
+ * 1 Force vertical scrollbar to fix Crhome/Firefox on Windows jump
+ */
+html.nav-active {
+  overflow-y: scroll; /* 1 */
+}
+
+.nav-active .g-nav {
+  transform: translate3d(0, 0, 0);
+
+  @media print {
+    display: none;
+  }
+}
+
+.nav-active .g-nav-overlay {
+  opacity: 1;
+  width: 100%;
+
+  @media print {
+    display: none;
+  }
+}

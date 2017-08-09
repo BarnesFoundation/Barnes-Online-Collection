@@ -1,0 +1,90 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Slider gallery' %}
+{% endif %}
+{% if content is empty %}
+  {% set content = ['<p>Additional exclusive benefits including private events and travel opportunities are available through our premier membership program, The Circles, and our young patrons membership, The Contemporaries.</p>'] %}
+{% endif %}
+
+{% if totalCards is empty %}
+  {% set totalCards = 10 %}
+{% endif %}
+
+{# set some random image widths for testing - in production we will not need this #}
+{% set imageWidths = [250, 350, 275, 300, 260, 202, 220, 305, 300] %}
+
+<div class="o-slider-gallery">
+  <div class="container">
+    <div class="m-block__columns">
+      <div class="m-block__column">
+        {% if noTitle is empty %}<h2 class="font-gamma m-block__title">{{ title }}</h2>{% endif %}
+      </div>
+      <div class="m-block__column">
+        {% for p in content %}
+          {{ p|raw }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="m-block__media o-slider-gallery__stage">
+
+    <div class="container">
+      <div class="o-slider-gallery__container" data-behavior="SliderGallery">
+        {% for i in 0..totalCards %}
+
+          {# Set a random imageWidth for testing - in production get the imageWidth with PHP #}
+          {% set imageWidth = imageWidths[random(8)] %}
+
+          {# Set a **unique** ID for the card-artwork so our inline CSS works #}
+          {% set id = 'm-card-artwork-' ~ i %}
+
+          {# Inline styles will set the ratio of our responsive images in the slider/carousel #}
+          <style scoped>
+            {# Image is 270px high #}
+            {% set imageRatio = (270/450) %}
+            {% set newWidth = (imageWidth * imageRatio)|round %}
+
+            #{{ id }} {
+              width: {{ newWidth }}px;
+            }
+
+            {# Image is 340px high #}
+            {% set imageRatio = (340/450) %}
+            {% set newWidth = (imageWidth * imageRatio)|round %}
+
+            @media print, screen and (min-width: 650px) {
+              #{{ id }} {
+                width: {{ newWidth }}px;
+              }
+            }
+
+            {# Image is 450px high #}
+            {% set imageRatio = 1 %}
+            {% set newWidth = (imageWidth * imageRatio)|round %}
+
+            @media screen and (min-width: 990px) {
+              #{{ id }} {
+                width: {{ newWidth }}px;
+              }
+            }
+          </style>
+
+          {%
+            include path ~ "card-artwork/_card-artwork.twig" with {
+              imageWidth: imageWidth,
+              id: id,
+              title: 'Artwork title ' ~ i
+            }
+          %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+

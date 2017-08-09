@@ -1,0 +1,52 @@
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+
+{% if images is empty %}
+  {% set link = '#' %}
+  {% set no_share = true %}
+  {% set type = 'Current Exhibition' %}
+  {% set title = 'This is a homepage hero' %}
+  {% set date = 'Until May 22, 2017' %}
+  {# Responsive images #}
+  {%
+    set images = {
+      mobile: '/dist/images/cover-home_m_01.jpg',
+      tablet: '/dist/images/cover-home_t_01.jpg',
+      desktop: '/dist/images/cover-home_d_01.jpg'
+    }
+  %}
+{% endif %}
+
+<div class="o-hero o-hero--home" data-behavior="HomeHeroClick HomeHeroHeight">
+  <div class="o-hero__inner">
+    <div class="container">
+      <div class="o-hero__copy">
+        <div class="o-hero__pre-title font-zeta">{{ type|raw }}</div>
+        <h2 class="o-hero__title"><a href="{{ link }}">{{ title|raw }}</a></h2>
+        <p class="o-hero__supporting">{{ date|raw }}</p>
+      </div>
+      {% if (no_share != true) %}
+      <div class="o-hero__extras font-smallprint">
+        {% include path ~ 'share/_share.twig' %}
+        <a class="o-hero__hashtag" href="{{ hashtagLink }}">{{ hashtag }}</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <picture>
+    <source media="(min-width: 990px)" srcset="{{ images.desktop }}" type="image/jpeg">
+    <source media="(min-width: 650px)" srcset="{{ images.tablet }}" type="image/jpeg">
+    <img class="o-hero__image" src="{{ images.mobile }}" alt="">
+  </picture>
+</div>
+{% if caption is defined %}
+<div class="o-hero__caption font-smallprint">
+  <div class="container">
+    {{ caption|raw }}
+  </div>
+</div>
+{% endif %}

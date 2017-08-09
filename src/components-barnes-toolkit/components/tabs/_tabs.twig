@@ -1,0 +1,42 @@
+{#
+
+Tabs component
+Used to link to child pages in a section
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if tabs is empty %}
+  {%
+    set tabs = [
+      {
+        copy: 'Tab one',
+        link: '#'
+      },
+      {
+        copy: 'Tab two',
+        link: '#',
+        current: true
+      },
+      {
+        copy: 'Tab three',
+        link: '#'
+      }
+    ]
+  %}
+{% endif %}
+
+<nav class="m-tabs{% if postCTA is defined %} m-tabs--post-cta {% endif %}" data-behavior="Tabs">
+  <div class="m-tabs__list">
+  {% for tab in tabs %}
+    <div class="m-tabs__item">
+      <a class="m-tabs__link" href="{{ tab.link }}"{% if tab.current is defined %} aria-current="true"{% endif %}>{{ tab.copy|raw }}</a>
+    </div>
+  {% endfor %}
+  </div>
+</nav>

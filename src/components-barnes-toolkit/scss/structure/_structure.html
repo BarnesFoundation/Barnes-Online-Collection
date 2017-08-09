@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US" class="no-js">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Barnes Foundation</title>
+  [script]document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');[/script]
+  <!-- CSS *before any blocking scripts -->
+  <link rel="stlyesheet" href="/dist/scripts/app.css">
+  <!-- Main Favicon -->
+  <link rel="shortcut icon" href="/dist/images/favicons/favicon.ico">
+  <!-- Apple Touch Icons (ipad/iphone standard+retina) -->
+  <link rel="apple-touch-icon" href="/dist/images/favicons/favicon-152.png">
+  <!-- General use iOS/Android icon, auto-downscaled by devices. -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-120.png" sizes="120x120">
+  <!-- iPhone retina touch icon -->
+  <link rel="apple-touch-icon" type="image/png" href="/dist/images/favicons/favicon-76.png" sizes="76x76">
+  <!-- iPad home screen icons -->
+  <!-- Favicon Fallbacks for old browsers that don't read .ico -->
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/dist/images/favicons/favicon-16.png" sizes="16x16">
+  <!-- Insert HTML5 shiv for older browsers like Internet Explorer 8,7 or 6 -->
+  <!--[if lt IE 9]>
+    [script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"][/script]
+  <![endif]-->
+  <!-- insert head.js - ideally minified and inline and not linked like this -->
+  [script src="/dist/scripts/head.js"][/script]
+</head>
+
+<body>
+  <div id="a17">
+    <!-- Skip links for accessibility reasons (keyboard users need them) -->
+    <a class="a-skip" href="#content">Skip to content</a>
+    <a class="a-skip" href="#footer">Skip to footer</a>
+    <!--/ Skip links -->
+    <!-- Header -->
+    <header class="g-header" data-behavior="header">
+      <div class="container">
+        <!-- Logo -->
+        <a class="a-logo g-header__logo" href="/">
+          <span class="html4-label">Barnes</span>
+          <svg class="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
+            <title id="logo-title">Barnes</title>
+            <use xlink:href="#icon--logo-s"></use>
+          </svg>
+          <svg class="a-logo__svg a-logo__svg--m" width="146" height="45">
+            <title>Barnes</title>
+            <use xlink:href="#icon--logo-m"></use>
+          </svg>
+          <svg class="a-logo__svg a-logo__svg--l" width="164.958" height="50">
+            <title>Barnes</title>
+            <use xlink:href="#icon--logo-l"></use>
+          </svg>
+          <svg class="a-logo__svg a-logo__svg--xl" width="200" height="62">
+            <title>Barnes</title>
+            <use xlink:href="#icon--logo-xl"></use>
+          </svg>
+        </a>
+        <!--/ Logo -->
+        <!-- Mini-nav -->
+        <nav class="g-header__nav">
+          <a class="g-header__nav__link" href="#">What’s On</a>
+          <a class="g-header__nav__link" href="#" aria-current="true">Plan your Visit</a>
+          <a class="g-header__nav__link" href="#">Our Collection</a>
+          <a class="g-header__nav__link" href="/static/pages/class.php">Take a Class</a>
+          <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="search-open-title">
+            <svg width="26" height="26">
+              <title id="search-open-title">Search</title>
+              <use xlink:href="#icon--icon_search"></use>
+            </svg>
+          </button>
+          <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-search-hide type="button" aria-labelledby="search-hide-title">
+            <svg width="26" height="26">
+              <title id="search-hide-title">Hide Search</title>
+              <use xlink:href="#icon--icon_search"></use>
+            </svg>
+          </button>
+          <button class="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="nav-open-title">
+            <svg width="26" height="26">
+              <title id="nav-open-title">Menu</title>
+              <use xlink:href="#icon--icon_menu"></use>
+            </svg>
+          </button>
+        </nav>
+        <!--/ Mini-nav -->
+      </div>
+      <!-- Search (off-canvas) -->
+      <div class="m-search-bar" data-behavior="SearchBar" aria-hidden="true">
+        <div class="container">
+          <form class="m-search-bar__form" action="/static/pages/search.php" method="get" novalidate data-behavior="FormValidate">
+            <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+              <h3 class="font-bold-heading">Please correct your errors</h3>
+            </div>
+            <div class="form-field m-search-bar__form-field">
+              <label class="visuallyhidden" for="search">Search</label>
+              <input class="input" type="search" name="q" id="search" placeholder="Search" required aria-required="true" aria-describedby="searcherror1">
+              <button class="btn btn--primary" type="submit">
+                Search
+              </button>
+              <div aria-hidden="true" class="form-field__error hidden" tabindex="-1" id="searcherror1">Enter a search term</div>
+            </div>
+          </form>
+          <button class="m-search-bar__close btn btn--icon-only html4-hidden" type="button" data-search-hide aria-labelledby="search-close-title">
+            <svg class="icon--close" width="20" height="20">
+              <title id="search-close-title">Close search</title>
+              <use xlink:href="#icon--icon_close" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!--/ Search -->
+    </header>
+    <div class="m-search-bar-overlay" data-search-overlay></div>
+    <!--/ Header -->
+    <!-- Nav (off-canvas) -->
+    <!-- Nav - hidden by default and shown by JS. tabindex set to allow focus for a11y -->
+    <div class="g-nav" data-behavior="nav" tabindex="-1">
+      <div class="g-nav__inner">
+        <button class="g-nav__close btn btn--icon-only html4-hidden" type="button" data-nav-hide aria-labelledby="nav-close-title">
+          <svg class="icon--close" width="20" height="20">
+            <title id="nav-close-title">Close menu</title>
+            <use xlink:href="#icon--icon_close" />
+          </svg>
+        </button>
+        <form class="g-nav__search" action="/static/pages/search.php" method="get" novalidate data-behavior="FormValidate">
+          <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+            <h3 class="font-bold-heading visuallyhidden">Please correct your errors</h3>
+          </div>
+          <div class="form-field g-nav__search__form-field">
+            <label class="visuallyhidden" for="search">Search</label>
+            <input type="search" name="q" id="search" placeholder="Search" required aria-required="true" aria-describedby="searcherror1">
+            <button class="btn btn--icon-only" type="submit">
+              <span class="visuallyhidden">Go</span>
+              <svg width="26" height="26">
+                <use xlink:href="#icon--icon_search"></use>
+              </svg>
+            </button>
+            <div aria-hidden="true" class="form-field__error hidden" tabindex="-1" id="searcherror1">Please enter a search term</div>
+          </div>
+        </form>
+        <h2 class="visuallyhidden" id="g-nav__title">Main menu</h2>
+        <nav class="g-nav__links" aria-labelledby="g-nav__title">
+          <div class="g-nav__important-links">
+            <a class="g-nav__link g-nav__link--important" href="/static/pages/whats-on.php"><span>What’s On</span></a>
+            <a class="g-nav__link g-nav__link--important" aria-current="true" href="/static/pages/plan-your-visit.php"><span>Plan your Visit</span></a>
+            <a class="g-nav__link g-nav__link--important" href="#"><span>Our Collection</span></a>
+            <a class="g-nav__link g-nav__link--important" href="/static/pages/class.php"><span>Take a Class</span></a>
+          </div> <a class="g-nav__link" href="/static/pages/about.php"><span>About</span></a>
+          <a class="g-nav__link" href="/static/pages/support-individual.php"><span>Join</span></a>
+          <a class="g-nav__link" aria-current="true" href="#"><span>Give</span></a>
+          <a class="g-nav__link" href="/static/pages/teachers-landing.php"><span>Teachers</span></a>
+          <a class="g-nav__link" href="/static/pages/press-landing.php"><span>Press</span></a>
+          <a class="g-nav__link" href="#"><span>Shop</span></a>
+          <a class="g-nav__link" href="/static/pages/host-an-event.php"><span>Facility Rental</span></a>
+          <a class="g-nav__link" href="#"><span>Arboretum</span></a>
+        </nav>
+      </div>
+    </div>
+    <div class="g-nav-overlay" data-nav-overlay></div>
+    <!--/ Nav -->
+    <!--/ Nav -->
+    <!-- Mobile only quick nav -->
+    <!-- Map + Daily opening times (small screen only) -->
+    <div class="m-mobile-options font-smallprint">
+      <div class="container">
+        <div class="m-mobile-options__welcome">
+          Open today
+        </div>
+        <div class="m-mobile-options__links">
+          <a class="a-brand-link m-mobile-options__link" href="#">Buy tickets</a>
+          <a class="a-brand-link m-mobile-options__link" href="#">Visit</a>
+        </div>
+      </div>
+    </div>
+    <!--/ Map + Daily opening times (small screen only) -->
+    <!--/ Mobile only quick nav -->
+    <!--
+    Main
+    by setting tabindex="-1" on this we can ensure that users sent here via the Skip to content link
+    will have their :focus sent here too
+  -->
+    <main id="content" tabindex="-1">
+      [COMPONENTS]
+    </main>
+    <!--/ Main -->
+    <!--
+    Footer
+    by setting tabindex="-1" on this we can ensure that users sent here via the SKip to footer link
+    will have their :focus sent here too
+  -->
+    <footer id="footer" class="g-footer" tabindex="-1">
+      <div class="container">
+        <!-- Footer actions -->
+        <div class="g-footer__actions">
+          <div class="g-footer__col">
+            <div class="g-footer__cta">
+              <div class="font-delta g-footer__cta-title">Your support help research and conservation at Barnes, so we can present our exhibitions and events.</div>
+              <div class="m-btn-group">
+                <a class="btn" href="#">Donate</a>
+                <a class="btn" href="#">Become a Member</a>
+              </div>
+            </div>
+          </div>
+          <div class="g-footer__col g-footer__details">
+            <div class="vcard g-footer__address">
+              <h2 class="font-zeta">Location</h2>
+              <div>
+                <p class="adr">
+                  <span class="street-address">2025 Benjamin Franklin Parkway</span>
+                  <br>
+                  <span class="locality">Philadelphia</span>, <span class="region">PA</span>  <span class="postcode">19130</span>
+                  <br>Phone: <span class="tel">215-278-7000</span>
+                </p>
+              </div>
+              <div class="g-footer__address__link">
+                <p><a href="https://www.google.com/maps?cid=5415126767940621792">Get directions</a>
+                </p>
+              </div>
+            </div>
+            <div class="g-footer__hours">
+              <h2 class="font-zeta">Hours</h2>
+              <p>Wed — Mon: 10am &ndash; 5pm
+                <br>First Friday: 6 &ndash; 9pm
+                <br>Tuesday closed</p>
+            </div>
+            <!-- Newsletter subscription form -->
+            <div class="g-footer__subscribe">
+              <h2 class="font-zeta">Newsletter</h2>
+              <form class="m-newsletter" action="//www.pages03.net/thebarnesfoundation/EmailPreferences/Opt-In?vs=YTg4NTA4MTAtNjcwZS00MjRmLTg2M2QtNDhlZjQ0OGUxN2ExOzsS1" method="post" novalidate data-behavior="Newsletter FormValidate">
+                <div class="m-newsletter__signup" aria-hidden="false">
+                  <div class="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+                    <h3 class="font-bold-heading visuallyhidden">Please correct your errors</h3>
+                  </div>
+                  <div class="form-field m-newsletter__field">
+                    <label class="visuallyhidden" for="subscribe">Enter your email address</label>
+                    <input class="m-newsletter__input" type="email" name="Email" id="subscribe" placeholder="Email address" required aria-required="true" aria-describedby="emailerror1">
+                    <button class="m-newsletter__btn btn" type="submit">
+                      <span class="m-newsletter__wording">Subscribe</span>
+                      <span class="m-newsletter__icon">
+          <svg width="13" height="20" aria-label="Subscribe"><use xlink:href="#icon--icon_arrow-right"></use></svg>
+        </span>
+                    </button>
+                    <div aria-hidden="true" class="form-field__error hidden" role="alert" tabindex="-1" id="emailerror1">Enter a valid email address</div>
+                    <input name="formSourceName" value="StandardForm" type="hidden">
+                    <!-- DO NOT REMOVE HIDDEN FIELD sp_exp -->
+                    <input type="hidden" name="sp_exp" value="yes">
+                  </div>
+                </div>
+                <div aria-hidden="true" class="hidden font-delta m-newsletter__loading" role="alert">
+                  Processing your request&hellip;
+                </div>
+                <div aria-hidden="true" class="hidden font-delta color-brand m-newsletter__success" role="alert">
+                  Thanks for subscribing to our newsletter
+                </div>
+              </form>
+            </div>
+            <!--/ Newsletter subscription form -->
+          </div>
+        </div>
+        <!--/ Footer actions -->
+        <!-- Footer auxiliary -->
+        <div class="g-footer__auxiliary">
+          <nav class="g-footer__nav" aria-labelledby="footernav-heading">
+            <h2 id="footernav-heading" class="visuallyhidden">Useful links</h2>
+            <a class="g-footer__nav__link" href="#">&copy; The Barnes Foundation</a>
+            <a class="g-footer__nav__link" href="#">Terms &amp; Conditions</a>
+            <a class="g-footer__nav__link" href="#">Privacy Statement</a>
+            <a class="g-footer__nav__link" href="#">Accessibility</a>
+            <a class="g-footer__nav__link" href="#">Contact</a>
+          </nav>
+          <div class="g-footer__social-container">
+            <nav class="g-footer__social" aria-labelledby="socialnav-heading">
+              <h2 id="socialnav-heading" class="visuallyhidden">Find us on social media</h2>
+              <a class="g-footer__social__link" href="https://twitter.com/the_barnes">
+                <svg width="20" height="20">
+                  <title>Twitter</title>
+                  <use xlink:href="#icon--icon_twitter"></use>
+                </svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.facebook.com/barnesfoundation">
+                <svg width="20" height="20">
+                  <title>Facebook</title>
+                  <use xlink:href="#icon--icon_facebook"></use>
+                </svg>
+              </a>
+              <a class="g-footer__social__link" href="http://www.youtube.com/barnesfoundation">
+                <svg width="20" height="20">
+                  <title>YouTube</title>
+                  <use xlink:href="#icon--icon_youtube"></use>
+                </svg>
+              </a>
+              <a class="g-footer__social__link" href="https://instagram.com/barnesfoundation/">
+                <svg width="20" height="20">
+                  <title>Instagram</title>
+                  <use xlink:href="#icon--icon_instagram"></use>
+                </svg>
+              </a>
+            </nav>
+            <a class="g-footer__a17" href="http://area17.com/?utm_source=<?php echo urlencode('http://www.barnesfoundation.org/'); ?>&amp;utm_medium=referral&amp;utm_campaign=footer-credit-2016">Site by AREA 17</a>
+          </div>
+        </div>
+        <!--/ Footer auxiliary -->
+      </div>
+    </footer>
+    <!--/ Footer -->
+  </div>
+  <!-- insert app.js -->
+  [script src="/dist/scripts/app.js"][/script]
+</body>
+
+</html>

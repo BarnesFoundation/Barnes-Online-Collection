@@ -1,0 +1,55 @@
+
+//
+// colors
+//
+
+.post .colors {
+  max-width: $max-width;
+  overflow:hidden;
+  margin-top:0;
+  margin-right: -10px;
+  margin-left: -10px;
+  padding: 0;
+
+  @include breakpoint($mobile-landscape-width + 1) {
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  li {
+    float:left;
+    width:33.333%;
+    padding:10px;
+    display:block;
+    margin:0;
+    font-size: 12px;
+    line-height: 20px;
+    color: $color-dark;
+
+    &:after,
+    &:before {
+      display:none;
+    }
+
+    @include breakpoint($mobile-landscape-width + 1) {
+      width:25%;
+      padding:15px;
+    }
+
+    @include breakpoint($tablet-landscape-width + 1) {
+      width:20%;
+    }
+  }
+
+  span {
+    display:block;
+    margin:0 0 0.5em 0;
+    padding:0;
+    background:rgba(0,0,0,0.1);
+    border:1px solid rgba(0,0,0,0.1);
+    height:40px;
+  }
+}
+
+
+

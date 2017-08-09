@@ -1,0 +1,429 @@
+/***
+
+Block
+====
+* Class name:  `m-block`
+* Modifier classes: `m-block--alt`, `m-block--brand`, `m-block--flush-top`, `m-block--flush-bottom`, `m-block--flush`, `m-block--no-border`, `m-block--shallow`, `m-block--up`
+* Tags used on: `<div>` `<section>` `<article>`
+
+A block is a container for a row of content/a component. It is usually white
+with black copy with a light grey border above it. However, it can also be
+grey with black copy or red with white copy, it can have the border removed and
+it can have its spacing reduced or removed altogether at the top and/or bottom.
+
+It is pretty flexible and it has to be because most other components sit inside
+of an `.m-block` div.
+
+
+*Modifiers explained:*
+
+* m-block--no-border: removes border-top
+* m-block--flush: removes padding-top and padding-bottom
+* m-block--flush-bottom: removes padding-bottom only
+* m-block--flush-top: removes padding-top
+* m-block--shallow: reduces the padding-bottom and padding-top <sup>1</sup>
+* m-block--up: add a negative margin-top to 'move up' the block
+* m-block--brand: makes the block white copy on a red background <sup>2</sup>
+* m-block--alt: gives the block a grey background <sup>2</sup>
+
+1 see the `if` statement below on the title in the code sample
+2 if you use these - make sure there is `<div class="container">` inside the component - not around it
+
+Finally, you can also reverse the direct of the columns inside a block by adding
+the modifier class `m-block__columns--reverse` next to `m-block__columns` e.g.
+`<div class="m-block__columns m-block__columns--reverse">`
+
+That allows for a left-aligned column system as opposed to the usually right-aligned
+system.
+
+***/
+
+.m-block {
+  border-top: 1px solid $color__border;
+  clear: both;
+  padding-bottom: 30px;
+  padding-top: 25px;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 50px;
+    padding-top: 58px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 80px;
+    padding-top: 78px;
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  // our :not rule stop too much specificity for elements that *need* a
+  // margin-top on them
+  > *:first-child:not(.m-block__columns):not(.m-block__media):not(.m-block__title):not(.m-block__shallow-title) {
+    margin-top: 0;
+  }
+
+  .rte > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/**
+ * A block that has slightly less padding on it
+ */
+.m-block--shallow {
+
+  @include breakpoint('medium+') {
+    padding-bottom: 30px;
+    padding-top: 38px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 40px;
+    padding-top: 48px;
+  }
+}
+
+/**
+ * Parent container for our columns. You can sometimes chain this with
+ * `m-block` e.g. `<div class="m-block m-block__columns">`
+ * 90% of the time we just want 2 x 50% columns. Easy.
+ * Want 4 columns? Nest away!
+ */
+.m-block__columns {
+
+  @include breakpoint('medium+') {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/**
+ * The old switcheroo.
+ * Sometimes we want columsn to appear in a different order
+ * visually to their source order
+ */
+.m-block__columns--reverse {
+  @include breakpoint('medium+') {
+    flex-direction: row-reverse;
+  }
+}
+
+/**
+ * When in linear mode (usally on mobile) lets add some margin between "columns"
+ */
+.m-block__column + .m-block__column {
+  margin-top: 9px;
+
+  @include breakpoint('medium+') {
+    margin-top: 0;
+  }
+}
+
+/**
+ * The column (90% of the time this is 50% width on big screens and 100% width
+ * on small screens)
+ */
+.m-block__column {
+
+  @include breakpoint('medium+') {
+    width: calc(50% - #{map-get($inner-gutters, 'medium')} / 2);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - #{map-get($inner-gutters, 'xlarge')} / 2);
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  // When the first element is a table
+  > table:first-child {
+    margin-top: 20px;
+
+    @include breakpoint('medium+') {
+      margin-top: -15px;
+    }
+  }
+
+  // When the first element is a table with a caption - yay for accessibility!
+  > table:first-child caption {
+    @include breakpoint('medium+') {
+      margin-top: 13px;
+    }
+  }
+}
+
+/**
+ * Grid/Layout variations
+ */
+
+/**
+ * In some case we want single stacked columns on mobile *and* tablet
+ */
+.m-block__columns--sm-linear {
+  flex-wrap: wrap;
+}
+
+.m-block__columns--sm-linear > .m-block__column {
+
+  @include breakpoint('medium+') {
+    width: 100%;
+  }
+
+  @include breakpoint('large+') {
+    width: calc(50% - #{map-get($inner-gutters, 'medium')} / 2);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc(50% - #{map-get($inner-gutters, 'xlarge')} / 2);
+  }
+}
+
+/**
+ * Columns in thirds
+ * By default columns come in two - both 50% width
+ * but occasionally we need 1/3s or 1/4s
+ */
+.m-block__column--one-third {
+
+  @include breakpoint('medium+') {
+    width: calc((1/3)*100% - 10px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc((1/3)*100% - 13px);
+  }
+}
+
+.m-block__column--two-thirds {
+
+  @include breakpoint('medium+') {
+    width: calc((2/3)*100% - 10px);
+  }
+
+  @include breakpoint('xlarge+') {
+    width: calc((2/3)*100% - 13px);
+  }
+}
+
+/**
+ * Block title
+ * The main title of the block - usually .font-gamma
+ * In order line up the baseline of this title with the baseline of the <p>
+ * in column next to it we have to use some mad margins. Sorry about that.
+ */
+.m-block__title {
+
+  // font-beta = <h2> size
+  &.font-beta {
+    margin-top: 13px;
+
+    @include breakpoint('medium+') {
+      margin-top: 3px;
+    }
+
+    @include breakpoint('large+') {
+      margin-top: -20px;
+    }
+  }
+
+  // font-beta = <h3> size
+  &.font-gamma {
+    margin-top: 10px;
+
+    @include breakpoint('medium+') {
+      margin-top: -17px;
+    }
+
+    @include breakpoint('large+') {
+      margin-top: -14px;
+    }
+  }
+
+  // font-beta = <h4> size
+  &.font-delta {
+    margin-top: 10px;
+
+    @include breakpoint('medium+') {
+      margin-top: -17px;
+    }
+
+    @include breakpoint('large+') {
+      margin-top: -14px;
+    }
+  }
+}
+
+.m-block__shallow-title {
+  margin-top: 0;
+
+  // font-beta = <h4> size
+  &.font-delta {
+    @include breakpoint('medium+') {
+      margin-top: -5px;
+    }
+
+    @include breakpoint('large+') {
+      margin-top: -2px;
+    }
+  }
+}
+
+.m-block__shallow-title-price {
+  display: inline-block;
+  margin-left: .5em;
+}
+
+/**
+ * Subtitle
+ */
+.m-block__subtitle {
+  margin-bottom: 14px;
+  margin-top: 0;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 0;
+  }
+}
+
+/**
+ * Summary
+ */
+.m-block__summary {
+  margin-bottom: 30px;
+  text-align: center;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(66.667% - 13px);
+  }
+
+  @include breakpoint('xlarge+') {
+    max-width: calc(66.667% - 15px);
+  }
+
+  // Remove margin on first element (usually a <h2> or a <p2>)
+  > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/**
+ * Links
+ */
+.m-block__link {
+  color: currentColor;
+  display: inline-block;
+  text-decoration: none;
+
+  &:hover {
+    color: $color__red--barnes;
+  }
+}
+
+
+/**
+ * Image
+ * Not to be confused with a media component below
+ */
+.m-block__image {
+  display: block;
+  margin-bottom: 5px;
+  max-width: 345px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-bottom: 0;
+    max-width: 100%;
+    width: auto;
+  }
+}
+
+/**
+ * Media component
+ * Set some margins for a media component sat inside a block
+ */
+.m-block__media {
+  margin: 42px 0 0;
+
+  @include breakpoint('medium+') {
+    margin: 53px 0 0;
+  }
+
+  @include breakpoint('large+') {
+    margin: 70px 0 0;
+  }
+
+  audio, img, object, svg, video {
+    display: block;
+  }
+}
+
+.m-block__media-summary {
+  margin: 17px 0 0;
+
+  @include breakpoint('medium+') {
+    margin: 28px 0 0;
+  }
+
+  @include breakpoint('large+') {
+    margin: 58px 0 0;
+  }
+}
+
+
+/**
+ * Colour/Style variations
+ */
+
+// Grey block - make sure these blocks are not wrapped by a
+// `<div class="container" />`
+.m-block--alt {
+  background-color: $color__white--off;
+}
+
+// Red block - make sure these blocks are not wrapped by a
+// `<div class="container" />`
+.m-block--brand {
+  background-color: $color__red--barnes;
+  color: $color__white;
+}
+
+.m-block--no-border {
+  border-top: none;
+}
+
+.m-block--flush-top {
+  padding-top: 0;
+}
+
+.m-block--flush-bottom {
+  padding-bottom: 0;
+}
+
+.m-block--flush {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+/**
+ * Move the block up a wee bit
+ * Example: when a block follow a media-block component its spacing needs to be
+ * adjusted
+ */
+.m-block--up {
+  margin-top: -7px;
+
+  @include breakpoint('medium+') {
+    margin-top: -15px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: -19px;
+  }
+}

@@ -1,0 +1,170 @@
+{#
+
+shopify-basket component
+
+#}
+
+{# Avoid awkward situation where an include inside an include is rejected by a PHP template #}
+{% if path is not defined %}
+  {% set path = '../' %}
+{% endif %}
+
+{# If some key variables are missing, load in the default content #}
+{% if title is empty %}
+  {% set title = 'Your Basket' %}
+{% endif %}
+
+{% if cart is empty %}
+  {%
+    set cart = {
+      total_price: '$9.99',
+      item_count: 2,
+      items: [
+        {
+          url: '#',
+          quantity: 1,
+          price: '$9',
+          original_line_price: '$10',
+          line_price: '$9',
+          variants: [
+            {
+              title: 'Default'
+            }
+          ],
+          discounts: [
+            {
+              title: 'Discount one'
+            }
+          ],
+          product: {
+            title: 'Product Name',
+            options: [
+              'One',
+              'Two'
+            ]
+          }
+        },
+        {
+          url: '#',
+          quantity: 1,
+          price: '$9',
+          original_line_price: '$10',
+          line_price: '$9',
+          variants: [
+            {
+              title: 'Default'
+            }
+          ],
+          product: {
+            title: 'Product Name',
+            options: [
+              'One',
+              'Two'
+            ]
+          }
+        }
+      ],
+      total_discounts: 1,
+      note: 'Note'
+    }
+  %}
+{% endif %}
+
+<div class="m-shopify-basket">
+
+  <h1 class="page-title page-title--shopify">{{ title }}</h1>
+
+{% if cart.item_count > 0 %}
+
+    <form action="/cart" method="post" novalidate class="cart">
+      <table>
+        <thead class="cart__row cart__header">
+          <th colspan="2">Description</th>
+          <th class="text-right">Quantity</th>
+          <th class="text-right">Price</th>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr class="cart__row border-bottom line{{ forloop.index }} cart-flex{% if forloop.first %} border-top{% endif %}">
+              <td class="cart__image-wrapper cart-flex-item">
+                <a href="{{ item.url }}">
+                  <img class="cart__image" src="//placehold.it/120x120" alt="{{ item.title | escape }}">
+                </a>
+              </td>
+              <td class="cart__meta small--text-left cart-flex-item">
+                <div class="list-view-item__title">
+                  <a href="{{ item.url }}">
+                    {{ item.product.title }}
+                    {% if item.quantity > 1 %}
+                      <span class="medium-up--hide"><span class="visually-hidden">Quantity</span>(x{{ item.quantity }})</span>
+                    {% endif %}
+                  </a>
+                </div>
+
+                <p class="small--hide">
+                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove a-brand-link font-smallprint">Remove <span class="visuallyhidden">Product title</span></a>
+                </p>
+              </td>
+              <td class="cart__update-wrapper cart-flex-item text-right">
+                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="btn btn--small btn--secondary cart__remove medium-up--hide">Remove <span class="visuallyhidden">Product title</span></a>
+                <div class="cart__qty">
+                  <label for="updates_{{ item.key }}" class="cart__qty-label visuallyhidden">Quantity</label>
+                  <input class="cart__qty-input" type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0" pattern="[0-9]*">
+                </div>
+                <input type="submit" name="update" class="btn btn--small cart__update medium-up--hide" value="Update">
+              </td>
+              <td class="text-right small--hide">
+                {% if item.original_line_price != item.line_price %}
+                  <div class="cart-item__original-price"><s>{{ item.original_line_price }}</s></div>
+                {% endif %}
+
+                <div class="cart-item__price">
+                  {{ item.line_price }}
+                </div>
+
+                {% for discount in item.discounts %}
+                  <div class="cart-item__discount">{{ discount.title }}</div>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <footer class="cart__footer">
+        <div class="grid">
+          <div class="grid__item medium-up--one-half cart-note">
+            <label for="CartSpecialInstructions" class="cart-note__label small--text-center">Note</label>
+            <textarea name="note" id="CartSpecialInstructions" class="cart-note__input">{{ cart.note }}</textarea>
+          </div>
+          <div class="grid__item text-right small--text-center{% if section.settings.cart_notes_enable %} medium-up--one-half{% endif %}">
+            <input type="submit" name="update" class="cart__update cart__update--large a-brand-link" value="Update">
+            <div>
+              <span class="cart__subtotal-title">Subtotal</span>
+              <span class="cart__subtotal">{{ cart.total_price }}</span>
+            </div>
+            {% if cart.total_discounts > 0 %}
+              <div class="cart__savings">
+                Savings
+                <span class="cart__savings-amount">{{ cart.total_discounts }}</span>
+              </div>
+            {% endif %}
+            <div class="cart__shipping">Shipping is added at the checkout</div>
+            <input type="submit" name="checkout" class="btn btn--primary" value="Checkout">
+            {% if additional_checkout_buttons %}
+              <div class="additional-checkout-buttons">Extra buttons</div>
+            {% endif %}
+          </div>
+        </div>
+      </footer>
+    </form>
+  {% else %}
+    <div class="empty-page-content">
+      <p class="cart--empty-message">Your basket is empty</p>
+      <div class="cookie-message">
+        <p>Cookie message/p>
+      </div>
+      <a href="/" class="btn btn--has-icon-after cart__continue-btn">Continue shopping</a>
+    </div>
+  {% endif %}
+</div>

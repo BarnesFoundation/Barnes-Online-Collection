@@ -1,0 +1,228 @@
+/***
+
+Buttons
+======
+* Class name: `btn`
+* Modifier classes:  `btn--primary`, `btn--disabled`, `btn--icon-only`
+* Tags used on: `<a>`, `<button>`
+
+A button can be either a link or a button tag - but remember to use `<a>` tags
+for links and `<button>` tags to perform actions like launch lightboxes/popups
+or submit forms.
+
+A good guideline here is: if your `<a>` tag has a _href_ value of *#* then it
+should _probably_ be a `<button>` instead.
+
+Button can also live inside a `<div class="btn-group">` container for situations
+where multiple buttons need to sit alongside each other.
+
+*Please note:* the icons in these buttons use `<SVG>` which are referenced by an
+SVG sprite file. This file is needed for any icons to display. This SVG sprite
+file will be included via JavaScript if you use the
+[Structure files](#structure).
+
+  ```
+  <hr>
+  <h2 class="font-zeta">Links styled to look like buttons</h2>
+  <a class="btn" href="#">A white button</a>
+  <a class="btn btn--primary" href="#">A red button</a>
+  <a class="btn btn--disabled" href="#">An inactive button</a>
+
+  <hr>
+  <h2 class="font-zeta">Buttons which are button tags</h2>
+
+  <button class="btn" type="button">Button</button>
+  <button class="btn" type="submit">Submit button</button>
+  <button class="btn btn--primary" type="submit">Submit button (red)</button>
+  <button class="btn" type="submit" disabled>Submit button (disabled)</button>
+
+  <hr>
+  <h2 class="font-zeta">Icon only buttons</h2>
+  <button class="btn btn--icon-only" type="submit">
+    <span class="html4-label">Search</span>
+    <svg width="26" height="26"><use xlink:href="#icon--icon_search"></use></svg>
+  </button>
+  <button class="btn btn--icon-only" type="button">
+    <span class="html4-label">Close</span>
+    <svg width="26" height="26"><use xlink:href="#icon--icon_close"></use></svg>
+  </button>
+  <button class="btn btn--icon-only" type="button">
+    <span class="html4-label">Menu</span>
+    <svg width="26" height="26"><use xlink:href="#icon--icon_menu"></use></svg>
+  </button>
+  <button class="btn btn--icon-only" type="button">
+    <span class="html4-label">Back</span>
+    <svg width="27" height="10"><use xlink:href="#icon--icon_arrow-back"></use></svg>
+  </button>
+
+  <hr>
+  <h2 class="font-zeta">Buttons in a group</h2>
+
+  <div class="m-btn-group">
+    <a class="btn" href="#">Link button</a>
+    <a class="btn" href="#">Link button</a>
+  </div>
+  ```
+
+***/
+
+
+/**
+ * 1 force this rule incase we ever switch off autoprefixer support
+ * 2 On really small screens lets make butotns full widths --always--
+ */
+.btn {
+  @include font-btn();
+
+  -webkit-appearance: none; /* 1 */
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid $color__border;
+  border-radius: 0;
+  color: $color__copy--button;
+  cursor: pointer;
+  display: inline-block;
+  height: 60px;
+  line-height: 57px;
+  min-width: 110px;
+  padding: 0 30px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms ease 100ms;
+  white-space: nowrap;
+  width: 100%; /* 2 */
+
+  @include breakpoint('small+') {
+    width: auto; /* 2 */
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &:hover,
+  &:active {
+    border-color: $color__border--dark;
+  }
+}
+
+/**
+ * Buttons sat next to each other
+ * Assumes they are not stacked so we have to override this with
+ * more specific rules later in the CSS
+ */
+.btn + .btn {
+  margin-top: 20px;
+
+  @include breakpoint('small+') {
+    margin-left: 15px;
+    margin-top: 0;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-left: 20px;
+  }
+}
+
+/**
+ * Buttons which is _only) an icon
+ */
+.btn--icon-only {
+  border: none;
+  height: auto;
+  line-height: inherit;
+  min-width: 1px;
+  padding: 0;
+  width: auto;
+
+  svg {
+    display: block;
+  }
+}
+
+/**
+ * A button which is disabled OR at least appears disabled
+ */
+.btn--disabled {
+  cursor: default;
+}
+
+/**
+ * Set some colouring for button using a mixin
+ * btn-color($name, $text-color, $background-color, $border-color, $text-color--hover: inherit, $background-color--hover: transparent, $border-color--hover: transparent)
+ *
+ */
+
+// Primary style button i.e. red button
+@include btn-color(primary, $color__white, $color__red--barnes, $color__red--barnes, $color__white, $color__red--barnes-dark, $color__red--barnes-dark);
+// Just an icon on its own
+@include btn-color(icon-only, currentColor, transparent);
+// A disabled button
+@include btn-color(disabled, $color__copy--light, $color__white--off, $color__white--off, $color__copy--light, $color__white--off, $color__white--off);
+
+/**
+ * That mixin code above is great but it has meant we have to use extend to grab
+ * its code and use it on properly disabled <button>s
+ */
+.btn[disabled] {
+  @extend .btn--disabled;
+}
+
+/**
+ * Focus outlines
+ * 1 Remove the default black dotted border on buttons in Firefox
+ * 2 Remove default browser outline status because we only want keyboard users to see a focus style
+ *   we use a .focus-ring class to differentiate :focus for keyboard and non-keyboard users
+ */
+button::-moz-focus-inner {
+  border: 0; /* 1 */
+}
+
+.btn:focus:not(.focus-ring) {
+  outline: none; /* 2 */
+  text-decoration: none;
+}
+
+.btn.focus-ring {
+  border-color: $color__border--dark;
+}
+
+/**
+ * Group
+ * Buttons in a group e.g. next to each other in a line
+ */
+.m-btn-group {
+  margin-left: -15px;
+  margin-top: 17px;
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-top: 17px;
+  }
+
+  @include breakpoint('large+') {
+    margin-top: 32px;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-left: -20px;
+  }
+}
+
+.m-btn-group .btn {
+  margin-left: 15px;
+
+  @include breakpoint('small+') {
+    margin-top: 0;
+  }
+
+  @include breakpoint('xlarge+') {
+    margin-left: 20px;
+  }
+}
+
+.m-btn-group .btn:first-child {
+  margin-top: 0;
+}
+

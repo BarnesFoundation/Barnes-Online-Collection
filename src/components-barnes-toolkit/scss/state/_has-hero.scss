@@ -1,0 +1,46 @@
+/**
+ * Has Hero
+ * This is the scenario where our page has a hero element flush with the
+ * top of the viewport with the header sat on top of it with a higher z-index.
+ *
+ * So we need the header (Which is usually black/red on white) to be transparent
+ * with white text and a white logo.
+ */
+
+
+/**
+ * 1 When .has-hero is applied to <html> it overrides the
+ * padding we needed for the fixed header on bigger screens
+ */
+html.has-hero:not(.no-js) {
+  @include breakpoint('medium+') {
+    padding-top: 0; /* 1 */
+  }
+}
+
+/**
+ * 2 This will set the link and button colours
+ */
+.has-hero .g-header {
+
+  @include breakpoint('medium+') {
+    background-color: transparent;
+    color: $color__white; /* 2 */
+  }
+}
+
+.has-hero .a-logo {
+  @include breakpoint('medium+') {
+    color: currentColor;
+  }
+}
+
+.has-hero .a-logo.focus-ring,
+.has-hero .g-header__nav__link.focus-ring,
+.has-hero .g-header__nav__btn.focus-ring {
+  outline: $focus-ring-invert;
+}
+
+.has-hero .a-skip {
+  top: 0;
+}

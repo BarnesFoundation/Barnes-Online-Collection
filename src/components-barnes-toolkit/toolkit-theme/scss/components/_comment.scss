@@ -1,0 +1,18 @@
+
+//
+// Comment
+//
+
+// hide h1 title that is displayed in the theme in h2
+
+.post-entry {
+  .comment {
+    h1:first-child {
+      display:none;
+    }
+
+    h1:first-of-type {
+      display:none;
+    }
+  }
+}

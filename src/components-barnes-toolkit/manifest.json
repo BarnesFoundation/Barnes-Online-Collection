@@ -1,0 +1,59 @@
+{
+  "dependencies": {
+    "app.js": {
+      "files": [
+        "js/app.js",
+        "js/functions/*",
+        "js/helpers/*",
+        "js/behaviors/*",
+        "components/**/*.js",
+        "js/libs/*"
+      ]
+    },
+    "head.js": {
+      "files": [
+        "js/head.js"
+      ]
+    },
+    "app.css": {
+      "files": [
+        "scss/app.scss"
+      ]
+    },
+    "html4css.css": {
+      "files": [
+        "scss/html4css.scss"
+      ]
+    },
+    "wufoo.css": {
+      "files": [
+        "scss/wufoo.scss"
+      ]
+    },
+    "wufoo-logo.css": {
+      "files": [
+        "scss/wufoo-logo.scss"
+      ]
+    }
+  },
+  "paths": {
+    "source": "frontend/",
+    "components": "components/",
+    "icons": "icons/",
+    "styles": "scss/",
+    "scripts": "js/",
+    "dist": "dist/",
+    "distCraft": "site/html/dist/",
+    "toolkit": "toolkit/",
+    "toolkitCraft": "site/html/toolkit/"
+  },
+  "config": {
+    "devUrl": "http://barnes.dev",
+    "whitelist": [
+      "/wp-admin/admin-ajax.php"
+    ],
+    "blacklist": [
+      "/wp-admin/**"
+    ]
+  }
+}
