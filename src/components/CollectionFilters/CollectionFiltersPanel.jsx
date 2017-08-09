@@ -23,33 +23,31 @@ class CollectionFiltersPanel extends Component {
     this.props.selectFilterSet(slug);
   }
 
-  render() {
-    var visibleFilterSet = this.props.filters.visibleFilterSet,
-      visibleFilter;
-
-    switch(visibleFilterSet) {
+  setVisibleFilter(slug) {
+    switch(slug) {
       case 'search':
-        visibleFilter = <SearchInput />;
-        break;
+        return <SearchInput />;
       case 'colors':
       case 'lines':
       case 'light':
       case 'space':
-        visibleFilter = <CollectionFiltersSet visibleFilterSet={visibleFilterSet} title={visibleFilterSet} />;
+        return <CollectionFiltersSet visibleFilterSet={slug} title={slug} />;
         break;
       case 'shuffle':
       default:
-        visibleFilter = null;
-        break;
+        return null;
     }
+  }
 
+  render() {
+    const visibleFilterSet = this.props.filters.visibleFilterSet;
     return (
       <div>
         <CollectionFiltersMenu
           visibleFilterSet={visibleFilterSet}
           selectFilter={this.selectFilter}
         />
-        {visibleFilter}
+        {this.setVisibleFilter(visibleFilterSet)}
         <CollectionFiltersApplied />
       </div>
     );
