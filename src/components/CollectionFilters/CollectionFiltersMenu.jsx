@@ -1,53 +1,23 @@
 import React, { Component } from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 
 class CollectionFiltersMenu extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentFilter: null,
-      filters: {
-        colors: {
-          title: "Colors",
-          type: "checkbox"
-        },
-        lines: {
-          title: "Lines",
-          type: "radio"
-        },
-        light: {
-          title: "Light",
-          type: "slider"
-        },
-        space: {
-          title: "Space",
-          type: "slider"
-        },
-        shuffle: {
-          title: "Shuffle",
-          type: "shuffle"
-        },
-        search: {
-          title: "Search",
-          type: "search"
-        }
-      }
-    };
-  }
-
   render() {
+    const filterOptions = this.props.filters.filterOptions;
     return (
       <div>
         {
           Object
-          .keys(this.state.filters)
+          .keys(filterOptions)
           .map(key =>
             <CollectionFiltersMenuItem
               key={key}
-              title={this.state.filters[key].title}
-              name={this.state.filters[key]}
+              title={filterOptions[key].title}
+              name={filterOptions[key].slug}
               selectFilter={this.props.selectFilter}
             />
           )
@@ -57,4 +27,16 @@ class CollectionFiltersMenu extends Component {
   }
 }
 
-export default CollectionFiltersMenu;
+const mapStateToProps = state => {
+  return {
+    filters: state.filters
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign(
+    {},
+  ), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersMenu);

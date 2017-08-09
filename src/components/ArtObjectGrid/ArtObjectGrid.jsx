@@ -66,7 +66,7 @@ ArtObjectGrid.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    objects: state.objects
+    objects: state.objects,
   };
 }
 

@@ -2,63 +2,51 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as QueryActions from '../../actions/query';
-import * as ObjectActions from '../../actions/object';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersSet from './CollectionFiltersSet';
+import CollectionFiltersApplied from './CollectionFiltersApplied';
+
+import * as FiltersActions from '../../actions/filters';
 
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedFilter: null,
-    };
-
-    this.selectFilter = this.selectFilter.bind(this);
-  }
-
-  selectFilter(filterName) {
-    console.log("Selected filter", filterName);
-    this.setState({selectedFilter: filterName.toLowerCase()});
+  setVisibleFilter(slug) {
+    switch(slug) {
+      case 'search':
+        return <SearchInput />;
+      case 'colors':
+      case 'lines':
+      case 'light':
+      case 'space':
+        return <CollectionFiltersSet />;
+      case 'shuffle':
+      default:
+        return null;
+    }
   }
 
   render() {
     return (
       <div>
-        <CollectionFiltersMenu
-          selectedFilter={this.state.selectedFilter}
-          selectFilter={this.selectFilter}
-        />
-
-        {this.state.selectedFilter === 'search' &&
-          <SearchInput />
-        }
-
-        {this.state.selectedFilter === "shuffle" &&
-          <p>Shuffle state of filter panel</p>
-        }
-
-        {this.state.selectedFilter && this.state.selectedFilter !== 'search' && this.state.selectedFilter !== "shuffle" &&
-          <CollectionFiltersSet selectedFilter={this.state.selectedFilter} title={this.state.selectedFilter}/>
-        }
+        <CollectionFiltersMenu />
+        {this.setVisibleFilter(this.props.filters.visibleFilterSet)}
+        <CollectionFiltersApplied />
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {
-    query: state.query
-  };
+    filters: state.filters
+  }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions, QueryActions), dispatch);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign({}), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersPanel);
