@@ -6,7 +6,18 @@ const initialState = {
     colors: {
       title: "Colors",
       slug: "colors",
-      type: "checkbox"
+      type: "checkbox",
+      options: {
+        red: {
+          slug: 'red'
+        },
+        blue: {
+          slug: 'blue'
+        },
+        yellow: {
+          slug: 'yellow'
+        }
+      }
     },
     lines: {
       title: "Lines",

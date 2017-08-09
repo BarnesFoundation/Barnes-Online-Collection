@@ -11,7 +11,7 @@ class CollectionFiltersSet extends Component {
   buildFilterSet(slug) {
     switch (slug) {
       case 'colors':
-        return <CollectionFiltersSetTypeCheckbox/>;
+        return <CollectionFiltersSetTypeCheckbox filter={slug}/>;
       case 'lines':
         const filterSet = <div><CollectionFiltersSetTypeRadio/><CollectionFiltersSetTypeRadio/></div>;
         return filterSet;
