@@ -1,27 +1,34 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-const classNames = {
+const CLASS_NAMES = {
   navActive: 'nav-active',
 }
 
+const updateHtmlClassList = list => {
+  // the <html> element
+  document.documentElement.classList = list.join(' ');
+};
+
 class HtmlClassManager extends Component {
   static propTypes = {
-    navActive: React.PropTypes.bool,
+    classNameList: React.PropTypes.array,
   }
   static defaultProps = {
-    navActive: false,
+    classNameList: [],
   }
 
   componentDidMount() {
-    document.body.classList.toggle(classNames.navActive, this.props.navActive)
+    updateHtmlClassList(this.props.classNameList);
   }
 
-  componentWillReceiveProps(nextProps) {
-    document.body.classList.toggle(classNames.navActive, nextProps.navActive)
+  componentWillUpdate(nextProps) {
+    updateHtmlClassList(nextProps.classNameList);
   }
 
   componentWillUnmount() {
-    document.body.classList.remove(classNames.navActive)
+    updateHtmlClassList([]);
   }
 
   render() {
@@ -29,4 +36,16 @@ class HtmlClassManager extends Component {
   }
 }
 
-export default HtmlClassManager;
+const mapStateToProps = state => {
+  return {
+    classNameList: state.htmlClassManager
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign(
+    {},
+  ), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HtmlClassManager);

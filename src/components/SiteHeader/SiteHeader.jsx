@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import SiteHeaderMenu from './SiteHeaderMenu';
+import * as Actions from '../../actions/htmlClassManager';
 
 class SiteHeader extends Component {
+
+  handleNavBtnClick(e) {
+    e.preventDefault();
+    this.props.htmlClassesToggle('nav-active');
+  }
+
+  handleNavCloseBtnClick(e) {
+    e.preventDefault();
+    this.props.htmlClassesRemove('nav-active');
+  }
+
   render() {
     return (
       <div>
@@ -32,19 +46,37 @@ class SiteHeader extends Component {
               <a className="g-header__nav__link" href="#">Plan your Visit</a>
               <a className="g-header__nav__link" href="#">Our Collection</a>
               <a className="g-header__nav__link" href="/static/pages/class.php">Take a Class</a>
-              <button className="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="search-open-title">
+              <button
+                onClick={this.handleNavBtnClick.bind(this)}
+                className="g-header__nav__btn btn btn--icon-only html4-hidden"
+                data-nav-show
+                type="button"
+                aria-labelledby="search-open-title"
+              >
                 <svg width="26" height="26">
                   <title id="search-open-title">Search</title>
                   <use xlinkHref="#icon--icon_search"></use>
                 </svg>
               </button>
-              <button className="g-header__nav__btn btn btn--icon-only html4-hidden" data-search-hide type="button" aria-labelledby="search-hide-title">
+              <button
+                onClick={this.handleNavBtnClick.bind(this)}
+                className="g-header__nav__btn btn btn--icon-only html4-hidden"
+                data-search-hide
+                type="button"
+                aria-labelledby="search-hide-title"
+              >
                 <svg width="26" height="26">
                   <title id="search-hide-title">Hide Search</title>
                   <use xlinkHref="#icon--icon_search"></use>
                 </svg>
               </button>
-              <button className="g-header__nav__btn btn btn--icon-only html4-hidden" data-nav-show type="button" aria-labelledby="nav-open-title">
+              <button
+                onClick={this.handleNavBtnClick.bind(this)}
+                className="g-header__nav__btn btn btn--icon-only html4-hidden"
+                data-nav-show
+                type="button"
+                aria-labelledby="nav-open-title"
+              >
                 <svg width="26" height="26">
                   <title id="nav-open-title">Menu</title>
                   <use xlinkHref="#icon--icon_menu"></use>
@@ -78,7 +110,13 @@ class SiteHeader extends Component {
         </header>
         <div className="g-nav" data-behavior="nav" tabIndex={-1}>
           <div className="g-nav__inner">
-            <button className="g-nav__close btn btn--icon-only html4-hidden" type="button" data-nav-hide aria-labelledby="nav-close-title">
+            <button
+              onClick={this.handleNavCloseBtnClick.bind(this)}
+              className="g-nav__close btn btn--icon-only html4-hidden"
+              type="button"
+              aria-labelledby="nav-close-title"
+              data-nav-hide
+            >
               <svg className="icon--close" width={20} height={20}>
                 <title id="nav-close-title">Close menu</title>
                 <use xlinkHref="#icon--icon_close" />
@@ -124,4 +162,17 @@ class SiteHeader extends Component {
   }
 }
 
-export default SiteHeader;
+const mapStateToProps = state => {
+  return {
+    htmlClassManager: state.htmlClassManager,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign(
+    {},
+    Actions
+  ), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SiteHeader);
