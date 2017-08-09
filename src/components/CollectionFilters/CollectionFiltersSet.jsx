@@ -1,39 +1,45 @@
 import React, { Component } from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import CollectionFiltersSetTypeCheckbox from './CollectionFiltersSetTypeCheckbox';
 import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
 
 class CollectionFiltersSet extends Component {
-  render() {
-    let filterSet = null;
-
-    switch (this.props.title) {
+  buildFilterSet(slug) {
+    switch (slug) {
       case 'colors':
-        filterSet = <CollectionFiltersSetTypeCheckbox />;
-        break;
+        return <CollectionFiltersSetTypeCheckbox/>;
       case 'lines':
-        filterSet = <div>
-          <CollectionFiltersSetTypeRadio />
-          <CollectionFiltersSetTypeRadio/>
-        </div>;
-        break;
+        const filterSet = <div><CollectionFiltersSetTypeRadio/><CollectionFiltersSetTypeRadio/></div>;
+        return filterSet;
       case 'light':
       case 'space':
-        filterSet = <CollectionFiltersSetTypeSlider />;
-        break;
+        return <CollectionFiltersSetTypeSlider/>
       default:
-        filterSet = null;
-        break;
+        return null;
     }
-
+  }
+  render() {
     return (
       <div>
-        <p>{this.props.title} Filters</p>
-        {filterSet}
+        {this.buildFilterSet(this.props.filters.visibleFilterSet)}
       </div>
     );
   }
 }
 
-export default CollectionFiltersSet;
+
+const mapStateToProps = state => {
+  return {
+    filters: state.filters
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign({}), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersSet);

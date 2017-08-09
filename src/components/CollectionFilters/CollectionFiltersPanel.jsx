@@ -1,56 +1,52 @@
 import React, { Component } from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersSet from './CollectionFiltersSet';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 
+import * as FiltersActions from '../../actions/filters';
+
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedFilter: null,
-    };
-
-    this.selectFilter = this.selectFilter.bind(this);
-  }
-
-  selectFilter(filterName) {
-    const slug = filterName.toLowerCase();
-    this.setState({ selectedFilter: slug });
-  }
-
-  render() {
-
-    var selectedFilter = this.state.selectedFilter, visibleFilter;
-
-    switch(selectedFilter) {
+  setVisibleFilter(slug) {
+    switch(slug) {
       case 'search':
-        visibleFilter = <SearchInput />;
-        break;
+        return <SearchInput />;
       case 'colors':
       case 'lines':
       case 'light':
       case 'space':
-        visibleFilter = <CollectionFiltersSet selectedFilter={selectedFilter} title={selectedFilter} />;
-        break;
+        return <CollectionFiltersSet />;
       case 'shuffle':
       default:
-        visibleFilter = null;
-        break;
+        return null;
     }
+  }
 
+  render() {
     return (
       <div>
-        <CollectionFiltersMenu selectedFilter={selectedFilter} selectFilter={this.selectFilter} />
-        {visibleFilter}
+        <CollectionFiltersMenu />
+        {this.setVisibleFilter(this.props.filters.visibleFilterSet)}
         <CollectionFiltersApplied />
       </div>
     );
   }
 }
 
-export default CollectionFiltersPanel;
+const mapStateToProps = state => {
+  return {
+    filters: state.filters
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign({}), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersPanel);
