@@ -4,14 +4,13 @@ export const SET_OBJECTS = 'SET_OBJECTS';
 //object
 export const SET_OBJECT = 'SET_OBJECT';
 
-//queries
-export const ADD_TO_QUERIES = 'ADD_TO_QUERIES';
-export const REMOVE_FROM_QUERIES = 'REMOVE_FROM_QUERIES';
+//filterSets
+export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
 
 //filters
-export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
 export const ADD_TO_FILTERS = 'ADD_TO_FILTERS';
-export const REMOVE_FROM_FILTERS = 'REMOVE_FROM_FILTERS';
+export const REMOVE_FILTER_BY_INDEX = 'REMOVE_FILTER_BY_INDEX';
+export const REMOVE_FILTER_BY_SLUG ='REMOVE_FILTER_BY_SLUG';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';

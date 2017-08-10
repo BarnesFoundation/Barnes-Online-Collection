@@ -3,35 +3,36 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import QueryTag from './QueryTag';
+import FilterTag from './FilterTag';
 
-import * as QueriesActions from '../../actions/queries';
+import * as FiltersActions from '../../actions/filters';
 import * as ObjectsActions from '../../actions/objects';
 
 class CollectionFiltersApplied extends Component {
-  buildQueryTags(queries) {
-    return queries.map((query, index) =>
-      <QueryTag key={index} index={index} value={query[2]} />
-    );
-  }
-
   buildFilterTags(filters) {
     return filters.map((filter, index) =>
-      <QueryTag key={index} index={index} value={filter[2]} />
+      <FilterTag
+        key={index} index={index}
+        displayType={filter.displayType}
+        displayValue={filter.displayValue}
+        method={filter.method}
+        type={filter.type}
+        field={filter.field}
+        term={filter.term}
+      />
     );
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.queries.length !== nextProps.queries.length || this.props.filters.filtersApplied.length !== nextProps.filters.filtersApplied.length) {
-      this.props.findFilteredObjects(nextProps.queries, nextProps.filters);
+    if (this.props.filters.length !== nextProps.filters.length) {
+      this.props.findFilteredObjects(nextProps.filters);
     }
   }
 
   render() {
     return (
       <div>
-        {this.buildQueryTags(this.props.queries)}
-        {this.buildFilterTags(this.props.filters.filtersApplied)}
+        {this.buildFilterTags(this.props.filters)}
       </div>
     );
   }
@@ -39,14 +40,13 @@ class CollectionFiltersApplied extends Component {
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries,
-    filters: state.filters,
+    filters: state.filters
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    QueriesActions,
+    FiltersActions,
     ObjectsActions
   ), dispatch);
 }

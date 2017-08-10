@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as QueriesActions from '../../actions/queries';
+import * as FiltersActions from '../../actions/filters';
 
-class QueryTag extends Component {
+class FilterTag extends Component {
   constructor(props) {
     super(props);
 
@@ -13,26 +13,28 @@ class QueryTag extends Component {
   }
 
   handleClick(event) {
-    this.props.removeFromQueries(this.props.index);
+    this.props.removeFilterByIndex(this.props.index);
   }
 
   render() {
     return (
-      <button onClick={this.handleClick}>{this.props.value} X</button>
+      <button onClick={this.handleClick}>
+        {this.props.displayValue} X
+      </button>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries
+    filters: state.filters
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    QueriesActions
+    FiltersActions
   ), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(QueryTag);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterTag);

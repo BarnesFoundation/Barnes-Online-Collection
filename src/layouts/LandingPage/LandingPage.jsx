@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
+
 import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
+
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
+
 import Footer from '../../components/Footer/Footer';
 
 class LandingPage extends Component {

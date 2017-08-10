@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as QueriesActions from '../../actions/queries';
 import * as FiltersActions from '../../actions/filters';
 
 class CollectionFiltersCheckbox extends Component {
@@ -19,13 +18,18 @@ class CollectionFiltersCheckbox extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    this.props.addToFilters(this.props.query);
-    // add/remove query to/from queries array
-    // toggle 'selected' styling
+
+    if (!this.state.selected) {
+      this.props.addToFilters(this.props);
+      this.setState({ selected: true });
+    } else {
+      this.props.removeFilterBySlug(this.props.slug);
+      this.setState({ selected: false });
+    }
   }
 
   render() {
-    const value = this.props.value;
+    const value = this.props.displayValue;
     return (
       <button
         onClick={this.handleClick}
@@ -39,15 +43,14 @@ class CollectionFiltersCheckbox extends Component {
 
 const mapStateToProps = state => {
   return {
+    filterSets: state.filterSets,
     filters: state.filters,
-    queries: state.queries
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    QueriesActions,
-    FiltersActions
+    FiltersActions,
   ), dispatch);
 }
 

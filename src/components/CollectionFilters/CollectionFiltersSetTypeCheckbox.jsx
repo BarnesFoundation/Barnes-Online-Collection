@@ -6,9 +6,20 @@ import { connect } from 'react-redux';
 import CollectionFiltersCheckbox  from './CollectionFiltersCheckbox';
 
 class CollectionFiltersSetTypeCheckbox extends Component {
-  buildCheckboxes(filterOptions) {
-    return filterOptions.map((option, index) => {
-      return <CollectionFiltersCheckbox key={index} value={option.slug} query={option.query}/>
+  buildCheckboxes(filterSets) {
+    return filterSets.map((option, index) => {
+      return (
+        <CollectionFiltersCheckbox
+          key={index} index={index}
+          slug={option.slug}
+          displayType={option.displayType}
+          displayValue={option.displayValue}
+          method={option.method}
+          type={option.type}
+          field={option.field}
+          term={option.term}
+        />
+      );
     });
   }
 
@@ -16,7 +27,7 @@ class CollectionFiltersSetTypeCheckbox extends Component {
     return (
       <div>
         <p>{this.props.filter}</p>
-        {this.buildCheckboxes(this.props.filters.filterOptions[this.props.filter].options)}
+        {this.buildCheckboxes(this.props.filterSets.sets[this.props.filter].options)}
       </div>
     );
   }
@@ -24,7 +35,7 @@ class CollectionFiltersSetTypeCheckbox extends Component {
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filterSets: state.filterSets
   }
 }
 
