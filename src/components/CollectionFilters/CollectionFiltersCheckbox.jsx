@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as FiltersActions from '../../actions/filters';
+import * as FilterSetsActions from '../../actions/filterSets';
+import * as SearchActions from '../../actions/search';
 
 class CollectionFiltersCheckbox extends Component {
   constructor(props) {
@@ -16,17 +18,21 @@ class CollectionFiltersCheckbox extends Component {
   handleClick(event) {
     event.preventDefault();
 
-    if (!this.state.selected) {
-      this.props.addToFilters(this.props);
-      this.setState({ selected: true });
+    const filter = this.props.filter;
+    let selected = this.state.selected;
+
+    if (!selected) {
+      this.props.clearSearchTerm();
+      this.props.addToFilters(filter);
     } else {
-      this.props.removeFilterBySlug(this.props.slug);
-      this.setState({ selected: false });
+      this.props.removeFilterBySlug(filter.slug);
     }
+
+    this.setState({ selected: !selected })
   }
 
   render() {
-    const value = this.props.displayValue;
+    const value = this.props.filter.displayValue;
     return (
       <button
         onClick={this.handleClick}
@@ -40,14 +46,17 @@ class CollectionFiltersCheckbox extends Component {
 
 const mapStateToProps = state => {
   return {
-    filterSets: state.filterSets,
+    // filterSets: state.filterSets,
     filters: state.filters,
+    // search: state.search
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
+    FilterSetsActions,
+    SearchActions,
   ), dispatch);
 }
 

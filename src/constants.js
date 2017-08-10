@@ -14,8 +14,8 @@ export const REMOVE_FILTER_BY_SLUG = 'REMOVE_FILTER_BY_SLUG';
 export const CLEAR_ALL_FILTERS = 'CLEAR_ALL_FILTERS';
 
 //search
-export const SEARCH = 'SEARCH';
-export const CLEAR_SEARCH = 'CLEAR_SEARCH';
+export const ADD_SEARCH_TERM = 'ADD_SEARCH_TERM';
+export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';

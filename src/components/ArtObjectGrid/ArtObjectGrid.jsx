@@ -14,10 +14,6 @@ import './artObjectGrid.css';
 class ArtObjectGrid extends Component {
   constructor(props) {
     super(props);
-
-    // ArtObjectGrid needs to:
-    // - know which objects to display
-    // - render objects
     this.setHistory = this.setHistory.bind(this);
   }
 
@@ -36,7 +32,6 @@ class ArtObjectGrid extends Component {
 
     return (
       <div>
-        <p>ArtObjectGrid</p>
         {objects.map(object => {
           return(
             <ArtObject

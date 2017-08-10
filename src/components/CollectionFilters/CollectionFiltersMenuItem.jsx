@@ -17,10 +17,7 @@ class CollectionFiltersMenuItem extends Component {
 
   render() {
     return (
-      <button
-        onClick={this.handleClick}
-        slug={this.props.slug}
-      >
+      <button onClick={this.handleClick}>
         {this.props.title}
       </button>
     );

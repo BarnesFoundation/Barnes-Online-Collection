@@ -8,7 +8,9 @@ import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
 
 class CollectionFiltersSet extends Component {
-  buildFilterSet(slug) {
+  buildFilterSet() {
+    const slug = this.props.filterSets.visibleFilterSet;
+
     switch (slug) {
       case 'colors':
         return <CollectionFiltersSetTypeCheckbox filter={slug}/>;
@@ -30,7 +32,7 @@ class CollectionFiltersSet extends Component {
   render() {
     return (
       <div>
-        {this.buildFilterSet(this.props.filterSets.visibleFilterSet)}
+        {this.buildFilterSet()}
       </div>
     );
   }

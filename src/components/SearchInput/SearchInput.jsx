@@ -26,7 +26,8 @@ class SearchInput extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.search(this.state.value);
+
+    this.props.addSearchTerm(this.state.value);
     this.setState({value: ''});
   }
 
@@ -48,19 +49,19 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
-  queries: PropTypes.array
+  search: PropTypes.string
 }
 
 const mapStateToProps = state => {
   return {
-    search: state.search
+    search: state.search,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    SearchActions
+    SearchActions,
   ), dispatch);
 }
 

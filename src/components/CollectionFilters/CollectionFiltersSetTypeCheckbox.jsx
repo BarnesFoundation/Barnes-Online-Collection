@@ -11,13 +11,14 @@ class CollectionFiltersSetTypeCheckbox extends Component {
       return (
         <CollectionFiltersCheckbox
           key={index} index={index}
-          slug={option.slug}
-          displayType={option.displayType}
-          displayValue={option.displayValue}
-          method={option.method}
-          type={option.type}
-          field={option.field}
-          term={option.term}
+          filter={option}
+          // slug={option.slug}
+          // displayType={option.displayType}
+          // displayValue={option.displayValue}
+          // method={option.method}
+          // type={option.type}
+          // field={option.field}
+          // term={option.term}
         />
       );
     });

@@ -16,6 +16,7 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'red',
+          applied: false
         },
         {
           slug: 'color-blue',
@@ -25,6 +26,7 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'blue',
+          applied: false
         },
         {
           slug: 'color-yellow',
@@ -34,6 +36,7 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'yellow',
+          applied: false
         }
       ],
     },
@@ -66,7 +69,7 @@ const initialState = {
   }
 };
 
-const filters = (state = initialState, action) => {
+const filterSets = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.SELECT_FILTER_SET:
       return Object.assign({}, state, { visibleFilterSet: action.slug });
@@ -75,4 +78,4 @@ const filters = (state = initialState, action) => {
   }
 }
 
-export default filters;
+export default filterSets;

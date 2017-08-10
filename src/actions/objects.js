@@ -2,6 +2,8 @@ import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 
+import * as FiltersActions from './filters';
+
 const buildRequestBody = () => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
@@ -69,5 +71,6 @@ export const searchObjects = (term) => {
     body = body.build();
 
     fetchResults(body, dispatch);
+    FiltersActions.clearAllFilters();
   }
 }

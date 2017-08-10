@@ -1,14 +1,14 @@
 import * as ActionTypes from '../constants';
 
-export function search(term) {
+export function addSearchTerm(term) {
   return {
-    type: ActionTypes.SEARCH,
+    type: ActionTypes.ADD_SEARCH_TERM,
     term: term
   }
 }
 
-export function clearSearch() {
+export function clearSearchTerm() {
   return {
-    type: ActionTypes.CLEAR_SEARCH
+    type: ActionTypes.CLEAR_SEARCH_TERM
   }
 }

@@ -5,7 +5,7 @@ import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
 
-import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
+import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 
@@ -17,9 +17,8 @@ class LandingPage extends Component {
       <div className="app">
         <HtmlClassManager />
         <SiteHeader />
-        <h1>LandingPage</h1>
         <LandingPageHeader />
-        <CollectionFiltersPanel />
+        <CollectionFilters />
         <ArtObjectGrid history={this.props.history}/>
         <Footer />
       </div>
