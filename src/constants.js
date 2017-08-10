@@ -33,3 +33,6 @@ export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 export const SHOW_ZOOM_OVERLAY = 'SHOW_ZOOM_OVERLAY';
 export const HIDE_ZOOM_OVERLAY = 'HIDE_ZOOM_OVERLAY';
 export const RESET_UI = 'RESET_UI';
+
+// urls
+export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
