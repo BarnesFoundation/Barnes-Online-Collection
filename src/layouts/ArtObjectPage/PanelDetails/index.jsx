@@ -7,48 +7,12 @@ import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
 import Zoom from '../../../components/Zoom/Zoom';
+import {COPYRIGHT_MAP} from '../../../constants';
 
 const getCopyright = (id) => {
   if (!id) return {link: '', copy: 'No Known Copyright', type: 'small'};
-  return copyrightMap[id];
-};
 
-const copyrightMap = {
-  1: {
-    copy: 'In Copyright',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
-    type: 'small'
-  },
-  3: {
-    copy: 'ARS',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
-    type: 'small'
-  },
-  4: {
-    copy: 'Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  8: {
-    copy: 'No Known Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  2: {
-    copy: 'World Rights: Copyright Undetermined',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
-    type: 'small'
-  },
-  10: {
-    copy: 'World Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  6: {
-    copy: 'No Known Claimant',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
-    type: 'small'
-  }
+  return COPYRIGHT_MAP[id];
 };
 
 class PanelDetails extends Component {
