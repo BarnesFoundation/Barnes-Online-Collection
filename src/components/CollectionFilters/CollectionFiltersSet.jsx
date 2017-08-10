@@ -11,21 +11,26 @@ class CollectionFiltersSet extends Component {
   buildFilterSet(slug) {
     switch (slug) {
       case 'colors':
-        return <CollectionFiltersSetTypeCheckbox/>;
+        return <CollectionFiltersSetTypeCheckbox filter={slug}/>;
       case 'lines':
-        const filterSet = <div><CollectionFiltersSetTypeRadio/><CollectionFiltersSetTypeRadio/></div>;
-        return filterSet;
+        return (
+          <div>
+            <CollectionFiltersSetTypeRadio filter={slug}/>
+            <CollectionFiltersSetTypeRadio filter={slug}/>
+          </div>
+        );
       case 'light':
       case 'space':
-        return <CollectionFiltersSetTypeSlider/>
+        return <CollectionFiltersSetTypeSlider filter={slug}/>;
       default:
         return null;
     }
   }
+
   render() {
     return (
       <div>
-        {this.buildFilterSet(this.props.filters.visibleFilterSet)}
+        {this.buildFilterSet(this.props.filterSets.visibleFilterSet)}
       </div>
     );
   }
@@ -34,7 +39,7 @@ class CollectionFiltersSet extends Component {
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filterSets: state.filterSets
   }
 }
 

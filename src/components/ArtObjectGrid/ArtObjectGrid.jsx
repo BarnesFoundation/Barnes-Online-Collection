@@ -23,7 +23,7 @@ class ArtObjectGrid extends Component {
 
   componentDidMount() {
     if (this.props.objects.length === 0) {
-      this.props.getObjects();
+      this.props.getAllObjects();
     }
   }
 
@@ -57,7 +57,7 @@ class ArtObjectGrid extends Component {
 }
 
 ArtObjectGrid.propTypes = {
-  getObjects: PropTypes.func.isRequired
+  getAllObjects: PropTypes.func.isRequired
 };
 
 ArtObjectGrid.defaultProps = {

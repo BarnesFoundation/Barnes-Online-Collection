@@ -9,11 +9,12 @@ import CollectionFiltersSet from './CollectionFiltersSet';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 
 import * as FiltersActions from '../../actions/filters';
+import * as FilterSetsActions from '../../actions/filterSets';
 
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
-  setVisibleFilter(slug) {
+  showFilter(slug) {
     switch(slug) {
       case 'search':
         return <SearchInput />;
@@ -32,7 +33,7 @@ class CollectionFiltersPanel extends Component {
     return (
       <div>
         <CollectionFiltersMenu />
-        {this.setVisibleFilter(this.props.filters.visibleFilterSet)}
+        {this.showFilter(this.props.filterSets.visibleFilterSet)}
         <CollectionFiltersApplied />
       </div>
     );
@@ -41,12 +42,15 @@ class CollectionFiltersPanel extends Component {
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filterSets: state.filterSets
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}), dispatch);
+  return bindActionCreators(Object.assign({},
+    FilterSetsActions
+  ),
+  dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersPanel);
