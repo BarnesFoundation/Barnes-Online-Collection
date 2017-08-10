@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
+import * as HtmlClassManagerActions from '../../../actions/htmlClassManager';
 
 const CLASSNAME_NAV_ACTIVE = 'nav-active';
 
@@ -78,12 +78,12 @@ class SiteHeader extends Component {
             <nav className="g-nav__links" aria-labelledby="g-nav__title">
               <div className="g-nav__important-links">
                 <a className="g-nav__link g-nav__link--important" href="/static/pages/whats-on.php"><span>What’s On</span></a>
-                <a className="g-nav__link g-nav__link--important" aria-current="true" href="/static/pages/plan-your-visit.php"><span>Plan your Visit</span></a>
+                <a className="g-nav__link g-nav__link--important" href="/static/pages/plan-your-visit.php"><span>Plan your Visit</span></a>
                 <a className="g-nav__link g-nav__link--important" href="#"><span>Our Collection</span></a>
                 <a className="g-nav__link g-nav__link--important" href="/static/pages/class.php"><span>Take a Class</span></a>
               </div> <a className="g-nav__link" href="/static/pages/about.php"><span>About</span></a>
               <a className="g-nav__link" href="/static/pages/support-individual.php"><span>Join</span></a>
-              <a className="g-nav__link" aria-current="true" href="#"><span>Give</span></a>
+              <a className="g-nav__link" href="#"><span>Give</span></a>
               <a className="g-nav__link" href="/static/pages/teachers-landing.php"><span>Teachers</span></a>
               <a className="g-nav__link" href="/static/pages/press-landing.php"><span>Press</span></a>
               <a className="g-nav__link" href="#"><span>Shop</span></a>

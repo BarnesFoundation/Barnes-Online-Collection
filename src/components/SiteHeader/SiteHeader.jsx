@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import SiteNavSidebar from '../SiteNavSidebar/SiteNavSidebar';
+import SiteNavSidebar from '../../components-barnes-toolkit/components/nav/Nav.jsx';
 import * as Actions from '../../actions/htmlClassManager';
 
 class SiteHeader extends Component {
