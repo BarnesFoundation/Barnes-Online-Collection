@@ -28,7 +28,7 @@ class ArtObjectGrid extends Component {
   }
 
   setHistory(objectId) {
-    this.props.history.push(`/objects/${objectId}`);
+    this.props.history.push(`/objects/${objectId}/`);
   }
 
   render() {
@@ -39,15 +39,20 @@ class ArtObjectGrid extends Component {
         <p>ArtObjectGrid</p>
         {objects.map(object => {
           return(
-            <ArtObject
-              key={object.id}
-              setObject={this.props.setObject}
-              setHistory={this.setHistory}
-              title={object.title}
-              people={object.people}
-              medium={object.medium}
-              imageUrlSmall={object.imageUrlSmall}
-            />
+            <a href="#"
+              onClick={() => {
+                this.props.setObject(object);
+                this.setHistory(object.id);
+              }}
+            >
+              <ArtObject
+                key={object.id}
+                title={object.title}
+                people={object.people}
+                medium={object.medium}
+                imageUrlSmall={object.imageUrlSmall}
+              />
+            </a>
           );
         })}
         <ViewMoreButton />
