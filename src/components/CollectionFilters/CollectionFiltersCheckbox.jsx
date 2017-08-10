@@ -9,10 +9,7 @@ class CollectionFiltersCheckbox extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      selected: false
-    };
-
+    this.state = { selected: false };
     this.handleClick = this.handleClick.bind(this);
   }
 

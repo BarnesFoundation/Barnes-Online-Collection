@@ -9,6 +9,8 @@ const filters = (state = [], action) => {
     case ActionTypes.REMOVE_FILTER_BY_SLUG:
       const index = findIndexBySlug(state, action.slug);
       return [...state.slice(0, index), ...state.slice(index+1)];
+    case ActionTypes.CLEAR_ALL_FILTERS:
+      return [];
     default:
       return state;
   }

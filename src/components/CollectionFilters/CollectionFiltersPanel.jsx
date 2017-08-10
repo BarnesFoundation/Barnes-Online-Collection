@@ -14,7 +14,7 @@ import * as FilterSetsActions from '../../actions/filterSets';
 import './collectionFilters.css';
 
 class CollectionFiltersPanel extends Component {
-  showFilter(slug) {
+  showFilterSet(slug) {
     switch(slug) {
       case 'search':
         return <SearchInput />;
@@ -25,7 +25,7 @@ class CollectionFiltersPanel extends Component {
         return <CollectionFiltersSet />;
       case 'shuffle':
       default:
-        return null;
+        return <CollectionFiltersApplied />;
     }
   }
 
@@ -33,7 +33,7 @@ class CollectionFiltersPanel extends Component {
     return (
       <div>
         <CollectionFiltersMenu />
-        {this.showFilter(this.props.filterSets.visibleFilterSet)}
+        {this.showFilterSet(this.props.filterSets.visibleFilterSet)}
         <CollectionFiltersApplied />
       </div>
     );

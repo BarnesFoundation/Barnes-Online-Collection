@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import CollectionFiltersCheckbox  from './CollectionFiltersCheckbox';
 
 class CollectionFiltersSetTypeCheckbox extends Component {
-  buildCheckboxes(filterSets) {
-    return filterSets.map((option, index) => {
+  buildCheckboxes() {
+    return this.props.filterSets.sets[this.props.filter].options.map((option, index) => {
       return (
         <CollectionFiltersCheckbox
           key={index} index={index}
@@ -26,8 +26,7 @@ class CollectionFiltersSetTypeCheckbox extends Component {
   render() {
     return (
       <div>
-        <p>{this.props.filter}</p>
-        {this.buildCheckboxes(this.props.filterSets.sets[this.props.filter].options)}
+        {this.buildCheckboxes()}
       </div>
     );
   }

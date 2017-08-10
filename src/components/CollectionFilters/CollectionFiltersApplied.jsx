@@ -7,10 +7,11 @@ import FilterTag from './FilterTag';
 
 import * as FiltersActions from '../../actions/filters';
 import * as ObjectsActions from '../../actions/objects';
+import * as SearchActions from '../../actions/search';
 
 class CollectionFiltersApplied extends Component {
-  buildFilterTags(filters) {
-    return filters.map((filter, index) =>
+  buildFilterTags() {
+    return this.props.filters.map((filter, index) =>
       <FilterTag
         key={index} index={index}
         displayType={filter.displayType}
@@ -23,31 +24,53 @@ class CollectionFiltersApplied extends Component {
     );
   }
 
+  buildResultsExplanation() {
+    if (this.props.filters.length > 0) {
+      return this.buildFilterTags();
+    } else if (this.props.search.length > 0) {
+      return (
+        <div>
+          <p>Results for {this.props.search}</p>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
   componentWillUpdate(nextProps) {
-    if (this.props.filters.length !== nextProps.filters.length) {
+    if (nextProps.filters.length > 0) {
+      this.props.clearSearch();
       this.props.findFilteredObjects(nextProps.filters);
+    } else if (nextProps.search.length > 0) {
+        this.props.clearAllFilters();
+        this.props.searchObjects(nextProps.search);
+    } else {
+      this.props.clearSearch();
+      this.props.clearAllFilters();
+      this.props.getAllObjects();
     }
   }
 
   render() {
     return (
-      <div>
-        {this.buildFilterTags(this.props.filters)}
-      </div>
+      <div>{this.buildResultsExplanation()}</div>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filters: state.filters,
+    search: state.search
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
-    ObjectsActions
+    ObjectsActions,
+    SearchActions
   ), dispatch);
 }
 

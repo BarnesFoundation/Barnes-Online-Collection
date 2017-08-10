@@ -10,6 +10,18 @@ const buildRequestBody = () => {
   return body;
 }
 
+const fetchResults = (body, dispatch) => {
+  axios.get('/api/search', {
+    params: {
+      body: body,
+    }
+  }).then((response) => {
+    console.log(response.data);
+    const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+    dispatch(setObjects(objects));
+  });
+}
+
 const setObjects = (objects) => {
   return {
     type: ActionTypes.SET_OBJECTS,
@@ -18,17 +30,9 @@ const setObjects = (objects) => {
 }
 
 export const getAllObjects = () => {
-  let body = buildRequestBody().build();
-
+  const body = buildRequestBody().build();
   return (dispatch) => {
-    axios.get('/api/search', {
-      params: {
-        body: body,
-      }
-    }).then((response) => {
-      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
-      dispatch(setObjects(objects));
-    });
+    fetchResults(body, dispatch);
   }
 };
 
@@ -50,15 +54,20 @@ export const findFilteredObjects = (filters) => {
       }
     }
     body = body.build();
+    fetchResults(body, dispatch);
+  }
+}
 
-    axios.get('/api/search', {
-      params: {
-        body: body,
-      }
-    }).then((response) => {
-      console.log(response.data);
-      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
-      dispatch(setObjects(objects));
-    });
+export const searchObjects = (term) => {
+  return (dispatch) => {
+    if (term.length === 0) {
+      return getAllObjects()(dispatch);
+    }
+
+    let body = buildRequestBody();
+    body = body.query('match', '_all', term);
+    body = body.build();
+
+    fetchResults(body, dispatch);
   }
 }

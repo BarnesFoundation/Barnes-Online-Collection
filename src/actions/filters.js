@@ -20,3 +20,9 @@ export function removeFilterBySlug(slug) {
     slug: slug
   }
 }
+
+export function clearAllFilters() {
+  return {
+    type: ActionTypes.CLEAR_ALL_FILTERS
+  }
+}
