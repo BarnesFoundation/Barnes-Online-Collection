@@ -99,7 +99,7 @@ class PanelDetails extends Component {
         </div>}
         <div className="art-object__more-info m-block">
           <h2>Bibliography</h2>
-          <p>{this.props.bibliography}</p>
+          <div dangerouslySetInnerHTML={{__html: this.props.bibliography}}></div>
         </div>
         {this.props.visualDescription && <div className="art-object__more-info m-block">
           <h2>Visual Discription</h2>
