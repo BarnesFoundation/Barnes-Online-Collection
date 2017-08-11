@@ -76,15 +76,11 @@ class ArtObjectPage extends Component {
         {/*
           <h1>Art Object Page</h1>
         */}
-        <div
-          className="container"
+        <TabbedContent
           onKeyUp={this.handleKeyUp}
-        >
-          <TabbedContent
-            slug={this.state.panelSlug}
-            baseUrl={this.state.baseUrl}
-          />
-        </div>
+          slug={this.state.panelSlug}
+          baseUrl={this.state.baseUrl}
+        />
         <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>
         </footer>

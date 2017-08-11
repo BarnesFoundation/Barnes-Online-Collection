@@ -43,25 +43,34 @@ class TabbedContent extends Component {
 
     return (
       <div>
-        <nav className="m-tabs m-tabs--post-cta" data-behavior="Tabs">
-          <div className="m-tabs__list">
-            {
-              this.state.tabs
-                .map(tabData => {
-                  return (
-                    <Link
-                      className="m-tabs__link"
-                      to={this.props.baseUrl + tabData.slug}
-                      onClick={this.handleContentTabClick(tabData.slug)}
-                    >
-                      {tabData.title}
-                    </Link>
-                  );
-                })
-            }
-          </div>
-        </nav>
-        {contentBlock}
+        <div className="container">
+          <nav className="m-tabs m-tabs--post-cta" data-behavior="Tabs">
+            <div className="m-tabs__list">
+              {
+                this.state.tabs
+                  .map(tabData => {
+                    const isSelected = tabData.slug === this.state.selectedTab;
+
+                    return (
+                      <div className="m-tabs__item">
+                        <Link
+                          className="m-tabs__link"
+                          aria-current={isSelected}
+                          to={this.props.baseUrl + tabData.slug}
+                          onClick={this.handleContentTabClick(tabData.slug)}
+                        >
+                          {tabData.title}
+                        </Link>
+                      </div>
+                    );
+                  })
+              }
+            </div>
+          </nav>
+        </div>
+        <div className="container">
+          {contentBlock}
+        </div>
       </div>
     );
   }
@@ -72,7 +81,7 @@ class TabbedContent extends Component {
 
   handleContentTabClick(slug) {
     return function(e) {
-      selectTab(slug);
+      this.selectTab(slug);
     }.bind(this);
   }
 }

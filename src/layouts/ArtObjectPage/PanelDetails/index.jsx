@@ -36,7 +36,7 @@ class PanelDetails extends Component {
 
     return (
       <div>
-        <div className="art-object__header">
+        <div className="art-object__header m-block">
           <div className="art-object__image-container">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
             <div className="art-object__colors">
@@ -59,6 +59,8 @@ class PanelDetails extends Component {
               }
             </div>
           </div>
+        </div>
+        <div className="art-object__more-info m-block">
           <div className="art-object__tombstone">
             <h1 className="art-object__title">{this.props.title}</h1>
             <div className="art-object__labels">
@@ -77,8 +79,6 @@ class PanelDetails extends Component {
               dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
             ></div>
           </div>
-        </div>
-        <div className="art-object__more-info">
           <div className="art-object__accordian-panel">
             <h2 className="art-object__accordian-title">Additional Information</h2>
             <div className="art-object__labels">
@@ -93,23 +93,23 @@ class PanelDetails extends Component {
             </div>
           </div>
         </div>
-        {this.props.provenance && <div className="art-object__more-info">
+        {this.props.provenance && <div className="art-object__more-info m-block">
           <h2>Provenance</h2>
           <p>{this.props.provenance}</p>
         </div>}
-        <div className="art-object__more-info">
+        <div className="art-object__more-info m-block">
           <h2>Bibliography</h2>
           <p>{this.props.bibliography}</p>
         </div>
-        {this.props.visualDescription && <div className="art-object__more-info">
+        {this.props.visualDescription && <div className="art-object__more-info m-block">
           <h2>Visual Discription</h2>
           <div dangerouslySetInnerHTML={{__html: this.props.visualDescription}}></div>
         </div>}
-        {this.props.longDescription && <div className="art-object__more-info">
+        {this.props.longDescription && <div className="art-object__more-info m-block">
           <h2>Long Description</h2>
           <div dangerouslySetInnerHTML={{__html: this.props.longDescription}}></div>
         </div>}
-        <div className="art-object__more-info">
+        <div className="art-object__more-info m-block">
           <h2>Copyright/Download</h2>
           <div className="art-object__label">
             <span>Copyright Status: </span>
