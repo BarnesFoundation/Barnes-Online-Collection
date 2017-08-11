@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as HtmlClassManagerActions from '../actions/htmlClassManager';
@@ -18,7 +19,8 @@ var origClasslist = null;
 class HtmlClassManager extends Component {
   static propTypes = {
     classNameList: React.PropTypes.array,
-  }
+  };
+
   static defaultProps = {
     classNameList: [],
   }

@@ -1,19 +1,39 @@
 import React, { Component } from 'react';
 
-class CollectionFiltersSetTypeCheckbox extends Component {
-  constructor(props) {
-    super(props);
-  }
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-  // TODO: On change, update search query.
+import CollectionFiltersCheckbox  from './CollectionFiltersCheckbox';
+
+class CollectionFiltersSetTypeCheckbox extends Component {
+  buildCheckboxes() {
+    return this.props.filterSets.sets[this.props.filter].options.map((option, index) => {
+      return (
+        <CollectionFiltersCheckbox
+          key={index} index={index}
+          filter={option}
+        />
+      );
+    });
+  }
 
   render() {
     return (
       <div>
-        <p>CollectionFiltersSetTypeCheckbox</p>
+        {this.buildCheckboxes()}
       </div>
     );
   }
 }
 
-export default CollectionFiltersSetTypeCheckbox;
+const mapStateToProps = state => {
+  return {
+    filterSets: state.filterSets
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(Object.assign({}), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersSetTypeCheckbox);

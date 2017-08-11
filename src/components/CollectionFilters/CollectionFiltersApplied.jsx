@@ -3,21 +3,29 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import QueryTag from './QueryTag';
+import FilterTag from './FilterTag';
 
-import * as QueriesActions from '../../actions/queries';
+import * as FiltersActions from '../../actions/filters';
 
 class CollectionFiltersApplied extends Component {
-  buildQueryTags(queries) {
-    return queries.map((query, index) =>
-      <QueryTag key={index} index={index} value={query[2]} />
+  filterTags() {
+    return this.props.filters.map((filter, index) =>
+      <FilterTag
+        key={index} index={index}
+        displayType={filter.displayType}
+        displayValue={filter.displayValue}
+        method={filter.method}
+        type={filter.type}
+        field={filter.field}
+        term={filter.term}
+      />
     );
   }
 
   render() {
     return (
       <div>
-        {this.buildQueryTags(this.props.queries)}
+        {this.filterTags()}
       </div>
     );
   }
@@ -25,12 +33,14 @@ class CollectionFiltersApplied extends Component {
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries,
+    filters: state.filters
   }
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, QueriesActions), dispatch);
+  return bindActionCreators(Object.assign({},
+    FiltersActions,
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersApplied);

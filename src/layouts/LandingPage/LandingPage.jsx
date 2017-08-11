@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import PageHeader from './Header';
+import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import CollectionFiltersPanel from '../../components/CollectionFilters/CollectionFiltersPanel';
+
+import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
+
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
+
 import Footer from '../../components/Footer/Footer';
 
 class LandingPage extends Component {
@@ -14,9 +17,8 @@ class LandingPage extends Component {
       <div className="app">
         <HtmlClassManager />
         <SiteHeader />
-        <h1>LandingPage</h1>
-        <PageHeader />
-        <CollectionFiltersPanel />
+        <LandingPageHeader />
+        <CollectionFilters />
         <ArtObjectGrid history={this.props.history}/>
         <Footer />
       </div>
