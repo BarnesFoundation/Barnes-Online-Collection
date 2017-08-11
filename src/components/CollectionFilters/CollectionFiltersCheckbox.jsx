@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import * as FiltersActions from '../../actions/filters';
 import * as FilterSetsActions from '../../actions/filterSets';
-import * as SearchActions from '../../actions/search';
 
 class CollectionFiltersCheckbox extends Component {
   constructor(props) {
@@ -54,7 +53,6 @@ class CollectionFiltersCheckbox extends Component {
 
 const mapStateToProps = state => {
   return {
-    // filterSets: state.filterSets,
     filters: state.filters,
   }
 }

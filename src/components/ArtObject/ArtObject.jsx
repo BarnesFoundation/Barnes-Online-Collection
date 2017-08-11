@@ -3,13 +3,8 @@ import './artObject.css';
 
 import ArtObjectImage from './ArtObjectImage';
 import ArtObjectOverlay from './ArtObjectOverlay';
-import ArtObjectCaption from './ArtObjectCaption';
 
 class ArtObject extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
