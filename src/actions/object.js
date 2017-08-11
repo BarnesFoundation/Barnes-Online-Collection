@@ -1,5 +1,15 @@
 import axios from 'axios';
+import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
+
+// todo: refactor to de-duplicate this logic from the ./objects.js file
+const buildRequestBody = () => {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(25);
+
+  return body;
+}
 
 export const setObject = (object) => {
   return {
@@ -9,9 +19,12 @@ export const setObject = (object) => {
 }
 
 export const getObject = (id) => {
+  let body = buildRequestBody().build();
+
   return (dispatch) => {
     axios.get('/api/search', {
       params: {
+        body: body,
         q: `_id:${id}`
       }
     }).then((response) => {
@@ -34,7 +47,7 @@ export const submitDownloadForm = (invno, field) => {
     axios.post(`/api/objects/${invno}/download`, { field }).then((response) => {
       console.log(response.data.url);
       if (response.data.url) {
-        newWindow.location = response.data.url; 
+        newWindow.location = response.data.url;
       } else {
         newWindow.close();
       }
