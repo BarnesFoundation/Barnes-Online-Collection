@@ -4,57 +4,73 @@ import PanelVisuallyRelated from '../PanelVisuallyRelated'
 import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
 
+const getTabFromSlug = slug => {
+  return tabList.find(tab => {
+    return slug === tab.slug;
+  });
+}
+
+const tabList = [
+  {
+    title: 'Visually Related',
+    slug: '',
+    contentBlock: <PanelVisuallyRelated/>,
+  },
+  {
+    title: 'Ensemble',
+    slug: 'ensemble',
+    contentBlock: <PanelEnsemble/>,
+  },
+  {
+    title: 'Details',
+    slug: 'details',
+    contentBlock: <PanelDetails/>,
+  },
+];
+
 class TabbedContent extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       selectedTab: this.props.slug,
-      tabs: {
-        visuallyRelated: {
-          title: 'Visually Related',
-          slug: '',
-        },
-        ensemble: {
-          title: 'Ensemble',
-          slug: 'ensemble',
-        },
-        details: {
-          title: 'Details',
-          slug: 'details',
-        },
-      },
+      tabs: tabList,
     };
   }
 
   render() {
+    const contentBlock = getTabFromSlug(this.state.selectedTab).contentBlock;
+
     return (
       <div>
-        {
-          Object.keys(this.state.tabs)
-            .map(key => {
-              const tabData = this.state.tabs[key];
+        <div className="container">
+          <nav className="m-tabs m-tabs--post-cta" data-behavior="Tabs">
+            <div className="m-tabs__list">
+              {
+                this.state.tabs
+                  .map(tabData => {
+                    const isSelected = tabData.slug === this.state.selectedTab;
 
-              return (
-                <Link
-                  to={this.props.baseUrl + tabData.slug}
-                  onClick={this.handleContentTabClick(tabData.slug)}
-                >
-                  {tabData.title}
-                </Link>
-              );
-            })
-        }
-
-        {this.state.selectedTab === '' &&
-          <PanelVisuallyRelated/>
-        }
-        {this.state.selectedTab === 'ensemble' &&
-          <PanelEnsemble/>
-        }
-        {this.state.selectedTab === 'details' &&
-          <PanelDetails/>
-        }
+                    return (
+                      <div className="m-tabs__item">
+                        <Link
+                          className="m-tabs__link"
+                          aria-current={isSelected}
+                          to={this.props.baseUrl + tabData.slug}
+                          onClick={this.handleContentTabClick(tabData.slug)}
+                        >
+                          {tabData.title}
+                        </Link>
+                      </div>
+                    );
+                  })
+              }
+            </div>
+          </nav>
+        </div>
+        <div className="container">
+          {contentBlock}
+        </div>
       </div>
     );
   }

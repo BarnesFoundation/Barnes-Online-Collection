@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import SiteNavSidebar from '../SiteNavSidebar/SiteNavSidebar';
+import SiteNavSidebar from '../../components-barnes-toolkit/components/nav/Nav.jsx';
 import * as Actions from '../../actions/htmlClassManager';
+import {MAIN_WEBSITE_DOMAIN} from '../../constants';
 
 class SiteHeader extends Component {
 
@@ -37,34 +38,19 @@ class SiteHeader extends Component {
               </svg>
             </a>
             <nav className="g-header__nav">
-              <a className="g-header__nav__link" href="#">What’s On</a>
-              <a className="g-header__nav__link" href="#">Plan your Visit</a>
-              <a className="g-header__nav__link" href="#">Our Collection</a>
-              <a className="g-header__nav__link" href="/static/pages/class.php">Take a Class</a>
-              <button
-                onClick={this.handleNavBtnClick.bind(this)}
+              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
+              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
+              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on/collection'}>Our Collection</a>
+              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
+              <a
+                href={MAIN_WEBSITE_DOMAIN + '/search'}
                 className="g-header__nav__btn btn btn--icon-only html4-hidden"
-                data-nav-show
-                type="button"
-                aria-labelledby="search-open-title"
               >
                 <svg width="26" height="26">
                   <title id="search-open-title">Search</title>
                   <use xlinkHref="#icon--icon_search"></use>
                 </svg>
-              </button>
-              <button
-                onClick={this.handleNavBtnClick.bind(this)}
-                className="g-header__nav__btn btn btn--icon-only html4-hidden"
-                data-search-hide
-                type="button"
-                aria-labelledby="search-hide-title"
-              >
-                <svg width="26" height="26">
-                  <title id="search-hide-title">Hide Search</title>
-                  <use xlinkHref="#icon--icon_search"></use>
-                </svg>
-              </button>
+              </a>
               <button
                 onClick={this.handleNavBtnClick.bind(this)}
                 className="g-header__nav__btn btn btn--icon-only html4-hidden"
