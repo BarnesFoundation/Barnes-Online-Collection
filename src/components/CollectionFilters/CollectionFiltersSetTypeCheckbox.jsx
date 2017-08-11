@@ -12,13 +12,6 @@ class CollectionFiltersSetTypeCheckbox extends Component {
         <CollectionFiltersCheckbox
           key={index} index={index}
           filter={option}
-          // slug={option.slug}
-          // displayType={option.displayType}
-          // displayValue={option.displayValue}
-          // method={option.method}
-          // type={option.type}
-          // field={option.field}
-          // term={option.term}
         />
       );
     });

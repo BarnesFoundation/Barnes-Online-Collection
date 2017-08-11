@@ -8,7 +8,7 @@ import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
 
 class CollectionFiltersSet extends Component {
-  buildFilterSet() {
+  filterSet() {
     const slug = this.props.filterSets.visibleFilterSet;
 
     switch (slug) {
@@ -32,7 +32,7 @@ class CollectionFiltersSet extends Component {
   render() {
     return (
       <div>
-        {this.buildFilterSet()}
+        {this.filterSet()}
       </div>
     );
   }

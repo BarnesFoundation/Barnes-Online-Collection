@@ -51,14 +51,6 @@ class ArtObjectGrid extends Component {
   }
 }
 
-ArtObjectGrid.propTypes = {
-  getAllObjects: PropTypes.func.isRequired
-};
-
-ArtObjectGrid.defaultProps = {
-  objects: []
-};
-
 function mapStateToProps(state) {
   return {
     objects: state.objects,
@@ -66,7 +58,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectsActions, ObjectActions), dispatch);
+  return bindActionCreators(Object.assign({},
+    ObjectsActions,
+    ObjectActions,
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);

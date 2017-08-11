@@ -12,11 +12,12 @@ import SearchApplied from '../SearchInput/SearchApplied';
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
+import * as ObjectsActions from '../../actions/objects';
 
 import './collectionFilters.css';
 
 class CollectionFilters extends Component {
-  showFilterSet() {
+  filterSet() {
     const slug = this.props.filterSets.visibleFilterSet;
     if (slug === 'search') {
       return <SearchInput />;
@@ -27,22 +28,27 @@ class CollectionFilters extends Component {
     }
   }
 
-  showAppliedFilters() {
-    if (this.props.search.length > 0) {
-      return <SearchApplied />
-    } else if (this.props.filters.length > 0) {
-      return <CollectionFiltersApplied />
-    } else {
-      return null;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.search.length > 0 && nextProps.search !== this.props.search) {
+      this.props.searchObjects(nextProps.search);
+      this.props.clearAllFilters();
+    } else if (nextProps.filters.length > 0 && nextProps.filters !== this.props.filters) {
+      this.props.findFilteredObjects(nextProps.filters);
+      this.props.clearSearchTerm();
     }
   }
 
   render() {
+    let filters = <CollectionFiltersApplied />;
+    if (this.props.search.length > 0) {
+      filters = <SearchApplied />;
+    }
+
     return (
       <div>
         <CollectionFiltersMenu />
-        {this.showFilterSet()}
-        {this.showAppliedFilters()}
+        {this.filterSet()}
+        {filters}
       </div>
     );
   }
@@ -60,7 +66,8 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
     SearchActions,
-    FilterSetsActions
+    FilterSetsActions,
+    ObjectsActions
   ),
   dispatch);
 }

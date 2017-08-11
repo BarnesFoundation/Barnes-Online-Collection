@@ -16,7 +16,6 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'red',
-          applied: false
         },
         {
           slug: 'color-blue',
@@ -26,7 +25,6 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'blue',
-          applied: false
         },
         {
           slug: 'color-yellow',
@@ -36,7 +34,6 @@ const initialState = {
           type: 'match',
           field: '_all',
           term: 'yellow',
-          applied: false
         }
       ],
     },

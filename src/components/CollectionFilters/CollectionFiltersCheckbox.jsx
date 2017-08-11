@@ -10,25 +10,33 @@ import * as SearchActions from '../../actions/search';
 class CollectionFiltersCheckbox extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { selected: false };
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  filterIsApplied() {
+    const filters = this.props.filters;
+    for (let i = 0; i < filters.length; i++) {
+      if (filters[i].slug === this.props.filter.slug) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   handleClick(event) {
     event.preventDefault();
 
     const filter = this.props.filter;
-    let selected = this.state.selected;
-
-    if (!selected) {
-      this.props.clearSearchTerm();
+    if (this.props.filters.length === 0) {
       this.props.addToFilters(filter);
     } else {
-      this.props.removeFilterBySlug(filter.slug);
+      const index = this.filterIsApplied();
+      if (index === -1) {
+        this.props.addToFilters(filter);
+      } else {
+        this.props.removeFilterByIndex(index);
+      }
     }
-
-    this.setState({ selected: !selected })
   }
 
   render() {
@@ -38,7 +46,7 @@ class CollectionFiltersCheckbox extends Component {
         onClick={this.handleClick}
         //Temporary styling for dramatic effect.
         style={{background: value, color: 'white'}}>
-        {value}
+        {value}{this.props.filter.applied ? ' (applied)' : ''}
       </button>
     );
   }
@@ -48,7 +56,6 @@ const mapStateToProps = state => {
   return {
     // filterSets: state.filterSets,
     filters: state.filters,
-    // search: state.search
   }
 }
 
@@ -56,7 +63,6 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
     FilterSetsActions,
-    SearchActions,
   ), dispatch);
 }
 

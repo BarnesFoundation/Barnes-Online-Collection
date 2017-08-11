@@ -6,12 +6,9 @@ import { connect } from 'react-redux';
 import FilterTag from './FilterTag';
 
 import * as FiltersActions from '../../actions/filters';
-import * as FilterSetsActions from '../../actions/filterSets';
-import * as ObjectsActions from '../../actions/objects';
-import * as SearchActions from '../../actions/search';
 
 class CollectionFiltersApplied extends Component {
-  buildFilterTags() {
+  filterTags() {
     return this.props.filters.map((filter, index) =>
       <FilterTag
         key={index} index={index}
@@ -25,25 +22,12 @@ class CollectionFiltersApplied extends Component {
     );
   }
 
-  componentDidMount() {
-    if (this.props.filters.length > 0) {
-      this.props.findFilteredObjects(this.props.filters);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const nextFilters = nextProps.filters;
-    const filters = this.props.filters;
-
-    if (nextFilters.length > 0 && filters !== nextFilters) {
-      this.props.findFilteredObjects(nextFilters);
-    } else if (nextFilters.length === 0) {
-      this.props.getAllObjects();
-    }
-  }
-
   render() {
-    return this.buildFilterTags();
+    return (
+      <div>
+        {this.filterTags()}
+      </div>
+    );
   }
 }
 
@@ -56,8 +40,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
-    FilterSetsActions,
-    ObjectsActions,
   ), dispatch);
 }
 
