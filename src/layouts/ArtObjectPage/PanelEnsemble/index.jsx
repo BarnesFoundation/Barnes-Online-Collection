@@ -8,7 +8,7 @@ class PanelEnsemble extends Component {
 
   render() {
     return (
-      <div>
+      <div className="m-block">
         <p>PanelEnsemble</p>
       </div>
     );

@@ -11,44 +11,6 @@ import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import TabbedContent from './TabbedContent/TabbedContent';
 
-const copyrightMap = {
-  1: {
-    copy: 'In Copyright',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
-    type: 'small'
-  },
-  3: {
-    copy: 'ARS',
-    link: 'http://rightsstatements.org/page/InC/1.0/?language=en',
-    type: 'small'
-  },
-  4: {
-    copy: 'Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  8: {
-    copy: 'No Known Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  2: {
-    copy: 'World Rights: Copyright Undetermined',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
-    type: 'small'
-  },
-  10: {
-    copy: 'World Rights: Public Domain',
-    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
-    type: 'large'
-  },
-  6: {
-    copy: 'No Known Claimant',
-    link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
-    type: 'small'
-  }
-}
-
 class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
@@ -111,15 +73,14 @@ class ArtObjectPage extends Component {
         </Helmet>
         <HtmlClassManager />
         <SiteHeader />
-        <h1>Art Object Page</h1>
-        <section className="art-object" onKeyUp={this.handleKeyUp}>
-          <div className="art-object__tabbed-content-test">
-            <TabbedContent
-              slug={this.state.panelSlug}
-              baseUrl={this.state.baseUrl}
-            />
-          </div>
-        </section>
+        {/*
+          <h1>Art Object Page</h1>
+        */}
+        <TabbedContent
+          onKeyUp={this.handleKeyUp}
+          slug={this.state.panelSlug}
+          baseUrl={this.state.baseUrl}
+        />
         <footer className="art-object__footer no-print">
           <Link to="/">Back to Results</Link>
         </footer>

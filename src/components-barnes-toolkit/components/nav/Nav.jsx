@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
+import * as HtmlClassManagerActions from '../../../actions/htmlClassManager';
+import {MAIN_WEBSITE_DOMAIN} from '../../../constants';
 
 const CLASSNAME_NAV_ACTIVE = 'nav-active';
 
@@ -77,18 +78,79 @@ class SiteHeader extends Component {
             <h2 className="visuallyhidden" id="g-nav__title">Main menu</h2>
             <nav className="g-nav__links" aria-labelledby="g-nav__title">
               <div className="g-nav__important-links">
-                <a className="g-nav__link g-nav__link--important" href="/static/pages/whats-on.php"><span>What’s On</span></a>
-                <a className="g-nav__link g-nav__link--important" aria-current="true" href="/static/pages/plan-your-visit.php"><span>Plan your Visit</span></a>
-                <a className="g-nav__link g-nav__link--important" href="#"><span>Our Collection</span></a>
-                <a className="g-nav__link g-nav__link--important" href="/static/pages/class.php"><span>Take a Class</span></a>
-              </div> <a className="g-nav__link" href="/static/pages/about.php"><span>About</span></a>
-              <a className="g-nav__link" href="/static/pages/support-individual.php"><span>Join</span></a>
-              <a className="g-nav__link" aria-current="true" href="#"><span>Give</span></a>
-              <a className="g-nav__link" href="/static/pages/teachers-landing.php"><span>Teachers</span></a>
-              <a className="g-nav__link" href="/static/pages/press-landing.php"><span>Press</span></a>
-              <a className="g-nav__link" href="#"><span>Shop</span></a>
-              <a className="g-nav__link" href="/static/pages/host-an-event.php"><span>Facility Rental</span></a>
-              <a className="g-nav__link" href="#"><span>Arboretum</span></a>
+                <a
+                  className="g-nav__link g-nav__link--important"
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/whats-on.php'}
+                >
+                  <span>What’s On</span>
+                </a>
+                <a
+                  className="g-nav__link g-nav__link--important"
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/plan-your-visit.php'}
+                >
+                  <span>Plan your Visit</span>
+                </a>
+                <a
+                  className="g-nav__link g-nav__link--important"
+                  href={MAIN_WEBSITE_DOMAIN + '/'}
+                >
+                  <span>Our Collection</span>
+                </a>
+                <a
+                  className="g-nav__link g-nav__link--important"
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/class.php'}
+                >
+                  <span>Take a Class</span>
+                </a>
+              </div>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/about.php'}
+              >
+                <span>About</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/support-individual.php'}
+              >
+                <span>Join</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/'}
+              >
+                <span>Give</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/teachers-landing.php'}
+              >
+                <span>Teachers</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/press-landing.php'}
+              >
+                <span>Press</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/'}
+              >
+                <span>Shop</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/host-an-event.php'}
+              >
+                <span>Facility Rental</span>
+              </a>
+              <a
+                className="g-nav__link"
+                href={MAIN_WEBSITE_DOMAIN + '/'}
+              >
+                <span>Arboretum</span>
+              </a>
             </nav>
           </div>
         </div>

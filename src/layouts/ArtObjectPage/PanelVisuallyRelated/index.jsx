@@ -8,8 +8,15 @@ class PanelVisuallyRelated extends Component {
 
   render() {
     return (
-      <div>
-        <p>PanelVisuallyRelated test</p>
+      <div className="m-block">
+        <div className="m-block__columns">
+          <div className="m-block__column">
+            <p style={{background: '#eee'}}>PanelVisuallyRelated test - left</p>
+          </div>
+          <div className="m-block__column">
+            <p style={{background: '#eee'}}>PanelVisuallyRelated test - right</p>
+          </div>
+        </div>
       </div>
     );
   }
