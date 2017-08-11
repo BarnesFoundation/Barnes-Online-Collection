@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import TabbedContent from './TabbedContent/TabbedContent';
+import Footer from '../../components/Footer/Footer';
 
 class ArtObjectPage extends Component {
   constructor(props) {
@@ -81,9 +82,7 @@ class ArtObjectPage extends Component {
           slug={this.state.panelSlug}
           baseUrl={this.state.baseUrl}
         />
-        <footer className="art-object__footer no-print">
-          <Link to="/">Back to Results</Link>
-        </footer>
+        <Footer />
       </div>
     );
   }
