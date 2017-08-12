@@ -74,9 +74,11 @@ class ArtObjectPage extends Component {
         </Helmet>
         <HtmlClassManager />
         <SiteHeader />
-        {/*
-          <h1>Art Object Page</h1>
-        */}
+
+        {/* todo: temp quick style. Need to get the AI for this page. */}
+        {
+          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.title}</h1>
+        }
         <TabbedContent
           onKeyUp={this.handleKeyUp}
           slug={this.state.panelSlug}
