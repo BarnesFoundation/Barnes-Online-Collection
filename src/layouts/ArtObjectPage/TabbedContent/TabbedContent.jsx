@@ -34,13 +34,12 @@ class TabbedContent extends Component {
     super(props);
 
     this.state = {
-      selectedTab: this.props.slug,
       tabs: tabList,
     };
   }
 
   render() {
-    const contentBlock = getTabFromSlug(this.state.selectedTab).contentBlock;
+    const contentBlock = getTabFromSlug(this.props.slug).contentBlock;
 
     return (
       <div>
@@ -50,7 +49,7 @@ class TabbedContent extends Component {
               {
                 this.state.tabs
                   .map(tabData => {
-                    const isSelected = tabData.slug === this.state.selectedTab;
+                    const isSelected = tabData.slug === this.props.slug;
 
                     return (
                       <div className="m-tabs__item">

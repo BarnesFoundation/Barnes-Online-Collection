@@ -25,6 +25,7 @@ class ArtObjectPage extends Component {
 
     if (!baseUrlMatch) {
       // it's missing the slash. Do a quick redirect here for now.
+      // todo: it'd be better to move this to a router later.
       window.location = window.location.pathname + '/';
       return;
     }
@@ -48,10 +49,18 @@ class ArtObjectPage extends Component {
   componentDidUpdate(nextProps, nextState) {
     const newArtObjectId = parseInt(this.props.match.params.id, 10)
     const currentArtObjectId = parseInt(this.props.artObject.id, 10)
-    const objectIsStale = currentArtObjectId !== newArtObjectId;
+    const isObjectStale = currentArtObjectId !== newArtObjectId;
+    const newPanelSlug = this.props.match.params.panel || '';
+    const isPanelStale = newPanelSlug !== this.state.panelSlug;
 
-    if(objectIsStale) {
+    if(isObjectStale) {
       this.props.getObject(newArtObjectId);
+    }
+
+    if (isPanelStale) {
+      this.setState({
+        panelSlug: newPanelSlug,
+      });
     }
   }
 
@@ -86,7 +95,7 @@ class ArtObjectPage extends Component {
 
         {/* todo: temp quick style. Need to get the AI for this page. */}
         {
-          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.location.pathname}</h1>
+          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.artObject.title}</h1>
         }
         <TabbedContent
           onKeyUp={this.handleKeyUp}
