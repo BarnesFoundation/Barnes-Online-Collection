@@ -7,18 +7,17 @@ import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 
 class CollectionFiltersMenu extends Component {
   render() {
-    const filterOptions = this.props.filters.filterOptions;
+    const filterSets = this.props.filterSets.sets;
     return (
       <div>
         {
           Object
-          .keys(filterOptions)
+          .keys(filterSets)
           .map(key =>
             <CollectionFiltersMenuItem
               key={key}
-              title={filterOptions[key].title}
-              name={filterOptions[key].slug}
-              selectFilter={this.props.selectFilter}
+              title={filterSets[key].title}
+              slug={filterSets[key].slug}
             />
           )
         }
@@ -29,14 +28,12 @@ class CollectionFiltersMenu extends Component {
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filterSets: state.filterSets
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-  ), dispatch);
+  return bindActionCreators(Object.assign({}), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersMenu);

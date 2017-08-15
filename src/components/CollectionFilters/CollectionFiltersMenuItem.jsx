@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as FiltersActions from '../../actions/filters';
+import * as FilterSetsActions from '../../actions/filterSets';
 
 class CollectionFiltersMenuItem extends Component {
   constructor(props) {
@@ -12,16 +12,12 @@ class CollectionFiltersMenuItem extends Component {
   }
 
   handleClick(event) {
-    const slug = this.props.name;
-    this.props.selectFilterSet(slug);
+    this.props.selectFilterSet(this.props.slug);
   }
 
   render() {
     return (
-      <button
-        onClick={this.handleClick}
-        name={this.props.name}
-      >
+      <button onClick={this.handleClick}>
         {this.props.title}
       </button>
     );
@@ -30,14 +26,14 @@ class CollectionFiltersMenuItem extends Component {
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters
+    filterSets: state.filterSets
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    FiltersActions
+    FilterSetsActions
   ), dispatch);
 }
 

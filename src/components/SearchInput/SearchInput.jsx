@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as QueriesActions from '../../actions/queries';
-import * as ObjectsActions from '../../actions/objects';
+import * as SearchActions from '../../actions/search';
 
 import './searchInput.css';
 
@@ -28,16 +27,8 @@ class SearchInput extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const query = ['match', '_all', this.state.value];
-    this.props.appendToQueries(query);
-
+    this.props.addSearchTerm(this.state.value);
     this.setState({value: ''});
-  }
-
-  componentWillUpdate(nextProps) {
-    if (this.props.queries.length !== nextProps.queries.length) {
-      this.props.findObjectsByQueries(nextProps.queries);
-    }
   }
 
   render() {
@@ -58,20 +49,19 @@ class SearchInput extends Component {
 }
 
 SearchInput.propTypes = {
-  queries: PropTypes.array
+  search: PropTypes.string
 }
 
 const mapStateToProps = state => {
   return {
-    queries: state.queries
+    search: state.search,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    ObjectsActions,
-    QueriesActions
+    SearchActions,
   ), dispatch);
 }
 

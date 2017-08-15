@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import HeaderText from '../../components/HeaderText/HeaderText';
 
-class Header extends Component {
+class LandingPageHeader extends Component {
   render() {
     return (
       <div>
@@ -12,4 +12,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default LandingPageHeader;

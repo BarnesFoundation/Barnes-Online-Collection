@@ -1,48 +1,28 @@
 import * as ActionTypes from '../constants';
 
-const initialState = {
-  visibleFilterSet: null,
-  filterOptions: {
-    colors: {
-      title: "Colors",
-      slug: "colors",
-      type: "checkbox"
-    },
-    lines: {
-      title: "Lines",
-      slug: "lines",
-      type: "radio"
-    },
-    light: {
-      title: "Light",
-      slug: "light",
-      type: "slider"
-    },
-    space: {
-      title: "Space",
-      slug: "space",
-      type: "slider"
-    },
-    shuffle: {
-      title: "Shuffle",
-      slug: "shuffle",
-      type: "shuffle"
-    },
-    search: {
-      title: "Search",
-      slug: "search",
-      type: "search"
-    }
-  }
-};
-
-const filters = (state = initialState, action) => {
+const filters = (state = [], action) => {
   switch(action.type) {
-    case ActionTypes.SELECT_FILTER_SET:
-      return Object.assign({}, state, { visibleFilterSet: action.slug });
+    case ActionTypes.ADD_TO_FILTERS:
+      return [...state, action.filter];
+    case ActionTypes.REMOVE_FILTER_BY_INDEX:
+      return [...state.slice(0, action.index), ...state.slice(action.index + 1)];
+    case ActionTypes.REMOVE_FILTER_BY_SLUG:
+      const index = findIndexBySlug(state, action.slug);
+      return [...state.slice(0, index), ...state.slice(index+1)];
+    case ActionTypes.CLEAR_ALL_FILTERS:
+      return [];
     default:
       return state;
   }
+}
+
+function findIndexBySlug(filters, slug) {
+  for (let i = 0; i < filters.length; i++) {
+    if (filters[i].slug === slug) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 export default filters;
