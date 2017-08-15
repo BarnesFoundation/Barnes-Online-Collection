@@ -24,24 +24,12 @@ class PanelDetails extends Component {
     const printAvailable = this.props.prints.find((print) => {
       return print.id === this.props.invno
     });
-    const colorSwatches = [];
-    if (this.props.color) {
-      for (let i = 0; i < 5; i++) {
-        colorSwatches.push(
-          <div className="art-object__color-swatch" style={{backgroundColor: this.props.color[`palette-closest-${i}`]}}>
-          </div>
-        );
-      }
-    }
 
     return (
-      <div>
+      <div className="component-panel-details">
         <div className="art-object__header m-block">
           <div className="art-object__image-container">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
-            <div className="art-object__colors">
-              {colorSwatches}
-            </div>
             <div className="art-object__image-options no-print">
               <button onClick={this.props.showZoomOverlay}>
                 Zoom
