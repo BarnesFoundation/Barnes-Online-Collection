@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
 import * as UIActions from '../../actions/ui';
 import './artObjectPage.css';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { getArtObjectUrlFromId } from '../../helpers';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import TabbedContent from './TabbedContent/TabbedContent';
@@ -16,28 +18,22 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    const id = props.match.params.id;
+    const urlPath = this.props.location.pathname;
+    const artObjectId = props.match.params.id;
     const panelSlug = props.match.params.panel || '';
-    const panelSlugIdx = this.props.location.pathname.search(panelSlug);
-    const baseUrl = panelSlugIdx ?
-      this.props.location.pathname.slice(0, panelSlugIdx) :
-      this.props.location.pathname;
+    const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
-    // todo: quick fix. move this to a router.
-    const hasTrailingSlash = !!baseUrl.match(/^.*\/$/);
-
-    if (!hasTrailingSlash) {
-      window.location = baseUrl + '/';
+    if (!baseUrlMatch) {
+      // it's missing the slash. Do a quick redirect here for now.
+      window.location = window.location.pathname + '/';
+      return;
     }
 
     this.state = {
       panelSlug: panelSlug,
-      baseUrl: baseUrl,
+      baseUrl: baseUrlMatch[0],
+      artObjectId: artObjectId,
     };
-
-    if (!props.title) {
-      this.props.getObject(id);
-    }
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -49,6 +45,16 @@ class ArtObjectPage extends Component {
     }
   }
 
+  componentDidUpdate(nextProps, nextState) {
+    const newArtObjectId = parseInt(this.props.match.params.id, 10)
+    const currentArtObjectId = parseInt(this.props.artObject.id, 10)
+    const objectIsStale = currentArtObjectId !== newArtObjectId;
+
+    if(objectIsStale) {
+      this.props.getObject(newArtObjectId);
+    }
+  }
+
   handleKeyUp(e) {
     if (e.which === 27) {
       this.props.hideZoomOverlay();
@@ -57,32 +63,35 @@ class ArtObjectPage extends Component {
 
   handleFormSubmit(e) {
     e.preventDefault();
-    this.props.submitDownloadForm(this.props.invno, this.downloadReason.value);
+    this.props.submitDownloadForm(this.props.artObject.invno, this.downloadReason.value);
     this.downloadReason.value = '';
     this.downloadToggle.checked = false;
 
   }
 
   render() {
+    const pageTitle = `${this.props.artObject.culture || this.props.artObject.people} - ${this.props.artObject.title}`;
+
     return (
       <div className="app">
         <Helmet>
-          <meta property="og:title" content={`${this.props.culture || this.props.people} - ${this.props.title}`} />
+          <title>{pageTitle} </title>
+          <meta property="og:title" content={pageTitle} />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content={window.location.href} />
-          <meta property="og:image" content={this.props.imageUrlLarge} />
+          <meta property="og:url" content={this.props.location.href} />
+          <meta property="og:image" content={this.props.artObject.imageUrlLarge} />
         </Helmet>
         <HtmlClassManager />
         <SiteHeader />
 
         {/* todo: temp quick style. Need to get the AI for this page. */}
         {
-          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.title}</h1>
+          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.location.pathname}</h1>
         }
         <TabbedContent
           onKeyUp={this.handleKeyUp}
           slug={this.state.panelSlug}
-          baseUrl={this.state.baseUrl}
+          artObject={this.props.artObject}
         />
         <Footer />
       </div>
@@ -91,11 +100,12 @@ class ArtObjectPage extends Component {
 }
 
 function mapStateToProps(state) {
-  return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
+  return Object.assign({}, {artObject: state.object}, { prints: state.prints }, { ui: state.ui });
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectPage);
+const compWithRouter = withRouter(ArtObjectPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(compWithRouter));

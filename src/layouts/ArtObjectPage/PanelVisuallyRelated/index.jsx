@@ -3,7 +3,7 @@ import './index.css';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 const getDisplayDateAndMedium = (displayDate, medium) => {
   const connector = displayDate && medium ? '—' : '';
 
@@ -42,7 +42,10 @@ class PanelVisuallyRelated extends Component {
             </div>
           </div>
           <div className="m-block__column">
-            <p style={{background: '#eee'}}>PanelVisuallyRelated test - right</p>
+            <div className="">
+              todo slider: more similar -- more surprising
+            </div>
+            <ArtObjectGrid />
           </div>
         </div>
       </div>
