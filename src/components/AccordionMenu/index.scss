@@ -12,6 +12,12 @@ $animationTime: .45s;
     }
   }
 
+  .m-accordion-tabs__title {
+    background: none;
+    border-left: none;
+    border-right: none;
+  }
+
   // use this animation for now which doens't require us to measure the height.
   // this won't work for images though...
   .m-accordion-tabs__body {

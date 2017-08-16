@@ -14,7 +14,10 @@ class AccordionMenu extends Component {
 
   handleContentTabClick(idx) {
     return function(e) {
-      this.selectTab(idx);
+      // if it's already selected, toggle it closed
+      const selectedIndex = this.state.selectedIdx === idx ? null : idx;
+
+      this.selectTab(selectedIndex);
     }.bind(this);
   }
 
@@ -38,12 +41,35 @@ class AccordionMenu extends Component {
                   handleContentTabClick: this.handleContentTabClick,
                 };
 
-                return <tabData.contentBlock {...props}/>;
+                return (
+                  <div>
+                    <button type="button"
+                      className="m-accordion-tabs__title font-delta"
+                      aria-selected={isSelected}
+                      role="tab"
+                      tabIndex={idx}
+                      aria-expanded={isSelected}
+                      onClick={this.handleContentTabClick(idx)}
+                    >
+                      {tabData.title}
+                      <span className="m-accordion-tabs__icon"><svg height={20} width={20}><use xlinkHref="#icon--icon_arrow_down" /></svg></span>
+                    </button>
+                    <div
+                      className="m-accordion-tabs__body"
+                      aria-labelledby={`accordion1494${idx}`}
+                      aria-hidden={!isSelected}
+                      role="tabpanel"
+                      data-height=""
+                    >
+                      <tabData.contentBlock {...props}/>
+                    </div>
+                  </div>
+                )
               })
           }
         </div>
       </div>
-    );
+    )
   }
 }
 

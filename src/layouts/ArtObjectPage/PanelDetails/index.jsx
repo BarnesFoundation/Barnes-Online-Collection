@@ -7,7 +7,9 @@ import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
 import AccordionMenu from '../../../components/AccordionMenu';
-import TabBibliography from './TabBibliography';
+import LongDescription from './AccordionPanels/LongDescription';
+import VisualDescription from './AccordionPanels/VisualDescription';
+import Bibliography from './AccordionPanels/Bibliography';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
@@ -23,16 +25,16 @@ class PanelDetails extends Component {
 
     this.tabList = [
       {
-        title: 'Visually Related',
-        contentBlock: TabBibliography,
+        title: 'Long Description',
+        contentBlock: LongDescription,
       },
       {
-        title: 'Ensemble',
-        contentBlock: TabBibliography,
+        title: 'Visual Description',
+        contentBlock: VisualDescription,
       },
       {
-        title: 'Details',
-        contentBlock: TabBibliography,
+        title: 'Bibliography',
+        contentBlock: Bibliography,
       },
     ];
   }
@@ -103,18 +105,6 @@ class PanelDetails extends Component {
         {this.props.provenance && <div className="art-object__more-info m-block">
           <h2>Provenance</h2>
           <p>{this.props.provenance}</p>
-        </div>}
-        <div className="art-object__more-info m-block">
-          <h2>Bibliography</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.bibliography}}></div>
-        </div>
-        {this.props.visualDescription && <div className="art-object__more-info m-block">
-          <h2>Visual Discription</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.visualDescription}}></div>
-        </div>}
-        {this.props.longDescription && <div className="art-object__more-info m-block">
-          <h2>Long Description</h2>
-          <div dangerouslySetInnerHTML={{__html: this.props.longDescription}}></div>
         </div>}
         <div className="art-object__more-info m-block">
           <h2>Copyright/Download</h2>
