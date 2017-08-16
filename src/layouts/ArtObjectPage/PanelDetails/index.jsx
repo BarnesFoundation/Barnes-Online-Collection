@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
-import AccordionMenu from './AccordionMenu';
+import AccordionMenu from '../../../components/AccordionMenu';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 

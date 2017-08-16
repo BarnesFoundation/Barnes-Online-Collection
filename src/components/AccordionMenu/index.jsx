@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import './index.css';
+
 const tabList = [
   {
     title: 'Visually Related',
@@ -51,19 +53,18 @@ class AccordionMenu extends Component {
                       aria-selected={isSelected}
                       role="tab"
                       tabIndex={idx}
-                      aria-controls={`accordion1494${idx}`}
                       aria-expanded={isSelected}
                       onClick={this.handleContentTabClick(idx)}
                     >
                       Dining and Coffee
                       <span className="m-accordion-tabs__icon"><svg height={20} width={20}><use xlinkHref="#icon--icon_arrow_down" /></svg></span>
                     </button>
-                    <div id={`accordion1494${idx}`}
+                    <div
                       className="m-accordion-tabs__body"
                       aria-labelledby={`accordion1494${idx}`}
                       aria-hidden={!isSelected}
                       role="tabpanel"
-                      data-height="815px"
+                      data-height=""
                     >
                       <div className="m-accordion-tabs__inner">
                         <p>bla bla</p>
