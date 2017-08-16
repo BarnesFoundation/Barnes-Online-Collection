@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PanelVisuallyRelated from '../PanelVisuallyRelated'
 import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
+import { getArtObjectUrlFromId } from '../../../helpers';
 
 const getTabFromSlug = slug => {
   return tabList.find(tab => {
@@ -33,13 +34,12 @@ class TabbedContent extends Component {
     super(props);
 
     this.state = {
-      selectedTab: this.props.slug,
       tabs: tabList,
     };
   }
 
   render() {
-    const contentBlock = getTabFromSlug(this.state.selectedTab).contentBlock;
+    const contentBlock = getTabFromSlug(this.props.slug).contentBlock;
 
     return (
       <div>
@@ -49,14 +49,14 @@ class TabbedContent extends Component {
               {
                 this.state.tabs
                   .map(tabData => {
-                    const isSelected = tabData.slug === this.state.selectedTab;
+                    const isSelected = tabData.slug === this.props.slug;
 
                     return (
                       <div className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
-                          to={this.props.baseUrl + tabData.slug}
+                          to={getArtObjectUrlFromId(this.props.artObject.id, tabData.slug)}
                           onClick={this.handleContentTabClick(tabData.slug)}
                         >
                           {tabData.title}

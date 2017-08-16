@@ -28,7 +28,11 @@ export const getObject = (id) => {
         q: `_id:${id}`
       }
     }).then((response) => {
-      const object = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }))[0];
+      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+      const object = objects.find(object => {
+        return parseInt(object.id, 10)  ===  parseInt(id, 10);
+      });
+
       dispatch(setObject(object));
     });
   }
