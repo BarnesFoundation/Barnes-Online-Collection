@@ -7,6 +7,7 @@ import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
 import AccordionMenu from '../../../components/AccordionMenu';
+import TabBibliography from './TabBibliography';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
@@ -19,6 +20,21 @@ const getCopyright = (id) => {
 class PanelDetails extends Component {
   constructor(props) {
     super(props);
+
+    this.tabList = [
+      {
+        title: 'Visually Related',
+        contentBlock: TabBibliography,
+      },
+      {
+        title: 'Ensemble',
+        contentBlock: TabBibliography,
+      },
+      {
+        title: 'Details',
+        contentBlock: TabBibliography,
+      },
+    ];
   }
 
   render() {
@@ -51,7 +67,7 @@ class PanelDetails extends Component {
         </div>
         <div className="art-object__more-info m-block">
 
-          <AccordionMenu />
+          <AccordionMenu tabList={this.tabList} />
 
           <div className="art-object__tombstone">
             <div className="art-object__labels">
