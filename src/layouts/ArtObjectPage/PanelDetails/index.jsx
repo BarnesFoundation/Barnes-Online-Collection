@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
+import AccordionMenu from './AccordionMenu';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
@@ -49,8 +50,10 @@ class PanelDetails extends Component {
           </div>
         </div>
         <div className="art-object__more-info m-block">
+
+          <AccordionMenu />
+
           <div className="art-object__tombstone">
-            <h1 className="art-object__title">{this.props.title}</h1>
             <div className="art-object__labels">
               {this.props.people && <p className="art-object__label">Artist</p>}
               {this.props.culture && <p className="art-object__label">Culture</p>}
@@ -116,10 +119,8 @@ class PanelDetails extends Component {
               </div>
               :
               <div className="no-print">
-                <button>
-                  Request Hi Res
-                </button>
-                <label htmlFor="download-image-button" className="download-image-label">Download</label>
+                <button className="btn" type="button">Request Image</button>
+                <label htmlFor="download-image-button" className="download-image-label btn btn--primary">Download</label>
                 <input
                   type="checkbox"
                   id="download-image-button"
