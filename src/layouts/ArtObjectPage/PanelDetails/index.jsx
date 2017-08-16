@@ -10,6 +10,7 @@ import AccordionMenu from '../../../components/AccordionMenu';
 import LongDescription from './AccordionPanels/LongDescription';
 import VisualDescription from './AccordionPanels/VisualDescription';
 import Bibliography from './AccordionPanels/Bibliography';
+import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
@@ -45,19 +46,13 @@ class PanelDetails extends Component {
     });
 
     return (
-      <div className="component-panel-details">
+      <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
           <div className="art-object__image-container">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
             <div className="art-object__image-options no-print">
               <button onClick={this.props.showZoomOverlay}>
                 Zoom
-              </button>
-              <button>
-                Share
-              </button>
-              <button onClick={window.print}>
-                Print
               </button>
               {printAvailable &&
                 <a href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
@@ -68,37 +63,47 @@ class PanelDetails extends Component {
           </div>
         </div>
         <div className="art-object__more-info m-block">
-
-          <AccordionMenu tabList={this.tabList} />
-
-          <div className="art-object__tombstone">
-            <div className="art-object__labels">
-              {this.props.people && <p className="art-object__label">Artist</p>}
-              {this.props.culture && <p className="art-object__label">Culture</p>}
-              <p className="art-object__label">Date</p>
-              <p className="art-object__label">Medium</p>
-            </div>
+          <div className="m-block-inner-narrow">
+            <SummaryTable />
             <div>
-              {this.props.people && <p>{this.props.people}</p>}
-              {this.props.culture && <p>{this.props.culture}</p>}
-              <p>{this.props.displayDate}</p>
-              <p>{this.props.medium}</p>
+              <button className="btn" type="button">Request Image</button>
+              {printAvailable &&
+                <a className="btn btn--primary" href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
+                Purchase Print
+                </a>
+              }
             </div>
-            <div className="art-object__short-description"
-              dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
-            ></div>
-          </div>
-          <div className="art-object__accordian-panel">
-            <h2 className="art-object__accordian-title">Additional Information</h2>
-            <div className="art-object__labels">
-              <p className="art-object__label">Accession Number</p>
-              <p className="art-object__label">Dimensions</p>
-              <p className="art-object__label">Museum Location</p>
+            <AccordionMenu tabList={this.tabList} />
+
+            <div className="art-object__tombstone">
+              <div className="art-object__labels">
+                {this.props.people && <p className="art-object__label">Artist</p>}
+                {this.props.culture && <p className="art-object__label">Culture</p>}
+                <p className="art-object__label">Date</p>
+                <p className="art-object__label">Medium</p>
+              </div>
+              <div>
+                {this.props.people && <p>{this.props.people}</p>}
+                {this.props.culture && <p>{this.props.culture}</p>}
+                <p>{this.props.displayDate}</p>
+                <p>{this.props.medium}</p>
+              </div>
+              <div className="art-object__short-description"
+                dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
+              ></div>
             </div>
-            <div>
-              <p>{this.props.invno}</p>
-              <p>{this.props.dimensions}</p>
-              <p>{`${this.props.room}, ${this.props.wall} Wall`}</p>
+            <div className="art-object__accordian-panel">
+              <h2 className="art-object__accordian-title">Additional Information</h2>
+              <div className="art-object__labels">
+                <p className="art-object__label">Accession Number</p>
+                <p className="art-object__label">Dimensions</p>
+                <p className="art-object__label">Museum Location</p>
+              </div>
+              <div>
+                <p>{this.props.invno}</p>
+                <p>{this.props.dimensions}</p>
+                <p>{`${this.props.room}, ${this.props.wall} Wall`}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -106,6 +111,9 @@ class PanelDetails extends Component {
           <h2>Provenance</h2>
           <p>{this.props.provenance}</p>
         </div>}
+
+        {/*todo: remove after clarifying design*/}
+        {/*
         <div className="art-object__more-info m-block">
           <h2>Copyright/Download</h2>
           <div className="art-object__label">
@@ -143,6 +151,8 @@ class PanelDetails extends Component {
             }
           </div>
         </div>
+        */}
+
         {this.props.ui.zoomOverlayVisible && <Zoom invno={this.props.invno} onExit={this.props.hideZoomOverlay}/>}
       </div>
     );

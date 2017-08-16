@@ -1,0 +1,23 @@
+// Main container: initialize the flex, direction is row
+.table-flexbox {
+  .table-row {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  // Text based cells: grow, truncate and show ellipsis when there is not enough space
+  .text {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // Fix a minimum width of the leaf level cells so that they'll line up
+  .text {
+    width: 1px;
+  }
+}

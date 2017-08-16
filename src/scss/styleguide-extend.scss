@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  // padding: 0;
+  // Temp padding adjustment until we get more styles in here.
+  padding: 30px;
+  font-family: $font-family;
+  color: $color-site;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+// todo: consider moving. Not sure yet how to structure these kind of style overrides.
+.m-block-inner-narrow {
+  max-width: $content-narrow-width;
+  margin: 0 auto;
+}
