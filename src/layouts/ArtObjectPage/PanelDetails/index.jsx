@@ -62,10 +62,10 @@ class PanelDetails extends Component {
             </div>
           </div>
         </div>
-        <div className="art-object__more-info m-block">
-          <div className="m-block-inner-narrow">
-            <SummaryTable />
-            <div>
+        <div className="art-object__more-info m-block m-block--shallow">
+          <div className="container-inner-narrow">
+            <SummaryTable {...this.props}/>
+            <div className="m-block m-block--no-border m-block--shallow">
               <button className="btn" type="button">Request Image</button>
               {printAvailable &&
                 <a className="btn btn--primary" href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
@@ -73,7 +73,23 @@ class PanelDetails extends Component {
                 </a>
               }
             </div>
+
+            {/* todo - figure out what this text is and where it comes from */}
+            <div className="art-object__more-info m-block m-block--shallow">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+
             <AccordionMenu tabList={this.tabList} />
+          </div>
+        </div>
+
+        {/*todo: remove after clarifying design*/}
+        {/*
+
+        {this.props.provenance && <div className="art-object__more-info m-block">
+          <h2>Provenance</h2>
+          <p>{this.props.provenance}</p>
+        </div>}
 
             <div className="art-object__tombstone">
               <div className="art-object__labels">
@@ -105,15 +121,7 @@ class PanelDetails extends Component {
                 <p>{`${this.props.room}, ${this.props.wall} Wall`}</p>
               </div>
             </div>
-          </div>
-        </div>
-        {this.props.provenance && <div className="art-object__more-info m-block">
-          <h2>Provenance</h2>
-          <p>{this.props.provenance}</p>
-        </div>}
 
-        {/*todo: remove after clarifying design*/}
-        {/*
         <div className="art-object__more-info m-block">
           <h2>Copyright/Download</h2>
           <div className="art-object__label">
