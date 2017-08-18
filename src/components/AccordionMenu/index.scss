@@ -1,0 +1,52 @@
+$preAnimationFadeTime: .15s;
+$animationTime: .45s;
+
+.component-panel-details {
+  .art-object__header {
+    justify-content: center;
+  }
+
+  .m-accordion-tabs {
+    [role="tabpanel"] {
+      display: block;
+    }
+  }
+
+  .m-accordion-tabs__title {
+    background: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  // use this animation for now which doens't require us to measure the height.
+  // this won't work for images though...
+  .m-accordion-tabs__body {
+    opacity: 1;
+    transition: opacity $animationTime $preAnimationFadeTime,
+      font-size $preAnimationFadeTime,
+      margin-top $preAnimationFadeTime,
+      padding-top $preAnimationFadeTime,
+      margin-bottom $preAnimationFadeTime,
+      padding-bottom $preAnimationFadeTime;
+
+    &[aria-hidden="true"] {
+      font-size: 0;
+      opacity: 0;
+
+      & * {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      /* just shrink while fading out, but do it all fast */
+      transition: opacity $preAnimationFadeTime,
+        font-size $preAnimationFadeTime,
+        margin-top $preAnimationFadeTime,
+        padding-top $preAnimationFadeTime,
+        margin-bottom $preAnimationFadeTime,
+        padding-bottom $preAnimationFadeTime;
+    }
+  }
+}

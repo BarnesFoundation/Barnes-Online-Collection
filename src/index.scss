@@ -2,18 +2,4 @@
 @import './scss/mixins.scss';
 
 @import './components-barnes-toolkit/scss/app.scss';
-
-body {
-  margin: 0;
-  // padding: 0;
-  // Temp padding adjustment until we get more styles in here.
-  padding: 30px;
-  font-family: $font-family;
-  color: $color-site;
-}
-
-ul,
-li {
-  list-style: none;
-}
-
+@import './scss/styleguide-extend.scss';
