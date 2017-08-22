@@ -1,0 +1,15 @@
+@import '../../scss/variables.scss';
+
+.component-masonry-grid {
+  .art-object-overlay {
+    display: none;
+  }
+
+  img {
+    display: block;
+  }
+
+  .masonry-grid-element {
+    margin: $art-object-grid-gap / 2;
+  }
+}

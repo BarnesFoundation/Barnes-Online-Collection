@@ -1,18 +1,25 @@
 @import '../../scss/variables.scss';
 
 .component-art-object-grid {
+  // use a border and negative margin to frame the image without covering it
+  .art-object-overlay,
+  .art-object-caption {
+    left: -$art-object-overlay-border-width;
+    right: -$art-object-overlay-border-width;
+    border: $art-object-overlay-border-width solid white;
+    z-index: 2;
+    position: absolute;
+  }
+
   .art-object-overlay {
     // to be revealed
+    top: -$art-object-overlay-border-width;
+    bottom: 0;
     display: none;
-    position: absolute;
-    top: 100%;
-    width: 100%;
-    background: white;
-    z-index: 2;
   }
 
   .masonry-grid-element {
-    margin: $artObjectGridGap / 2;
+    margin: $art-object-grid-gap / 2;
     position: relative;
 
     &:hover {
@@ -24,5 +31,10 @@
     img {
       display: block;
     }
+  }
+
+  .art-object-caption {
+    background: white;
+    top: 100%;
   }
 }
