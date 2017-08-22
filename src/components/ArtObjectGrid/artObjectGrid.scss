@@ -1,0 +1,28 @@
+@import '../../scss/variables.scss';
+
+.component-art-object-grid {
+  .art-object-overlay {
+    // to be revealed
+    display: none;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background: white;
+    z-index: 2;
+  }
+
+  .masonry-grid-element {
+    margin: $artObjectGridGap / 2;
+    position: relative;
+
+    &:hover {
+      .art-object-overlay {
+        display: block;
+      }
+    }
+
+    img {
+      display: block;
+    }
+  }
+}

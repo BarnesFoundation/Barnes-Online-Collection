@@ -7,7 +7,7 @@ import * as ObjectActions from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
-
+import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
 
 class ArtObjectGrid extends Component {
@@ -24,21 +24,25 @@ class ArtObjectGrid extends Component {
   render() {
     const { objects } = this.props;
 
+    const masonryElements = objects.map(function(object) {
+      return (
+        <li className="masonry-grid-element">
+          <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
+            <ArtObject
+              key={object.id}
+              title={object.title}
+              people={object.people}
+              medium={object.medium}
+              imageUrlSmall={object.imageUrlSmall}
+            />
+          </Link>
+        </li>
+      );
+    });
+
     return (
-      <div>
-        {objects.map(object => {
-          return(
-            <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
-              <ArtObject
-                key={object.id}
-                title={object.title}
-                people={object.people}
-                medium={object.medium}
-                imageUrlSmall={object.imageUrlSmall}
-              />
-            </Link>
-          );
-        })}
+      <div className="component-art-object-grid">
+        <MasonryGrid masonryElements={masonryElements} />
         <ViewMoreButton />
       </div>
     );
