@@ -9,7 +9,7 @@ class ArtObject extends Component {
     return (
       <div>
         <ArtObjectImage alt={this.props.title} src={this.props.imageUrlSmall}/>
-        <ArtObjectOverlay title={this.props.title} medium={this.props.medium}/>
+        <ArtObjectOverlay {...this.props}/>
       </div>
     );
   }

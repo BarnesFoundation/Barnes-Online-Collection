@@ -6,7 +6,7 @@ class ArtObjectOverlay extends Component {
   render() {
     return (
       <div className="art-object-overlay">
-        <ArtObjectCaption title={this.props.title} medium={this.props.medium}/>
+        <ArtObjectCaption {...this.props} />
       </div>
     );
   }

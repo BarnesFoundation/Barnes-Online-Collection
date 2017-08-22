@@ -14,7 +14,7 @@
   .art-object-overlay {
     // to be revealed
     top: -$art-object-overlay-border-width;
-    bottom: 0;
+    bottom: -$art-object-overlay-border-width;
     display: none;
   }
 
@@ -36,5 +36,11 @@
   .art-object-caption {
     background: white;
     top: 100%;
+
+    .h2,
+    .h3 {
+      line-height: 1.5em;
+      margin: 0;
+    }
   }
 }
