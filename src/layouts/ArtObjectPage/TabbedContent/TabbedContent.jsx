@@ -52,7 +52,7 @@ class TabbedContent extends Component {
                     const isSelected = tabData.slug === this.props.slug;
 
                     return (
-                      <div className="m-tabs__item">
+                      <div key={tabData.slug} className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
