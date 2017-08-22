@@ -19,13 +19,13 @@ export const setObject = (object) => {
 }
 
 export const getObject = (id) => {
-  let body = buildRequestBody().build();
+  let body = buildRequestBody();
+  body = body.query('match', '_id', id).build();
 
   return (dispatch) => {
     axios.get('/api/search', {
       params: {
-        body: body,
-        q: `_id:${id}`
+        body: body
       }
     }).then((response) => {
       const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));

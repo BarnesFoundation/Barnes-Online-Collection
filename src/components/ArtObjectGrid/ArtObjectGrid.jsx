@@ -28,7 +28,7 @@ class ArtObjectGrid extends Component {
       <div>
         {objects.map(object => {
           return(
-            <Link to={getArtObjectUrlFromId(object.id)}>
+            <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
               <ArtObject
                 key={object.id}
                 title={object.title}
