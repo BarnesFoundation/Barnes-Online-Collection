@@ -4,6 +4,10 @@ const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
 const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
 
 export const generateObjectImageUrls = (object) => {
+  // temp fix for imageSecret missing on some images
+  if (!object) {
+    return {};
+  }
   if (!object.imageSecret) {
     return object;
   }

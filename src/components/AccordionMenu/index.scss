@@ -1,15 +1,14 @@
+@import '../../scss/variables.scss';
+
 $preAnimationFadeTime: .15s;
 $animationTime: .45s;
 
-.component-panel-details {
-  .art-object__header {
-    justify-content: center;
-  }
+.component-m-support-accordion {
+  border-bottom: $border-style;
+  margin-bottom: 2rem;
 
-  .m-accordion-tabs {
-    [role="tabpanel"] {
-      display: block;
-    }
+  [role="tabpanel"] {
+    display: block;
   }
 
   .m-accordion-tabs__title {
@@ -19,8 +18,11 @@ $animationTime: .45s;
   }
 
   // use this animation for now which doens't require us to measure the height.
-  // this won't work for images though...
-  .m-accordion-tabs__body {
+  // this won't work for images though... If we need to include images
+  // we'll probably have to use a more involved solution that measures the container's height.
+
+  .m-accordion-tabs__body,
+  .m-support-accordion__body {
     opacity: 1;
     transition: opacity $animationTime $preAnimationFadeTime,
       font-size $preAnimationFadeTime,
