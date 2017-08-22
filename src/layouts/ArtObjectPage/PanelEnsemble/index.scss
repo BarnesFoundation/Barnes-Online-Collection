@@ -1,0 +1,26 @@
+@import '../../../scss/variables.scss';
+
+.art-object-page__panel-ensemble {
+  .art-object__header {
+    display: block;
+    text-align: center;
+
+    .h2,
+    .h3 {
+      margin-top: 0;
+    }
+
+    // todo: try to find styleguide standards instead
+    .h2 {
+      font-size: 25px;
+      font-weight: bold;
+    }
+    .h3 {
+      font-size: 19px;
+      color: $color-grey-light-1;
+    }
+  }
+  .art-object__image-container {
+    clear: both;
+  }
+}
