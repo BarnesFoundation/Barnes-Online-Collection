@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 class ViewMoreButton extends Component {
   render() {
     return (
-      <button>ViewMoreButton</button>
+      <div className="view-more-button m-block m-block--no-border">
+        <button className="btn">View More</button>
+      </div>
     );
   }
 }

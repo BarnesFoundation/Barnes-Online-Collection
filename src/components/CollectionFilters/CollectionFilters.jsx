@@ -45,7 +45,7 @@ class CollectionFilters extends Component {
     }
 
     return (
-      <div>
+      <div className="component-collection-filters">
         <CollectionFiltersMenu />
         {this.filterSet()}
         {filters}

@@ -7,7 +7,7 @@
     left: -$art-object-overlay-border-width;
     right: -$art-object-overlay-border-width;
     border: $art-object-overlay-border-width solid white;
-    z-index: 2;
+    z-index: $z-index-art-object-grid-overlay;
     position: absolute;
   }
 
@@ -53,5 +53,11 @@
       line-height: 1.5em;
       margin: 0;
     }
+  }
+
+  .view-more-button {
+    width: 100%;
+    text-align: center;
+    z-index: $z-index-art-object-grid-view-more;
   }
 }

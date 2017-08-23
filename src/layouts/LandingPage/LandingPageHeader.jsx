@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 
-import HeaderText from '../../components/HeaderText/HeaderText';
-
 class LandingPageHeader extends Component {
   render() {
     return (
-      <div>
-        <HeaderText text="Albert Barnes taught people to look at works of art primarily in terms of their visual relationships."/>
+      <div className="landing-page-header">
+        <h2 className="h2 font-gamma">Albert Barnes taught people to look at works <br className="br-large-only"/>of art primarily in terms of their visual relationships.</h2>
       </div>
     );
   }

@@ -18,3 +18,7 @@ $border-style: 1px solid #dcdcdc;
 // art object grid
 $art-object-grid-gap: 4px;
 $art-object-overlay-border-width: 20px;
+
+// z-indexes
+$z-index-art-object-grid-overlay: 2;
+$z-index-art-object-grid-view-more: 3;
