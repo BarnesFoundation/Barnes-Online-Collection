@@ -42,8 +42,8 @@ class PanelVisuallyRelated extends Component {
             </div>
           </div>
           <div className="m-block__column">
-            <div className="">
-              todo slider: more similar -- more surprising
+            <div className="todo-slider">
+              todo add slider UI (more similar -- more surprising)
             </div>
             <ArtObjectGrid />
           </div>

@@ -1,1 +1,19 @@
 @import '../../scss/variables.scss';
+
+.landing-page-header {
+  text-align: center;
+
+  // margin-top: -30px;
+
+  .h2 {
+    margin: 0 auto;
+    // the mock shows a font size outside the styleguide
+    font-size: 30px;
+    line-height: 40px;
+    font-weight: normal;
+  }
+}
+
+.collection-filters-wrap {
+  text-align: center;
+}

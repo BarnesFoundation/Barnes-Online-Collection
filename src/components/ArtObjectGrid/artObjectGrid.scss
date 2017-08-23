@@ -1,0 +1,63 @@
+@import '../../scss/variables.scss';
+
+.component-art-object-grid {
+  // use a border and negative margin to frame the image without covering it
+  .art-object-overlay,
+  .art-object-caption {
+    left: -$art-object-overlay-border-width;
+    right: -$art-object-overlay-border-width;
+    border: $art-object-overlay-border-width solid white;
+    z-index: $z-index-art-object-grid-overlay;
+    position: absolute;
+  }
+
+  .art-object-overlay {
+    // to be revealed
+    top: -$art-object-overlay-border-width;
+    bottom: -$art-object-overlay-border-width;
+    display: none;
+  }
+
+  .component-masonry-grid {
+    margin: 0;
+    padding: 0;
+
+    &[data-hidden="true"] {
+      visibility: hidden;
+    }
+  }
+
+  .masonry-grid-element {
+    padding: $art-object-grid-gap / 2;
+    margin: 0;
+    position: relative;
+    max-width: 50%;
+
+    &:hover {
+      .art-object-overlay {
+        display: block;
+      }
+    }
+
+    img {
+      display: block;
+    }
+  }
+
+  .art-object-caption {
+    background: white;
+    top: 100%;
+
+    .h2,
+    .h3 {
+      line-height: 1.5em;
+      margin: 0;
+    }
+  }
+
+  .view-more-button {
+    width: 100%;
+    text-align: center;
+    z-index: $z-index-art-object-grid-view-more;
+  }
+}

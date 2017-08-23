@@ -5,7 +5,9 @@ import ArtObjectCaption from './ArtObjectCaption';
 class ArtObjectOverlay extends Component {
   render() {
     return (
-      <p><ArtObjectCaption title={this.props.title} medium={this.props.medium}/></p>
+      <div className="art-object-overlay">
+        <ArtObjectCaption {...this.props} />
+      </div>
     );
   }
 }

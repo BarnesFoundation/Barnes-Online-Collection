@@ -7,8 +7,26 @@ import * as ObjectActions from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
-
+import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
+
+const getMasonryElements = function(objects) {
+  return objects.map(function(object) {
+    return (
+      <li className="masonry-grid-element">
+        <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
+          <ArtObject
+            key={object.id}
+            title={object.title}
+            people={object.people}
+            medium={object.medium}
+            imageUrlSmall={object.imageUrlSmall}
+          />
+        </Link>
+      </li>
+    );
+  });
+};
 
 class ArtObjectGrid extends Component {
   constructor(props) {
@@ -23,22 +41,12 @@ class ArtObjectGrid extends Component {
 
   render() {
     const { objects } = this.props;
-
+    const masonryElements = getMasonryElements(objects);
     return (
-      <div>
-        {objects.map(object => {
-          return(
-            <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
-              <ArtObject
-                key={object.id}
-                title={object.title}
-                people={object.people}
-                medium={object.medium}
-                imageUrlSmall={object.imageUrlSmall}
-              />
-            </Link>
-          );
-        })}
+      <div className="component-art-object-grid">
+        {masonryElements.length &&
+          <MasonryGrid masonryElements={masonryElements} />
+        }
         <ViewMoreButton />
       </div>
     );

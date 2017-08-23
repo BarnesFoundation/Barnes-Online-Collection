@@ -41,7 +41,7 @@ class AccordionMenu extends Component {
               };
 
               return (
-                <div className="m-block m-block--shallow m-support-accordion">
+                <div className="m-block m-block--shallow m-support-accordion-element">
                   <button type="button"
                     className="font-delta m-block__shallow-title m-support-accordion__title"
                     aria-selected={isSelected}
@@ -65,7 +65,6 @@ class AccordionMenu extends Component {
                     role="tabpanel"
                     data-height=""
                   >
-                    test
                     <tabData.contentBlock {...props}/>
                   </div>
                 </div>

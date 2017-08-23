@@ -48,17 +48,12 @@ class PanelDetails extends Component {
     return (
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
-          <div className="art-object__image-container">
+          <div className="container-inner-narrow">
             <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
             <div className="art-object__image-options no-print">
               <button onClick={this.props.showZoomOverlay}>
                 Zoom
               </button>
-              {printAvailable &&
-                <a href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
-                  Purchase Print
-                </a>
-              }
             </div>
           </div>
         </div>

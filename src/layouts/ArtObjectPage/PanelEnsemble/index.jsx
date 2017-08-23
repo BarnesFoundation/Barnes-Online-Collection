@@ -10,9 +10,9 @@ class PanelEnsemble extends Component {
   render() {
     return (
       <div className="art-object-page__panel-ensemble">
-        <div className="art-object__header m-block">
-          <div className="m-block--shallow">
-            <img className="art-object__image" src="/images/ensemble-room-image.jpg" alt={Constants.ENSEMBLE_ROOM_IMAGE_ALT}/>
+        <div className="art-object__header m-block m-block--shallow">
+          <div className="">
+            <img className="art-object__image-page-centered" src="/images/ensemble-room-image.jpg" alt={Constants.ENSEMBLE_ROOM_IMAGE_ALT}/>
           </div>
           <div>
             <h2 className="h2">{Constants.ENSEMBLE_ROOM_TITLE}</h2>

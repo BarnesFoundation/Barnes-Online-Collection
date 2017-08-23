@@ -95,7 +95,9 @@ class ArtObjectPage extends Component {
 
         {/* todo: temp quick style. Need to get the AI for this page. */}
         {
-          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.artObject.title}</h1>
+          <div className="container">
+            <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.artObject.title}</h1>
+          </div>
         }
         <TabbedContent
           onKeyUp={this.handleKeyUp}

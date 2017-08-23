@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import './landingPage.css';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
@@ -17,9 +17,17 @@ class LandingPage extends Component {
       <div className="app">
         <HtmlClassManager />
         <SiteHeader />
-        <LandingPageHeader />
-        <CollectionFilters />
-        <ArtObjectGrid history={this.props.history}/>
+        <div className="container">
+          <div className="m-block m-block--no-border">
+            <LandingPageHeader />
+          </div>
+          <div className="collection-filters-wrap m-block m-block--flush-top m-block--shallow m-block--no-border">
+            <CollectionFilters />
+          </div>
+          <div className="m-block m-block--shallow">
+            <ArtObjectGrid history={this.props.history}/>
+          </div>
+        </div>
         <Footer />
       </div>
     );
