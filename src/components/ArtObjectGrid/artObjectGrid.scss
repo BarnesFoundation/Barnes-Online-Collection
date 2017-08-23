@@ -18,9 +18,20 @@
     display: none;
   }
 
+  .component-masonry-grid {
+    margin: 0;
+    padding: 0;
+
+    &[data-hidden="true"] {
+      visibility: hidden;
+    }
+  }
+
   .masonry-grid-element {
-    margin: $art-object-grid-gap / 2;
+    padding: $art-object-grid-gap / 2;
+    margin: 0;
     position: relative;
+    max-width: 50%;
 
     &:hover {
       .art-object-overlay {

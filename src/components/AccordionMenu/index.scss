@@ -11,6 +11,12 @@ $animationTime: .45s;
     display: block;
   }
 
+  // shift the padding to the button so that you can click anywhere
+  .m-support-accordion-element {
+    .m-support-accordion__title {
+    }
+  }
+
   .m-accordion-tabs__title {
     background: none;
     border-left: none;
