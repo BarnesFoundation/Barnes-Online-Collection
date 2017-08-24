@@ -29,6 +29,10 @@ li {
   white-space: nowrap;
 }
 
+.color-medium {
+  color: $color-grey-medium;
+}
+
 @include breakpoint('small-') {
   .br-large-only {
     display: none;

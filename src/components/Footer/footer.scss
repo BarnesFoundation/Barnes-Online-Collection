@@ -1,0 +1,19 @@
+@import '../../scss/variables.scss';
+
+.g-footer {
+  &__donate {
+    .h4 {
+      // make the text match the mock
+      max-width: 400px;
+    }
+  }
+
+  &__details {
+    .h2 {
+      // bump up from 15px
+      font-size: 16px;
+      color: $color-grey-light;
+      margin-top: 0;
+    }
+  }
+}
