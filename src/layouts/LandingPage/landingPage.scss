@@ -1,19 +1,46 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
-.landing-page-header {
-  text-align: center;
+.app-landing-page {
+  .landing-page-header {
+    text-align: center;
 
-  // margin-top: -30px;
+    // margin-top: -30px;
 
-  .h2 {
-    margin: 0 auto;
-    // the mock shows a font size outside the styleguide
-    font-size: 30px;
-    line-height: 40px;
-    font-weight: normal;
+    .h2 {
+      margin: 0 auto;
+      // the mock shows a font size outside the styleguide
+      font-size: 30px;
+      line-height: 40px;
+      font-weight: normal;
+    }
   }
-}
 
-.collection-filters-wrap {
-  text-align: center;
+  .collection-filters-wrap {
+    text-align: center;
+  }
+
+  // the grid on the landingPage should default to exactly 4 columns on large screens
+  @include breakpoint('large+') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 25%;
+      }
+    }
+  }
+
+  @include breakpoint('medium-') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 33.33%;
+      }
+    }
+  }
+  @include breakpoint('small-') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 50%;
+      }
+    }
+  }
 }
