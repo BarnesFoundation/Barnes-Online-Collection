@@ -43,3 +43,32 @@
     }
   }
 }
+
+.color-filters-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  .color-filter {
+    flex-grow: 1;
+    height: 100%;
+    width: auto;
+    min-width: auto;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    margin: 0;
+    &.is-applied {
+      border: 3px solid black;
+    }
+    &__red {
+      background: red;
+    }
+    &__blue {
+      background: blue;
+    }
+    &__yellow {
+      background: yellow;
+    }
+  }
+}

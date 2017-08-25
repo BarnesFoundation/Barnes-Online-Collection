@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import ColorFilters from './ColorFilters';
 import CollectionFiltersSetTypeCheckbox from './CollectionFiltersSetTypeCheckbox';
 import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
@@ -13,7 +14,7 @@ class CollectionFiltersSet extends Component {
 
     switch (slug) {
       case 'colors':
-        return <CollectionFiltersSetTypeCheckbox filter={slug}/>;
+        return <ColorFilters filter={slug}/>;
       case 'lines':
         return (
           <div>
