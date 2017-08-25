@@ -13,8 +13,8 @@ import './artObjectGrid.css';
 const getMasonryElements = function(objects) {
   return objects.map(function(object) {
     return (
-      <li className="masonry-grid-element">
-        <Link key={object.id} to={getArtObjectUrlFromId(object.id)}>
+      <li key={object.id} className="masonry-grid-element">
+        <Link to={getArtObjectUrlFromId(object.id)}>
           <ArtObject
             key={object.id}
             title={object.title}
