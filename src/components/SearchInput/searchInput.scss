@@ -24,3 +24,27 @@
     color: $color__red--barnes;
   }
 }
+
+.search-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 45px;
+  text-align: left;
+  font-family: 'Calibre';
+  font-size: 30px;
+  p {
+    margin-top: 0;
+  }
+
+  .btn {
+    width: auto;
+    min-width: auto;
+    height: auto;
+    min-height: auto;
+    padding: 0;
+    border: none;
+    outline: none;
+    margin: 0;
+  }
+}
