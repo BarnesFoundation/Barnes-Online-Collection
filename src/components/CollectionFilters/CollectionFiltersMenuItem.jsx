@@ -25,6 +25,10 @@ class CollectionFiltersMenuItem extends Component {
       classNames += ' btn-collection-filter--shuffle';
     }
 
+    if (slug === this.props.filterSets.visibleFilterSet) {
+      classNames += ' is-selected';
+    }
+
     return classNames;
   }
 

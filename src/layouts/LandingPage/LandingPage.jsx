@@ -24,7 +24,7 @@ class LandingPage extends Component {
           <div className="collection-filters-wrap m-block m-block--flush-top m-block--shallow m-block--no-border">
             <CollectionFilters />
           </div>
-          <div className="m-block m-block--shallow">
+          <div className="m-block m-block--shallow m-block--no-border">
             <ArtObjectGrid history={this.props.history}/>
           </div>
         </div>
