@@ -54,12 +54,12 @@ const initialState = {
     },
     // These aren't filters, so this gets a little muddy; should probably refactor.
     shuffle: {
-      title: "Shuffle",
+      title: "",
       slug: "shuffle",
       type: "shuffle"
     },
     search: {
-      title: "Search",
+      title: "",
       slug: "search",
       type: "search"
     }
