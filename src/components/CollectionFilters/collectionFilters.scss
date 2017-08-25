@@ -1,0 +1,27 @@
+.component-collection-filters {
+  .btn-collection-filter {
+    height: auto;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    padding-right: 55px;
+    border: none;
+    margin-left: 0;
+    line-height: normal;
+    &--shuffle {
+      padding: 0 15px 0 30px;
+    }
+    &--search {
+      padding-right: 0;
+      margin-right: -15px;
+      padding-left: 40px;
+    }
+    &--shuffle,
+    &--search {
+      border-left: 1px solid grey;
+    }
+    .collection-filter-icon {
+      margin-right: 15px;
+    }
+  }
+}

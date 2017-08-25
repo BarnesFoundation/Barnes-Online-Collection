@@ -15,9 +15,26 @@ class CollectionFiltersMenuItem extends Component {
     this.props.selectFilterSet(this.props.slug);
   }
 
+  getClassNames() {
+    const slug = this.props.slug;
+    let classNames = 'btn btn-collection-filter font-zeta color-light';
+
+    if (slug === 'search') {
+      classNames += ' btn-collection-filter--search';
+    } else if (slug === 'shuffle') {
+      classNames += ' btn-collection-filter--shuffle';
+    }
+
+    return classNames;
+  }
+
   render() {
+    const slug = this.props.slug;
     return (
-      <button onClick={this.handleClick}>
+      <button
+        className={this.getClassNames()}
+        onClick={this.handleClick}>
+        <span className="collection-filter-icon">X</span>
         {this.props.title}
       </button>
     );
