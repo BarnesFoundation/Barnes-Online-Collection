@@ -33,17 +33,24 @@ class SearchInput extends Component {
 
   render() {
     return (
-      <section aria-label="search" className="searchbar">
-        <form className="searchbar__container" onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            autoFocus="true"
-            value={this.state.value}
-            onChange={this.handleChange}
-            className="searchbar__input"
-          />
+      <div aria-label="search" className="search-input">
+        <form onSubmit={this.handleSubmit}>
+          <div className="form-field">
+            <input
+              className="input"
+              type="text"
+              autoFocus="true"
+              value={this.state.value}
+              placeholder="Search an artist, word, period..."
+              onChange={this.handleChange}
+            />
+            <input
+              className="btn btn-submit"
+              type="submit"
+            />
+          </div>
         </form>
-      </section>
+      </div>
     );
   }
 }

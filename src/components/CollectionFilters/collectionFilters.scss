@@ -36,8 +36,10 @@
 
   .collection-filters-set {
     height: 0;
+    padding: 0;
     &.is-open {
       height: 90px;
+      padding-top: 40px;
     }
   }
 }

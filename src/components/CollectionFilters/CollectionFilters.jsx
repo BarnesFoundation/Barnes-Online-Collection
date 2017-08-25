@@ -32,6 +32,7 @@ class CollectionFilters extends Component {
     if (nextProps.search.length > 0 && nextProps.search !== this.props.search) {
       this.props.searchObjects(nextProps.search);
       this.props.clearAllFilters();
+      this.props.closeFilterSet();
     } else if (nextProps.filters.length > 0 && nextProps.filters !== this.props.filters) {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();

@@ -70,6 +70,8 @@ const filterSets = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.SELECT_FILTER_SET:
       return Object.assign({}, state, { visibleFilterSet: action.slug });
+    case ActionTypes.CLOSE_FILTER_SET:
+      return Object.assign({}, state, { visibleFilterSet: null });
     default:
       return state;
   }

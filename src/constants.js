@@ -6,6 +6,7 @@ export const SET_OBJECT = 'SET_OBJECT';
 
 //filterSets
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
+export const CLOSE_FILTER_SET = 'CLOSE_FILTER_SET';
 
 //filters
 export const ADD_TO_FILTERS = 'ADD_TO_FILTERS';
