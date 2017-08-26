@@ -10,40 +10,43 @@ import ViewMoreButton from './ViewMoreButton';
 import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
 
-const getMasonryElements = function(objects) {
-  return objects.map(function(object) {
-    return (
-      <li key={object.id} className="masonry-grid-element">
-        <Link to={getArtObjectUrlFromId(object.id)}>
-          <ArtObject
-            key={object.id}
-            title={object.title}
-            people={object.people}
-            medium={object.medium}
-            imageUrlSmall={object.imageUrlSmall}
-          />
-        </Link>
-      </li>
-    );
-  });
-};
-
 class ArtObjectGrid extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     if (this.props.objects.length === 0) {
       this.props.getAllObjects();
     }
   }
 
+  getMasonryElements() {
+    return this.props.objects.map(function(object) {
+      return (
+        <li key={object.id} className="masonry-grid-element">
+          <Link to={getArtObjectUrlFromId(object.id)}>
+            <ArtObject
+              key={object.id}
+              title={object.title}
+              people={object.people}
+              medium={object.medium}
+              imageUrlSmall={object.imageUrlSmall}
+            />
+          </Link>
+        </li>
+      );
+    });
+  };
+
+  getClasses() {
+    let classes = 'component-art-object-grid';
+    if (this.props.objects.length > 0) {
+      classes += ' fade-in';
+    }
+    return classes;
+  }
+
   render() {
-    const { objects } = this.props;
-    const masonryElements = getMasonryElements(objects);
+    const masonryElements = this.getMasonryElements();
     return (
-      <div className="component-art-object-grid">
+      <div className={this.getClasses()}>
         {masonryElements.length &&
           <MasonryGrid masonryElements={masonryElements} />
         }
