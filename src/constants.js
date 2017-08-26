@@ -8,6 +8,9 @@ export const SET_OBJECT = 'SET_OBJECT';
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
 export const CLOSE_FILTER_SET = 'CLOSE_FILTER_SET';
 
+//mobileFilters
+export const TOGGLE_MOBILE_FILTERS = 'TOGGLE_MOBILE_FILTERS';
+
 //filters
 export const ADD_TO_FILTERS = 'ADD_TO_FILTERS';
 export const REMOVE_FILTER_BY_INDEX = 'REMOVE_FILTER_BY_INDEX';

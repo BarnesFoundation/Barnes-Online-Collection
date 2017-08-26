@@ -11,6 +11,9 @@ import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchApplied from '../SearchInput/SearchApplied';
 
+import MobileCollectionFiltersMenu from './MobileCollectionFiltersMenu';
+import MobileCollectionFiltersToggle from './MobileCollectionFiltersToggle';
+
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
@@ -50,7 +53,10 @@ class CollectionFilters extends Component {
     return (
       <div className="collection-filters">
       <MediaQuery maxWidth={425}>
-        <p>Mobile menu</p>
+        { this.props.mobileFilters.visible &&
+          <MobileCollectionFiltersMenu />
+        }
+        <MobileCollectionFiltersToggle />
       </MediaQuery>
       <MediaQuery minWidth={426}>
           <CollectionFiltersMenu />
@@ -67,6 +73,7 @@ class CollectionFilters extends Component {
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
+    mobileFilters: state.mobileFilters,
     filters: state.filters,
     search: state.search
   }
