@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import MediaQuery from 'react-responsive';
+
 import LineFilter from './LineFilter';
 
 class LineFilters extends Component {
@@ -26,8 +28,17 @@ class LineFilters extends Component {
   render() {
     return (
       <div className='line-filters-container'>
-        <div>{this.buildFilters('composition')}</div>
-        <div>{this.buildFilters('linearity')}</div>
+        <MediaQuery minWidth={426}>
+          <div>{this.buildFilters('composition')}</div>
+          <div>{this.buildFilters('linearity')}</div>
+        </MediaQuery>
+        <MediaQuery maxWidth={425}>
+          <div className="mobile-filter-section">
+            <h6 className="mobile-filter-header font-zeta">Lines</h6>
+            <div>{this.buildFilters('composition')}</div>
+            <div>{this.buildFilters('linearity')}</div>
+          </div>
+        </MediaQuery>
       </div>
     );
   }
