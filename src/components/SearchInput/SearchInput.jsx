@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import MediaQuery from 'react-responsive';
+
 import * as SearchActions from '../../actions/search';
 
 import './searchInput.css';
@@ -33,23 +35,44 @@ class SearchInput extends Component {
 
   render() {
     return (
-      <div aria-label="search" className="search-input">
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-field">
-            <input
-              className="input"
-              type="text"
-              autoFocus="true"
-              value={this.state.value}
-              placeholder="Search an artist, word, period..."
-              onChange={this.handleChange}
-            />
-            <input
-              className="btn btn-submit"
-              type="submit"
-            />
+      <div>
+        <MediaQuery maxWidth={425}>
+          <div className="mobile-filter-section search-input">
+            <h6 className="mobile-filter-header font-zeta">Search</h6>
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-field">
+                <input
+                  className="input mobile"
+                  type="text"
+                  value={this.state.value}
+                  placeholder="Search an artist, word, period..."
+                  onChange={this.handleChange}
+                />
+              </div>
+            </form>
           </div>
-        </form>
+        </MediaQuery>
+
+        <MediaQuery minWidth={426}>
+          <div className="search-input">
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-field">
+                <input
+                  className="input"
+                  type="text"
+                  autoFocus="true"
+                  value={this.state.value}
+                  placeholder="Search an artist, word, period..."
+                  onChange={this.handleChange}
+                />
+                <input
+                  className="btn btn-submit"
+                  type="submit"
+                />
+              </div>
+            </form>
+          </div>
+        </MediaQuery>
       </div>
     );
   }

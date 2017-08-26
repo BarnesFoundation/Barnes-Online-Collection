@@ -3,26 +3,25 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
+import CollectionFiltersApplied from './CollectionFiltersApplied';
+import SearchInput from '../SearchInput/SearchInput';
+import ColorFilters from './ColorFilters';
+import LineFilters from './LineFilters';
+import LightFilters from './LightFilters';
+import SpaceFilters from './SpaceFilters';
 
 class MobileCollectionFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
-      <div className="mobile-collection-filters-panel">Mobile collection filters menu</div>
-      //<div>
-        // {
-        //   Object
-        //   .keys(filterSets)
-        //   .map(key =>
-        //     <CollectionFiltersMenuItem
-        //       key={key}
-        //       title={filterSets[key].title}
-        //       slug={filterSets[key].slug}
-        //     />
-        //   )
-        // }
-      //</div>
+      <div className="mobile-collection-filters-panel">
+        <CollectionFiltersApplied />
+        <SearchInput />
+        <ColorFilters />
+        <LineFilters />
+        <LightFilters />
+        <SpaceFilters />
+      </div>
     );
   }
 }

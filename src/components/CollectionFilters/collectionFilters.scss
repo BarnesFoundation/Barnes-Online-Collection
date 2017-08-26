@@ -219,7 +219,7 @@ input[type="range"].slider {
   height: 100vh;
   min-width: 100%;
   width: 100vw;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.7);
   z-index: 100;
   cursor: pointer;
 }
@@ -230,6 +230,20 @@ input[type="range"].slider {
   left: 0;
   height: 100vh;
   width: calc(100vw - 50px);
+  padding: 25px 0;
   background: white;
   z-index: 200;
+}
+
+.mobile-filter-section {
+  padding: 30px 25px;
+  border-top: 1px solid $color-grey-light;
+  text-align: left;
+  form {
+    margin-top: 0;
+  }
+}
+
+.mobile-filter-header {
+  margin-top: 0;
 }

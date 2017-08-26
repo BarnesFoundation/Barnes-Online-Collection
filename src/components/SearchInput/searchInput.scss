@@ -13,6 +13,9 @@
     :-moz-placeholder {
       color: $color-grey-light-2;
     }
+    &.mobile {
+      font-size: 17px;
+    }
   }
   .btn.btn-submit {
     width: auto;
