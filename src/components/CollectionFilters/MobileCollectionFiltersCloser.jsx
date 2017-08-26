@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import * as MobileFiltersActions from '../../actions/mobileFilters';
 
-class MobileCollectionFiltersToggle extends Component {
+class MobileCollectionFiltersCloser extends Component {
   constructor(props) {
     super(props);
 
@@ -13,13 +13,15 @@ class MobileCollectionFiltersToggle extends Component {
   }
 
   handleClick() {
-    this.props.toggleMobileFilters();
+    this.props.closeMobileFilters();
   }
 
   render() {
     const filterSets = this.props.filterSets.sets;
+    const filterCount = this.props.filters.length;
+
     return (
-      <button onClick={this.handleClick} className="btn">Toggle Mobile Filters</button>
+      <div onClick={this.handleClick} className="mobile-filters-overlay"></div>
     );
   }
 }
@@ -27,6 +29,7 @@ class MobileCollectionFiltersToggle extends Component {
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
+    filters: state.filters,
     mobileFilters: state.mobileFilters,
   }
 }
@@ -35,4 +38,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}, MobileFiltersActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MobileCollectionFiltersToggle);
+export default connect(mapStateToProps, mapDispatchToProps)(MobileCollectionFiltersCloser);

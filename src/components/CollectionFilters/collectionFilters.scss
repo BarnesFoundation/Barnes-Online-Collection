@@ -5,11 +5,13 @@
     min-width: 0;
     padding: 0;
     padding-bottom: 30px;
+    background: white;
     border: none;
     border-bottom: 5px solid transparent;
     margin-left: 0;
     margin-right: 55px;
     line-height: normal;
+    cursor: pointer;
     &.is-selected,
     &:hover,
     &:active {
@@ -192,4 +194,42 @@ input[type="range"].slider {
   align-items: center;
   justify-content: center;
   padding-top: 25px;
+}
+
+.btn-open-mobile-filters {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  width: auto;
+  height: 50px;
+  padding: 0 25px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-radius: 25px;
+  line-height: normal;
+  background: white;
+  cursor: pointer;
+}
+
+.mobile-filters-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  min-width: 100%;
+  width: 100vw;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  cursor: pointer;
+}
+
+.mobile-collection-filters-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: calc(100vw - 50px);
+  background: white;
+  z-index: 200;
 }

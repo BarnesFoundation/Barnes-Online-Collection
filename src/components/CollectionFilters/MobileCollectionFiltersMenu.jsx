@@ -9,7 +9,7 @@ class MobileCollectionFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
-      <div>Mobile collection filters menu</div>
+      <div className="mobile-collection-filters-panel">Mobile collection filters menu</div>
       //<div>
         // {
         //   Object

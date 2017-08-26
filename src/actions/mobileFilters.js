@@ -1,7 +1,13 @@
 import * as ActionTypes from '../constants';
 
-export function toggleMobileFilters() {
+export function openMobileFilters() {
   return {
-    type: ActionTypes.TOGGLE_MOBILE_FILTERS
+    type: ActionTypes.OPEN_MOBILE_FILTERS
+  }
+}
+
+export function closeMobileFilters() {
+  return {
+    type: ActionTypes.CLOSE_MOBILE_FILTERS
   }
 }

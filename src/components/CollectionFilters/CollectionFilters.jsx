@@ -12,7 +12,8 @@ import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchApplied from '../SearchInput/SearchApplied';
 
 import MobileCollectionFiltersMenu from './MobileCollectionFiltersMenu';
-import MobileCollectionFiltersToggle from './MobileCollectionFiltersToggle';
+import MobileCollectionFiltersOpener from './MobileCollectionFiltersOpener';
+import MobileCollectionFiltersCloser from './MobileCollectionFiltersCloser';
 
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
@@ -54,9 +55,14 @@ class CollectionFilters extends Component {
       <div className="collection-filters">
       <MediaQuery maxWidth={425}>
         { this.props.mobileFilters.visible &&
-          <MobileCollectionFiltersMenu />
+          <div>
+            <MobileCollectionFiltersMenu />
+            <MobileCollectionFiltersCloser />
+          </div>
         }
-        <MobileCollectionFiltersToggle />
+        { !this.props.mobileFilters.visible &&
+          <MobileCollectionFiltersOpener />
+        }
       </MediaQuery>
       <MediaQuery minWidth={426}>
           <CollectionFiltersMenu />

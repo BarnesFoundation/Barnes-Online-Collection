@@ -8,8 +8,10 @@ const mobileFilters = (state = initialState, action) => {
   const isVisible = state.visible;
 
   switch(action.type) {
-    case ActionTypes.TOGGLE_MOBILE_FILTERS:
-      return Object.assign({}, state, { visible: !isVisible });
+    case ActionTypes.OPEN_MOBILE_FILTERS:
+      return Object.assign({}, state, { visible: true });
+    case ActionTypes.CLOSE_MOBILE_FILTERS:
+      return Object.assign({}, state, { visible: false });
     default:
       return state;
   }

@@ -17,7 +17,7 @@ class CollectionFiltersMenuItem extends Component {
 
   getClassNames() {
     const slug = this.props.slug;
-    let classNames = 'btn btn-collection-filter font-zeta color-light';
+    let classNames = 'btn-collection-filter font-zeta color-light';
 
     if (slug === 'search') {
       classNames += ' btn-collection-filter--search';
