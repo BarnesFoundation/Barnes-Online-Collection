@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 
 import ColorFilters from './ColorFilters';
 import LineFilters from './LineFilters';
-import CollectionFiltersSetTypeCheckbox from './CollectionFiltersSetTypeCheckbox';
-import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
-import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
+import LightFilters from './LightFilters';
+import SpaceFilters from './SpaceFilters';
 
 class CollectionFiltersSet extends Component {
   filterSet() {
@@ -19,8 +18,9 @@ class CollectionFiltersSet extends Component {
       case 'lines':
         return <LineFilters filter={slug}/>;
       case 'light':
+        return <LightFilters filter={slug}/>;
       case 'space':
-        return <CollectionFiltersSetTypeSlider filter={slug}/>;
+        return <SpaceFilters filter={slug}/>;
       default:
         return null;
     }

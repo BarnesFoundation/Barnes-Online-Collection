@@ -6,7 +6,6 @@ const initialState = {
     colors: {
       title: "Colors",
       slug: "colors",
-      type: "checkbox",
       options: [
         {
           slug: 'color-sky-blue',
@@ -193,7 +192,6 @@ const initialState = {
     lines: {
       title: "Lines",
       slug: "lines",
-      type: "radio",
       options: {
         composition: [
           {
@@ -232,12 +230,10 @@ const initialState = {
     light: {
       title: "Light",
       slug: "light",
-      type: "slider"
     },
     space: {
       title: "Space",
       slug: "space",
-      type: "slider"
     },
     // These aren't filters, so this gets a little muddy; should probably refactor.
     shuffle: {
