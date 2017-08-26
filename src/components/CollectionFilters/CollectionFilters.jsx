@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import MediaQuery from 'react-responsive';
+
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
 import SearchInput from '../SearchInput/SearchInput';
@@ -46,12 +48,17 @@ class CollectionFilters extends Component {
     }
 
     return (
-      <div className="component-collection-filters">
-        <CollectionFiltersMenu />
-        <div className="m-block m-block--flush">
-          {this.filterSet()}
-          {filters}
-        </div>
+      <div className="collection-filters">
+      <MediaQuery maxWidth={425}>
+        <p>Mobile menu</p>
+      </MediaQuery>
+      <MediaQuery minWidth={426}>
+          <CollectionFiltersMenu />
+          <div className="m-block m-block--flush">
+            {this.filterSet()}
+            {filters}
+          </div>
+      </MediaQuery>
       </div>
     );
   }

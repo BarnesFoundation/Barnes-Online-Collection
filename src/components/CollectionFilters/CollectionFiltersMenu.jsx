@@ -9,7 +9,7 @@ class CollectionFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
-      <div className="container">
+      <div>
         {
           Object
           .keys(filterSets)

@@ -38,7 +38,7 @@ class CollectionFiltersMenuItem extends Component {
       <button
         className={this.getClassNames()}
         onClick={this.handleClick}>
-        <span className="collection-filter-icon">X</span>
+        <img className="collection-filter-icon" alt="X"/>
         {this.props.title}
       </button>
     );
