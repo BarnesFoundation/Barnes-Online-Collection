@@ -193,7 +193,41 @@ const initialState = {
     lines: {
       title: "Lines",
       slug: "lines",
-      type: "radio"
+      type: "radio",
+      options: {
+        composition: [
+          {
+            slug: 'line-vertical',
+            name: 'vertical'
+          },
+          {
+            slug: 'line-diagonal',
+            name: 'diagonal'
+          },
+          {
+            slug: 'line-horizontal',
+            name: 'horizontal'
+          },
+          {
+            slug: 'line-curvy',
+            name: 'curvy'
+          }
+        ],
+        linearity: [
+          {
+            slug: 'line-broken',
+            name: 'broken'
+          },
+          {
+            slug: 'line-unbroken',
+            name: 'unbroken'
+          },
+          {
+            slug: 'line-all-types',
+            name: 'all types'
+          }
+        ]
+      }
     },
     light: {
       title: "Light",

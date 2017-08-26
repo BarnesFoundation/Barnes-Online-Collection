@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import ColorFilters from './ColorFilters';
+import LineFilters from './LineFilters';
 import CollectionFiltersSetTypeCheckbox from './CollectionFiltersSetTypeCheckbox';
 import CollectionFiltersSetTypeRadio from './CollectionFiltersSetTypeRadio';
 import CollectionFiltersSetTypeSlider from './CollectionFiltersSetTypeSlider';
@@ -16,12 +17,7 @@ class CollectionFiltersSet extends Component {
       case 'colors':
         return <ColorFilters filter={slug}/>;
       case 'lines':
-        return (
-          <div>
-            <CollectionFiltersSetTypeRadio filter={slug}/>
-            <CollectionFiltersSetTypeRadio filter={slug}/>
-          </div>
-        );
+        return <LineFilters filter={slug}/>;
       case 'light':
       case 'space':
         return <CollectionFiltersSetTypeSlider filter={slug}/>;
