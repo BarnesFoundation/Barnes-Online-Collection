@@ -43,6 +43,7 @@
   form {
     margin-top: 0;
   }
+
   .line-filters-container {
     flex-direction: column;
     width: 100%;
@@ -73,7 +74,7 @@
       }
       &:last-of-type {
         .line-filter {
-          min-width: none;
+          min-width: 0;
           width: calc(100%/3);
           border-width: 2px 1px;
           margin: 0;
@@ -87,10 +88,15 @@
       }
     }
   }
+
+  .light-filters-container {
+
+  }
 }
 
 .mobile-filters-header {
   margin-top: 0;
   margin-bottom: 10px;
   width: 100%;
+  text-align: left;
 }
