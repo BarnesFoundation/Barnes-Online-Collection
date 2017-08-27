@@ -44,6 +44,15 @@
     margin-top: 0;
   }
 
+  .color-filters-container {
+    flex-wrap: wrap;
+    height: 140px;
+    .color-filter {
+      height: calc(100%/4);
+      width: calc(100%/5);
+    }
+  }
+
   .line-filters-container {
     flex-direction: column;
     width: 100%;
