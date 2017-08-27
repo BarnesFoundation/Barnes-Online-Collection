@@ -116,12 +116,12 @@ input[type="range"].slider {
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: 2px solid $color-grey-light-1;
-    height: 34px;
-    width: 34px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     background: white;
     cursor: pointer;
-    margin-top: -15px;
+    margin-top: -12px;
   }
 
   &:focus::-webkit-slider-runnable-track {

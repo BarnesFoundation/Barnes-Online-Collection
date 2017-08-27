@@ -30,7 +30,7 @@
 
 .mobile-filters-panel {
   width: calc(100vw - 50px);
-  padding: 25px 0;
+  padding: 25px 0 0;
   background: white;
   z-index: 200;
   overflow-y: scroll;
@@ -89,8 +89,14 @@
     }
   }
 
-  .light-filters-container {
-
+  .light-filters-container,
+  .space-filters-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .slider {
+      width: 100%;
+      margin: 0 0 20px;
+    }
   }
 }
 
