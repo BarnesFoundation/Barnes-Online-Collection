@@ -10,11 +10,11 @@ import LineFilters from './LineFilters';
 import LightFilters from './LightFilters';
 import SpaceFilters from './SpaceFilters';
 
-class MobileCollectionFiltersMenu extends Component {
+class MobileFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
-      <div className="mobile-collection-filters-panel">
+      <div className="mobile-filters-panel">
         <CollectionFiltersApplied />
         <SearchInput />
         <ColorFilters />
@@ -36,4 +36,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MobileCollectionFiltersMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersMenu);

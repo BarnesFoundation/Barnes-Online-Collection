@@ -31,8 +31,8 @@ class ColorFilters extends Component {
           </div>
         </MediaQuery>
         <MediaQuery maxWidth={425}>
-          <div className="mobile-filter-section">
-            <h6 className="mobile-filter-header font-zeta">Colors</h6>
+          <div className="mobile-filters-section">
+            <h6 className="mobile-filters-header font-zeta">Colors</h6>
             <div className="color-filters-container">
               {this.buildFilters()}
             </div>

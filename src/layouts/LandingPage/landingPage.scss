@@ -18,6 +18,7 @@
 
 @import '../../components/CollectionFilters/collectionFilters.scss';
 @import '../../components/SearchInput/searchInput.scss';
+@import '../../components/CollectionFilters/mobileFilters.scss';
 
 @media screen and (max-width: 768px) {
   .landing-page-header-wrap.m-block.m-block--no-border.m-block--shallow {

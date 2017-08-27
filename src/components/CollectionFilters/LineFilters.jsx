@@ -9,9 +9,7 @@ import LineFilter from './LineFilter';
 
 class LineFilters extends Component {
   buildFilters(type) {
-
     const filters = this.props.filterSets.sets.lines.options[type];
-
     return (
       filters.map((option, index) => {
         return (
@@ -25,18 +23,25 @@ class LineFilters extends Component {
     );
   }
 
+  getLineFilters() {
+    return (
+      <div className="line-filters-container">
+        <div className="line-filters-group">{this.buildFilters('composition')}</div>
+        <div className="line-filters-group">{this.buildFilters('linearity')}</div>
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div className='line-filters-container'>
+      <div>
         <MediaQuery minWidth={426}>
-          <div>{this.buildFilters('composition')}</div>
-          <div>{this.buildFilters('linearity')}</div>
+          {this.getLineFilters()}
         </MediaQuery>
         <MediaQuery maxWidth={425}>
-          <div className="mobile-filter-section">
-            <h6 className="mobile-filter-header font-zeta">Lines</h6>
-            <div>{this.buildFilters('composition')}</div>
-            <div>{this.buildFilters('linearity')}</div>
+          <div className="mobile-filters-section">
+            <h6 className="mobile-filters-header font-zeta">Lines</h6>
+            {this.getLineFilters()}
           </div>
         </MediaQuery>
       </div>

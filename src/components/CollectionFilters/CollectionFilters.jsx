@@ -11,9 +11,9 @@ import SearchInput from '../SearchInput/SearchInput';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchApplied from '../SearchInput/SearchApplied';
 
-import MobileCollectionFiltersMenu from './MobileCollectionFiltersMenu';
-import MobileCollectionFiltersOpener from './MobileCollectionFiltersOpener';
-import MobileCollectionFiltersCloser from './MobileCollectionFiltersCloser';
+import MobileFiltersMenu from './MobileFiltersMenu';
+import MobileFiltersOpener from './MobileFiltersOpener';
+import MobileFiltersCloser from './MobileFiltersCloser';
 
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
@@ -43,34 +43,42 @@ class CollectionFilters extends Component {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
     }
+    // } else if (nextProps.search.length === 0 && nextProps.filters.length === 0 && nextProps.search !== this.props.search && nextProps.filters !== this.props.filters) {
+    //   this.props.getAllObjects();
+    //   this.props.clearAllFilters();
+    //   this.props.clearSearchTerm();
+    //   this.props.closeFilterSet();
+    // }
   }
 
   render() {
-    let filters = <CollectionFiltersApplied />;
+    let filtersApplied = <CollectionFiltersApplied />;
     if (this.props.search.length > 0) {
-      filters = <SearchApplied />;
+      filtersApplied = <SearchApplied />;
     }
+
+    const mobileFiltersVisible = this.props.mobileFilters.visible;
 
     return (
       <div className="collection-filters">
-      <MediaQuery maxWidth={425}>
-        { this.props.mobileFilters.visible &&
-          <div>
-            <MobileCollectionFiltersMenu />
-            <MobileCollectionFiltersCloser />
-          </div>
-        }
-        { !this.props.mobileFilters.visible &&
-          <MobileCollectionFiltersOpener />
-        }
-      </MediaQuery>
-      <MediaQuery minWidth={426}>
-          <CollectionFiltersMenu />
-          <div className="m-block m-block--flush">
-            {this.filterSet()}
-            {filters}
-          </div>
-      </MediaQuery>
+        <MediaQuery maxWidth={425}>
+          { mobileFiltersVisible &&
+            <div>
+              <MobileFiltersMenu />
+              <MobileFiltersCloser />
+            </div>
+          }
+          { !mobileFiltersVisible &&
+            <MobileFiltersOpener />
+          }
+        </MediaQuery>
+        <MediaQuery minWidth={426}>
+            <CollectionFiltersMenu />
+            <div className="m-block m-block--flush">
+              {this.filterSet()}
+              {filtersApplied}
+            </div>
+        </MediaQuery>
       </div>
     );
   }

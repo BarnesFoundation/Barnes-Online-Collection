@@ -44,7 +44,6 @@ class LineFilter extends Component {
     if (this.filterIsApplied() > -1) {
       classes += ' is-applied';
     }
-
     return classes;
   }
 

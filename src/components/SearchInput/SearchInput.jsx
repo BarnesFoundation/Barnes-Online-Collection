@@ -37,8 +37,8 @@ class SearchInput extends Component {
     return (
       <div>
         <MediaQuery maxWidth={425}>
-          <div className="mobile-filter-section search-input">
-            <h6 className="mobile-filter-header font-zeta">Search</h6>
+          <div className="mobile-filters-section search-input">
+            <h6 className="mobile-filters-header font-zeta">Search</h6>
             <form onSubmit={this.handleSubmit}>
               <div className="form-field">
                 <input

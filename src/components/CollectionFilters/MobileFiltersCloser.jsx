@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import * as MobileFiltersActions from '../../actions/mobileFilters';
 
-class MobileCollectionFiltersCloser extends Component {
+class MobileFiltersCloser extends Component {
   constructor(props) {
     super(props);
 
@@ -38,4 +38,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}, MobileFiltersActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MobileCollectionFiltersCloser);
+export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersCloser);
