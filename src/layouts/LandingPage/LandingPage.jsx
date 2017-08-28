@@ -17,12 +17,14 @@ class LandingPage extends Component {
       <div className="app app-landing-page">
         <HtmlClassManager />
         <SiteHeader />
-        <div className="container">
-          <LandingPageHeader />
-          <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border">
+        <div className="landing-page container">
+          <div className="landing-page-header-wrap m-block m-block--no-border m-block--shallow">
+            <LandingPageHeader />
+          </div>
+          <div className="collection-filters-wrap m-block m-block--flush m-block--shallow m-block--no-border">
             <CollectionFilters />
           </div>
-          <div className="m-block m-block--shallow">
+          <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
             <ArtObjectGrid history={this.props.history}/>
           </div>
         </div>

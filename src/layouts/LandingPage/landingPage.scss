@@ -1,6 +1,17 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
+// Todo: Let's review these imports...
+// I don't think these need to be imported here
+// Because using the react component paradigm, we import them in the jsx.
+// @import '../../components/CollectionFilters/collectionFilters.scss';
+// @import '../../components/SearchInput/searchInput.scss';
+
+// It looks like we do import this here because there is no jsx for it.
+// Though, maybe that means this style shouldn't be in the components folder?
+@import '../../components/CollectionFilters/mobileFilters.scss';
+
+
 .app-landing-page {
   .landing-page-header {
     // the mock shows a font size outside the styleguide
@@ -34,6 +45,7 @@
       }
     }
   }
+
   @include breakpoint('small-') {
     .component-art-object-grid {
       .masonry-grid-element {
@@ -42,3 +54,17 @@
     }
   }
 }
+
+// todo: review this.
+// @media screen and (max-width: 768px) {
+//   .landing-page-header-wrap.m-block.m-block--no-border.m-block--shallow {
+//     padding-top: 0;
+//     padding-bottom: 60px;
+//   }
+// }
+
+// @media screen and (max-width: 425px) {
+//   .landing-page {
+//     padding-top: 25px;
+//     border-top: 1px solid $color-grey-light-2;
+//

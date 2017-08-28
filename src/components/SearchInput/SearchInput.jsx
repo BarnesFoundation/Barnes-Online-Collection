@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import MediaQuery from 'react-responsive';
+
 import * as SearchActions from '../../actions/search';
 
 import './searchInput.css';
@@ -33,17 +35,45 @@ class SearchInput extends Component {
 
   render() {
     return (
-      <section aria-label="search" className="searchbar">
-        <form className="searchbar__container" onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            autoFocus="true"
-            value={this.state.value}
-            onChange={this.handleChange}
-            className="searchbar__input"
-          />
-        </form>
-      </section>
+      <div>
+        <MediaQuery maxWidth={425}>
+          <div className="mobile-filters-section search-input">
+            <h6 className="mobile-filters-header font-zeta">Search</h6>
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-field">
+                <input
+                  className="input mobile"
+                  type="text"
+                  value={this.state.value}
+                  placeholder="Search an artist, word, period..."
+                  onChange={this.handleChange}
+                />
+              </div>
+            </form>
+          </div>
+        </MediaQuery>
+
+        <MediaQuery minWidth={426}>
+          <div className="search-input">
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-field">
+                <input
+                  className="input"
+                  type="text"
+                  autoFocus="true"
+                  value={this.state.value}
+                  placeholder="Search an artist, word, period..."
+                  onChange={this.handleChange}
+                />
+                <input
+                  className="btn btn-submit"
+                  type="submit"
+                />
+              </div>
+            </form>
+          </div>
+        </MediaQuery>
+      </div>
     );
   }
 }

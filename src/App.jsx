@@ -14,10 +14,6 @@ import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import history from './history';
 
 class App extends Component {
-  // componentDidMount() {
-  //   fetch('/api/objects/5227');
-  // }
-
   render() {
     return (
       <Provider store={this.props.store}>

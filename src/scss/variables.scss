@@ -10,6 +10,14 @@ $color-grey-ultra-light: #f0f0f0;
 // the approved mock is slightly different from the AI file
 $color-grey-ultra-light-2: #f7f7f7;
 
+// todo: these are just test colors. Use the styleguide
+// todo: these were left over from a merge..
+// phase out them out in favor of the colors above from the AI design.
+$color-grey-light-1: $color-grey-medium;
+$color-grey-light-2: $color-grey-light;
+// tie over from barnes variables to match recommened styles.
+$color-red-barnes: $color__red--barnes;
+
 $content-narrow-width: 800px;
 $image-page-centered-perc: 65%;
 
