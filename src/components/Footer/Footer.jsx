@@ -10,14 +10,32 @@ class Footer extends Component {
 
   render() {
     return (
-      <footer className="g-footer">
-        <div className="container">
-
-          <div className="g-footer__col g-footer__details">
-          test
+      <footer className="g-footer g-footer--no-border g-footer--flush-top">
+        <div className="container g-footer__container-top">
+          <div className="m-block m-block--no-border m-block__columns">
+            <div className="m-block__column">
+              <p className="color-medium">
+                The Barnes Foundation collection online is made possible<br className="br-large-only" /> by a generous grant from The John S. and James L. Knight Foundation
+              </p>
+            </div>
+            <div className="m-block__column">
+              <div className="m-block__columns">
+                <div className="m-block__column">
+                  {/* todo: add link urls */}
+                  <a className="a-brand-link a-brand-link--block" href="#">Project Credits &amp; Information</a>
+                  <a className="a-brand-link a-brand-link--block" href="#">Image Licensing</a>
+                </div>
+                <div className="m-block__column">
+                  <a className="a-brand-link a-brand-link--block" href="#">Collection History</a>
+                  <a className="a-brand-link a-brand-link--block" href="#">Archives and Special Collections</a>
+                  <a className="a-brand-link a-brand-link--block" href="#">Plant Collections</a>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="m-block__columns">
+        </div>
+        <div className="container">
+          <div className="m-block m-block--no-border m-block__columns">
             <div className="m-block__column g-footer__donate">
               <h4 className="h4 font-delta">Your support helps research and conservation at the Barnes, so we can present our exhibitions and events.</h4>
               <div className="m-btn-group">

@@ -1,6 +1,10 @@
 @import '../../scss/variables.scss';
 
 .g-footer {
+  &__container-top {
+    background: $color-grey-ultra-light-2;
+  }
+
   &__donate {
     .h4 {
       // make the text match the mock

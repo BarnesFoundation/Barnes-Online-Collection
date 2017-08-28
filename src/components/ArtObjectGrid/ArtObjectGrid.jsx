@@ -44,7 +44,7 @@ class ArtObjectGrid extends Component {
     const masonryElements = getMasonryElements(objects);
     return (
       <div className="component-art-object-grid">
-        {masonryElements.length &&
+        {!!masonryElements.length &&
           <MasonryGrid masonryElements={masonryElements} />
         }
         <ViewMoreButton />
