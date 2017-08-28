@@ -1,3 +1,13 @@
 @import '../components-barnes-toolkit/scss/setup/_mixins.scss';
 
 // add Mixins here
+@mixin stacking-btn-margin-fix() {
+  .m-btn-group {
+    margin-top: 0;
+
+    &:first-child,
+    .btn {
+      margin-top: 17px;
+    }
+  }
+}

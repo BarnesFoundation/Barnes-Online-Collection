@@ -65,5 +65,10 @@
     width: 100%;
     text-align: center;
     z-index: $z-index-art-object-grid-view-more;
+
+    // give it a background for now. Later solve the text overlap problem
+    .btn {
+      background: $color-white;
+    }
   }
 }
