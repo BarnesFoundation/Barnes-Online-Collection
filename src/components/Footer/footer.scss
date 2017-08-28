@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .g-footer {
   &__container-top {
@@ -18,6 +19,18 @@
       font-size: 16px;
       color: $color-grey-light;
       margin-top: 0;
+    }
+  }
+
+  // Take some padding from the col wrapper
+  // to give each stacked col some padding of its own.
+  @include breakpoint('small-') {
+    .m-block.m-block__columns {
+      padding-bottom: 0;
+
+      > .m-block__column {
+        padding-bottom: 30px;
+      }
     }
   }
 }
