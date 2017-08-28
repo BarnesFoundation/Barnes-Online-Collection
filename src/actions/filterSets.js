@@ -6,3 +6,9 @@ export function selectFilterSet(slug) {
     slug: slug
   }
 }
+
+export function closeFilterSet() {
+  return {
+    type: ActionTypes.CLOSE_FILTER_SET,
+  }
+}

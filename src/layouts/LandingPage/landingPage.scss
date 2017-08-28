@@ -3,8 +3,6 @@
 .landing-page-header {
   text-align: center;
 
-  // margin-top: -30px;
-
   .h2 {
     margin: 0 auto;
     // the mock shows a font size outside the styleguide
@@ -16,4 +14,22 @@
 
 .collection-filters-wrap {
   text-align: center;
+}
+
+@import '../../components/CollectionFilters/collectionFilters.scss';
+@import '../../components/SearchInput/searchInput.scss';
+@import '../../components/CollectionFilters/mobileFilters.scss';
+
+@media screen and (max-width: 768px) {
+  .landing-page-header-wrap.m-block.m-block--no-border.m-block--shallow {
+    padding-top: 0;
+    padding-bottom: 60px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .landing-page {
+    padding-top: 25px;
+    border-top: 1px solid $color-grey-light-2;
+  }
 }

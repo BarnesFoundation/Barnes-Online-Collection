@@ -6,6 +6,11 @@ export const SET_OBJECT = 'SET_OBJECT';
 
 //filterSets
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
+export const CLOSE_FILTER_SET = 'CLOSE_FILTER_SET';
+
+//mobileFilters
+export const OPEN_MOBILE_FILTERS = 'OPEN_MOBILE_FILTERS';
+export const CLOSE_MOBILE_FILTERS = 'CLOSE_MOBILE_FILTERS';
 
 //filters
 export const ADD_TO_FILTERS = 'ADD_TO_FILTERS';

@@ -1,6 +1,12 @@
 @import '../../scss/variables.scss';
 
 .component-art-object-grid {
+  opacity: 0;
+  transition: opacity 0.75s ease;
+  &.fade-in {
+    opacity: 1;
+    transition: opacity 0.75s ease;
+  }
   // use a border and negative margin to frame the image without covering it
   .art-object-overlay,
   .art-object-caption {
