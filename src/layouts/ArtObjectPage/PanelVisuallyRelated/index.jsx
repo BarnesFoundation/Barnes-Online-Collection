@@ -28,7 +28,7 @@ class PanelVisuallyRelated extends Component {
     }
 
     return (
-      <div className="m-block">
+      <div className="m-block m-block--shallow">
         <div className="m-block__columns">
           <div className="m-block__column">
             <div className="art-object__image-container">

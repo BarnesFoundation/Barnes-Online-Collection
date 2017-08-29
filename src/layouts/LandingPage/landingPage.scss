@@ -1,35 +1,75 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
-.landing-page-header {
-  text-align: center;
+// Todo: @rachel Let's review these imports...
+// I don't think these need to be imported here
+// Because using the react component paradigm, we import them in the jsx.
+// @import '../../components/CollectionFilters/collectionFilters.scss';
+// @import '../../components/SearchInput/searchInput.scss';
 
-  .h2 {
-    margin: 0 auto;
+// It looks like we do import this here because there is no jsx for it.
+// Though, maybe that means this style shouldn't be in the components folder?
+@import '../../components/CollectionFilters/mobileFilters.scss';
+
+
+.app-landing-page {
+  .landing-page-header {
     // the mock shows a font size outside the styleguide
+    text-align: center;
+    // make it look good on medium screen sizes
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 30px;
     line-height: 40px;
     font-weight: normal;
   }
-}
 
-.collection-filters-wrap {
-  text-align: center;
-}
+  .collection-filters-wrap {
+    text-align: center;
+  }
 
-@import '../../components/CollectionFilters/collectionFilters.scss';
-@import '../../components/SearchInput/searchInput.scss';
-@import '../../components/CollectionFilters/mobileFilters.scss';
+  // the grid on the landingPage should default to exactly 4 columns on large screens
+  @include breakpoint('large+') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 25%;
+      }
+    }
+  }
 
-@media screen and (max-width: 768px) {
-  .landing-page-header-wrap.m-block.m-block--no-border.m-block--shallow {
-    padding-top: 0;
-    padding-bottom: 60px;
+  @include breakpoint('medium-') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 33.33%;
+      }
+    }
+  }
+
+  @include breakpoint('small-') {
+    .component-art-object-grid {
+      .masonry-grid-element {
+        max-width: 50%;
+      }
+    }
   }
 }
 
-@media screen and (max-width: 425px) {
-  .landing-page {
-    padding-top: 25px;
-    border-top: 1px solid $color-grey-light-2;
-  }
-}
+// @rachel -- I'm afraid that the context of these got mixed up with my merged code.
+// Do we still need these?
+// @media screen and (max-width: 768px) {
+//   .landing-page-header-wrap.m-block.m-block--no-border.m-block--shallow {
+//     padding-top: 0;
+//     padding-bottom: 60px;
+//   }
+// }
+
+// // todo: review this.
+
+
+// @media screen and (max-width: 425px) {
+//   .landing-page {
+//     padding-top: 25px;
+//     border-top: 1px solid $color-grey-light;
+//   }
+// }

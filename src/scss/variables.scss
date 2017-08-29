@@ -1,13 +1,18 @@
 @import '../components-barnes-toolkit/scss/setup/_variables.scss';
+@import '../components-barnes-toolkit/scss/setup/_colors.scss';
 
 // colors
-$color-black: #000;
-// todo: these are just test colors. Use the styleguide
-$color-grey-dark: #333;
-$color-grey-light-1: #6e6e6e;
-$color-grey-light-2: #b4b4b4;
-$color-grey-light: #ccc;
-$color__red--barnes: #d64220;
+$color-white: #ffffff;
+$color-black: #000000;
+$color-grey-dark: #282828;
+$color-grey-medium: #6e6e6e;
+$color-grey-light: #b4b4b4;
+$color-grey-super-light: #dcdcdc;
+$color-grey-ultra-light: #f0f0f0;
+// the approved mock is slightly different from the AI file
+$color-grey-ultra-light-2: #f7f7f7;
+// tie over from barnes variables to match recommened styles.
+$color-red-barnes: $color__red--barnes;
 
 $content-narrow-width: 800px;
 $image-page-centered-perc: 65%;
@@ -23,5 +28,7 @@ $art-object-grid-gap: 4px;
 $art-object-overlay-border-width: 20px;
 
 // z-indexes
+// please note that many style guide z-indexes are set here:
+// src/components-barnes-toolkit/scss/setup/_variables.scss
 $z-index-art-object-grid-overlay: 2;
-$z-index-art-object-grid-view-more: 3;
+$z-index-art-object-grid-view-more: 2;
