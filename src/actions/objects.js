@@ -16,7 +16,8 @@ const fetchResults = (body, dispatch) => {
       body: body,
     }
   }).then((response) => {
-    console.log(response.data);
+    console.log(body);
+    console.log(response.data.hits.hits.length, 'hits');
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
     dispatch(setObjects(objects));
   });
@@ -38,13 +39,13 @@ export const getAllObjects = () => {
 
 export const findFilteredObjects = (filters) => {
   return (dispatch) => {
-    if (filters.length === 0) {
+    if (!filters.ordered || filters.ordered.length === 0) {
       return getAllObjects()(dispatch);
     }
 
     let body = buildRequestBody();
-    for (let i = 0; i < filters.length; i++) {
-      const filter = filters[i];
+    for (let i = 0; i < filters.ordered.length; i++) {
+      const filter = filters.ordered[i];
       switch (filter.method) {
         case 'query':
           body = body.query(filter.type, filter.field, filter.term);

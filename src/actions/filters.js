@@ -7,6 +7,13 @@ export function addColorFilter(filter) {
   }
 }
 
+export function removeColorFilter(filter) {
+  return {
+    type: ActionTypes.REMOVE_COLOR_FILTER,
+    filter: filter
+  }
+}
+
 export function removeFilterByIndex(index) {
   return {
     type: ActionTypes.REMOVE_FILTER_BY_INDEX,

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
+import { BREAKPOINTS } from '../../constants';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
@@ -35,20 +36,29 @@ class CollectionFilters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.search.length > 0 && nextProps.search !== this.props.search) {
+    if (
+      nextProps.search.length > 0 &&
+      nextProps.search !== this.props.search
+    ) {
       this.props.searchObjects(nextProps.search);
       this.props.clearAllFilters();
       this.props.closeFilterSet();
-    } else if (nextProps.filters.length > 0 && nextProps.filters !== this.props.filters) {
+    } else if (
+      nextProps.filters.ordered &&
+      nextProps.filters.ordered.length > 0 &&
+      nextProps.filters.ordered !== this.props.filters.ordered
+    ) {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
-    }
-    // } else if (nextProps.search.length === 0 && nextProps.filters.length === 0 && nextProps.search !== this.props.search && nextProps.filters !== this.props.filters) {
-    //   this.props.getAllObjects();
+    } else if (
+      nextProps.search.length === 0 ||
+      !nextProps.filters.ordered
+    ) {
     //   this.props.clearAllFilters();
     //   this.props.clearSearchTerm();
+      this.props.getAllObjects();
     //   this.props.closeFilterSet();
-    // }
+    }
   }
 
   render() {
@@ -61,7 +71,7 @@ class CollectionFilters extends Component {
 
     return (
       <div className="collection-filters">
-        <MediaQuery maxWidth={425}>
+        <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
           { mobileFiltersVisible &&
             <div>
               <MobileFiltersMenu />
@@ -72,7 +82,7 @@ class CollectionFilters extends Component {
             <MobileFiltersOpener />
           }
         </MediaQuery>
-        <MediaQuery minWidth={426}>
+        <MediaQuery minWidth={BREAKPOINTS.desktop_min}>
             <CollectionFiltersMenu />
             <div className="m-block m-block--flush">
               {this.filterSet()}

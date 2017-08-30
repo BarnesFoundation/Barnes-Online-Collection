@@ -9,17 +9,22 @@ import * as FiltersActions from '../../actions/filters';
 
 class CollectionFiltersApplied extends Component {
   filterTags() {
-    return this.props.filters.ordered.map((filter, index) =>
-      <FilterTag
-        key={index} index={index}
-        displayType={filter.displayType}
-        displayValue={filter.displayValue}
-        method={filter.method}
-        type={filter.type}
-        field={filter.field}
-        term={filter.term}
-      />
-    );
+    const orderedFilters = this.props.filters.ordered;
+
+    if (!orderedFilters) {
+      return null;
+    } else {
+      return orderedFilters.map((filter, index) =>
+        <FilterTag
+          key={index} index={index}
+          filterType={filter.filterType}
+          method={filter.method}
+          type={filter.type}
+          field={filter.field}
+          term={filter.term}
+        />
+      );
+    }
   }
 
   render() {
