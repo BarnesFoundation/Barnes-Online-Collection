@@ -63,6 +63,7 @@
       .line-filter {
         height: auto;
         min-height: 50px;
+        min-width: 0;
         padding: 10px 0;
         .btn-icon {
           display: block;
@@ -83,7 +84,6 @@
       }
       &:last-of-type {
         .line-filter {
-          min-width: 0;
           width: calc(100%/3);
           border-width: 2px 1px;
           margin: 0;

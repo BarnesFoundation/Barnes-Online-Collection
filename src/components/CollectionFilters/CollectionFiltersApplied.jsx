@@ -9,7 +9,7 @@ import * as FiltersActions from '../../actions/filters';
 
 class CollectionFiltersApplied extends Component {
   filterTags() {
-    return this.props.filters.map((filter, index) =>
+    return this.props.filters.ordered.map((filter, index) =>
       <FilterTag
         key={index} index={index}
         displayType={filter.displayType}
