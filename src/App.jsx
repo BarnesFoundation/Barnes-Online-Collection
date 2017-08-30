@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
-
+import ScrollToTop from './ScrollToTop';
 import history from './history';
 
 class App extends Component {
@@ -18,11 +18,13 @@ class App extends Component {
     return (
       <Provider store={this.props.store}>
         <Router history={history}>
-          <Switch>
-            <Route exact path="/" component={LandingPage} />
-            <Route exact path="/objects/:id" component={ArtObjectPage} />
-            <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
-          </Switch>
+          <ScrollToTop>
+            <Switch>
+              <Route exact path="/" component={LandingPage} />
+              <Route exact path="/objects/:id" component={ArtObjectPage} />
+              <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
+            </Switch>
+          </ScrollToTop>
         </Router>
       </Provider>
     );
