@@ -95,13 +95,16 @@
       color: white;
     }
   }
+
+  input[type="range"].slider {
+    width: 70%;
+    margin: 0 40px;
+  }
 }
 
 input[type="range"].slider {
   -webkit-appearance: none;
-  width: 70%;
   border: 0;
-  margin: 0 40px;
 
   &:focus {
     outline: none;
