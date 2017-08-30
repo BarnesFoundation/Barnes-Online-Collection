@@ -1,0 +1,38 @@
+@import '../../scss/_mixins.scss';
+
+.component-slider {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  &[data-label-style="inline"] {
+    // don't use inline on the small breakpoint
+    @include breakpoint('medium+') {
+      flex-wrap: nowrap;
+
+      .show-for-style-inline {
+        display: block;
+      }
+      .hide-for-style-inline {
+        display: none;
+      }
+
+      .slider {
+        width: auto;
+        margin: 0 40px;
+        align-content: stretch;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  .slider {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}

@@ -95,11 +95,6 @@
       color: white;
     }
   }
-
-  input[type="range"].slider {
-    width: 70%;
-    margin: 0 40px;
-  }
 }
 
 input[type="range"].slider {
@@ -191,12 +186,4 @@ input[type="range"].slider {
   margin-top: 0;
   font-size: 17px;
   color: $color-grey-medium;
-}
-
-.light-filters-container,
-.space-filters-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 25px;
 }

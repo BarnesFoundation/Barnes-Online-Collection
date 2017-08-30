@@ -4,6 +4,9 @@ import './index.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
+
+import Slider from '../../../components/Slider/Slider.jsx';
+
 const getDisplayDateAndMedium = (displayDate, medium) => {
   const connector = displayDate && medium ? '—' : '';
 
@@ -42,15 +45,10 @@ class PanelVisuallyRelated extends Component {
             </div>
           </div>
           <div className="m-block__column">
-            <div className="component-slider">
-              <input
-              className="slider"
-              type="range" min="0" max="100"
-              defaultValue="50"
-              />
-              <span className="slider-label font-smallprint">More similar</span>
-              <span className="slider-label font-smallprint">More surprising</span>
-            </div>
+            <Slider
+              labelLeft='More similar'
+              labelRight='More surprising'
+            />
             <ArtObjectGrid />
           </div>
         </div>

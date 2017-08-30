@@ -6,20 +6,6 @@
 @import './PanelVisuallyRelated/index.scss';
 
 .app-art-object-page {
-  // todo: move this;
-  .component-slider {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    .slider {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-  }
-
   @include breakpoint('small-') {
     // fix style of how columns stack
     .m-block__column + .m-block__column {
