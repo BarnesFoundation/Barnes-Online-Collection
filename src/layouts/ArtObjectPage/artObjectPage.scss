@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 @import './PanelDetails/index.scss';
 @import './PanelEnsemble/index.scss';
@@ -16,6 +17,15 @@
     .slider {
       width: 100%;
       margin-bottom: 16px;
+    }
+  }
+
+  @include breakpoint('small-') {
+    // fix style of how columns stack
+    .m-block__column + .m-block__column {
+      margin-top: $block-margin-small;
+      padding-top: $block-margin-small;
+      border-top: $border-style;
     }
   }
 }

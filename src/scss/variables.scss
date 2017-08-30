@@ -11,8 +11,11 @@ $color-grey-super-light: #dcdcdc;
 $color-grey-ultra-light: #f0f0f0;
 // the approved mock is slightly different from the AI file
 $color-grey-ultra-light-2: #f7f7f7;
+
 // tie over from barnes variables to match recommened styles.
 $color-red-barnes: $color__red--barnes;
+$color-border: $color__border;
+
 
 $content-narrow-width: 800px;
 $image-page-centered-perc: 65%;
@@ -21,7 +24,11 @@ $color-site: $color-black;
 $font-family: sans-serif;
 $font_path: '/fonts/';
 
-$border-style: 1px solid #dcdcdc;
+$border-style: 1px solid $color-border;
+
+// block margins
+// from /src/components-barnes-toolkit/components/block/_block.scss
+$block-margin-small: 30px;
 
 // art object grid
 $art-object-grid-gap: 4px;
