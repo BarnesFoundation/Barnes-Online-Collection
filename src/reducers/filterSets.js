@@ -41,14 +41,11 @@ const buildInitialState = () => {
 
   for (let i = 0; i < COLOR_FILTERS.length; i++) {
     let colorFilter = {
+      filterType: 'color',
       slug: 'color-'+COLOR_FILTERS[i].name,
       name: COLOR_FILTERS[i].name,
-      filterType: 'color',
-      method: 'query',
-      type: 'match',
-      field: '_all',
-      term: COLOR_FILTERS[i].term,
       color: COLOR_FILTERS[i].buttonColor,
+      queries: COLOR_FILTERS[i].queries,
     };
 
     initialState.sets.colors.options.push(colorFilter);

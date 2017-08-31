@@ -44,19 +44,56 @@ export const findFilteredObjects = (filters) => {
     }
 
     let body = buildRequestBody();
+    let queries = [];
+
     for (let i = 0; i < filters.ordered.length; i++) {
       const filter = filters.ordered[i];
-      switch (filter.method) {
-        case 'query':
-          body = body.query(filter.type, filter.field, filter.term);
+      switch (filter.filterType) {
+        case 'color':
+          for (let i = 0; i < filter.queries.length; i++) {
+            queries.push(buildColorQuery(filter.queries[i]));
+          }
           break;
         default:
           break;
       }
     }
+    body = assembleDisMaxQuery(body, queries);
     body = body.build();
     fetchResults(body, dispatch);
   }
+}
+
+const buildSingleColorQuery = (body, query) => {
+  return body.query('multi_match', {
+    query: query,
+    fields: [
+      'color.palette-closest-*',
+      'color.palette-color-*',
+      'color.average-closest',
+      'color.average-color'
+    ]
+  });
+}
+
+const buildColorQuery = (query) => {
+  return {
+    'multi_match': {
+      query: query,
+      fields: [
+        'color.palette-closest-*',
+        'color.palette-color-*',
+        'color.average-closest',
+        'color.average-color'
+      ]
+    }
+  };
+}
+
+const assembleDisMaxQuery = (body, queries) => {
+  return body.query('dis_max', {
+    'queries': queries
+  });
 }
 
 export const searchObjects = (term) => {
