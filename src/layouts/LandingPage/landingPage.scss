@@ -28,31 +28,6 @@
   .collection-filters-wrap {
     text-align: center;
   }
-
-  // the grid on the landingPage should default to exactly 4 columns on large screens
-  @include breakpoint('large+') {
-    .component-art-object-grid {
-      .masonry-grid-element {
-        max-width: 25%;
-      }
-    }
-  }
-
-  @include breakpoint('medium-') {
-    .component-art-object-grid {
-      .masonry-grid-element {
-        max-width: 33.33%;
-      }
-    }
-  }
-
-  @include breakpoint('small-') {
-    .component-art-object-grid {
-      .masonry-grid-element {
-        max-width: 50%;
-      }
-    }
-  }
 }
 
 // @rachel -- I'm afraid that the context of these got mixed up with my merged code.

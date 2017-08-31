@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
 import * as Constants from '../../../constants';
+import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 class PanelEnsemble extends Component {
   constructor(props) {
@@ -19,10 +20,8 @@ class PanelEnsemble extends Component {
             <h3 className="h3">{Constants.ENSEMBLE_ROOM_SUB_TITLE}</h3>
           </div>
         </div>
-        <div className="art-object__more-info m-block m-block--shallow">
-          <div className="container-inner-narrow">
-          ...
-          </div>
+        <div className="m-block m-block--shallow">
+          <ArtObjectGrid gridStyle="full-size" />
         </div>
       </div>
     );
