@@ -27,17 +27,25 @@ class ViewMoreButton extends Component {
     }
   }
 
+  shouldShowButton() {
+    return this.props.hitsDisplayed.maxHits > this.props.hitsDisplayed.lastIndex;
+  }
+
   render() {
-    return (
-      <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
-        <button
-          className="btn"
-          onClick={this.handleClick}
-        >
-          View More
-        </button>
-      </div>
-    );
+    if (this.shouldShowButton()) {
+      return (
+        <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
+          <button
+            className="btn"
+            onClick={this.handleClick}
+          >
+            View More
+          </button>
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
   }
 }
 
@@ -45,7 +53,8 @@ const mapStateToProps = state => {
   return {
     filters: state.filters,
     search: state.search,
-    objects: state.objects
+    objects: state.objects,
+    hitsDisplayed: state.hitsDisplayed
   }
 }
 

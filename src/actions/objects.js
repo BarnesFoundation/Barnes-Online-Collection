@@ -18,9 +18,13 @@ const fetchResults = (body, dispatch) => {
   }).then((response) => {
     console.log(body);
     console.log(response.data.hits.hits.length, 'hits');
+
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
 
+    const maxHits = response.data.hits.total;
+
     dispatch(setObjects(objects));
+    dispatch(setMaxHits(maxHits));
   });
 }
 
@@ -35,6 +39,13 @@ const appendObjects = (objects) => {
   return {
     type: ActionTypes.APPEND_OBJECTS,
     payload: objects
+  };
+}
+
+const setMaxHits = (maxHits) => {
+  return {
+    type: ActionTypes.SET_MAX_HITS,
+    maxHits: maxHits
   };
 }
 
