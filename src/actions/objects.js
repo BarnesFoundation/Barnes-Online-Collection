@@ -2,10 +2,10 @@ import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 
-const buildRequestBody = () => {
+const buildRequestBody = (idxFrom=0, size=25) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
-    .from(0).size(25);
+    .from(idxFrom).size(size);
 
   return body;
 }
@@ -18,6 +18,7 @@ const fetchResults = (body, dispatch) => {
   }).then((response) => {
     console.log(response.data);
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+
     dispatch(setObjects(objects));
   });
 }
@@ -25,6 +26,13 @@ const fetchResults = (body, dispatch) => {
 const setObjects = (objects) => {
   return {
     type: ActionTypes.SET_OBJECTS,
+    payload: objects
+  };
+}
+
+const appendObjects = (objects) => {
+  return {
+    type: ActionTypes.APPEND_OBJECTS,
     payload: objects
   };
 }

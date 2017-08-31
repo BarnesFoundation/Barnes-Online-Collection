@@ -1,5 +1,6 @@
 // objects
 export const SET_OBJECTS = 'SET_OBJECTS';
+export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 
 //object
 export const SET_OBJECT = 'SET_OBJECT';
