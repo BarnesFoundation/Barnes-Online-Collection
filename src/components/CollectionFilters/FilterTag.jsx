@@ -13,7 +13,13 @@ class FilterTag extends Component {
   }
 
   handleClick(event) {
-    this.props.removeFilterByIndex(this.props.index);
+    switch(this.props.filterType) {
+      case 'color':
+        this.props.removeColorFilter(this.props);
+        break;
+      default:
+        this.props.removeFilterByIndex(this.props.index);
+    }
   }
 
   render() {

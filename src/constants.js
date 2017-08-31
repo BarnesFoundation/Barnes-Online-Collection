@@ -41,6 +41,12 @@ export const RESET_UI = 'RESET_UI';
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
 
+// breakpoints
+export const BREAKPOINTS = {
+  desktop_min: 426,
+  mobile_max: 425
+};
+
 // copyrights
 export const COPYRIGHT_MAP = {
   1: {

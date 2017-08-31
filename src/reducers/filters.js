@@ -14,35 +14,33 @@ const initialState = {
 const filters = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.ADD_COLOR_FILTER:
-      return Object.assign({}, state, {colors: [...state.colors, action.filter], ordered: [...state.ordered, action.filter]});
+      return Object.assign({}, state, {
+        colors: [...state.colors, action.filter],
+        ordered: [...state.ordered, action.filter]
+      });
     case ActionTypes.REMOVE_COLOR_FILTER:
-      let modifiedState = Object.assign({}, state);
-
-      const removeSlug = state.ordered[action.index].slug;
-      const removeColorIndex = findIndexBySlug(state.colors, removeSlug);
-
-      modifiedState.ordered = [
-        ...modifiedState.ordered.slice(0, action.index),
-        ...modifiedState.ordered.slice(action.index + 1)
-      ];
-
-      modifiedState.colors = [
-        ...modifiedState.colors.slice(0, removeColorIndex),
-        ...modifiedState.colors.slice(removeColorIndex + 1)
-      ];
-
-      return modifiedState;
+      const filterIndex = findIndexBySlug(state.colors, state.ordered[action.filter.index].slug);
+      return Object.assign({}, state, {
+        colors: getReducedFilters(state.colors, filterIndex),
+        ordered: getReducedFilters(state.ordered, action.filter.index)
+      });
     case ActionTypes.REMOVE_FILTER_BY_INDEX:
-
       return [...state.slice(0, action.index), ...state.slice(action.index + 1)];
     case ActionTypes.REMOVE_FILTER_BY_SLUG:
       const index = findIndexBySlug(state, action.slug);
       return [...state.slice(0, index), ...state.slice(index+1)];
     case ActionTypes.CLEAR_ALL_FILTERS:
-      return [];
+      return initialState;
     default:
       return state;
   }
+}
+
+function getReducedFilters(filterArray, index) {
+  return [
+    ...filterArray.slice(0, index),
+    ...filterArray.slice(index + 1)
+  ];
 }
 
 function findIndexBySlug(filters, slug) {
