@@ -24,7 +24,7 @@ const objects = (state = [], action) => {
       return action.payload.map(object => generateObjectImageUrls(object));
     case ActionTypes.APPEND_OBJECTS:
       const newObjects = action.payload.map(object => generateObjectImageUrls(object));
-      return [...state, newObjects];
+      return state.concat(newObjects);
     default:
       return state;
   }

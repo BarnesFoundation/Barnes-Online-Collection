@@ -13,18 +13,23 @@ class ViewMoreButton extends Component {
   }
 
   handleClick() {
-    const noSearch = this.props.search.length === 0;
-    const noFilters = !this.props.filters.ordered || this.props.filters.ordered.length === 0;
+    const search = this.props.search;
+    const filters = this.props.filters;
 
-    if (noSearch && noFilters) {
-      debugger;
-      // Get next 25 objects.
-      // Append to existing group of objects.
-    } else if (noSearch) {
-      debugger;
-    } else if (noFilters) {
-      debugger;
+    const hasSearch = search.length > 0;
+    const hasFilters = filters.ordered && filters.ordered.length > 0;
+
+    let query = null;
+
+    if (hasSearch) {
+      query = search;
+    } else if (hasFilters) {
+      query = filters;
     }
+
+    const fromIndex = this.props.hitsDisplayed.lastIndex || 25;
+
+    this.props.getNextObjects(fromIndex, query);
   }
 
   shouldShowButton() {
@@ -61,7 +66,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     ObjectsActions
-  ));
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewMoreButton);
