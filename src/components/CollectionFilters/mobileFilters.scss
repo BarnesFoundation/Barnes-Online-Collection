@@ -99,16 +99,6 @@
       }
     }
   }
-
-  .light-filters-container,
-  .space-filters-container {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .slider {
-      width: 100%;
-      margin: 0 0 20px;
-    }
-  }
 }
 
 .mobile-filters-header {

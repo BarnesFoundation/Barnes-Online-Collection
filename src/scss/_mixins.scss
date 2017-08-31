@@ -1,3 +1,6 @@
+// import setup/_variables too here
+// because setup/_mixins doesn't seem to explicitly declare that dependency
+@import '../components-barnes-toolkit/scss/setup/_variables.scss';
 @import '../components-barnes-toolkit/scss/setup/_mixins.scss';
 
 // add Mixins here
