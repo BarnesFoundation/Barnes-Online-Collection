@@ -1,6 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
+import mockData from './mockData';
 
 const buildRequestBody = () => {
   let body = bodybuilder()
@@ -16,6 +17,12 @@ const fetchResults = (body, dispatch) => {
       body: body,
     }
   }).then((response) => {
+    debugger;
+    if (!response.data.hits) {
+      console.warn('using mock data');
+      response.data = mockData;
+    }
+
     console.log(response.data);
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
     dispatch(setObjects(objects));
