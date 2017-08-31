@@ -82,7 +82,7 @@ class ArtObjectPage extends Component {
     const pageTitle = `${this.props.artObject.culture || this.props.artObject.people} - ${this.props.artObject.title}`;
 
     return (
-      <div className="app">
+      <div className="app app-art-object-page">
         <Helmet>
           <title>{pageTitle} </title>
           <meta property="og:title" content={pageTitle} />

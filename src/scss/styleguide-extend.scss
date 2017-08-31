@@ -29,8 +29,18 @@ li {
   white-space: nowrap;
 }
 
-@include breakpoint('small-') {
+.color-medium {
+  color: $color-grey-medium;
+}
+
+// do our best to use a custom break to make text look like the mock.
+// but let smaller screen sizes wrap as they need to
+@include breakpoint('large-') {
   .br-large-only {
     display: none;
   }
+}
+
+.a-brand-link--block {
+  display: block;
 }

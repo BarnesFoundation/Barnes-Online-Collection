@@ -4,30 +4,22 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
+import Slider from '../Slider/Slider.jsx';
 
 class SpaceFilters extends Component {
-  sliderLabel(text) {
-    return <p className="slider-label font-smallprint">{text}</p>;
-  }
-
   getSpaceFilters() {
     return (
-      <div className='space-filters-container'>
-        <MediaQuery minWidth={426}>{this.sliderLabel('Shallow')}</MediaQuery>
-        <input
-          className="slider"
-          type="range" min="0" max="100"
-          defaultValue="50"
-        />
-        <MediaQuery maxWidth={425}>{this.sliderLabel('Shallow')}</MediaQuery>
-        {this.sliderLabel('Deep')}
-      </div>
+      <Slider
+        labelStyle="inline"
+        labelLeft="Shallow"
+        labelRight="Deep"
+      />
     );
   }
 
   render() {
     return (
-      <div>
+      <div className='space-filters-container'>
         <MediaQuery maxWidth={425}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Space</h6>

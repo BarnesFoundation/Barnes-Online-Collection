@@ -14,7 +14,7 @@ import Footer from '../../components/Footer/Footer';
 class LandingPage extends Component {
   render() {
     return (
-      <div className="app">
+      <div className="app app-landing-page">
         <HtmlClassManager />
         <SiteHeader />
         <div className="landing-page container">

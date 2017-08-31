@@ -4,6 +4,9 @@ import './index.css';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
+
+import Slider from '../../../components/Slider/Slider.jsx';
+
 const getDisplayDateAndMedium = (displayDate, medium) => {
   const connector = displayDate && medium ? '—' : '';
 
@@ -28,7 +31,7 @@ class PanelVisuallyRelated extends Component {
     }
 
     return (
-      <div className="m-block">
+      <div className="m-block m-block--shallow">
         <div className="m-block__columns">
           <div className="m-block__column">
             <div className="art-object__image-container">
@@ -42,9 +45,10 @@ class PanelVisuallyRelated extends Component {
             </div>
           </div>
           <div className="m-block__column">
-            <div className="todo-slider">
-              todo add slider UI (more similar -- more surprising)
-            </div>
+            <Slider
+              labelLeft='More similar'
+              labelRight='More surprising'
+            />
             <ArtObjectGrid />
           </div>
         </div>
