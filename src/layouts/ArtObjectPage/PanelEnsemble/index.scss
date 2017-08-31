@@ -1,4 +1,5 @@
 @import '../../../scss/variables.scss';
+@import '../../../scss/_mixins.scss';
 
 .art-object-page__panel-ensemble {
   .art-object__header {
@@ -20,6 +21,13 @@
       color: $color-grey-medium;
     }
   }
+
+  @include breakpoint('small-') {
+    .art-object__header {
+      display: none;
+    }
+  }
+
   .art-object__image-container {
     clear: both;
   }
