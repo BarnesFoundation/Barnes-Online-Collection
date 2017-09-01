@@ -44,7 +44,6 @@ class CollectionFilters extends Component {
       this.props.searchObjects(nextProps.search);
       this.props.clearAllFilters();
       this.props.closeFilterSet();
-      // this.props.setLastIndex(0, 25);
     } else if (
       nextProps.filters.ordered &&
       nextProps.filters.ordered.length > 0 &&
@@ -52,7 +51,6 @@ class CollectionFilters extends Component {
     ) {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
-      // this.props.setLastIndex(0, 25);
     } else if (
       (nextProps.search.length === 0 ||
       !nextProps.filters.ordered) &&
@@ -60,7 +58,6 @@ class CollectionFilters extends Component {
       nextProps.filters.ordered !== this.props.filters.ordered)
     ) {
       this.props.getAllObjects();
-      // this.props.setLastIndex(0, 25);
     }
   }
 

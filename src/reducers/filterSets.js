@@ -6,35 +6,35 @@ const buildInitialState = () => {
     visibleFilterSet: null,
     sets: {
       colors: {
-        title: "Colors",
-        slug: "colors",
+        title: 'Colors',
+        slug: 'colors',
         options: []
       },
       lines: {
-        title: "Lines",
-        slug: "lines",
+        title: 'Lines',
+        slug: 'lines',
         options: {
           composition: [],
           linearity: []
         }
       },
       light: {
-        title: "Light",
-        slug: "light"
+        title: 'Light',
+        slug: 'light'
       },
       space: {
-        title: "Space",
-        slug: "space"
+        title: 'Space',
+        slug: 'space'
       },
       shuffle: {
-        title: "",
-        slug: "shuffle",
-        type: "shuffle"
+        title: '',
+        slug: 'shuffle',
+        type: 'shuffle'
       },
       search: {
-        title: "",
-        slug: "search",
-        type: "search"
+        title: '',
+        slug: 'search',
+        type: 'search'
       }
     }
   };
