@@ -15,12 +15,10 @@ const fetchResults = (body, dispatch, append=false) => {
       body: body,
     }
   }).then((response) => {
-    console.log(body);
-    console.log(response.data.hits.hits.length, 'hits');
-
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
 
     dispatch(setMaxHits(response.data.hits.total));
+    dispatch(setLastIndex(body.from + body.size));
 
     if (append) {
       dispatch(appendObjects(objects));
@@ -60,9 +58,7 @@ const setLastIndex = (lastIndex) => {
 
 export const getNextObjects = (fromIndex, query=null) => {
   return (dispatch) => {
-    setLastIndex(fromIndex);
     const append = true;
-
     if (!query) {
       return getAllObjects(fromIndex, append)(dispatch);
     } else if (typeof query === 'string') {

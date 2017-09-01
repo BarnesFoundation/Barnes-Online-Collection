@@ -28,11 +28,12 @@ class ViewMoreButton extends Component {
     }
 
     const fromIndex = this.props.hitsDisplayed.lastIndex || 25;
-
+    console.log(fromIndex);
     this.props.getNextObjects(fromIndex, query);
   }
 
   shouldShowButton() {
+    console.log(this.props.hitsDisplayed);
     return this.props.hitsDisplayed.maxHits > this.props.hitsDisplayed.lastIndex;
   }
 

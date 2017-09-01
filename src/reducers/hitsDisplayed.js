@@ -9,7 +9,7 @@ const hitsDisplayed = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.SET_LAST_INDEX:
       return Object.assign({}, state, {
-        lastIndex: (action.idxFrom + action.size)
+        lastIndex: action.lastIndex
       });
     case ActionTypes.SET_MAX_HITS:
       return Object.assign({}, state, {

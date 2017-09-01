@@ -18,13 +18,24 @@ export const generateObjectImageUrls = (object) => {
   return newObject;
 }
 
+const dedupeObjects = (objects) => {
+  let hashTable = {};
+
+  return objects.filter(function(el) {
+    let key = JSON.stringify(el);
+    let match = Boolean(hashTable[key]);
+
+    return (match ? false : hashTable[key] = true);
+  });
+}
+
 const objects = (state = [], action) => {
   switch(action.type) {
     case ActionTypes.SET_OBJECTS:
       return action.payload.map(object => generateObjectImageUrls(object));
     case ActionTypes.APPEND_OBJECTS:
       const newObjects = action.payload.map(object => generateObjectImageUrls(object));
-      return state.concat(newObjects);
+      return dedupeObjects(state.concat(newObjects));
     default:
       return state;
   }

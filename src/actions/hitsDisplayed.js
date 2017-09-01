@@ -1,10 +1,9 @@
 import * as ActionTypes from '../constants';
 
-export const setLastIndex = (idxFrom, size) => {
+export const setLastIndex = (lastIndex) => {
   return {
     type: ActionTypes.SET_LAST_INDEX,
-    idxFrom: idxFrom,
-    size: size
+    lastIndex: lastIndex
   };
 }
 
