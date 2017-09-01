@@ -21,8 +21,8 @@ export const generateObjectImageUrls = (object) => {
 const dedupeObjects = (objects) => {
   let hashTable = {};
 
-  return objects.filter(function(el) {
-    let key = JSON.stringify(el);
+  return objects.filter(function(object) {
+    let key = object.id;
     let match = Boolean(hashTable[key]);
 
     return (match ? false : hashTable[key] = true);
