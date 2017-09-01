@@ -62,6 +62,7 @@
     margin: 0;
     position: relative;
     max-width: 50%;
+    transition: left 0.5s ease, top 0.5s ease;
 
     img,
     a {
@@ -93,11 +94,11 @@
   .art-object-fade {
     &__out {
       opacity: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.5s ease 0.5s;
     }
     &__in {
       opacity: 1;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.5s ease 0.5s;
     }
   }
 
