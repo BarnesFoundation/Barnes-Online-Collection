@@ -13,9 +13,9 @@ class FilterTag extends Component {
   }
 
   handleClick(event) {
-    switch(this.props.filterType) {
+    switch(this.props.filter.filterType) {
       case 'color':
-        this.props.removeColorFilter(this.props);
+        this.props.removeColorFilter(this.props.filter);
         break;
       default:
         this.props.removeFilterByIndex(this.props.index);

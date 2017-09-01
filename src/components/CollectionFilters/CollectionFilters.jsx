@@ -62,7 +62,7 @@ class CollectionFilters extends Component {
   }
 
   render() {
-    let filtersApplied = <CollectionFiltersApplied />;
+    let filtersApplied = <CollectionFiltersApplied visible={!!this.props.filterSets.visibleFilterSet}/>;
     if (this.props.search.length > 0) {
       filtersApplied = <SearchApplied />;
     }
