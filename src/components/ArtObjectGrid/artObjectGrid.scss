@@ -63,13 +63,13 @@
     position: relative;
     max-width: 50%;
 
-    img {
+    img,
+    a {
+      // this ensures the masonry calculations work right
       display: block;
     }
 
     a {
-      display: inline-block;
-
       &:hover,
       &:focus {
         .art-object-overlay {
