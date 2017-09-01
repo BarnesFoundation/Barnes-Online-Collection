@@ -1,253 +1,76 @@
 import * as ActionTypes from '../constants';
+import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings';
 
-const initialState = {
-  visibleFilterSet: null,
-  sets: {
-    colors: {
-      title: "Colors",
-      slug: "colors",
-      options: [
-        {
-          slug: 'color-sky-blue',
-          name: 'sky-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'sky blue',
-          color: '#71D5F8',
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#3C7CF6'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#0F48AF'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#192A72'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#211346'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#0E4349'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#0F4223'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#58871F'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#9AC12D'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#FFFC23'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#E69C17'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#EB6915'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#D8440E'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#CD130E'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#9D3469'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#6B2056'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#541439'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#6E6E6E'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#DCDCDC'
-        },
-        {
-          slug: 'color-ultramarine-blue',
-          name: 'ultramarine-blue',
-          method: 'query',
-          type: 'match',
-          field: '_all',
-          term: 'ultramarine blue',
-          color: '#F0F0F0'
-        },
-      ],
-    },
-    lines: {
-      title: "Lines",
-      slug: "lines",
-      options: {
-        composition: [
-          {
-            slug: 'line-vertical',
-            name: 'vertical'
-          },
-          {
-            slug: 'line-diagonal',
-            name: 'diagonal'
-          },
-          {
-            slug: 'line-horizontal',
-            name: 'horizontal'
-          },
-          {
-            slug: 'line-curvy',
-            name: 'curvy'
-          }
-        ],
-        linearity: [
-          {
-            slug: 'line-broken',
-            name: 'broken'
-          },
-          {
-            slug: 'line-unbroken',
-            name: 'unbroken'
-          },
-          {
-            slug: 'line-all-types',
-            name: 'all types'
-          }
-        ]
+const buildInitialState = () => {
+  var initialState = {
+    visibleFilterSet: null,
+    sets: {
+      colors: {
+        title: 'Colors',
+        slug: 'colors',
+        options: []
+      },
+      lines: {
+        title: 'Lines',
+        slug: 'lines',
+        options: {
+          composition: [],
+          linearity: []
+        }
+      },
+      light: {
+        title: 'Light',
+        slug: 'light'
+      },
+      space: {
+        title: 'Space',
+        slug: 'space'
+      },
+      shuffle: {
+        title: '',
+        slug: 'shuffle',
+        type: 'shuffle'
+      },
+      search: {
+        title: '',
+        slug: 'search',
+        type: 'search'
       }
-    },
-    light: {
-      title: "Light",
-      slug: "light",
-    },
-    space: {
-      title: "Space",
-      slug: "space",
-    },
-    // These aren't filters, so this gets a little muddy; should probably refactor.
-    shuffle: {
-      title: "",
-      slug: "shuffle",
-      type: "shuffle"
-    },
-    search: {
-      title: "",
-      slug: "search",
-      type: "search"
     }
+  };
+
+  for (let i = 0; i < COLOR_FILTERS.length; i++) {
+    let colorFilter = {
+      filterType: 'color',
+      slug: 'color-'+COLOR_FILTERS[i].name,
+      name: COLOR_FILTERS[i].name,
+      color: COLOR_FILTERS[i].buttonColor,
+      queries: COLOR_FILTERS[i].queries,
+    };
+
+    initialState.sets.colors.options.push(colorFilter);
   }
-};
+
+  for (let i = 0; i < LINE_FILTERS.composition.length; i++) {
+    let lineFilter = LINE_FILTERS.composition[i];
+    lineFilter.filterType = 'line';
+    lineFilter.slug = 'line-'+lineFilter.name;
+
+    initialState.sets.lines.options.composition.push(lineFilter);
+  }
+
+  for (let i = 0; i < LINE_FILTERS.linearity.length; i++) {
+    let lineFilter = LINE_FILTERS.linearity[i];
+    lineFilter.filterType = 'line';
+    lineFilter.slug = 'line-'+lineFilter.name;
+
+    initialState.sets.lines.options.linearity.push(lineFilter);
+  }
+
+  return initialState;
+}
+
+const initialState = buildInitialState();
 
 const filterSets = (state = initialState, action) => {
   switch(action.type) {

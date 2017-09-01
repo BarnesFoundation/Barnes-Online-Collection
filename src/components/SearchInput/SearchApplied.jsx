@@ -17,6 +17,7 @@ class SearchApplied extends Component {
     this.props.clearSearchTerm();
     this.props.getAllObjects();
   }
+
   render() {
     return (
       <div className="search-results">

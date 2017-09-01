@@ -13,7 +13,7 @@ class ColorFilter extends Component {
   }
 
   filterIsApplied() {
-    const filters = this.props.filters;
+    const filters = this.props.filters.colors;
     for (let i = 0; i < filters.length; i++) {
       if (filters[i].slug === this.props.filter.slug) {
         return i;
@@ -27,13 +27,13 @@ class ColorFilter extends Component {
 
     const filter = this.props.filter;
     if (this.props.filters.length === 0) {
-      this.props.addToFilters(filter);
+      this.props.addColorFilter(filter);
     } else {
       const index = this.filterIsApplied();
       if (index === -1) {
-        this.props.addToFilters(filter);
+        this.props.addColorFilter(filter);
       } else {
-        this.props.removeFilterByIndex(index);
+        this.props.removeColorFilter(filter);
       }
     }
   }
