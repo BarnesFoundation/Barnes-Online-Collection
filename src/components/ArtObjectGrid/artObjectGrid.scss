@@ -1,12 +1,36 @@
 @import '../../scss/variables.scss';
+@import '../../scss/_mixins.scss';
 
 .component-art-object-grid {
   opacity: 0;
   transition: opacity 0.75s ease;
+
   &.fade-in {
     opacity: 1;
     transition: opacity 0.75s ease;
   }
+
+  &[data-grid-style="full-size"] {
+    // A full screen grid should default to exactly 4 columns on large screens.
+    @include breakpoint('large+') {
+      .masonry-grid-element {
+        max-width: 25%;
+      }
+    }
+
+    @include breakpoint('medium-') {
+      .masonry-grid-element {
+        max-width: 33.33%;
+      }
+    }
+
+    @include breakpoint('small-') {
+      .masonry-grid-element {
+        max-width: 50%;
+      }
+    }
+  }
+
   // use a border and negative margin to frame the image without covering it
   .art-object-overlay,
   .art-object-caption {
@@ -39,14 +63,19 @@
     position: relative;
     max-width: 50%;
 
-    &:hover {
-      .art-object-overlay {
-        display: block;
-      }
-    }
-
     img {
       display: block;
+    }
+
+    a {
+      display: inline-block;
+
+      &:hover,
+      &:focus {
+        .art-object-overlay {
+          display: block;
+        }
+      }
     }
   }
 

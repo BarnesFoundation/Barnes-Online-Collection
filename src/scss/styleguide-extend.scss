@@ -5,7 +5,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: $font-family;
-  color: $color-site;
 }
 
 ul,
@@ -31,6 +30,13 @@ li {
 
 .color-medium {
   color: $color-grey-medium;
+}
+
+.btn {
+  &:focus {
+    border-color: $color-grey-light;
+    color: $color-grey-dark
+  }
 }
 
 // do our best to use a custom break to make text look like the mock.

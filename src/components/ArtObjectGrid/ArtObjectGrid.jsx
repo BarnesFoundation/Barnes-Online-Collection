@@ -46,7 +46,10 @@ class ArtObjectGrid extends Component {
   render() {
     const masonryElements = this.getMasonryElements();
     return (
-      <div className={this.getClasses()}>
+      <div
+        className={this.getClasses()}
+        data-grid-style={this.props.gridStyle}
+      >
         {masonryElements.length &&
           <MasonryGrid masonryElements={masonryElements} />
         }
