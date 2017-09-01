@@ -63,14 +63,19 @@
     position: relative;
     max-width: 50%;
 
-    &:hover {
-      .art-object-overlay {
-        display: block;
-      }
-    }
-
     img {
       display: block;
+    }
+
+    a {
+      display: inline-block;
+
+      &:hover,
+      &:focus {
+        .art-object-overlay {
+          display: block;
+        }
+      }
     }
   }
 

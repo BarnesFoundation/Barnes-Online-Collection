@@ -32,6 +32,13 @@ li {
   color: $color-grey-medium;
 }
 
+.btn {
+  &:focus {
+    border-color: $color-grey-light;
+    color: $color-grey-dark
+  }
+}
+
 // do our best to use a custom break to make text look like the mock.
 // but let smaller screen sizes wrap as they need to
 @include breakpoint('large-') {
