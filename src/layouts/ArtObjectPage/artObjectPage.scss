@@ -7,8 +7,10 @@
 
 .app-art-object-page {
   @include breakpoint('small-') {
+
     // fix style of how columns stack
-    .m-block__column + .m-block__column {
+    // todo: this needs to be more targeted.
+    .m-block__column--page-col + .m-block__column--page-col {
       margin-top: $block-margin-small;
       padding-top: $block-margin-small;
       border-top: $border-style;

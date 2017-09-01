@@ -33,7 +33,7 @@ class PanelVisuallyRelated extends Component {
     return (
       <div className="m-block m-block--shallow">
         <div className="m-block__columns">
-          <div className="m-block__column">
+          <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
               <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
               <div className="art-object__colors">
@@ -44,7 +44,7 @@ class PanelVisuallyRelated extends Component {
               <p>{getDisplayDateAndMedium(this.props.displayDate, this.props.medium)}</p>
             </div>
           </div>
-          <div className="m-block__column">
+          <div className="m-block__column m-block__column--page-col">
             <Slider
               labelLeft='More similar'
               labelRight='More surprising'
