@@ -26,6 +26,7 @@ class ColorFilter extends Component {
     event.preventDefault();
 
     const filter = this.props.filter;
+
     if (this.props.filters.length === 0) {
       this.props.addColorFilter(filter);
     } else {

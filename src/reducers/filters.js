@@ -19,10 +19,9 @@ const filters = (state = initialState, action) => {
         ordered: [...state.ordered, action.filter]
       });
     case ActionTypes.REMOVE_COLOR_FILTER:
-      const filterIndex = findIndexBySlug(state.colors, state.ordered[action.filter.index].slug);
       return Object.assign({}, state, {
-        colors: getReducedFilters(state.colors, filterIndex),
-        ordered: getReducedFilters(state.ordered, action.filter.index)
+        colors: getReducedFilters(state.colors, action.filter.slug),
+        ordered: getReducedFilters(state.ordered, action.filter.slug)
       });
     case ActionTypes.REMOVE_FILTER_BY_INDEX:
       return [...state.slice(0, action.index), ...state.slice(action.index + 1)];
@@ -36,7 +35,8 @@ const filters = (state = initialState, action) => {
   }
 }
 
-function getReducedFilters(filterArray, index) {
+function getReducedFilters(filterArray, slug) {
+  const index = findIndexBySlug(filterArray, slug);
   return [
     ...filterArray.slice(0, index),
     ...filterArray.slice(index + 1)
