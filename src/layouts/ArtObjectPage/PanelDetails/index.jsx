@@ -60,7 +60,7 @@ class PanelDetails extends Component {
         <div className="art-object__more-info m-block m-block--shallow">
           <div className="container-inner-narrow">
             <SummaryTable {...this.props}/>
-            <div className="m-block m-block--no-border m-block--shallow">
+            <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
               <button className="btn" type="button">Request Image</button>
               {printAvailable &&
                 <a className="btn btn--primary" href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
