@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
+import { BREAKPOINTS } from '../../constants';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
@@ -19,6 +20,7 @@ import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as ObjectsActions from '../../actions/objects';
+import * as HitsDisplayedActions from '../../actions/hitsDisplayed';
 
 import './collectionFilters.css';
 
@@ -35,24 +37,32 @@ class CollectionFilters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.search.length > 0 && nextProps.search !== this.props.search) {
+    if (
+      nextProps.search.length > 0 &&
+      nextProps.search !== this.props.search
+    ) {
       this.props.searchObjects(nextProps.search);
       this.props.clearAllFilters();
       this.props.closeFilterSet();
-    } else if (nextProps.filters.length > 0 && nextProps.filters !== this.props.filters) {
+    } else if (
+      nextProps.filters.ordered &&
+      nextProps.filters.ordered.length > 0 &&
+      nextProps.filters.ordered !== this.props.filters.ordered
+    ) {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
+    } else if (
+      (nextProps.search.length === 0 ||
+      !nextProps.filters.ordered) &&
+      (nextProps.search !== this.props.search ||
+      nextProps.filters.ordered !== this.props.filters.ordered)
+    ) {
+      this.props.getAllObjects();
     }
-    // } else if (nextProps.search.length === 0 && nextProps.filters.length === 0 && nextProps.search !== this.props.search && nextProps.filters !== this.props.filters) {
-    //   this.props.getAllObjects();
-    //   this.props.clearAllFilters();
-    //   this.props.clearSearchTerm();
-    //   this.props.closeFilterSet();
-    // }
   }
 
   render() {
-    let filtersApplied = <CollectionFiltersApplied />;
+    let filtersApplied = <CollectionFiltersApplied visible={!!this.props.filterSets.visibleFilterSet}/>;
     if (this.props.search.length > 0) {
       filtersApplied = <SearchApplied />;
     }
@@ -61,7 +71,7 @@ class CollectionFilters extends Component {
 
     return (
       <div className="collection-filters">
-        <MediaQuery maxWidth={425}>
+        <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
           { mobileFiltersVisible &&
             <div>
               <MobileFiltersMenu />
@@ -72,7 +82,7 @@ class CollectionFilters extends Component {
             <MobileFiltersOpener />
           }
         </MediaQuery>
-        <MediaQuery minWidth={426}>
+        <MediaQuery minWidth={BREAKPOINTS.desktop_min}>
             <CollectionFiltersMenu />
             <div className="m-block m-block--flush">
               {this.filterSet()}
@@ -89,7 +99,8 @@ const mapStateToProps = state => {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
     filters: state.filters,
-    search: state.search
+    search: state.search,
+    hitsDisplayed: state.hitsDisplayed
   }
 }
 
@@ -98,7 +109,8 @@ const mapDispatchToProps = dispatch => {
     FiltersActions,
     SearchActions,
     FilterSetsActions,
-    ObjectsActions
+    ObjectsActions,
+    HitsDisplayedActions
   ),
   dispatch);
 }

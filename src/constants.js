@@ -1,5 +1,6 @@
 // objects
 export const SET_OBJECTS = 'SET_OBJECTS';
+export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 
 //object
 export const SET_OBJECT = 'SET_OBJECT';
@@ -13,7 +14,8 @@ export const OPEN_MOBILE_FILTERS = 'OPEN_MOBILE_FILTERS';
 export const CLOSE_MOBILE_FILTERS = 'CLOSE_MOBILE_FILTERS';
 
 //filters
-export const ADD_TO_FILTERS = 'ADD_TO_FILTERS';
+export const ADD_COLOR_FILTER = 'ADD_COLOR_FILTER';
+export const REMOVE_COLOR_FILTER = 'REMOVE_COLOR_FILTER';
 export const REMOVE_FILTER_BY_INDEX = 'REMOVE_FILTER_BY_INDEX';
 export const REMOVE_FILTER_BY_SLUG = 'REMOVE_FILTER_BY_SLUG';
 export const CLEAR_ALL_FILTERS = 'CLEAR_ALL_FILTERS';
@@ -21,6 +23,10 @@ export const CLEAR_ALL_FILTERS = 'CLEAR_ALL_FILTERS';
 //search
 export const ADD_SEARCH_TERM = 'ADD_SEARCH_TERM';
 export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
+
+//hitsDisplayed
+export const SET_LAST_INDEX = 'SET_LAST_INDEX';
+export const SET_MAX_HITS = 'SET_MAX_HITS';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';
@@ -38,6 +44,12 @@ export const RESET_UI = 'RESET_UI';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
+
+// breakpoints
+export const BREAKPOINTS = {
+  desktop_min: 426,
+  mobile_max: 425
+};
 
 // copyrights
 export const COPYRIGHT_MAP = {
