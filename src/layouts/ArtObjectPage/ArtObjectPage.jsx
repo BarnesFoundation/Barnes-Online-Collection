@@ -44,9 +44,16 @@ class ArtObjectPage extends Component {
     if (this.props.prints.length === 0) {
       this.props.getPrints();
     }
+
+    this.updateStaleData();
   }
 
-  componentDidUpdate(nextProps, nextState) {
+  componentDidUpdate() {
+    this.updateStaleData();
+  }
+
+  updateStaleData() {
+
     const newArtObjectId = parseInt(this.props.match.params.id, 10)
     const currentArtObjectId = parseInt(this.props.artObject.id, 10)
     const isObjectStale = currentArtObjectId !== newArtObjectId;
