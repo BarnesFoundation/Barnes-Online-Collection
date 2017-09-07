@@ -6,12 +6,12 @@ import * as HtmlClassManagerActions from '../actions/htmlClassManager';
 
 const updateHtmlClassList = list => {
   // the <html> element
-  document.documentElement.classList = list.join(' ');
+  document.documentElement.className = list.join(' ');
 };
 
 const getLiveClassList = () => {
   // the <html> element
-  return document.documentElement.classList.value.split(' ');
+  return document.documentElement.className.split(' ');
 };
 
 var origClasslist = null;
