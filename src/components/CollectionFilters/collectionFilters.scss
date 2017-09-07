@@ -1,6 +1,14 @@
 @import '../../scss/variables.scss';
 
 .collection-filters {
+
+  .collection-filter-icon {
+    margin-right: .5em;
+    vertical-align: middle;
+    // make it appear slightly more centered with the font
+    margin-top: -0.08em;
+  }
+
   .btn-collection-filter {
     height: auto;
     width: auto;
@@ -20,14 +28,6 @@
     &:active {
       color: $color-red-barnes;
       border-color: $color-red-barnes;
-    }
-
-    .collection-filter-icon {
-      margin-right: 15px;
-      vertical-align: middle;
-      font-size: $collection-filter-icon-font-size;
-      // make it appear slightly more centered with the font
-      margin-top: -0.08em;
     }
 
     &--shuffle,
@@ -58,6 +58,11 @@
         }
       }
     }
+
+    .collection-filter-icon {
+      margin-right: 15px;
+      font-size: $collection-filter-icon-font-size;
+    }
   }
 
   .collection-filters-set {
@@ -68,11 +73,6 @@
       height: 90px;
       padding-top: 40px;
     }
-  }
-
-  .btn-icon {
-    width: 15px;
-    margin-right: 12px;
   }
 }
 

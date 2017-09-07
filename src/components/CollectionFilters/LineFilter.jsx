@@ -53,11 +53,7 @@ class LineFilter extends Component {
         onClick={this.handleClick}
         className={this.getClasses()}
       >
-        <img className="btn-icon"
-          src={`/images/${this.props.filter.slug}.svg`}
-          alt="X"
-          // alt={this.props.filter.name}
-        />
+        <svg className={`icon icon-${this.props.filter.svgId} collection-filter-icon`}><use xlinkHref={`#icon-${this.props.filter.svgId}`}></use></svg>
         {this.props.filter.name}
       </button>
     );

@@ -61,6 +61,7 @@ const buildInitialState = () => {
     let lineFilter = LINE_FILTERS.composition[i];
     lineFilter.filterType = 'line';
     lineFilter.slug = 'line-'+lineFilter.name;
+    lineFilter.svgId = lineFilter.svgId;
 
     initialState.sets.lines.options.composition.push(lineFilter);
   }
@@ -69,6 +70,7 @@ const buildInitialState = () => {
     let lineFilter = LINE_FILTERS.linearity[i];
     lineFilter.filterType = 'line';
     lineFilter.slug = 'line-'+lineFilter.name;
+    lineFilter.svgId = lineFilter.svgId;
 
     initialState.sets.lines.options.linearity.push(lineFilter);
   }
