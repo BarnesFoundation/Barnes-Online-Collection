@@ -7,12 +7,14 @@ const buildInitialState = () => {
     sets: {
       colors: {
         title: 'Colors',
+        svgId: 'tool_colors',
         slug: 'colors',
         options: []
       },
       lines: {
         title: 'Lines',
         slug: 'lines',
+        svgId: 'tool_lines',
         options: {
           composition: [],
           linearity: []
@@ -20,20 +22,24 @@ const buildInitialState = () => {
       },
       light: {
         title: 'Light',
-        slug: 'light'
+        slug: 'light',
+        svgId: 'tool_lights',
       },
       space: {
         title: 'Space',
-        slug: 'space'
+        slug: 'space',
+        svgId: 'tool_space',
       },
       shuffle: {
         title: '',
         slug: 'shuffle',
+        svgId: 'shuffle',
         type: 'shuffle'
       },
       search: {
         title: '',
         slug: 'search',
+        svgId: 'search',
         type: 'search'
       }
     }

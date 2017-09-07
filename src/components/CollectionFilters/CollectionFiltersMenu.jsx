@@ -18,6 +18,7 @@ class CollectionFiltersMenu extends Component {
               key={key}
               title={filterSets[key].title}
               slug={filterSets[key].slug}
+              svgId={filterSets[key].svgId}
             />
           )
         }
