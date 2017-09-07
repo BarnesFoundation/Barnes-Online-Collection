@@ -124,27 +124,34 @@ export const COLOR_FILTERS = [
 export const LINE_FILTERS = {
   composition: [
     {
-      name: 'vertical'
+      name: 'vertical',
+      svgId: 'line_vertical'
     },
     {
-      name: 'diagonal'
+      name: 'diagonal',
+      svgId: 'line_diagonal'
     },
     {
-      name: 'horizontal'
+      name: 'horizontal',
+      svgId: 'line_horizontal'
     },
     {
-      name: 'curvy'
+      name: 'curvy',
+      svgId: 'line_curvy'
     }
   ],
   linearity: [
     {
-      name: 'broken'
+      name: 'broken',
+      svgId: 'lines_broken'
     },
     {
-      name: 'unbroken'
+      name: 'unbroken',
+      svgId: 'lines_unbroken'
     },
     {
-      name: 'all types'
+      name: 'all types',
+      svgId: 'lines_alltypes'
     }
   ]
 };
