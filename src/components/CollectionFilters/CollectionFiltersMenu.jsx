@@ -4,12 +4,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
+import ReactTooltip from 'react-tooltip';
 
 class CollectionFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
       <div>
+        <ReactTooltip id="collectionFilterMenuItem" effect="solid"/>
         {
           Object
           .keys(filterSets)
@@ -19,6 +21,7 @@ class CollectionFiltersMenu extends Component {
               title={filterSets[key].title}
               slug={filterSets[key].slug}
               svgId={filterSets[key].svgId}
+              tooltip={filterSets[key].tooltip}
             />
           )
         }

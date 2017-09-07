@@ -39,7 +39,10 @@ class CollectionFiltersMenuItem extends Component {
     return (
       <button
         className={this.getClassNames()}
-        onClick={this.handleClick}>
+        onClick={this.handleClick}
+        data-tip={this.props.tooltip}
+        data-for="collectionFilterMenuItem"
+      >
         <div className="button-inner">
           <svg className={`icon icon-${svgId} collection-filter-icon`}><use xlinkHref={`#icon-${svgId}`}></use></svg>
           <span>

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './landingPage.css';
+
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import HtmlClassManager from '../../components/HtmlClassManager';
-
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
-
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
-
 import Footer from '../../components/Footer/Footer';
+
+import './landingPage.css';
 
 class LandingPage extends Component {
   render() {
