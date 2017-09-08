@@ -19,7 +19,8 @@ class PanelVisuallyRelated extends Component {
   }
 
   render() {
-    const colorSwatches = [];
+    const colorsSet = this.props.color || [];
+    let colorSwatches = colorsSet
 
     if (this.props.color) {
       for (let i = 0; i < 5; i++) {
