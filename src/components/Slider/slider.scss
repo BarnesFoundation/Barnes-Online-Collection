@@ -8,120 +8,54 @@
   margin-bottom: 20px;
 
   &[data-label-style="inline"] {
-    // don't use inline on the small breakpoint
+    // restrict the styles to this breakpoint
+    // in otherwords, don't use inline on the small breakpoint
     @include breakpoint('medium+') {
       flex-wrap: nowrap;
+
+      // give it a min width as large as the largest label
+      // which prevents the slider from jumping sideways when you switch tabs
+      .slider-label {
+        min-width: $slider-label-min-width;
+      }
+
+      .slider-label-right {
+        text-align: right;
+        padding-left: $slider-label-padding;
+      }
+
+      .slider-label-left {
+        text-align: left;
+        padding-right: $slider-label-padding;
+      }
 
       .show-for-style-inline {
         display: block;
       }
+
       .hide-for-style-inline {
         display: none;
       }
 
       .slider {
+        // vertical center it
+        margin-top: 5px;
         width: auto;
-        margin: 0 40px;
         align-content: stretch;
         flex-grow: 1;
       }
     }
   }
 
+  .rc-slider {
+    // clear padding from the plugin styles
+    padding: 0;
+    margin-bottom: 8px;
+  }
+
   .slider-label {
     white-space: nowrap;
     font-size: 17px;
     color: $color-grey-medium;
-  }
-
-  .slider {
-    width: 100%;
-    margin-bottom: 16px;
-    -webkit-appearance: none;
-    border: 0;
-
-    &:focus {
-      outline: none;
-    }
-
-    &::-webkit-slider-runnable-track {
-      width: 70%;
-      height: 5px;
-      background: $color-grey-light;
-      border: 0;
-      cursor: pointer;
-    }
-
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -12px;
-    }
-
-    // todo: consider using off-the-shelf code for this.
-    &:focus::-webkit-slider-runnable-track {
-      background: $color-grey-light;
-    }
-
-    &::-moz-range-track {
-      width: 70%;
-      height: 5px;
-      background: $color-grey-light;
-      border: 0;
-      cursor: pointer;
-    }
-
-    &::-moz-range-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 34px;
-      width: 34px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -15px;
-    }
-
-    &::-ms-track {
-      width: 70%;
-      cursor: pointer;
-      background: $color-grey-light;
-      border: 0;
-      color: transparent;
-    }
-
-    &::-ms-fill-lower {
-      background: $color-grey-light;
-      border: 0;
-    }
-
-    &::-ms-fill-upper {
-      background: $color-grey-light;
-      border: 0;
-    }
-
-    &:focus::-ms-fill-lower {
-      background: $color-grey-light;
-    }
-
-    &:focus::-ms-fill-upper {
-      background: $color-grey-light;
-    }
-
-    &::-ms-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 34px;
-      width: 34px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -15px;
-    }
   }
 }
