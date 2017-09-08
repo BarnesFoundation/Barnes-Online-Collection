@@ -47,15 +47,52 @@
     }
   }
 
-  .rc-slider {
-    // clear padding from the plugin styles
-    padding: 0;
-    margin-bottom: 8px;
-  }
-
   .slider-label {
     white-space: nowrap;
     font-size: 17px;
     color: $color-grey-medium;
+  }
+
+  // override rc-slider styles
+  .rc-slider {
+    padding: 0;
+    margin-bottom: 8px;
+  }
+
+  .rc-slider-handle {
+    border-color: $slider-handle-border-color;
+    height: $slider-handle-size;
+    width: $slider-handle-size;
+    margin-left: -$slider-handle-size / 2;
+    margin-top: -$slider-handle-size / 2 + $slider-track-height / 2;
+  }
+
+  .rc-slider-track,
+  .rc-slider-rail {
+    background-color: $slider-track-color;
+    height: $slider-track-height;
+  }
+
+}
+
+// override rc-slider tooltip styles
+.rc-slider-tooltip {
+  opacity: 0.9;
+
+  .rc-slider-tooltip-inner {
+    // copy tooltip styles
+    height: auto;
+    font-size: 13px;
+    padding: $tooltip-padding;
+    background-color: #222;
+    color: #fff;
+    border-radius: 3px;
+  }
+
+  .rc-slider-tooltip-arrow {
+    border-top-color: #222 !important;
+    margin-left: -6px !important;
+    bottom: 2px !important;
+    border-width: 6px 6px 0 !important;
   }
 }

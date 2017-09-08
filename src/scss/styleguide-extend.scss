@@ -59,3 +59,8 @@ li {
 .a-brand-link--block {
   display: block;
 }
+
+// just throw this in here. It tweaks the default padding just slightly for this plugin.
+.__react_component_tooltip {
+  padding: $tooltip-padding !important;
+}

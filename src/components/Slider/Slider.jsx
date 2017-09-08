@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import './slider.css';
 
-import SliderEl from 'rc-slider/lib/Slider';
+import ReactTooltip from 'react-tooltip';
+import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-const trackHeight = 5;
-const handleSize = 30;
-const trackColor = '#b4b4b4';
-const handleBorderColor = '#6e6e6e';
-const trackStyle = {
-  backgroundColor: trackColor,
-  height: trackHeight,
+const SliderWithTooltip = createSliderWithTooltip(Slider);
+
+const percentFormatter = (v) => {
+  return `${v} %`;
 };
 
-class Slider extends Component {
+class CustomSlider extends Component {
   constructor(props) {
     super(props);
 
@@ -22,27 +20,26 @@ class Slider extends Component {
     };
   }
 
+  onSliderChange = (value) => {
+    this.state.value = value;
+
+  }
+
   render() {
     return (
       <div
         className="component-slider"
         data-label-style={this.props.labelStyle}
       >
+      <ReactTooltip id="footest" effect="solid"/>
        <span
         className="slider-label slider-label-left font-smallprint hidden show-for-style-inline"
       >{this.props.labelLeft}</span>
-        <SliderEl
+        <SliderWithTooltip
+          tipFormatter={percentFormatter}
           className="slider"
           defaultValue={this.state.value}
-          trackStyle={trackStyle}
-          railStyle={trackStyle}
-          handleStyle={{
-            borderColor: handleBorderColor,
-            height: handleSize,
-            width: handleSize,
-            marginLeft: -handleSize/2,
-            marginTop: -handleSize/2 + trackHeight/2,
-          }}
+          onChange={this.onSliderChange}
         />
         <span className="slider-label slider-label-left font-smallprint hide-for-style-inline">{this.props.labelLeft}</span>
         <span className="slider-label slider-label-right font-smallprint">{this.props.labelRight}</span>
@@ -51,4 +48,4 @@ class Slider extends Component {
   }
 }
 
-export default Slider;
+export default CustomSlider;
