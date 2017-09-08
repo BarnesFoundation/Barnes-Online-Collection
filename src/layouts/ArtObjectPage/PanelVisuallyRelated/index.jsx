@@ -19,27 +19,12 @@ class PanelVisuallyRelated extends Component {
   }
 
   render() {
-    const colorsSet = this.props.color || [];
-    let colorSwatches = colorsSet
-
-    if (this.props.color) {
-      for (let i = 0; i < 5; i++) {
-        colorSwatches.push(
-          <div className="art-object__color-swatch" style={{backgroundColor: this.props.color[`palette-closest-${i}`]}}>
-          </div>
-        );
-      }
-    }
-
     return (
       <div className="m-block m-block--shallow">
         <div className="m-block__columns">
           <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
               <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
-              <div className="art-object__colors">
-                {colorSwatches}
-              </div>
             </div>
             <div className="">
               <p>{getDisplayDateAndMedium(this.props.displayDate, this.props.medium)}</p>
