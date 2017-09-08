@@ -16,7 +16,10 @@ class Footer extends Component {
             <div className="m-block m-block--no-border m-block__columns">
               <div className="m-block__column">
                 <p className="color-medium">
-                  The Barnes Foundation collection online is made possible<br className="br-large-only" /> by a generous grant from The John S. and James L. Knight Foundation
+                  The Barnes Foundation collection online is made possible<br className="br-large-only" /> by generous support from The John S. and James L. Knight Foundation.
+                </p>
+                <p>
+                  <img width={285} src="/images/knight-foundation-logo.svg" alt="knight foundation logo" />
                 </p>
               </div>
               <div className="m-block__column">
