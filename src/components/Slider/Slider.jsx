@@ -8,7 +8,7 @@ import 'rc-slider/assets/index.css';
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 const percentFormatter = (v) => {
-  return `${v} %`;
+  return `${v}%`;
 };
 
 class CustomSlider extends Component {
@@ -20,9 +20,11 @@ class CustomSlider extends Component {
     };
   }
 
-  onSliderChange = (value) => {
-    this.state.value = value;
-
+  onSliderChange(value) {
+    // This will set state.value to the active value between 0-100.
+    this.setState({
+      value: value
+    });
   }
 
   render() {
@@ -39,7 +41,7 @@ class CustomSlider extends Component {
           tipFormatter={percentFormatter}
           className="slider"
           defaultValue={this.state.value}
-          onChange={this.onSliderChange}
+          onChange={this.onSliderChange.bind(this)}
         />
         <span className="slider-label slider-label-left font-smallprint hide-for-style-inline">{this.props.labelLeft}</span>
         <span className="slider-label slider-label-right font-smallprint">{this.props.labelRight}</span>
