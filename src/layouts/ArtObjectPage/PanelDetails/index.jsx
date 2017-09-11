@@ -45,6 +45,8 @@ class PanelDetails extends Component {
       return print.id === this.props.invno
     });
 
+    const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
+
     return (
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
@@ -59,9 +61,10 @@ class PanelDetails extends Component {
         </div>
         <div className="art-object__more-info m-block m-block--shallow">
           <div className="container-inner-narrow">
-            <SummaryTable {...this.props}/>
+            <SummaryTable {...this.props} objectCopyrightDetails={objectCopyrightDetails}/>
+
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
-              {getCopyright(this.props.objRightsTypeId).type === "large" ?
+              {objectCopyrightDetails.type === "large" ?
                 <a className="btn" href={this.props.imageUrlLarge} target="_blank" rel="noopener noreferrer" >
                   Download Image
                 </a>
