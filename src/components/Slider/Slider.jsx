@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './slider.css';
 
-import ReactTooltip from 'react-tooltip';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -33,7 +32,6 @@ class CustomSlider extends Component {
         className="component-slider"
         data-label-style={this.props.labelStyle}
       >
-      <ReactTooltip id="footest" effect="solid"/>
        <span
         className="slider-label slider-label-left font-smallprint hidden show-for-style-inline"
       >{this.props.labelLeft}</span>
