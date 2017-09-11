@@ -61,7 +61,16 @@ class PanelDetails extends Component {
           <div className="container-inner-narrow">
             <SummaryTable {...this.props}/>
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
-              <button className="btn" type="button">Request Image</button>
+              {getCopyright(this.props.objRightsTypeId).type === "large" ?
+                <a className="btn" href={this.props.imageUrlLarge} target="_blank" rel="noopener noreferrer" >
+                  Download Image
+                </a>
+              :
+                <a className="btn" href="https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/" target="_blank" rel="noopener noreferrer" >
+                  Request Image
+                </a>
+              }
+
               {printAvailable &&
                 <a className="btn btn--primary" href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
                 Purchase Print
