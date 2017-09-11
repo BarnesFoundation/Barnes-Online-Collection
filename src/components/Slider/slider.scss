@@ -8,20 +8,39 @@
   margin-bottom: 20px;
 
   &[data-label-style="inline"] {
-    // don't use inline on the small breakpoint
+    // restrict the styles to this breakpoint
+    // in otherwords, don't use inline on the small breakpoint
     @include breakpoint('medium+') {
       flex-wrap: nowrap;
+
+      // give it a min width as large as the largest label
+      // which prevents the slider from jumping sideways when you switch tabs
+      .slider-label {
+        min-width: $slider-label-min-width;
+      }
+
+      .slider-label-right {
+        text-align: right;
+        padding-left: $slider-label-padding;
+      }
+
+      .slider-label-left {
+        text-align: left;
+        padding-right: $slider-label-padding;
+      }
 
       .show-for-style-inline {
         display: block;
       }
+
       .hide-for-style-inline {
         display: none;
       }
 
       .slider {
+        // vertical center it
+        margin-top: 5px;
         width: auto;
-        margin: 0 40px;
         align-content: stretch;
         flex-grow: 1;
       }
@@ -34,94 +53,46 @@
     color: $color-grey-medium;
   }
 
-  .slider {
-    width: 100%;
-    margin-bottom: 16px;
-    -webkit-appearance: none;
-    border: 0;
+  // override rc-slider styles
+  .rc-slider {
+    padding: 0;
+    margin-bottom: 8px;
+  }
 
-    &:focus {
-      outline: none;
-    }
+  .rc-slider-handle {
+    border-color: $slider-handle-border-color;
+    height: $slider-handle-size;
+    width: $slider-handle-size;
+    margin-left: -$slider-handle-size / 2;
+    margin-top: -$slider-handle-size / 2 + $slider-track-height / 2;
+  }
 
-    &::-webkit-slider-runnable-track {
-      width: 70%;
-      height: 5px;
-      background: $color-grey-light;
-      border: 0;
-      cursor: pointer;
-    }
+  .rc-slider-track,
+  .rc-slider-rail {
+    background-color: $slider-track-color;
+    height: $slider-track-height;
+  }
 
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -12px;
-    }
+}
 
-    // todo: consider using off-the-shelf code for this.
-    &:focus::-webkit-slider-runnable-track {
-      background: $color-grey-light;
-    }
+// override rc-slider tooltip styles
+.rc-slider-tooltip {
+  opacity: 0.9;
 
-    &::-moz-range-track {
-      width: 70%;
-      height: 5px;
-      background: $color-grey-light;
-      border: 0;
-      cursor: pointer;
-    }
+  .rc-slider-tooltip-inner {
+    // copy tooltip styles
+    height: auto;
+    font-size: 13px;
+    padding: $tooltip-padding;
+    background-color: #222;
+    color: #fff;
+    border-radius: 3px;
+  }
 
-    &::-moz-range-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 34px;
-      width: 34px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -15px;
-    }
-
-    &::-ms-track {
-      width: 70%;
-      cursor: pointer;
-      background: $color-grey-light;
-      border: 0;
-      color: transparent;
-    }
-
-    &::-ms-fill-lower {
-      background: $color-grey-light;
-      border: 0;
-    }
-
-    &::-ms-fill-upper {
-      background: $color-grey-light;
-      border: 0;
-    }
-
-    &:focus::-ms-fill-lower {
-      background: $color-grey-light;
-    }
-
-    &:focus::-ms-fill-upper {
-      background: $color-grey-light;
-    }
-
-    &::-ms-thumb {
-      -webkit-appearance: none;
-      border: 2px solid $color-grey-medium;
-      height: 34px;
-      width: 34px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      margin-top: -15px;
-    }
+  .rc-slider-tooltip-arrow {
+    border-top-color: #222 !important;
+    margin-left: -6px !important;
+    bottom: 2px !important;
+    border-width: 6px 6px 0 !important;
   }
 }

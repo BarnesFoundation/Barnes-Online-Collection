@@ -16,7 +16,6 @@ $color-grey-ultra-light-2: #f7f7f7;
 $color-red-barnes: $color__red--barnes;
 $color-border: $color__border;
 
-
 $content-narrow-width: 800px;
 $image-page-centered-perc: 65%;
 
@@ -44,3 +43,15 @@ $z-index-art-object-grid-view-more: 2;
 $collection-filter-item-margin: 30px;
 $collection-filter-icon-font-size: 1.75em;
 $collection-filter-icon-font-size-sm-scale: .8;
+
+// plugin component styles
+// slider
+$slider-label-min-width: 100px;
+$slider-label-padding: 40px;
+$slider-track-height: 5px;
+$slider-handle-size: 30px;
+$slider-track-color: $color-grey-light;
+$slider-handle-border-color: $color-grey-medium;
+
+// tooltip
+$tooltip-padding: 8px 14px;
