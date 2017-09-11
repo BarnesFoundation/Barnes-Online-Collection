@@ -34,14 +34,14 @@ const buildInitialState = () => {
         title: '',
         slug: 'shuffle',
         svgId: 'shuffle',
-        tooltip: 'Search a keyword, artist…',
+        tooltip: 'Shuffle',
         type: 'shuffle'
       },
       search: {
         title: '',
         slug: 'search',
         svgId: 'search',
-        tooltip: 'Shuffle',
+        tooltip: 'Search a keyword, artist…',
         type: 'search'
       }
     }
