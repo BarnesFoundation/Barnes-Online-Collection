@@ -12,10 +12,10 @@ window.$ = window.jQuery = jQuery;
 class Zoom extends Component {
   componentDidMount() {
     const map = leaflet.map('map', {
-      center: [2048, 2048],
+      center: [0, 0],
       crs: leaflet.CRS.Simple,
-      zoom: 2,
-      minZoom: 2
+      zoom: 1,
+      minZoom: 1
     });
 
     const info = `https://s3.amazonaws.com/${AWS_BUCKET}/tiles/${this.props.invno}/info.json`;
