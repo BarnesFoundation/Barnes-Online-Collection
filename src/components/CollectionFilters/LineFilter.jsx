@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 // import { bindActionCreators } from 'redux';
 // import { connect } from 'react-redux';
-
 // import * as FiltersActions from '../../actions/filters';
 // import * as FilterSetsActions from '../../actions/filterSets';
 
@@ -54,12 +53,9 @@ class LineFilter extends Component {
         // className={this.getClasses()}
         className={this.props.classes}
       >
-        <img
-          className="btn-icon"
-          src={`/images/${this.props.slug}.svg`}
-          alt="X"
-          // alt={this.props.filter.name}
-        />
+        <svg className={`icon icon-${this.props.filter.svgId} collection-filter-icon`}>
+          <use xlinkHref={`#icon-${this.props.filter.svgId}`}></use>
+        </svg>
         {this.props.name}
       </button>
     );
