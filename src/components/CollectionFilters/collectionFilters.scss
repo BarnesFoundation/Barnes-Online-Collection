@@ -1,6 +1,13 @@
 @import '../../scss/variables.scss';
 
 .collection-filters {
+  .collection-filter-icon {
+    margin-right: .5em;
+    vertical-align: middle;
+    // make it appear slightly more centered with the font
+    margin-top: -0.08em;
+  }
+
   .btn-collection-filter {
     height: auto;
     width: auto;
@@ -22,24 +29,38 @@
       border-color: $color-red-barnes;
     }
 
-    .collection-filter-icon {
-      padding-right: 15px;
-    }
-
-    &--shuffle {
-      margin: 0 30px;
-    }
-
-    &--search {
-      margin-left: 40px;
-      margin-right: 0;
-    }
-
     &--shuffle,
     &--search {
-      .collection-filter-icon {
-        padding-right: 0;
+      margin-right: 0;
+
+      .button-inner {
+        position: relative;
+        padding: 0 $collection-filter-item-margin;
+
+        // make a vert centered border with a height to match the larger icons
+        &:before {
+          display: block;
+          left: 0;
+          content: '';
+          position: absolute;
+          height: $collection-filter-icon-font-size;
+          border-left: 1px solid #dcdcdc;
+          transform: translateY(-50%);
+          top: 50%;
+        }
+
+        .collection-filter-icon {
+          // use scale instead of a smaller font so that the
+          // height stays consistent to ensure the border below doesn't jump
+          transform: scale($collection-filter-icon-font-size-sm-scale);
+          margin-right: 0;
+        }
       }
+    }
+
+    .collection-filter-icon {
+      margin-right: 15px;
+      font-size: $collection-filter-icon-font-size;
     }
   }
 
@@ -51,11 +72,6 @@
       height: 90px;
       padding-top: 40px;
     }
-  }
-
-  .btn-icon {
-    width: 15px;
-    margin-right: 12px;
   }
 }
 

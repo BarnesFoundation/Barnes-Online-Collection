@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-// import { bindActionCreators } from 'redux';
-// import { connect } from 'react-redux';
-// import * as FiltersActions from '../../actions/filters';
-// import * as FilterSetsActions from '../../actions/filterSets';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as FiltersActions from '../../actions/filters';
+import * as FilterSetsActions from '../../actions/filterSets';
 
 class LineFilter extends Component {
   constructor(props) {

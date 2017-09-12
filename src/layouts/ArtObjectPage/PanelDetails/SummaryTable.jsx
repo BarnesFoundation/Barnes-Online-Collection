@@ -4,8 +4,9 @@ import '../../../components/FlexboxTable/index.css';
 
 class FlexboxTable extends Component {
   render() {
+
     return (
-      <div className="m-block table-flexbox component-summary-table">
+      <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
         {this.props.people &&
           <div className="table-row">
             <div className="text">Artist</div>
@@ -37,6 +38,10 @@ class FlexboxTable extends Component {
         <div className="table-row">
           <div className="text">Dimensions</div>
           <div className="text color-light">{this.props.dimensions}</div>
+        </div>
+        <div className="table-row">
+          <div className="text">Copyright Status</div>
+          <div className="text color-light">{this.props.objectCopyrightDetails.copy}</div>
         </div>
       </div>
     );

@@ -11,24 +11,29 @@ class Footer extends Component {
   render() {
     return (
       <footer className="g-footer g-footer--no-border g-footer--flush-top">
-        <div className="container g-footer__container-top">
-          <div className="m-block m-block--no-border m-block__columns">
-            <div className="m-block__column">
-              <p className="color-medium">
-                The Barnes Foundation collection online is made possible<br className="br-large-only" /> by a generous grant from The John S. and James L. Knight Foundation
-              </p>
-            </div>
-            <div className="m-block__column">
-              <div className="m-block__columns">
-                <div className="m-block__column">
-                  {/* todo: add link urls */}
-                  <a className="a-brand-link a-brand-link--block" href="#">Project Credits &amp; Information</a>
-                  <a className="a-brand-link a-brand-link--block" href="#">Image Licensing</a>
-                </div>
-                <div className="m-block__column">
-                  <a className="a-brand-link a-brand-link--block" href="#">Collection History</a>
-                  <a className="a-brand-link a-brand-link--block" href="#">Archives and Special Collections</a>
-                  <a className="a-brand-link a-brand-link--block" href="#">Plant Collections</a>
+        <div className="container-wrap-fullscreen">
+          <div className="container g-footer__container-top">
+            <div className="m-block m-block--no-border m-block__columns">
+              <div className="m-block__column">
+                <p className="color-medium">
+                  The Barnes Foundation collection online is made possible<br className="br-large-only" /> by generous support from The John S. and James L. Knight Foundation.
+                </p>
+                <p>
+                  <img width={285} src="/images/knight-foundation-logo.svg" alt="knight foundation logo" />
+                </p>
+              </div>
+              <div className="m-block__column">
+                <div className="m-block__columns">
+                  <div className="m-block__column">
+                    {/* todo: add link urls */}
+                    <a className="a-brand-link a-brand-link--block" href="#">Project Credits &amp; Information</a>
+                    <a className="a-brand-link a-brand-link--block" href="#">Image Licensing</a>
+                  </div>
+                  <div className="m-block__column">
+                    <a className="a-brand-link a-brand-link--block" href="#">Collection History</a>
+                    <a className="a-brand-link a-brand-link--block" href="#">Archives and Special Collections</a>
+                    <a className="a-brand-link a-brand-link--block" href="#">Plant Collections</a>
+                  </div>
                 </div>
               </div>
             </div>

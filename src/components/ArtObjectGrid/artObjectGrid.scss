@@ -14,19 +14,19 @@
     // A full screen grid should default to exactly 4 columns on large screens.
     @include breakpoint('large+') {
       .masonry-grid-element {
-        max-width: 25%;
+        width: 25%;
       }
     }
 
     @include breakpoint('medium-') {
       .masonry-grid-element {
-        max-width: 33.33%;
+        width: 33.33%;
       }
     }
 
     @include breakpoint('small-') {
       .masonry-grid-element {
-        max-width: 50%;
+        width: 50%;
       }
     }
   }
@@ -61,13 +61,14 @@
     padding: $art-object-grid-gap / 2;
     margin: 0;
     position: relative;
-    max-width: 50%;
+    width: 50%;
     transition: left 0.5s ease, top 0.5s ease;
 
     img,
     a {
       // this ensures the masonry calculations work right
       display: block;
+      width: 100%;
     }
 
     a {

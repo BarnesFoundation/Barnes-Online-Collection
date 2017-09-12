@@ -39,6 +39,15 @@ li {
   }
 }
 
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
 // do our best to use a custom break to make text look like the mock.
 // but let smaller screen sizes wrap as they need to
 @include breakpoint('large-') {
@@ -49,4 +58,9 @@ li {
 
 .a-brand-link--block {
   display: block;
+}
+
+// Small style tweak for this plugin's default padding.
+.__react_component_tooltip {
+  padding: $tooltip-padding !important;
 }
