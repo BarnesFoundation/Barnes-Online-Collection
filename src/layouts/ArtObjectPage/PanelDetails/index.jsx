@@ -51,12 +51,11 @@ class PanelDetails extends Component {
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
           <div className="container-inner-narrow">
-            <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
-            <div className="art-object__image-options no-print">
-              <button onClick={this.props.showZoomOverlay}>
-                Zoom
-              </button>
-            </div>
+            {objectCopyrightDetails.type === "large" ?
+              <Zoom invno={this.props.invno} />
+            :
+              <img className="art-object__image" src={this.props.imageUrlSmall} alt={this.props.title}/>
+            }
           </div>
         </div>
         <div className="art-object__more-info m-block m-block--shallow">
@@ -167,8 +166,6 @@ class PanelDetails extends Component {
           </div>
         </div>
         */}
-
-        {this.props.ui.zoomOverlayVisible && <Zoom invno={this.props.invno} onExit={this.props.hideZoomOverlay}/>}
       </div>
     );
   }
