@@ -18,7 +18,7 @@ class Filter extends Component {
   }
 
   filterIsApplied() {
-    const filters = this.props.filters;
+    const filters = this.props.filters.ordered;
     for (let i = 0; i < filters.length; i++) {
       if (filters[i].slug === this.props.filter.slug) {
         return i;
@@ -28,8 +28,6 @@ class Filter extends Component {
   }
 
   handleClick(event) {
-    // event.preventDefault();
-
     const filter = this.props.filter;
 
     if (this.props.filters.length === 0) {

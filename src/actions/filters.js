@@ -8,16 +8,13 @@ export function addFilter(filter) {
 }
 
 export function removeFilter(filter) {
-  switch(filter.filterType) {
-    case 'color':
-      removeFilterByIndex(filter);
-      break;
-    default:
-      break;
+  return {
+    type: ActionTypes.REMOVE_FILTER,
+    filter: filter
   }
 }
 
-function removeFilterByIndex(index) {
+export function removeFilterByIndex(index) {
   return {
     type: ActionTypes.REMOVE_FILTER_BY_INDEX,
     index: index

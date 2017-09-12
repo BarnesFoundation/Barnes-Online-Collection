@@ -15,13 +15,6 @@ class FilterTag extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    // switch(this.props.filter.filterType) {
-    //   case 'color':
-    //     this.props.removeColorFilter(this.props.filter);
-    //     break;
-    //   default:
-    //     this.props.removeFilterByIndex(this.props.index);
-    // }
     this.props.removeFilter(this.props.filter);
   }
 
