@@ -25,9 +25,15 @@ class PanelVisuallyRelated extends Component {
           <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
               <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
-            </div>
-            <div className="">
-              <p>{getDisplayDateAndMedium(this.props.displayDate, this.props.medium)}</p>
+              <div className="art-object__image-information">
+                <p>{getDisplayDateAndMedium(this.props.displayDate, this.props.medium)}</p>
+              </div>
+
+              {/* tags go here */}
+              {this.props.theSearchTagsGoHere &&
+                <div className="m-block m-block--no-border m-block--shallow m-block--flush-bottom art-object__search-tags">
+                </div>
+              }
             </div>
           </div>
           <div className="m-block__column m-block__column--page-col">

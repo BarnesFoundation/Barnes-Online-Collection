@@ -33,7 +33,6 @@ class Zoom extends Component {
     return (
       <section className="zoom">
         <div className="map-container">
-          <img className="zoom__exit" src="/x.svg" alt="close zoom" onClick={this.props.onExit}/>
           <div id="map">
           </div>
         </div>

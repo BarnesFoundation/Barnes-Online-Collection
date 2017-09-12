@@ -14,10 +14,9 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-
-  // Fix a minimum width of the leaf level cells so that they'll line up
-  .text {
+    // ensure at least a little padding
+    padding-right: 5px;
+    // Fix a minimum width of the leaf level cells so that they'll line up
     width: 1px;
   }
 }

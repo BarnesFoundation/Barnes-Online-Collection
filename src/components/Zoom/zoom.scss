@@ -1,27 +1,29 @@
 @import '../../scss/variables.scss';
 
 .zoom {
-  position: fixed;
-  height: 100%;
+  position: relative;
   width: 100%;
+
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    // lock aspect ratio
+    padding-top: $mapbox-aspect-ratio * 100%;
+  }
+
+  display: block;
   top: 0;
   left: 0;
   z-index: 1;
   background-color: $color-grey-dark;
 
-  &__exit {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    height: 40px;
-    cursor: pointer;
-    z-index: 2;
-  }
-
   .map-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
   .leaflet-container {
