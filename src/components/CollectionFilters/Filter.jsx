@@ -87,13 +87,20 @@ class Filter extends Component {
           classes={this.getClasses()}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
+          svgId={this.props.filter.svgId}
         />;
       case 'light':
         return <LightFilter
           handleClick={this.handleClick}
           classes={this.getClasses()}
+          svgId={this.props.filter.svgId}
         />;
       case 'space':
+        return <SpaceFilter
+          handleClick={this.handleClick}
+          classes={this.getClasses()}
+          svgId={this.props.filter.svgId}
+        />;
       default:
         return null;
         break;
