@@ -94,7 +94,9 @@ export const findFilteredObjects = (filters, fromIndex=0, append=false) => {
           }
           break;
         case 'line':
-          queries.push(buildLineQuery(filter));
+        case 'light':
+        case 'space':
+          queries.push(buildRangeGteQuery(filter));
         default:
           break;
       }
@@ -120,12 +122,20 @@ const buildColorQuery = (query) => {
   };
 }
 
-const buildLineQuery = (query) => {
+// const buildLineQuery = (query) => {
+//   let queryObject = { range: {} };
+//   queryObject['range'][query.name] = {
+//     "gte" : 0.5
+//   };
+
+//   return queryObject;
+// }
+
+const buildRangeGteQuery = (query) => {
   let queryObject = { range: {} };
   queryObject['range'][query.name] = {
-    "gte" : 0.5
-  };
-
+    "gte": 0.5
+  }
   return queryObject;
 }
 
