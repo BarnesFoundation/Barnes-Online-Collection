@@ -34,12 +34,21 @@ class CollectionFiltersMenuItem extends Component {
 
   render() {
     const slug = this.props.slug;
+    const svgId = this.props.svgId;
+
     return (
       <button
         className={this.getClassNames()}
-        onClick={this.handleClick}>
-        <img className="collection-filter-icon" alt="X"/>
-        {this.props.title}
+        onClick={this.handleClick}
+        data-tip={this.props.tooltip}
+        data-for="collectionFilterMenuItem"
+      >
+        <div className="button-inner">
+          <svg className={`icon icon-${svgId} collection-filter-icon`}><use xlinkHref={`#icon-${svgId}`}></use></svg>
+          <span>
+            {this.props.title}
+          </span>
+        </div>
       </button>
     );
   }

@@ -1,20 +1,23 @@
 import * as ActionTypes from '../constants';
 
-export function addColorFilter(filter) {
+export function addFilter(filter) {
   return {
-    type: ActionTypes.ADD_COLOR_FILTER,
+    type: ActionTypes.ADD_FILTER,
     filter: filter
   }
 }
 
-export function removeColorFilter(filter) {
-  return {
-    type: ActionTypes.REMOVE_COLOR_FILTER,
-    filter: filter
+export function removeFilter(filter) {
+  switch(filter.filterType) {
+    case 'color':
+      removeFilterByIndex(filter);
+      break;
+    default:
+      break;
   }
 }
 
-export function removeFilterByIndex(index) {
+function removeFilterByIndex(index) {
   return {
     type: ActionTypes.REMOVE_FILTER_BY_INDEX,
     index: index

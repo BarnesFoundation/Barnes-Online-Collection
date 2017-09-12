@@ -2,7 +2,8 @@
 @import '../../scss/mixins.scss';
 
 .g-footer {
-  &__container-top {
+  // a regular container is not full-bleed for large screen sizes
+  .container-wrap-fullscreen {
     background: $color-grey-ultra-light-2;
   }
 
@@ -10,6 +11,7 @@
     .h4 {
       // make the text match the mock
       max-width: 400px;
+      margin-bottom: 10px;
     }
   }
 

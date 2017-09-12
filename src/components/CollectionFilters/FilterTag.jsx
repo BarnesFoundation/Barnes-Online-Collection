@@ -8,18 +8,18 @@ import * as FiltersActions from '../../actions/filters';
 class FilterTag extends Component {
   constructor(props) {
     super(props);
-
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(event) {
-    switch(this.props.filter.filterType) {
-      case 'color':
-        this.props.removeColorFilter(this.props.filter);
-        break;
-      default:
-        this.props.removeFilterByIndex(this.props.index);
-    }
+    // switch(this.props.filter.filterType) {
+    //   case 'color':
+    //     this.props.removeColorFilter(this.props.filter);
+    //     break;
+    //   default:
+    //     this.props.removeFilterByIndex(this.props.index);
+    // }
+    this.props.removeFilter(this.props.filter);
   }
 
   render() {
