@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Icon from '../Icon.jsx';
+
 import * as FiltersActions from '../../actions/filters';
 
 class FilterTag extends Component {
@@ -12,6 +14,7 @@ class FilterTag extends Component {
   }
 
   handleClick(event) {
+    event.preventDefault();
     // switch(this.props.filter.filterType) {
     //   case 'color':
     //     this.props.removeColorFilter(this.props.filter);
@@ -24,8 +27,9 @@ class FilterTag extends Component {
 
   render() {
     return (
-      <button onClick={this.handleClick}>
-        {this.props.displayValue} X
+      <button className="applied-filter-tag" onClick={this.handleClick}>
+        <Icon svgId={this.props.filter.svgId} classes='collection-filter-icon' />
+        <Icon svgId='cross_tag' classes='icon-cross-tag'/>
       </button>
     );
   }

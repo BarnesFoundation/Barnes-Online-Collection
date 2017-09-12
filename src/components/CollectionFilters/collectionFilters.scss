@@ -123,3 +123,21 @@
     }
   }
 }
+
+.applied-filter-tag {
+  display: flex;
+  flex-wrap: no-wrap;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  background: transparent;
+  padding: 0 20px;
+  outline: none;
+  border: 2px solid #dedede;
+  border-radius: 25px;
+  margin: 12px;
+  .icon-cross-tag {
+    width: 10px;
+    height: 10px;
+  }
+}
