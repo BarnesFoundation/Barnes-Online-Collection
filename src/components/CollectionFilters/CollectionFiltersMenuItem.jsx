@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Icon from '../Icon';
+
 import * as FilterSetsActions from '../../actions/filterSets';
 
 class CollectionFiltersMenuItem extends Component {
@@ -44,7 +46,7 @@ class CollectionFiltersMenuItem extends Component {
         data-for="collectionFilterMenuItem"
       >
         <div className="button-inner">
-          <svg className={`icon icon-${svgId} collection-filter-icon`}><use xlinkHref={`#icon-${svgId}`}></use></svg>
+          <Icon svgId={svgId} classes='collection-filter-icon' />
           <span>
             {this.props.title}
           </span>

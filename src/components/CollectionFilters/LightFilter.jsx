@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ColorFilter extends Component {
+class LightFilter extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -12,14 +12,8 @@ class ColorFilter extends Component {
   }
 
   render() {
-    return (
-      <button
-        onClick={this.handleClick}
-        style={this.props.style}
-        className={this.props.classes}
-      ></button>
-    );
+    return <div><p>Light Filter</p></div>;
   }
 }
 
-export default ColorFilter;
+export default LightFilter;

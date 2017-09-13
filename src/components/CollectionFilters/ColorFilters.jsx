@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
 
-import ColorFilter from './ColorFilter';
+import Filter from './Filter';
 
 class ColorFilters extends Component {
   buildFilters() {
     const colorFilters = this.props.filterSets.sets.colors.options;
     return colorFilters.map((option, index) => {
       return (
-        <ColorFilter
+        <Filter
           key={index}
           index={index}
           filter={option}

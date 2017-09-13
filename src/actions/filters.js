@@ -1,15 +1,15 @@
 import * as ActionTypes from '../constants';
 
-export function addColorFilter(filter) {
+export function addFilter(filter) {
   return {
-    type: ActionTypes.ADD_COLOR_FILTER,
+    type: ActionTypes.ADD_FILTER,
     filter: filter
   }
 }
 
-export function removeColorFilter(filter) {
+export function removeFilter(filter) {
   return {
-    type: ActionTypes.REMOVE_COLOR_FILTER,
+    type: ActionTypes.REMOVE_FILTER,
     filter: filter
   }
 }

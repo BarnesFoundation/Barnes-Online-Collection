@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
 
-import LineFilter from './LineFilter';
+import Filter from './Filter';
 
 class LineFilters extends Component {
   buildFilters(type) {
@@ -13,7 +13,7 @@ class LineFilters extends Component {
     return (
       filters.map((option, index) => {
         return (
-          <LineFilter
+          <Filter
             key={index}
             index={index}
             filter={option}
