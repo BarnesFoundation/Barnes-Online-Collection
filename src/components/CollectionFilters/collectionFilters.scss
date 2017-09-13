@@ -87,12 +87,12 @@
     width: auto;
     min-width: auto;
     padding: 0;
-    border: 0;
+    border: 3px solid transparent;
     outline: 0;
     margin: 0;
-
+    &:hover,
     &.is-applied {
-      border: 3px solid black;
+      border-color: black;
     }
   }
 }
