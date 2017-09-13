@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Icon from '../Icon';
+
 import * as MobileFiltersActions from '../../actions/mobileFilters';
 
 class MobileFiltersOpener extends Component {
@@ -22,7 +24,7 @@ class MobileFiltersOpener extends Component {
 
     return (
       <button onClick={this.handleClick} className="btn-open-mobile-filters font-zeta color-light">
-        <svg className="icon icon-filters collection-filter-icon"><use xlinkHref="#icon-filters"></use></svg>
+        <Icon svgId='filters' classes='collection-filter-icon' />
         Filter{ filterCount > 0 && ` (${this.props.filters.length})` }
       </button>
     );

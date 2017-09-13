@@ -93,26 +93,19 @@ export const findFilteredObjects = (filters, fromIndex=0, append=false) => {
             queries.push(buildColorQuery(filter.queries[i]));
           }
           break;
+        case 'line':
+        case 'light':
+        case 'space':
+          queries.push(buildRangeGteQuery(filter));
         default:
           break;
       }
     }
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
+    console.log(body);
     fetchResults(body, dispatch, append);
   }
-}
-
-const buildSingleColorQuery = (body, query) => {
-  return body.query('multi_match', {
-    query: query,
-    fields: [
-      'color.palette-closest-*',
-      'color.palette-color-*',
-      'color.average-closest',
-      'color.average-color'
-    ]
-  });
 }
 
 const buildColorQuery = (query) => {
@@ -128,6 +121,27 @@ const buildColorQuery = (query) => {
     }
   };
 }
+
+// const buildLineQuery = (query) => {
+//   let queryObject = { range: {} };
+//   queryObject['range'][query.name] = {
+//     "gte" : 0.5
+//   };
+
+//   return queryObject;
+// }
+
+const buildRangeGteQuery = (query) => {
+  let queryObject = { range: {} };
+  queryObject['range'][query.name] = {
+    "gte": 0.5
+  }
+  return queryObject;
+}
+
+const buildLightQuery = (query) => {}
+
+const buildSpaceQuery = (query) => {}
 
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {

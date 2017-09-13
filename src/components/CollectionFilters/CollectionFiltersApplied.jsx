@@ -24,7 +24,7 @@ class CollectionFiltersApplied extends Component {
   }
 
   getClasses() {
-    let classes = '';
+    let classes = 'applied-filter-tags-container';
     if (!this.props.visible) {
       classes += 'hidden'
     }
