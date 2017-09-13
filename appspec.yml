@@ -7,3 +7,4 @@ hooks:
   AfterInstall:
     - location: /ubuntu/post-deploy.sh
       timeout: 300
+      runas: ubuntu
