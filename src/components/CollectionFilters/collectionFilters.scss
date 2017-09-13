@@ -124,6 +124,13 @@
   }
 }
 
+.applied-filter-tags-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}
+
 .applied-filter-tag {
   display: flex;
   align-items: center;
@@ -133,7 +140,7 @@
   outline: none;
   border: 2px solid #dedede;
   border-radius: 25px;
-  margin: 12px;
+  margin: 0 12px 0 0;
   .icon-cross-tag {
     width: 10px;
     height: 10px;
