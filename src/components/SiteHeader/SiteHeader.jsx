@@ -18,7 +18,7 @@ class SiteHeader extends Component {
       <div>
         <header className="g-header" data-behavior="header">
           <div className="container">
-            <a className="a-logo g-header__logo" href="https://barnesfoundation.org/">
+            <a className="a-logo g-header__logo" href={MAIN_WEBSITE_DOMAIN}>
               <span className="html4-label">Barnes</span>
               <svg className="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
                 <title id="logo-title">Barnes</title>
