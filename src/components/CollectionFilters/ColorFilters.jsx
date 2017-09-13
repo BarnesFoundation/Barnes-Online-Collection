@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
 
-// import ColorFilter from './ColorFilter';
 import Filter from './Filter';
 
 class ColorFilters extends Component {
