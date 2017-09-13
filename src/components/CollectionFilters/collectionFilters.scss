@@ -126,8 +126,6 @@
 
 .applied-filter-tag {
   display: flex;
-  flex-wrap: no-wrap;
-  justify-content: center;
   align-items: center;
   height: 40px;
   background: transparent;
@@ -139,5 +137,13 @@
   .icon-cross-tag {
     width: 10px;
     height: 10px;
+  }
+  .color-filter-icon {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 0;
+    margin-right: 10px;
+    margin-left: -10px;
   }
 }

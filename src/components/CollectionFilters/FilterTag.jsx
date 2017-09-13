@@ -13,6 +13,14 @@ class FilterTag extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  getFilterIcon() {
+    if (this.props.filter.filterType === 'color') {
+      return <span className="color-filter-icon" style={{background: this.props.filter.color}}></span>;
+    } else {
+      return <Icon svgId={this.props.filter.svgId} classes='collection-filter-icon' />;
+    }
+  }
+
   handleClick(event) {
     event.preventDefault();
     this.props.removeFilter(this.props.filter);
@@ -21,7 +29,7 @@ class FilterTag extends Component {
   render() {
     return (
       <button className="applied-filter-tag" onClick={this.handleClick}>
-        <Icon svgId={this.props.filter.svgId} classes='collection-filter-icon' />
+        {this.getFilterIcon()}
         <Icon svgId='cross_tag' classes='icon-cross-tag'/>
       </button>
     );
