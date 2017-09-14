@@ -11,6 +11,7 @@ const buildRequestBody = (fromIndex=0, size=25) => {
 }
 
 const addHighlightsFilter = (body) => {
+  console.log('highlights only!');
   return body.filter('match', 'highlight', 'true');
 }
 
@@ -18,7 +19,7 @@ const mapObjects = (objects) => {
   return objects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=false) => {
+const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=false, queries=null) => {
   axios.get('/api/search', {
     params: {
       body: body,
@@ -32,7 +33,7 @@ const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=
 
     if (barnesify && maxHits > 25) {
         console.log('barnesifying...');
-        barnesifyObjects(objects, dispatch, highlights, append);
+        barnesifyObjects(objects, dispatch, highlights, append, queries);
     } else {
       if (append) {
         dispatch(appendObjects(objects));
@@ -58,7 +59,7 @@ const shuffleObjects = (objects) => {
   return objects;
 }
 
-const barnesifyObjects = (objects, dispatch, highlights=false, append=false) => {
+const barnesifyObjects = (objects, dispatch, highlights=false, append=false, queries=null) => {
   let barnesObjects = {
     twoD: [],
     metalworks: [],
@@ -94,6 +95,10 @@ const barnesifyObjects = (objects, dispatch, highlights=false, append=false) => 
 
     if (highlights) {
       body = addHighlightsFilter(body);
+    }
+
+    if (queries) {
+      body = assembleDisMaxQuery(body, queries);
     }
 
     body = body.build();
@@ -240,9 +245,10 @@ export const findFilteredObjects = (filters, fromIndex=0, append=false, barnesif
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
 
+    const highlights = false;
     if (fromIndex === 0) { barnesify = true; }
 
-    fetchResults(body, dispatch, append, barnesify);
+    fetchResults(body, dispatch, append, barnesify, highlights, queries);
   }
 }
 
@@ -272,7 +278,7 @@ const buildColorQuery = (query) => {
 const buildRangeGteQuery = (query) => {
   let queryObject = { range: {} };
   queryObject['range'][query.name] = {
-    "gte": 0.5
+    "gte": query.min
   }
   return queryObject;
 }
