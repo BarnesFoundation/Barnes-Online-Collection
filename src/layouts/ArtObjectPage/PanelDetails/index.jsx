@@ -49,6 +49,8 @@ class PanelDetails extends Component {
 
     const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
 
+    const accordionTabList = getTabList(this.props);
+
     return (
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
@@ -82,13 +84,19 @@ class PanelDetails extends Component {
               }
             </div>
 
-            <div className="art-object__more-info m-block m-block--shallow">
-              <div className="art-object__short-description"
-                dangerouslySetInnerHTML={{__html: this.props.shortDescription}}
-              ></div>
-            </div>
+            {
+              this.props.shortDescription &&
+              <div className="art-object__more-info m-block m-block--shallow">
+                <div className="art-object__short-description"
+                  dangerouslySetInnerHTML={{__html: this.props.shortDescription}}
+                ></div>
+              </div>
+            }
 
-            <AccordionMenu tabList={getTabList(this.props)} />
+            {
+              accordionTabList.length > 0 &&
+              <AccordionMenu tabList={accordionTabList} />
+            }
           </div>
         </div>
 
