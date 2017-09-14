@@ -54,7 +54,7 @@ class PanelDetails extends Component {
             {objectCopyrightDetails.type === "large" ?
               <Zoom invno={this.props.invno} />
             :
-              <img className="art-object__image" src={this.props.imageUrlSmall} alt={this.props.title}/>
+              <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
             }
           </div>
         </div>

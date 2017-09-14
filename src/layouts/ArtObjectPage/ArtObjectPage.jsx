@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
 import * as UIActions from '../../actions/ui';
-import './artObjectPage.css';
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { getArtObjectUrlFromId } from '../../helpers';
+import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
+import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import TabbedContent from './TabbedContent/TabbedContent';
 import Footer from '../../components/Footer/Footer';
+import './artObjectPage.css';
 
 class ArtObjectPage extends Component {
   constructor(props) {
@@ -86,17 +87,15 @@ class ArtObjectPage extends Component {
   }
 
   render() {
-    const pageTitle = `${this.props.artObject.culture || this.props.artObject.people} - ${this.props.artObject.title}`;
+    const metaTitle = `${META_TITLE} — ${this.props.artObject.culture || this.props.artObject.people}: ${this.props.artObject.title}`;
+    const metaImage = this.props.artObject.imageUrlSmall;
 
     return (
       <div className="app app-art-object-page">
-        <Helmet>
-          <title>{pageTitle} </title>
-          <meta property="og:title" content={pageTitle} />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content={this.props.location.href} />
-          <meta property="og:image" content={this.props.artObject.imageUrlLarge} />
-        </Helmet>
+        <SiteHtmlHelmetHead
+          metaTitle={metaTitle}
+          metaImage={metaImage}
+        />
         <HtmlClassManager />
         <SiteHeader />
 

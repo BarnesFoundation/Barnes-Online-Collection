@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
+import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
@@ -14,6 +14,7 @@ class LandingPage extends Component {
   render() {
     return (
       <div className="app app-landing-page">
+        <SiteHtmlHelmetHead />
         <HtmlClassManager />
         <SiteHeader />
         <div className="landing-page container">
