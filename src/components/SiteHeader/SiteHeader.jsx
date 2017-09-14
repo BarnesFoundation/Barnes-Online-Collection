@@ -40,7 +40,7 @@ class SiteHeader extends Component {
             <nav className="g-header__nav">
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
-              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on/collection'}>Our Collection</a>
+              <a className="g-header__nav__link" href="/">Our Collection</a>
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
               <a
                 href={MAIN_WEBSITE_DOMAIN + '/search'}
