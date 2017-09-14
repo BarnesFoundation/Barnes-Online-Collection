@@ -2,10 +2,21 @@ import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 
-const buildRequestBody = (fromIndex=0, size=25) => {
+const BARNES_SETTINGS = {
+  min2D: 10,
+  minMetalworks: 7,
+  minObjects: 7,
+  min3D: 5,
+  terms2D: ['Paintings', 'Drawings', 'Works on Paper', 'Prints'],
+  termsMetalworks: ['Metalworks'],
+  terms3D: ['Vessels', 'Sculptures', 'Furniture', 'Jewelry', 'Tools and Equipment', 'Lighting Devices'],
+  size: 25
+};
+
+const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
-    .from(fromIndex).size(size);
+    .from(fromIndex).size(BARNES_SETTINGS.size);
   return body;
 }
 
@@ -37,6 +48,7 @@ const fetchResults = (body, dispatch, options=queryOptions) => {
 
     if (options.barnesify && maxHits > 25) {
         console.log('barnesifying...');
+        if (options.append) { options.fromIndex = lastIndex };
         barnesifyObjects(objects, dispatch, options);
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
@@ -72,13 +84,13 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const setBarnesObjects = () => {
-    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_ALGORITHM.min2D);
+    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
 
-    if (barnesObjects.metalworks.length >= BARNES_ALGORITHM.minMetalworks) {
-      refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_ALGORITHM.minMetalworks));
-      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_ALGORITHM.min3D));
+    if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
+      refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks));
+      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_SETTINGS.min3D));
     } else {
-      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_ALGORITHM.minObjects));
+      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_SETTINGS.minObjects));
     }
 
     let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
@@ -86,7 +98,8 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const params = (terms) => {
-    let body = buildRequestBody().query('terms', 'classification', terms);
+    const fromIndex = options.fromIndex || 0;
+    let body = buildRequestBody(fromIndex).query('terms', 'classification', terms);
 
     if (options.highlights) body = addHighlightsFilter(body);
     if (options.queries) body = assembleDisMaxQuery(body, options.queries);
@@ -96,25 +109,25 @@ const barnesifyObjects = (objects, dispatch, options) => {
     return { params: { body: body } };
   }
 
-  axios.get('/api/search', params(BARNES_ALGORITHM.terms2D))
+  axios.get('/api/search', params(BARNES_SETTINGS.terms2D))
   .then((response) => {
-    if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
+    if (response.data.hits.total >= BARNES_SETTINGS.min2D) {
       updateBarnesObjects(response.data.hits.hits, 'twoD');
 
-      axios.get('/api/search', params(BARNES_ALGORITHM.termsMetalworks))
+      axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks))
       .then((response) => {
-        if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
+        if (response.data.hits.total >= BARNES_SETTINGS.minMetalworks) {
           updateBarnesObjects(response.data.hits.hits, 'metalworks');
 
-          axios.get('/api/search', params(BARNES_ALGORITHM.terms3D))
+          axios.get('/api/search', params(BARNES_SETTINGS.terms3D))
           .then((response) => {
             updateBarnesObjects(response.data.hits.hits, 'threeD');
             setBarnesObjects();
           })
         } else {
-          axios.get('/api/search', params(['Metalworks', ...BARNES_ALGORITHM.terms3D]))
+          axios.get('/api/search', params(['Metalworks', ...BARNES_SETTINGS.terms3D]))
           .then((response) => {
-            if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
+            if (response.data.hits.total >= BARNES_SETTINGS.minObjects) {
               updateBarnesObjects(response.data.hits.hits, 'objects');
               setBarnesObjects();
             } else {
@@ -128,16 +141,6 @@ const barnesifyObjects = (objects, dispatch, options) => {
     }
   });
 }
-
-const BARNES_ALGORITHM = {
-  min2D: 10,
-  minMetalworks: 7,
-  minObjects: 7,
-  min3D: 5,
-  terms2D: ['Paintings', 'Drawings', 'Works on Paper', 'Prints'],
-  termsMetalworks: ['Metalworks'],
-  terms3D: ['Vessels', 'Sculptures', 'Furniture', 'Jewelry', 'Tools and Equipment', 'Lighting Devices'],
-};
 
 const setObjects = (objects) => {
   return {
@@ -168,8 +171,8 @@ const setLastIndex = (lastIndex) => {
 }
 
 export const getNextObjects = (fromIndex, query=null, options=queryOptions) => {
-  options.append = true;
   return (dispatch) => {
+    options.append = true;
     if (!query) {
       return getAllObjects(fromIndex, options)(dispatch);
     } else if (typeof query === 'string') {
