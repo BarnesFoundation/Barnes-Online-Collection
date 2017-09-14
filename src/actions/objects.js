@@ -9,13 +9,17 @@ const buildRequestBody = (fromIndex=0, size=25) => {
   return body;
 }
 
+const mapObjects = (objects) => {
+  return objects.map(object => Object.assign({}, object._source, { id: object._id }));
+}
+
 const fetchResults = (body, dispatch, task=null) => {
   axios.get('/api/search', {
     params: {
       body: body,
     }
   }).then((response) => {
-    const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+    const objects = mapObjects(response.data.hits.hits);
     const maxHits = response.data.hits.total;
 
     dispatch(setMaxHits(maxHits));
@@ -24,8 +28,9 @@ const fetchResults = (body, dispatch, task=null) => {
     if (task === 'append') {
       dispatch(appendObjects(objects));
     } else {
+      // dispatch(setObjects(objects));
       if (maxHits > 25) {
-        barnesifyObjects(objects, maxHits, dispatch);
+        barnesifyObjects(objects, dispatch);
       } else {
         dispatch(setObjects(objects));
       }
@@ -33,31 +38,99 @@ const fetchResults = (body, dispatch, task=null) => {
   });
 }
 
-const checkPossibleType = (type) => {
+const shuffleObjects = (objects) => {
+  let i = 0;
+  let j = 0;
+  let temp = null;
 
+  for (i = objects.length - 1; i > 0; i -= 1) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = objects[i];
+    objects[i] = objects[j];
+    objects[j] = temp;
+  }
+
+  return objects;
 }
 
 const barnesifyObjects = (objects, dispatch) => {
-  checkEnoughPaintings(objects, grabPaintings, setObjects, dispatch);
-}
+  let barnesObjects = {
+    twoD: [],
+    metalworks: [],
+    threeD: [],
+    objects: []
+  };
 
-const checkEnoughPaintings = (objects, proceed, abort, dispatch) => {
-  let body = buildRequestBody().query('match', 'classification', 'Paintings');
-  body = body.build();
+  const updateBarnesObjects = (objects, type) => {
+    barnesObjects[type].push(...objects);
+    console.log(barnesObjects);
+  }
 
-  axios.get('/api/search', { params: { body: body } })
-    .then((response) => {
-    if (response.data.hits.total >= 10) {
-      proceed(response.data.hits, dispatch);
+  const setBarnesObjects = () => {
+    let refinedBarnesObjects = [];
+
+    refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_ALGORITHM.min2D);
+
+    if (barnesObjects.metalworks.length >= BARNES_ALGORITHM.minMetalworks) {
+      refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_ALGORITHM.minMetalworks));
+      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_ALGORITHM.min3D));
     } else {
-      dispatch(abort(objects));
+      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_ALGORITHM.minObjects));
     }
-  });
+
+    dispatch(setObjects(mapObjects(shuffleObjects(refinedBarnesObjects))));
+  }
+
+  const body = (terms) => {
+    return buildRequestBody().query('terms', 'classification', terms).build();
+  }
+
+  const params = (body) => {
+    return { params: { body: body } };
+  }
+
+  axios.get('/api/search', params(body(BARNES_ALGORITHM.terms2D)))
+    .then((response) => {
+      if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
+        updateBarnesObjects(response.data.hits.hits, 'twoD');
+
+        axios.get('/api/search', params(body(BARNES_ALGORITHM.termsMetalworks)))
+        .then((response) => {
+          if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
+            updateBarnesObjects(response.data.hits.hits, 'metalworks');
+
+            axios.get('/api/search', params(body(BARNES_ALGORITHM.terms3D)))
+            .then((response) => {
+              updateBarnesObjects(response.data.hits.hits, 'threeD');
+              setBarnesObjects();
+            })
+          } else {
+            axios.get('/api/search', params(body(['Metalworks', ...BARNES_ALGORITHM.terms3D])))
+            .then((response) => {
+              if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
+                updateBarnesObjects(response.data.hits.hits, 'objects');
+                setBarnesObjects();
+              } else {
+                dispatch(setObjects(objects));
+              }
+            });
+          }
+        });
+      } else {
+        dispatch(setObjects(objects));
+      }
+    });
 }
 
-// const checkEnough = (objects, dispatch) => {
-//   debugger;
-// }
+const BARNES_ALGORITHM = {
+  min2D: 10,
+  minMetalworks: 7,
+  minObjects: 7,
+  min3D: 5,
+  terms2D: ['Paintings', 'Drawings', 'Works on Paper', 'Prints'],
+  termsMetalworks: ['Metalworks'],
+  terms3D: ['Vessels', 'Sculptures', 'Furniture', 'Jewelry', 'Tools and Equipment', 'Lighting Devices'],
+};
 
 const setObjects = (objects) => {
   return {
