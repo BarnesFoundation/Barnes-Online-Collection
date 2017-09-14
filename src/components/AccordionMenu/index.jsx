@@ -32,6 +32,7 @@ class AccordionMenu extends Component {
           this.props.tabList
             .map((tabData, idx) => {
               const isSelected = idx === this.state.selectedIdx;
+              const tabContent = tabData.tabContent;
 
               const props = {
                 ...tabData,
@@ -65,7 +66,9 @@ class AccordionMenu extends Component {
                     role="tabpanel"
                     data-height=""
                   >
-                    <tabData.contentBlock {...props}/>
+                    <div className="m-accordion-tabs__inner">
+                      <div dangerouslySetInnerHTML={{__html: tabContent}}></div>
+                    </div>
                   </div>
                 </div>
               )

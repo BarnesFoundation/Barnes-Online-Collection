@@ -4,6 +4,9 @@
 .component-art-object-grid {
   opacity: 0;
   transition: opacity 0.75s ease;
+  // This hides a FOUC that can happen when the grid is resizing itself and a scrollbar appears briefly
+  // Note that the grid should not have a specified height so this won't actually hide content
+  overflow: hidden;
 
   &.fade-in {
     opacity: 1;

@@ -4,4 +4,11 @@
       margin-bottom: 12px;
     }
   }
+
+  // this section may have zero or more paragraphs. So this helps keep consistent padding
+  .art-object__short-description {
+    & > p:first-child {
+      margin-top: 0;
+    }
+  }
 }
