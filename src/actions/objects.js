@@ -2,31 +2,62 @@ import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 
-const buildRequestBody = (fromIndex=0) => {
+const buildRequestBody = (fromIndex=0, size=25) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
-    .from(fromIndex).size(25);
+    .from(fromIndex).size(size);
   return body;
 }
 
-const fetchResults = (body, dispatch, append=false) => {
+const fetchResults = (body, dispatch, task=null) => {
   axios.get('/api/search', {
     params: {
       body: body,
     }
   }).then((response) => {
     const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+    const maxHits = response.data.hits.total;
 
-    dispatch(setMaxHits(response.data.hits.total));
+    dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(body.from + body.size));
 
-    if (append) {
+    if (task === 'append') {
       dispatch(appendObjects(objects));
     } else {
-      dispatch(setObjects(objects));
+      if (maxHits > 25) {
+        barnesifyObjects(objects, maxHits, dispatch);
+      } else {
+        dispatch(setObjects(objects));
+      }
     }
   });
 }
+
+const checkPossibleType = (type) => {
+
+}
+
+const barnesifyObjects = (objects, dispatch) => {
+  checkEnoughPaintings(objects, grabPaintings, setObjects, dispatch);
+}
+
+const checkEnoughPaintings = (objects, proceed, abort, dispatch) => {
+  let body = buildRequestBody().query('match', 'classification', 'Paintings');
+  body = body.build();
+
+  axios.get('/api/search', { params: { body: body } })
+    .then((response) => {
+    if (response.data.hits.total >= 10) {
+      proceed(response.data.hits, dispatch);
+    } else {
+      dispatch(abort(objects));
+    }
+  });
+}
+
+// const checkEnough = (objects, dispatch) => {
+//   debugger;
+// }
 
 const setObjects = (objects) => {
   return {
@@ -58,7 +89,7 @@ const setLastIndex = (lastIndex) => {
 
 export const getNextObjects = (fromIndex, query=null) => {
   return (dispatch) => {
-    const append = true;
+    const append = 'append';
     if (!query) {
       return getAllObjects(fromIndex, append)(dispatch);
     } else if (typeof query === 'string') {
@@ -69,14 +100,14 @@ export const getNextObjects = (fromIndex, query=null) => {
   }
 }
 
-export const getAllObjects = (fromIndex=0, append=false) => {
+export const getAllObjects = (fromIndex=0, append=null) => {
   const body = buildRequestBody(fromIndex).build();
   return (dispatch) => {
     fetchResults(body, dispatch, append);
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0, append=false) => {
+export const findFilteredObjects = (filters, fromIndex=0, append=null) => {
   return (dispatch) => {
     if (!filters.ordered || filters.ordered.length === 0) {
       return getAllObjects()(dispatch);
@@ -149,7 +180,7 @@ const assembleDisMaxQuery = (body, queries) => {
   });
 }
 
-export const searchObjects = (term, fromIndex=0, append=false) => {
+export const searchObjects = (term, fromIndex=0, append=null) => {
   return (dispatch) => {
     if (term.length === 0) {
       return getAllObjects()(dispatch);
