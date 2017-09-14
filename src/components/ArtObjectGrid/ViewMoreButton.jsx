@@ -33,7 +33,6 @@ class ViewMoreButton extends Component {
   }
 
   shouldShowButton() {
-    console.log(this.props.hitsDisplayed);
     return this.props.hitsDisplayed.maxHits > this.props.hitsDisplayed.lastIndex;
   }
 
