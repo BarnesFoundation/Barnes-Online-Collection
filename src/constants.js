@@ -44,6 +44,12 @@ export const RESET_UI = 'RESET_UI';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
+export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
+
+// meta tag content
+export const META_TITLE = 'Barnes Collection Online';
+export const META_IMAGE = CANONICAL_ROOT + '/barnes-logo.svg';
+export const META_DESCRIPTION = 'The Barnes Foundation in Philadelphia is home to one of the world\'s greatest collections of impressionist, post-impressionist and early modern paintings.';
 
 // breakpoints
 export const BREAKPOINTS = {
@@ -94,4 +100,3 @@ export const COPYRIGHT_MAP = {
 export const ENSEMBLE_ROOM_IMAGE_ALT = "Barnes Ensemble Room 7 East Wall";
 export const ENSEMBLE_ROOM_TITLE = "Room 7";
 export const ENSEMBLE_ROOM_SUB_TITLE = "East Wall";
-
