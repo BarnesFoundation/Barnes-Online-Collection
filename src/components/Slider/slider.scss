@@ -78,6 +78,7 @@
 // override rc-slider tooltip styles
 .rc-slider-tooltip {
   opacity: 0.9;
+  z-index: $z-index-rc-slider-tooltip;
 
   .rc-slider-tooltip-inner {
     // copy tooltip styles

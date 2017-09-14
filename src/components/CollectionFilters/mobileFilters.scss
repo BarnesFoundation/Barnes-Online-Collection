@@ -5,7 +5,7 @@
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 500;
+  z-index: $z-index-mobile-filters-btn-open;
   height: 50px;
   padding: 0 25px;
   border: 2px solid rgba(0,0,0,0.2);
@@ -26,7 +26,7 @@
   min-width: 100%;
   width: 100vw;
   background: rgba(0,0,0,0.7);
-  z-index: 100;
+  z-index: $z-index-mobile-filters-overlay;
   cursor: pointer;
 }
 
@@ -34,7 +34,7 @@
   width: calc(100vw - 50px);
   padding: 25px 0 0;
   background: white;
-  z-index: 200;
+  z-index: $z-index-mobile-filters-panel;
   overflow-y: scroll;
 }
 
