@@ -6,7 +6,6 @@ const buildRequestBody = (fromIndex=0, size=25) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
     .from(fromIndex).size(size);
-
   return body;
 }
 
@@ -19,27 +18,28 @@ const mapObjects = (objects) => {
   return objects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=false, queries=null) => {
-  axios.get('/api/search', {
-    params: {
-      body: body,
-    }
-  }).then((response) => {
+const queryOptions = {
+  append: false,
+  barnesify: false,
+  highlights: false,
+  queries: null
+};
+
+const fetchResults = (body, dispatch, options=queryOptions) => {
+  axios.get('/api/search', { params: { body: body } })
+  .then((response) => {
     const objects = mapObjects(response.data.hits.hits);
     const maxHits = response.data.hits.total;
+    const lastIndex = body.from + body.size;
 
     dispatch(setMaxHits(maxHits));
-    dispatch(setLastIndex(body.from + body.size));
+    dispatch(setLastIndex(lastIndex));
 
-    if (barnesify && maxHits > 25) {
+    if (options.barnesify && maxHits > 25) {
         console.log('barnesifying...');
-        barnesifyObjects(objects, dispatch, highlights, append, queries);
+        barnesifyObjects(objects, dispatch, options);
     } else {
-      if (append) {
-        dispatch(appendObjects(objects));
-      } else {
-        dispatch(setObjects(objects));
-      }
+      options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
     }
   });
 }
@@ -59,7 +59,7 @@ const shuffleObjects = (objects) => {
   return objects;
 }
 
-const barnesifyObjects = (objects, dispatch, highlights=false, append=false, queries=null) => {
+const barnesifyObjects = (objects, dispatch, options) => {
   let barnesObjects = {
     twoD: [],
     metalworks: [],
@@ -82,24 +82,14 @@ const barnesifyObjects = (objects, dispatch, highlights=false, append=false, que
     }
 
     let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
-
-    if (append) {
-      dispatch(appendObjects(objects));
-    } else {
-      dispatch(setObjects(objects));
-    }
+    options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
   }
 
   const params = (terms) => {
     let body = buildRequestBody().query('terms', 'classification', terms);
 
-    if (highlights) {
-      body = addHighlightsFilter(body);
-    }
-
-    if (queries) {
-      body = assembleDisMaxQuery(body, queries);
-    }
+    if (options.highlights) body = addHighlightsFilter(body);
+    if (options.queries) body = assembleDisMaxQuery(body, options.queries);
 
     body = body.build();
 
@@ -107,36 +97,36 @@ const barnesifyObjects = (objects, dispatch, highlights=false, append=false, que
   }
 
   axios.get('/api/search', params(BARNES_ALGORITHM.terms2D))
-    .then((response) => {
-      if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
-        updateBarnesObjects(response.data.hits.hits, 'twoD');
+  .then((response) => {
+    if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
+      updateBarnesObjects(response.data.hits.hits, 'twoD');
 
-        axios.get('/api/search', params(BARNES_ALGORITHM.termsMetalworks))
-        .then((response) => {
-          if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
-            updateBarnesObjects(response.data.hits.hits, 'metalworks');
+      axios.get('/api/search', params(BARNES_ALGORITHM.termsMetalworks))
+      .then((response) => {
+        if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
+          updateBarnesObjects(response.data.hits.hits, 'metalworks');
 
-            axios.get('/api/search', params(BARNES_ALGORITHM.terms3D))
-            .then((response) => {
-              updateBarnesObjects(response.data.hits.hits, 'threeD');
+          axios.get('/api/search', params(BARNES_ALGORITHM.terms3D))
+          .then((response) => {
+            updateBarnesObjects(response.data.hits.hits, 'threeD');
+            setBarnesObjects();
+          })
+        } else {
+          axios.get('/api/search', params(['Metalworks', ...BARNES_ALGORITHM.terms3D]))
+          .then((response) => {
+            if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
+              updateBarnesObjects(response.data.hits.hits, 'objects');
               setBarnesObjects();
-            })
-          } else {
-            axios.get('/api/search', params(['Metalworks', ...BARNES_ALGORITHM.terms3D]))
-            .then((response) => {
-              if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
-                updateBarnesObjects(response.data.hits.hits, 'objects');
-                setBarnesObjects();
-              } else {
-                dispatch(setObjects(objects));
-              }
-            });
-          }
-        });
-      } else {
-        dispatch(setObjects(objects));
-      }
-    });
+            } else {
+              dispatch(setObjects(objects));
+            }
+          });
+        }
+      });
+    } else {
+      dispatch(setObjects(objects));
+    }
+  });
 }
 
 const BARNES_ALGORITHM = {
@@ -177,79 +167,73 @@ const setLastIndex = (lastIndex) => {
   };
 }
 
-export const getNextObjects = (fromIndex, query=null) => {
+export const getNextObjects = (fromIndex, query=null, options=queryOptions) => {
+  options.append = true;
   return (dispatch) => {
-    const append = true;
     if (!query) {
-      return getAllObjects(fromIndex, append)(dispatch);
+      return getAllObjects(fromIndex, options)(dispatch);
     } else if (typeof query === 'string') {
-      return searchObjects(query, fromIndex, append)(dispatch);
+      return searchObjects(query, fromIndex, options)(dispatch);
     } else if (typeof query === 'object') {
-      return findFilteredObjects(query, fromIndex, append)(dispatch);
+      return findFilteredObjects(query, fromIndex, options)(dispatch);
     }
   }
 }
 
-export const getFirstObjects = () => {
-  let body = buildRequestBody();
-  body = addHighlightsFilter(body).build();
+export const getAllObjects = (fromIndex=0, options=queryOptions) => {
+  let body = buildRequestBody(fromIndex);
 
-  return (dispatch) => {
-    fetchResults(body, dispatch, 'barnesify', true);
-  }
-}
-
-export const getAllObjects = (fromIndex=0, append=false) => {
-  let body = buildRequestBody(fromIndex, 25);
-  let barnesify = false;
-  let highlights = false;
-
-  if (!append) {
+  if (!options.append) {
     body = addHighlightsFilter(body).build();
-    barnesify = true;
-    highlights = true;
+    options.barnesify = true;
+    options.highlights = true;
   } else {
     body = body.build();
   }
 
   return (dispatch) => {
-    fetchResults(body, dispatch, append, barnesify, highlights);
+    fetchResults(body, dispatch, options);
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0, append=false, barnesify=false) => {
+export const findFilteredObjects = (filters, fromIndex=0, options=queryOptions) => {
   return (dispatch) => {
     if (!filters.ordered || filters.ordered.length === 0) {
       return getAllObjects()(dispatch);
     }
 
-    let body = buildRequestBody(fromIndex);
-    let queries = [];
+    if (fromIndex === 0) options.barnesify = true;
 
-    for (let i = 0; i < filters.ordered.length; i++) {
-      const filter = filters.ordered[i];
-      switch (filter.filterType) {
-        case 'color':
-          for (let i = 0; i < filter.queries.length; i++) {
-            queries.push(buildColorQuery(filter.queries[i]));
-          }
-          break;
-        case 'line':
-        case 'light':
-        case 'space':
-          queries.push(buildRangeGteQuery(filter));
-        default:
-          break;
-      }
-    }
+    const queries = buildQueriesFromFilters(filters.ordered);
+    options.queries = queries;
+
+    let body = buildRequestBody(fromIndex);
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
 
-    const highlights = false;
-    if (fromIndex === 0) { barnesify = true; }
-
-    fetchResults(body, dispatch, append, barnesify, highlights, queries);
+    fetchResults(body, dispatch, options);
   }
+}
+
+const buildQueriesFromFilters = (filters) => {
+  let queries = [];
+  for (let i = 0; i < filters.length; i++) {
+    const filter = filters[i];
+    switch (filter.filterType) {
+      case 'color':
+        for (let i = 0; i < filter.queries.length; i++) {
+          queries.push(buildColorQuery(filter.queries[i]));
+        }
+        break;
+      case 'line':
+      case 'light':
+      case 'space':
+        queries.push(buildRangeQuery(filter, { 'gte': 0.5 }));
+      default:
+        break;
+    }
+  }
+  return queries;
 }
 
 const buildColorQuery = (query) => {
@@ -266,20 +250,9 @@ const buildColorQuery = (query) => {
   };
 }
 
-// const buildLineQuery = (query) => {
-//   let queryObject = { range: {} };
-//   queryObject['range'][query.name] = {
-//     "gte" : 0.5
-//   };
-
-//   return queryObject;
-// }
-
-const buildRangeGteQuery = (query) => {
+const buildRangeQuery = (filter, query) => {
   let queryObject = { range: {} };
-  queryObject['range'][query.name] = {
-    "gte": query.min
-  }
+  queryObject['range'][filter.name] = query;
   return queryObject;
 }
 
@@ -293,7 +266,7 @@ const assembleDisMaxQuery = (body, queries) => {
   });
 }
 
-export const searchObjects = (term, fromIndex=0, append=null) => {
+export const searchObjects = (term, fromIndex=0, options=queryOptions) => {
   return (dispatch) => {
     if (term.length === 0) {
       return getAllObjects()(dispatch);
@@ -303,6 +276,6 @@ export const searchObjects = (term, fromIndex=0, append=null) => {
     body = body.query('match', '_all', term);
     body = body.build();
 
-    fetchResults(body, dispatch, append);
+    fetchResults(body, dispatch, options);
   }
 }
