@@ -8,13 +8,18 @@ export const generateObjectImageUrls = (object) => {
   if (!object) {
     return {};
   }
+
   if (!object.imageSecret) {
     return object;
   }
+
   const baseUrl = `https://s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`;
   const newObject = Object.assign({}, object);
+
   newObject.imageUrlSmall = `${baseUrl}/${object.id}_${object.imageSecret}_n.jpg`;
+  newObject.imageUrlOriginal = `${baseUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
   newObject.imageUrlLarge = `${baseUrl}/${object.id}_${object.imageSecret}_b.jpg`;
+
   return newObject;
 }
 

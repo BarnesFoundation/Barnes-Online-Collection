@@ -57,7 +57,7 @@ class PanelDetails extends Component {
 
     const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
     const accordionTabList = getTabList(this.props);
-    const imgUrlPathWithoutProt = getUrlWithoutProt(this.props.imageUrlLarge);
+    const imgUrlPathWithoutProt = getUrlWithoutProt(this.props.imageUrlOriginal);
     const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${this.props.people}&field21=${this.props.title}&field20=${this.props.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${this.props.people}&field372=${this.props.title}&field20=${this.props.invno}&field374=${imgUrlPathWithoutProt}`;
 
