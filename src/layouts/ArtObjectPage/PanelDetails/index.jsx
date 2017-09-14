@@ -7,9 +7,6 @@ import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import * as UIActions from '../../../actions/ui';
 import AccordionMenu from '../../../components/AccordionMenu';
-import LongDescription from './AccordionPanels/LongDescription';
-import VisualDescription from './AccordionPanels/VisualDescription';
-import Bibliography from './AccordionPanels/Bibliography';
 import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
@@ -20,24 +17,29 @@ const getCopyright = (id) => {
   return COPYRIGHT_MAP[id];
 };
 
+const getTabList = (artObjectProps) => {
+  return [
+    {
+      title: 'Long Description',
+      tabContent: artObjectProps.longDescription,
+    },
+    {
+      title: 'Visual Description',
+      tabContent: artObjectProps.visualDescription,
+    },
+    {
+      title: 'Bibliography',
+      tabContent: artObjectProps.bibliography,
+    },
+  ].filter((obj) => {
+    // filter out ones with no content
+    return !!obj.tabContent;
+  });
+};
+
 class PanelDetails extends Component {
   constructor(props) {
     super(props);
-
-    this.tabList = [
-      {
-        title: 'Long Description',
-        contentBlock: LongDescription,
-      },
-      {
-        title: 'Visual Description',
-        contentBlock: VisualDescription,
-      },
-      {
-        title: 'Bibliography',
-        contentBlock: Bibliography,
-      },
-    ];
   }
 
   render() {
@@ -80,12 +82,13 @@ class PanelDetails extends Component {
               }
             </div>
 
-            {/* todo - figure out what this text is and where it comes from */}
             <div className="art-object__more-info m-block m-block--shallow">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <div className="art-object__short-description"
+                dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
+              ></div>
             </div>
 
-            <AccordionMenu tabList={this.tabList} />
+            <AccordionMenu tabList={getTabList(this.props)} />
           </div>
         </div>
 
