@@ -35,7 +35,12 @@ const filters = (state = initialState, action) => {
             case 'diagonal':
             case 'horizontal':
             case 'curvy':
-              supplementedState.line.composition = action.filter.name;
+              if (supplementedState.line.composition) {
+                supplementedState.line.composition = [...supplementedState.line.composition, action.filter]
+              ;
+              } else {
+                supplementedState.line.composition = [action.filter];
+              }
               break;
             case 'broken':
             case 'unbroken':
@@ -59,6 +64,24 @@ const filters = (state = initialState, action) => {
       switch (action.filter.filterType) {
         case 'color':
           reducedState.colors = getReducedFilters(state.colors, action.filter.slug);
+          break;
+        case 'line':
+          switch(action.filter.name) {
+            case 'vertical':
+            case 'diagonal':
+            case 'horizontal':
+            case 'curvy':
+              reducedState.line.composition = getReducedFilters(state.line.composition, action.filter.slug);
+              break;
+            case 'broken':
+            case 'unbroken':
+              reducedState.line.linearity = getReducedFilters(state.line.linearity, action.filter.slug);
+              break;
+            case 'all-types':
+              break;
+            default:
+              break;
+          }
           break;
         default:
           break;
