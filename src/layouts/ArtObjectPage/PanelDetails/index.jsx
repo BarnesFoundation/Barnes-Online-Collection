@@ -48,8 +48,8 @@ class PanelDetails extends Component {
     });
 
     const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
-
     const accordionTabList = getTabList(this.props);
+    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${this.props.people}&field21=${this.props.title}&field20=${this.props.invno}`;
 
     return (
       <div className="art-object-page__panel-details">
@@ -72,7 +72,7 @@ class PanelDetails extends Component {
                   Download Image
                 </a>
               :
-                <a className="btn" href="https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/" target="_blank" rel="noopener noreferrer" >
+                <a className="btn" href={requestImageUrl} target="_blank" rel="noopener noreferrer" >
                   Request Image
                 </a>
               }
