@@ -18,7 +18,7 @@ class SiteHeader extends Component {
       <div>
         <header className="g-header" data-behavior="header">
           <div className="container">
-            <a className="a-logo g-header__logo" href="/">
+            <a className="a-logo g-header__logo" href={MAIN_WEBSITE_DOMAIN}>
               <span className="html4-label">Barnes</span>
               <svg className="a-logo__svg a-logo__svg--s" width="121" height="37" aria-labelledby="logo-title">
                 <title id="logo-title">Barnes</title>
@@ -40,7 +40,7 @@ class SiteHeader extends Component {
             <nav className="g-header__nav">
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
-              <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/whats-on/collection'}>Our Collection</a>
+              <a className="g-header__nav__link" href="/">Our Collection</a>
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
               <a
                 href={MAIN_WEBSITE_DOMAIN + '/search'}

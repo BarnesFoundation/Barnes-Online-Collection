@@ -59,7 +59,7 @@ class SiteHeader extends Component {
                 <use xlinkHref="#icon--icon_close" />
               </svg>
             </button>
-            <form className="g-nav__search" action="/static/pages/search.php" method="get" noValidate data-behavior="FormValidate">
+            <form className="g-nav__search" action="/static/pages/search" method="get" noValidate data-behavior="FormValidate">
               <div className="form-field__error form-field__error--summary hidden" tabIndex={-1} aria-hidden="true">
                 <h3 className="font-bold-heading visuallyhidden">Please correct your errors</h3>
               </div>
@@ -80,38 +80,38 @@ class SiteHeader extends Component {
               <div className="g-nav__important-links">
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/whats-on.php'}
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/whats-on'}
                 >
                   <span>What’s On</span>
                 </a>
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/plan-your-visit.php'}
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/plan-your-visit'}
                 >
                   <span>Plan your Visit</span>
                 </a>
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/'}
+                  href="/"
                 >
                   <span>Our Collection</span>
                 </a>
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/class.php'}
+                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/class'}
                 >
                   <span>Take a Class</span>
                 </a>
               </div>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/about.php'}
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/about'}
               >
                 <span>About</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/support-individual.php'}
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/support-individual'}
               >
                 <span>Join</span>
               </a>
@@ -123,13 +123,13 @@ class SiteHeader extends Component {
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/teachers-landing.php'}
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/teachers-landing'}
               >
                 <span>Teachers</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/press-landing.php'}
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/press-landing'}
               >
                 <span>Press</span>
               </a>
@@ -141,7 +141,7 @@ class SiteHeader extends Component {
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/host-an-event.php'}
+                href={MAIN_WEBSITE_DOMAIN + '/static/pages/host-an-event'}
               >
                 <span>Facility Rental</span>
               </a>

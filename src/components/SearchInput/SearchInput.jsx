@@ -45,7 +45,7 @@ class SearchInput extends Component {
                   className="input mobile"
                   type="text"
                   value={this.state.value}
-                  placeholder="Search an artist, word, period..."
+                  placeholder="Search a keyword, artist…"
                   onChange={this.handleChange}
                 />
               </div>
@@ -62,7 +62,7 @@ class SearchInput extends Component {
                   type="text"
                   autoFocus="true"
                   value={this.state.value}
-                  placeholder="Search an artist, word, period..."
+                  placeholder="Search a keyword, artist…"
                   onChange={this.handleChange}
                 />
                 <input

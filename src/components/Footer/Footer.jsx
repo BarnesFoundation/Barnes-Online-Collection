@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {MAIN_WEBSITE_DOMAIN} from '../../constants';
 import './footer.css';
 
 class Footer extends Component {
@@ -45,7 +46,7 @@ class Footer extends Component {
               <h4 className="h4 font-delta">Your support helps research and conservation at the Barnes, so we can present our exhibitions and events.</h4>
               <div className="m-btn-group">
                 <a className="btn" href="https://tickets.barnesfoundation.org/orders/316/tickets">Donate</a>
-                <a className="btn" href="https://www.barnesfoundation.org/support/membership">Become a Member</a>
+                <a className="btn" href={MAIN_WEBSITE_DOMAIN + '/support/membership'}>Become a Member</a>
               </div>
             </div>
             <div className="m-block__column g-footer__details color-medium">
@@ -68,7 +69,7 @@ class Footer extends Component {
                 <h2 className="font-zeta">Newsletter</h2>
                 <form
                   className="m-newsletter"
-                  action="https://www.barnesfoundation.org/newsletter-signup"
+                  action={MAIN_WEBSITE_DOMAIN + '/newsletter-signup'}
                   id="newsletterForm"
                   method="post"
                   acceptCharset="UTF-8"
@@ -109,19 +110,19 @@ class Footer extends Component {
           <div className="g-footer__auxiliary">
             <nav className="g-footer__nav" aria-labelledby="footernav-heading">
               <h2 id="footernav-heading" className="visuallyhidden">Useful links</h2>
-              <a className="g-footer__nav__link" href="https://www.barnesfoundation.org/">
+              <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/'}>
                 © 2017 Barnes Foundation
               </a>
-              <a className="g-footer__nav__link" href="https://www.barnesfoundation.org/terms">
+              <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/terms'}>
                 Terms &amp; Conditions
               </a>
-              <a className="g-footer__nav__link" href="https://www.barnesfoundation.org/privacy-policy">
+              <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/privacy-policy'}>
                 Privacy Statement
               </a>
-              <a className="g-footer__nav__link" href="https://www.barnesfoundation.org/accessibility">
+              <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/accessibility'}>
                 Accessibility
               </a>
-              <a className="g-footer__nav__link" href="https://www.barnesfoundation.org/about">
+              <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/about'}>
                 Contact
               </a>
             </nav>
