@@ -6,14 +6,19 @@ const buildRequestBody = (fromIndex=0, size=25) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
     .from(fromIndex).size(size);
+
   return body;
+}
+
+const addHighlightsFilter = (body) => {
+  return body.filter('match', 'highlight', 'true');
 }
 
 const mapObjects = (objects) => {
   return objects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, task=null) => {
+const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=false) => {
   axios.get('/api/search', {
     params: {
       body: body,
@@ -25,12 +30,12 @@ const fetchResults = (body, dispatch, task=null) => {
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(body.from + body.size));
 
-    if (task === 'append') {
-      dispatch(appendObjects(objects));
+    if (barnesify && maxHits > 25) {
+        console.log('barnesifying...');
+        barnesifyObjects(objects, dispatch, highlights, append);
     } else {
-      // dispatch(setObjects(objects));
-      if (maxHits > 25) {
-        barnesifyObjects(objects, dispatch);
+      if (append) {
+        dispatch(appendObjects(objects));
       } else {
         dispatch(setObjects(objects));
       }
@@ -53,7 +58,7 @@ const shuffleObjects = (objects) => {
   return objects;
 }
 
-const barnesifyObjects = (objects, dispatch) => {
+const barnesifyObjects = (objects, dispatch, highlights=false, append=false) => {
   let barnesObjects = {
     twoD: [],
     metalworks: [],
@@ -63,13 +68,10 @@ const barnesifyObjects = (objects, dispatch) => {
 
   const updateBarnesObjects = (objects, type) => {
     barnesObjects[type].push(...objects);
-    console.log(barnesObjects);
   }
 
   const setBarnesObjects = () => {
-    let refinedBarnesObjects = [];
-
-    refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_ALGORITHM.min2D);
+    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_ALGORITHM.min2D);
 
     if (barnesObjects.metalworks.length >= BARNES_ALGORITHM.minMetalworks) {
       refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_ALGORITHM.minMetalworks));
@@ -78,34 +80,44 @@ const barnesifyObjects = (objects, dispatch) => {
       refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_ALGORITHM.minObjects));
     }
 
-    dispatch(setObjects(mapObjects(shuffleObjects(refinedBarnesObjects))));
+    let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
+
+    if (append) {
+      dispatch(appendObjects(objects));
+    } else {
+      dispatch(setObjects(objects));
+    }
   }
 
-  const body = (terms) => {
-    return buildRequestBody().query('terms', 'classification', terms).build();
-  }
+  const params = (terms) => {
+    let body = buildRequestBody().query('terms', 'classification', terms);
 
-  const params = (body) => {
+    if (highlights) {
+      body = addHighlightsFilter(body);
+    }
+
+    body = body.build();
+
     return { params: { body: body } };
   }
 
-  axios.get('/api/search', params(body(BARNES_ALGORITHM.terms2D)))
+  axios.get('/api/search', params(BARNES_ALGORITHM.terms2D))
     .then((response) => {
       if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
         updateBarnesObjects(response.data.hits.hits, 'twoD');
 
-        axios.get('/api/search', params(body(BARNES_ALGORITHM.termsMetalworks)))
+        axios.get('/api/search', params(BARNES_ALGORITHM.termsMetalworks))
         .then((response) => {
           if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
             updateBarnesObjects(response.data.hits.hits, 'metalworks');
 
-            axios.get('/api/search', params(body(BARNES_ALGORITHM.terms3D)))
+            axios.get('/api/search', params(BARNES_ALGORITHM.terms3D))
             .then((response) => {
               updateBarnesObjects(response.data.hits.hits, 'threeD');
               setBarnesObjects();
             })
           } else {
-            axios.get('/api/search', params(body(['Metalworks', ...BARNES_ALGORITHM.terms3D])))
+            axios.get('/api/search', params(['Metalworks', ...BARNES_ALGORITHM.terms3D]))
             .then((response) => {
               if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
                 updateBarnesObjects(response.data.hits.hits, 'objects');
@@ -162,7 +174,7 @@ const setLastIndex = (lastIndex) => {
 
 export const getNextObjects = (fromIndex, query=null) => {
   return (dispatch) => {
-    const append = 'append';
+    const append = true;
     if (!query) {
       return getAllObjects(fromIndex, append)(dispatch);
     } else if (typeof query === 'string') {
@@ -173,14 +185,34 @@ export const getNextObjects = (fromIndex, query=null) => {
   }
 }
 
-export const getAllObjects = (fromIndex=0, append=null) => {
-  const body = buildRequestBody(fromIndex).build();
+export const getFirstObjects = () => {
+  let body = buildRequestBody();
+  body = addHighlightsFilter(body).build();
+
   return (dispatch) => {
-    fetchResults(body, dispatch, append);
+    fetchResults(body, dispatch, 'barnesify', true);
+  }
+}
+
+export const getAllObjects = (fromIndex=0, append=false) => {
+  let body = buildRequestBody(fromIndex, 25);
+  let barnesify = false;
+  let highlights = false;
+
+  if (!append) {
+    body = addHighlightsFilter(body).build();
+    barnesify = true;
+    highlights = true;
+  } else {
+    body = body.build();
+  }
+
+  return (dispatch) => {
+    fetchResults(body, dispatch, append, barnesify, highlights);
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0, append=null) => {
+export const findFilteredObjects = (filters, fromIndex=0, append=false, barnesify=false) => {
   return (dispatch) => {
     if (!filters.ordered || filters.ordered.length === 0) {
       return getAllObjects()(dispatch);
@@ -207,8 +239,10 @@ export const findFilteredObjects = (filters, fromIndex=0, append=null) => {
     }
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
-    console.log(body);
-    fetchResults(body, dispatch, append);
+
+    if (fromIndex === 0) { barnesify = true; }
+
+    fetchResults(body, dispatch, append, barnesify);
   }
 }
 
