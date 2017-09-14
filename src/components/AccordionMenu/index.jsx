@@ -31,9 +31,6 @@ class AccordionMenu extends Component {
         {
           this.props.tabList
             .map((tabData, idx) => {
-
-              // debugger;
-
               const isSelected = idx === this.state.selectedIdx;
               const tabContent = tabData.tabContent;
 

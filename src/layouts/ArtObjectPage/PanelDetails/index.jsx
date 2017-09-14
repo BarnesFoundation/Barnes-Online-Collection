@@ -84,7 +84,7 @@ class PanelDetails extends Component {
 
             <div className="art-object__more-info m-block m-block--shallow">
               <div className="art-object__short-description"
-                dangerouslySetInnerHTML={{__html: this.props.shortDescription || this.props.description}}
+                dangerouslySetInnerHTML={{__html: this.props.shortDescription}}
               ></div>
             </div>
 
