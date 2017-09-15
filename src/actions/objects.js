@@ -7,9 +7,11 @@ const BARNES_SETTINGS = {
   minMetalworks: 7,
   minObjects: 7,
   min3D: 5,
-  terms2D: ['Paintings', 'Drawings', 'Works on Paper', 'Prints'],
+  minKnickKnacks: 5,
+  terms2D: ['Architecture', 'Paintings', 'Drawings', 'Works on Paper', 'Prints', 'Enamels', 'Manuscripts', 'Photographs'],
   termsMetalworks: ['Metalworks'],
-  terms3D: ['Vessels', 'Sculptures', 'Furniture', 'Jewelry', 'Tools and Equipment', 'Lighting Devices'],
+  terms3D: ['Sculptures', 'Furniture', 'Timepieces'],
+  termsKnickKnacks: ['Flatware', 'Jewelry', 'Lighting Devices', 'Textiles', 'Tools and Equipment', 'Vessels'],
   size: 25
 };
 
