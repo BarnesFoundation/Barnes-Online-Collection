@@ -21,7 +21,6 @@ const buildRequestBody = (fromIndex=0) => {
 }
 
 const addHighlightsFilter = (body) => {
-  console.log('highlights only!');
   return body.filter('match', 'highlight', 'true');
 }
 
@@ -37,18 +36,20 @@ const queryOptions = {
 };
 
 const fetchResults = (body, dispatch, options=queryOptions) => {
+  console.log('Fetching results...');
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
     const objects = mapObjects(response.data.hits.hits);
+    console.log('Retrieved', objects.length, 'objects.' );
     const maxHits = response.data.hits.total;
     const lastIndex = body.from + body.size;
 
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
 
-    if (options.barnesify && maxHits > 25) {
-        console.log('barnesifying...');
-        if (options.append) { options.fromIndex = lastIndex };
+    if (options.highlights) { console.log('Showing highlights only.'); }
+
+    if (options.barnesify && !options.append && maxHits >= 25) {
         barnesifyObjects(objects, dispatch, options);
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
@@ -72,6 +73,7 @@ const shuffleObjects = (objects) => {
 }
 
 const barnesifyObjects = (objects, dispatch, options) => {
+  console.log('Beginning Barnesification process...');
   let barnesObjects = {
     twoD: [],
     metalworks: [],
@@ -84,17 +86,40 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const setBarnesObjects = () => {
+    let ratios = {
+      '2D': 0,
+      metalworks: 0,
+      '3D': 0,
+      '3D+Metalworks': 0,
+      total: 0
+    };
+
+    console.log('Compiling Barnesified object set...');
     let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
+    ratios['2D'] = refinedBarnesObjects.length;
 
     if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
       refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks));
-      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_SETTINGS.min3D));
+      ratios['metalworks'] = refinedBarnesObjects.length - ratios['2D'];
+
+      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_SETTINGS.size - refinedBarnesObjects.length));
+      ratios['3D'] = refinedBarnesObjects.length - ratios['2D'] - ratios['metalworks'];
     } else {
-      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_SETTINGS.minObjects));
+      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_SETTINGS.size - refinedBarnesObjects.length));
+      ratios['3D+Metalworks'] = refinedBarnesObjects.length - ratios['2D'];
     }
 
+    ratios['total'] = refinedBarnesObjects.length;
+
     let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
-    options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
+
+    console.log('Total objects:', ratios.total);
+    console.log('2D:', ratios['2D'], 'objects', '/', ratios['2D']/ratios.total);
+    console.log('metalworks:', ratios['metalworks'], 'objects', '/', ratios['metalworks']/ratios.total);
+    console.log('3D:', ratios['3D'], 'objects', '/', ratios['3D']/ratios.total);
+    console.log('3D+Metalworks:', ratios['3D+Metalworks'], 'objects', '/',  ratios['3D+Metalworks']/ratios.total);
+
+    dispatch(setObjects(objects));
   }
 
   const params = (terms) => {
@@ -112,15 +137,18 @@ const barnesifyObjects = (objects, dispatch, options) => {
   axios.get('/api/search', params(BARNES_SETTINGS.terms2D))
   .then((response) => {
     if (response.data.hits.total >= BARNES_SETTINGS.min2D) {
+      console.log('Retrieved', response.data.hits.total, '2D objects. Proceeding...');
       updateBarnesObjects(response.data.hits.hits, 'twoD');
 
       axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks))
       .then((response) => {
         if (response.data.hits.total >= BARNES_SETTINGS.minMetalworks) {
+          console.log('Retrieved', response.data.hits.total, 'metalworks. Proceeding...');
           updateBarnesObjects(response.data.hits.hits, 'metalworks');
 
           axios.get('/api/search', params(BARNES_SETTINGS.terms3D))
           .then((response) => {
+            console.log('Retrieved', response.data.hits.total, '3D objects. Proceeding...');
             updateBarnesObjects(response.data.hits.hits, 'threeD');
             setBarnesObjects();
           })
@@ -128,6 +156,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
           axios.get('/api/search', params(['Metalworks', ...BARNES_SETTINGS.terms3D]))
           .then((response) => {
             if (response.data.hits.total >= BARNES_SETTINGS.minObjects) {
+              console.log('Retrieved', response.data.hits.total, 'metalworks + 3D objects. Proceeding...');
               updateBarnesObjects(response.data.hits.hits, 'objects');
               setBarnesObjects();
             } else {
@@ -137,6 +166,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
         }
       });
     } else {
+      console.log('Not enough 2D objects to Barnesify. Aborting...')
       dispatch(setObjects(objects));
     }
   });
