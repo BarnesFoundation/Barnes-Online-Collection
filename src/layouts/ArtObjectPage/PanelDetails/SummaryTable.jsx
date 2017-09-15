@@ -4,6 +4,8 @@ import '../../../components/FlexboxTable/index.css';
 
 class FlexboxTable extends Component {
   render() {
+    const copyrightLink = this.props.objectCopyrightDetails.link;
+    const copyrightCopy = this.props.objectCopyrightDetails.copy;
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
@@ -41,7 +43,21 @@ class FlexboxTable extends Component {
         </div>
         <div className="table-row">
           <div className="text">Copyright Status</div>
-          <div className="text color-light">{this.props.objectCopyrightDetails.copy}</div>
+          <div className="text color-light">
+            {
+              copyrightLink ?
+                <a
+                  className="a-brand-link"
+                  href={copyrightLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {copyrightCopy}
+                </a>
+              :
+              <span>{copyrightCopy}</span>
+            }
+          </div>
         </div>
       </div>
     );

@@ -17,6 +17,14 @@ const getCopyright = (id) => {
   return COPYRIGHT_MAP[id];
 };
 
+const getUrlWithoutProt = (url) => {
+  if (!url) {
+    return;
+  }
+
+  return url.split(/^(http|https):\/\//)[2];
+}
+
 const getTabList = (artObjectProps) => {
   return [
     {
@@ -48,8 +56,10 @@ class PanelDetails extends Component {
     });
 
     const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
-
     const accordionTabList = getTabList(this.props);
+    const imgUrlPathWithoutProt = getUrlWithoutProt(this.props.imageUrlOriginal);
+    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${this.props.people}&field21=${this.props.title}&field20=${this.props.invno}`;
+    const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${this.props.people}&field372=${this.props.title}&field20=${this.props.invno}&field374=${imgUrlPathWithoutProt}`;
 
     return (
       <div className="art-object-page__panel-details">
@@ -68,11 +78,11 @@ class PanelDetails extends Component {
 
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
               {objectCopyrightDetails.type === "large" ?
-                <a className="btn" href={this.props.imageUrlLarge} target="_blank" rel="noopener noreferrer" >
+                <a className="btn" href={downloadRequestUrl} target="_blank" rel="noopener noreferrer" >
                   Download Image
                 </a>
               :
-                <a className="btn" href="https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/" target="_blank" rel="noopener noreferrer" >
+                <a className="btn" href={requestImageUrl} target="_blank" rel="noopener noreferrer" >
                   Request Image
                 </a>
               }
