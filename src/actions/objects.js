@@ -262,9 +262,10 @@ const buildQueriesFromFilters = (filters) => {
         }
         break;
       case 'line':
+        queries.push(buildRangeQuery(filter, { 'gte': 0.5 }));
       case 'light':
       case 'space':
-        queries.push(buildRangeQuery(filter, { 'gte': 0.5 }));
+        queries.push(buildRangeQuery(filter, { 'gte': filter.value }));
       default:
         break;
     }

@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
 
+import Slider from '../Slider/Slider';
+
 class LightFilter extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleClick(event) {
-    event.preventDefault();
-    this.props.handleClick();
+  handleChange(value) {
+    debugger;
+    const filter = {
+      value: value,
+      name: 'light'
+    };
+    this.props.handleChange(filter);
   }
 
   render() {
-    return <div><p>Light Filter</p></div>;
+    return (
+      <Slider
+        labelStyle="inline"
+        labelLeft="Diffused"
+        labelRight="Light"
+        handleChange={this.handleChange}
+      />
+    );
   }
 }
 

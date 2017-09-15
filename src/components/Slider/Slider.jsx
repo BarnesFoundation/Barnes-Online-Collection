@@ -24,6 +24,8 @@ class CustomSlider extends Component {
     this.setState({
       value: value
     });
+
+    this.props.handleChange(value);
   }
 
   render() {

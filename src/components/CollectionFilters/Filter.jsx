@@ -14,7 +14,7 @@ import * as FilterSetsActions from '../../actions/filterSets';
 class Filter extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   filterIsApplied() {
@@ -25,9 +25,10 @@ class Filter extends Component {
       }
     }
     return -1;
+    debugger;
   }
 
-  handleClick(event) {
+  handleUpdate(event) {
     const filter = this.props.filter;
 
     if (this.props.filters.length === 0) {
@@ -54,8 +55,6 @@ class Filter extends Component {
       case 'line':
         classes += ' font-smallprint';
         break;
-      case 'light':
-      case 'space':
       default:
         break;
     }
@@ -75,13 +74,13 @@ class Filter extends Component {
         };
 
         return <ColorFilter
-          handleClick={this.handleClick}
+          handleClick={this.handleUpdate}
           style={style}
           classes={this.getClasses()}
           />;
       case 'line':
         return <LineFilter
-          handleClick={this.handleClick}
+          handleClick={this.handleUpdate}
           classes={this.getClasses()}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
@@ -89,15 +88,13 @@ class Filter extends Component {
         />;
       case 'light':
         return <LightFilter
-          handleClick={this.handleClick}
-          classes={this.getClasses()}
-          svgId={this.props.filter.svgId}
+          handleChange={this.handleUpdate}
+          svgId='tool_lights'
         />;
       case 'space':
         return <SpaceFilter
-          handleClick={this.handleClick}
-          classes={this.getClasses()}
-          svgId={this.props.filter.svgId}
+          handleChange={this.handleUpdate}
+          svgId='tool_space'
         />;
       default:
         return null;
