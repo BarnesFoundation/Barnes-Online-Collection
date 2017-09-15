@@ -28,14 +28,7 @@ const mapObjects = (objects) => {
   return objects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const queryOptions = {
-  append: false,
-  barnesify: false,
-  highlights: false,
-  queries: null
-};
-
-const fetchResults = (body, dispatch, options=queryOptions) => {
+const fetchResults = (body, dispatch, options={}) => {
   console.log('Fetching results...');
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
@@ -49,7 +42,7 @@ const fetchResults = (body, dispatch, options=queryOptions) => {
 
     if (options.highlights) { console.log('Showing highlights only.'); }
 
-    if (options.barnesify && !options.append && maxHits >= 25) {
+    if (options.barnesify && maxHits >= 25) {
         barnesifyObjects(objects, dispatch, options);
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
@@ -123,8 +116,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const params = (terms) => {
-    const fromIndex = options.fromIndex || 0;
-    let body = buildRequestBody(fromIndex).query('terms', 'classification', terms);
+    let body = buildRequestBody().query('terms', 'classification', terms);
 
     if (options.highlights) body = addHighlightsFilter(body);
     if (options.queries) body = assembleDisMaxQuery(body, options.queries);
@@ -173,6 +165,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
 }
 
 const setObjects = (objects) => {
+  console.log('Setting objects...');
   return {
     type: ActionTypes.SET_OBJECTS,
     payload: objects
@@ -180,6 +173,7 @@ const setObjects = (objects) => {
 }
 
 const appendObjects = (objects) => {
+  console.log('Appending objects...');
   return {
     type: ActionTypes.APPEND_OBJECTS,
     payload: objects
@@ -200,27 +194,29 @@ const setLastIndex = (lastIndex) => {
   };
 }
 
-export const getNextObjects = (fromIndex, query=null, options=queryOptions) => {
+export const getNextObjects = (fromIndex, query=null, options={}) => {
   return (dispatch) => {
-    options.append = true;
     if (!query) {
-      return getAllObjects(fromIndex, options)(dispatch);
+      return getAllObjects(fromIndex)(dispatch);
     } else if (typeof query === 'string') {
-      return searchObjects(query, fromIndex, options)(dispatch);
+      return searchObjects(query, fromIndex)(dispatch);
     } else if (typeof query === 'object') {
-      return findFilteredObjects(query, fromIndex, options)(dispatch);
+      return findFilteredObjects(query, fromIndex)(dispatch);
     }
   }
 }
 
-export const getAllObjects = (fromIndex=0, options=queryOptions) => {
+export const getAllObjects = (fromIndex=0) => {
   let body = buildRequestBody(fromIndex);
+  let options = {};
 
-  if (!options.append) {
+  if (!fromIndex) {
     body = addHighlightsFilter(body).build();
     options.barnesify = true;
     options.highlights = true;
   } else {
+    options.append = true;
+    options.barnesify = false;
     body = body.build();
   }
 
@@ -229,13 +225,20 @@ export const getAllObjects = (fromIndex=0, options=queryOptions) => {
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0, options=queryOptions) => {
+export const findFilteredObjects = (filters, fromIndex=0) => {
   return (dispatch) => {
+    let options = {};
+
     if (!filters.ordered || filters.ordered.length === 0) {
       return getAllObjects()(dispatch);
     }
 
-    if (fromIndex === 0) options.barnesify = true;
+    if (!fromIndex) {
+      options.barnesify = true;
+    } else {
+      options.barnesify = false;
+      options.append = true;
+    }
 
     const queries = buildQueriesFromFilters(filters.ordered);
     options.queries = queries;
@@ -299,15 +302,19 @@ const assembleDisMaxQuery = (body, queries) => {
   });
 }
 
-export const searchObjects = (term, fromIndex=0, options=queryOptions) => {
+export const searchObjects = (term, fromIndex=0) => {
   return (dispatch) => {
-    if (term.length === 0) {
+    let options = {};
+
+    if (!term.length) {
       return getAllObjects()(dispatch);
     }
 
     let body = buildRequestBody(fromIndex);
     body = body.query('match', '_all', term);
     body = body.build();
+
+    if (fromIndex) options.append = true;
 
     fetchResults(body, dispatch, options);
   }
