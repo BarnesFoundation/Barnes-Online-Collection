@@ -93,31 +93,22 @@ const barnesifyObjects = (objects, dispatch, options) => {
     console.log('Compiling Barnesified object set...');
     let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
     ratios['2D'] = refinedBarnesObjects.length;
-    let metalworks, threeD, knickknacks;
 
-    if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
-      metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
-    } else {
-      metalworks = barnesObjects.metalworks;
-    }
+    // if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
+    //   metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
+    // } else {
+    //   metalworks = barnesObjects.metalworks;
+    // }
+    let metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
     refinedBarnesObjects.push(...metalworks);
     ratios['metalworks'] = metalworks.length;
     let metalworksDiff = BARNES_SETTINGS.minMetalworks - metalworks.length;
 
-    if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
-      threeD = barnesObjects.threeD.slice(0, BARNES_SETTINGS.min3D + metalworksDiff);
-    } else {
-      threeD = barnesObjects.threeD;
-    }
+    let threeD = barnesObjects.threeD.slice(0, (BARNES_SETTINGS.min3D + metalworksDiff));
     refinedBarnesObjects.push(...threeD);
     ratios['3D'] = threeD.length;
-    let threeDDiff = BARNES_SETTINGS.min3D - threeD.length;
 
-    if (barnesObjects.knickknacks.length >= BARNES_SETTINGS.knickknacks) {
-      knickknacks = barnesObjects.knickknacks.slice(0, BARNES_SETTINGS.minKnickKnacks + threeDDiff);
-    } else {
-      knickknacks = barnesObjects.knickknacks;
-    }
+    let knickknacks = barnesObjects.knickknacks.slice(0, (BARNES_SETTINGS.size - refinedBarnesObjects.length));
     refinedBarnesObjects.push(...knickknacks);
     ratios['knickknacks'] = knickknacks.length;
 
