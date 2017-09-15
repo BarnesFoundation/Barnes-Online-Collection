@@ -194,7 +194,7 @@ const setLastIndex = (lastIndex) => {
   };
 }
 
-export const getNextObjects = (fromIndex, query=null, options={}) => {
+export const getNextObjects = (fromIndex, query=null) => {
   return (dispatch) => {
     if (!query) {
       return getAllObjects(fromIndex)(dispatch);
@@ -306,7 +306,7 @@ export const searchObjects = (term, fromIndex=0) => {
   return (dispatch) => {
     let options = {};
 
-    if (!term.length) {
+    if (term.length === 0) {
       return getAllObjects()(dispatch);
     }
 
@@ -314,7 +314,7 @@ export const searchObjects = (term, fromIndex=0) => {
     body = body.query('match', '_all', term);
     body = body.build();
 
-    if (fromIndex) options.append = true;
+    if (fromIndex >= 25) options.append = true;
 
     fetchResults(body, dispatch, options);
   }
