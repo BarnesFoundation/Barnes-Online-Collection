@@ -14,12 +14,11 @@ class ArtObjectGrid extends Component {
 
   componentDidMount() {
     if (this.props.objects.length === 0) {
-      switch (this.isPageType()) {
-        case 'object':
-          this.props.getRelatedObjects();
+      switch (this.props.pageType) {
+        case 'visually-related':
+          this.props.getRelatedObjects(this.props.object.id);
           break;
         case 'ensemble':
-          debugger;
           this.props.getEnsembleObjects(this.props.object.ensembleIndex);
           break;
         case 'landing':
@@ -30,15 +29,19 @@ class ArtObjectGrid extends Component {
     }
   }
 
-  isPageType() {
-    const path = window.location.pathname;
-    if (path === '/') {
-      return 'landing';
-    } else if (path.indexOf('objects') > -1) {
-      if (path.indexOf('ensemble') > -1) {
-        return 'ensemble';
-      } else {
-        return 'object';
+  componentWillUpdate(nextProps) {
+    if (this.props.object !== nextProps.object) {
+      switch(nextProps.pageType) {
+        case 'visually-related':
+          this.props.getRelatedObjects(nextProps.object.id);
+          break;
+        case 'ensemble':
+          this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
+          break;
+        case 'landing':
+        default:
+          this.props.getAllObjects();
+          break;
       }
     }
   }
