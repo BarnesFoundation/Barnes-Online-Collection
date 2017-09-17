@@ -18,9 +18,7 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    const urlPath = this.props.location.pathname;
-    const artObjectId = props.match.params.id;
-    const panelSlug = props.match.params.panel || '';
+    const urlPath = props.location.pathname;
     const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
     if (!baseUrlMatch) {
@@ -29,6 +27,9 @@ class ArtObjectPage extends Component {
       window.location = window.location.pathname + '/';
       return;
     }
+
+    const artObjectId = parseInt(props.match.params.id, 10);
+    const panelSlug = props.match.params.panel || '';
 
     this.state = {
       panelSlug: panelSlug,
@@ -45,29 +46,27 @@ class ArtObjectPage extends Component {
       this.props.getPrints();
     }
 
-    this.updateStaleData();
+    this.props.getObject(this.state.artObjectId);
   }
 
-  componentDidUpdate() {
-    this.updateStaleData();
-  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params !== nextProps.match.params) {
+      const baseUrlMatch = nextProps.location.pathname.match('/objects/[0-9]*/');
+      if (!baseUrlMatch) {
+        window.location = window.location.pathname + '/';
+        return;
+      }
 
-  updateStaleData() {
+      const artObjectId = parseInt(nextProps.match.params.id, 10);
+      const panelSlug = nextProps.match.params.panel || '';
 
-    const newArtObjectId = parseInt(this.props.match.params.id, 10)
-    const currentArtObjectId = parseInt(this.props.object.id, 10)
-    const isObjectStale = currentArtObjectId !== newArtObjectId;
-    const newPanelSlug = this.props.match.params.panel || '';
-    const isPanelStale = newPanelSlug !== this.state.panelSlug;
-
-    if(isObjectStale) {
-      this.props.getObject(newArtObjectId);
-    }
-
-    if (isPanelStale) {
       this.setState({
-        panelSlug: newPanelSlug,
+        panelSlug: panelSlug,
+        baseUrl: baseUrlMatch[0],
+        artObjectId: artObjectId
       });
+
+      this.props.getObject(artObjectId);
     }
   }
 
@@ -82,7 +81,6 @@ class ArtObjectPage extends Component {
     this.props.submitDownloadForm(this.props.object.invno, this.downloadReason.value);
     this.downloadReason.value = '';
     this.downloadToggle.checked = false;
-
   }
 
   render() {
@@ -108,7 +106,7 @@ class ArtObjectPage extends Component {
         <TabbedContent
           onKeyUp={this.handleKeyUp}
           slug={this.state.panelSlug}
-          artObject={object}
+          object={object}
         />
         <Footer />
       </div>

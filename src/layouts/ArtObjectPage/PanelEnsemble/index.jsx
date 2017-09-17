@@ -4,10 +4,6 @@ import * as Constants from '../../../constants';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 class PanelEnsemble extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="art-object-page__panel-ensemble">
@@ -21,7 +17,7 @@ class PanelEnsemble extends Component {
           </div>
         </div>
         <div className="m-block m-block--shallow">
-          <ArtObjectGrid gridStyle="full-size" />
+          <ArtObjectGrid gridStyle="full-size" pageType="ensemble"/>
         </div>
       </div>
     );

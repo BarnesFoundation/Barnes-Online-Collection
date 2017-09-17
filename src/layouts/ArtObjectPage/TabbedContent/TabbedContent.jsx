@@ -5,42 +5,40 @@ import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
 import { getArtObjectUrlFromId } from '../../../helpers';
 
-const getTabFromSlug = slug => {
-  return tabList.find(tab => {
-    return slug === tab.slug;
-  });
-}
-
-const tabList = [
-  {
-    title: 'Visually Related',
-    slug: '',
-    contentBlock: <PanelVisuallyRelated/>,
-  },
-  {
-    title: 'Ensemble',
-    slug: 'ensemble',
-    contentBlock: <PanelEnsemble/>,
-  },
-  {
-    title: 'Details',
-    slug: 'details',
-    contentBlock: <PanelDetails/>,
-  },
-];
-
 class TabbedContent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      tabs: tabList,
-    };
+    const tabList = [
+      {
+        title: 'Visually Related',
+        slug: '',
+      },
+      {
+        title: 'Ensemble',
+        slug: 'ensemble',
+      },
+      {
+        title: 'Details',
+        slug: 'details',
+      },
+    ];
+
+    this.state = { tabs: tabList };
+  }
+
+  getTab() {
+    switch(this.props.slug) {
+      case 'ensemble':
+        return <PanelEnsemble />;
+      case 'details':
+        return <PanelDetails />;
+      default:
+        return <PanelVisuallyRelated />;
+    }
   }
 
   render() {
-    const contentBlock = getTabFromSlug(this.props.slug).contentBlock;
-
     return (
       <div>
         <div className="container">
@@ -56,7 +54,7 @@ class TabbedContent extends Component {
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
-                          to={getArtObjectUrlFromId(this.props.artObject.id, tabData.slug)}
+                          to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
                           onClick={this.handleContentTabClick(tabData.slug)}
                         >
                           {tabData.title}
@@ -69,7 +67,7 @@ class TabbedContent extends Component {
           </nav>
         </div>
         <div className="container">
-          {contentBlock}
+          {this.getTab()}
         </div>
       </div>
     );
