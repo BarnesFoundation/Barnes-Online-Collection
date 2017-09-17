@@ -18,6 +18,7 @@ class SpaceFilter extends Component {
         labelStyle="inline"
         labelLeft="Shallow"
         labelRight="Deep"
+        defaultValue={this.props.value || 50}
         handleChange={this.handleChange}
       />
     );

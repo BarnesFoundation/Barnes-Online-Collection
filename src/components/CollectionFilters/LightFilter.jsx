@@ -18,6 +18,7 @@ class LightFilter extends Component {
         labelStyle="inline"
         labelLeft="Diffused"
         labelRight="Light"
+        defaultValue={this.props.value || 50}
         handleChange={this.handleChange}
       />
     );

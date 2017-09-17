@@ -88,6 +88,7 @@ class Filter extends Component {
           svgId={this.props.filter.svgId}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
+          value={this.props.filters.light ? this.props.filters.light.value : null}
         />;
       case 'space':
         return <SpaceFilter
@@ -95,6 +96,7 @@ class Filter extends Component {
           svgId={this.props.filter.svgId}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
+          value={this.props.filters.space ? this.props.filters.space.value : null}
         />;
       default:
         return null;
