@@ -12,7 +12,6 @@ import SpaceFilters from './SpaceFilters';
 
 class MobileFiltersMenu extends Component {
   render() {
-    const filterSets = this.props.filterSets.sets;
     return (
       <div className="mobile-filters-panel">
         <CollectionFiltersApplied />

@@ -19,13 +19,12 @@ class MobileFiltersOpener extends Component {
   }
 
   render() {
-    const filterSets = this.props.filterSets.sets;
     const filterCount = this.props.filters.length;
 
     return (
       <button onClick={this.handleClick} className="btn-open-mobile-filters font-zeta color-light">
         <Icon svgId='filters' classes='collection-filter-icon' />
-        Filter{ filterCount > 0 && ` (${this.props.filters.length})` }
+        Filter{ filterCount > 0 && ` (${filterCount})` }
       </button>
     );
   }

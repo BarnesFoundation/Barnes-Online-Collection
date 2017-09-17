@@ -342,10 +342,6 @@ const buildRangeQuery = (filter, query) => {
   return queryObject;
 }
 
-const buildLightQuery = (query) => {}
-
-const buildSpaceQuery = (query) => {}
-
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {
     'queries': queries

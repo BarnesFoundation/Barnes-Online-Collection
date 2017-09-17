@@ -14,7 +14,8 @@ import * as FilterSetsActions from '../../actions/filterSets';
 class Filter extends Component {
   constructor(props) {
     super(props);
-    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleButtonFilter = this.handleButtonFilter.bind(this);
+    this.handleSliderFilter = this.handleSliderFilter.bind(this);
   }
 
   filterIsApplied() {
@@ -25,22 +26,20 @@ class Filter extends Component {
       }
     }
     return -1;
-    debugger;
   }
 
-  handleUpdate(event) {
+  handleButtonFilter() {
     const filter = this.props.filter;
 
-    if (this.props.filters.ordered.length === 0) {
+    if (this.props.filters.ordered.length === 0 || this.filterIsApplied() === -1) {
       this.props.addFilter(filter);
     } else {
-      const index = this.filterIsApplied();
-      if (index === -1) {
-        this.props.addFilter(filter);
-      } else {
-        this.props.removeFilter(filter);
-      }
+      this.props.removeFilter(filter);
     }
+  }
+
+  handleSliderFilter(filter) {
+
   }
 
   getClasses() {
@@ -74,13 +73,13 @@ class Filter extends Component {
         };
 
         return <ColorFilter
-          handleClick={this.handleUpdate}
+          handleClick={this.handleButtonFilter}
           style={style}
           classes={this.getClasses()}
           />;
       case 'line':
         return <LineFilter
-          handleClick={this.handleUpdate}
+          handleClick={this.handleButtonFilter}
           classes={this.getClasses()}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
@@ -88,17 +87,16 @@ class Filter extends Component {
         />;
       case 'light':
         return <LightFilter
-          handleChange={this.handleUpdate}
+          handleChange={this.handleSliderFilter}
           svgId='tool_lights'
         />;
       case 'space':
         return <SpaceFilter
-          handleChange={this.handleUpdate}
+          handleChange={this.handleSliderFilter}
           svgId='tool_space'
         />;
       default:
         return null;
-        break;
     }
   }
 

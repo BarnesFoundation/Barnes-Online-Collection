@@ -35,9 +35,6 @@ class CollectionFiltersMenuItem extends Component {
   }
 
   render() {
-    const slug = this.props.slug;
-    const svgId = this.props.svgId;
-
     return (
       <button
         className={this.getClassNames()}
@@ -46,7 +43,7 @@ class CollectionFiltersMenuItem extends Component {
         data-for="collectionFilterMenuItem"
       >
         <div className="button-inner">
-          <Icon svgId={svgId} classes='collection-filter-icon' />
+          <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
           <span>
             {this.props.title}
           </span>

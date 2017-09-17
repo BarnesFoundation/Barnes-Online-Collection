@@ -6,14 +6,8 @@ const initialState = {
     composition: null,
     linearity: null
   },
-  line: null,
   space: null,
   ordered: []
-};
-
-const lineFilterObject = {
-  composition: null,
-  linearity: null
 };
 
 const filters = (state = initialState, action) => {
@@ -57,7 +51,10 @@ const filters = (state = initialState, action) => {
           }
           break;
         case 'light':
+          debugger;
+          break;
         case 'space':
+          break;
         default:
           break;
       }
@@ -81,7 +78,10 @@ const filters = (state = initialState, action) => {
           }
           break;
         case 'light':
+          debugger;
+          break;
         case 'space':
+          break;
         default:
           break;
       }

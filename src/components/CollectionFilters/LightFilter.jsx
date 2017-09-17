@@ -9,7 +9,6 @@ class LightFilter extends Component {
   }
 
   handleChange(value) {
-    debugger;
     const filter = {
       value: value,
       name: 'light'
