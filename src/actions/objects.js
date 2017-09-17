@@ -12,7 +12,9 @@ const BARNES_SETTINGS = {
   termsMetalworks: ['Metalworks'],
   terms3D: ['Sculptures', 'Furniture', 'Timepieces'],
   termsKnickKnacks: ['Flatware', 'Jewelry', 'Lighting Devices', 'Textiles', 'Tools and Equipment', 'Vessels'],
-  size: 25
+  size: 25,
+  line_threshhold: 0.5,
+  broken_threshhold: 0
 };
 
 const buildRequestBody = (fromIndex=0) => {
@@ -41,8 +43,6 @@ const fetchResults = (body, dispatch, options={}) => {
 
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
-
-    if (options.highlights) { console.log('Showing highlights only.'); }
 
     if (options.barnesify && maxHits >= 25) {
         barnesifyObjects(objects, dispatch, options);
@@ -93,12 +93,6 @@ const barnesifyObjects = (objects, dispatch, options) => {
     console.log('Compiling Barnesified object set...');
     let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
     ratios['2D'] = refinedBarnesObjects.length;
-
-    // if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
-    //   metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
-    // } else {
-    //   metalworks = barnesObjects.metalworks;
-    // }
     let metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
     refinedBarnesObjects.push(...metalworks);
     ratios['metalworks'] = metalworks.length;
@@ -252,11 +246,26 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
+export const getRelatedObjects = (objectID, fromIndex=0) => {
+  debugger;
+}
+
+export const getEnsembleObjects = (objectID) => {
+  debugger;
+  return (dispatch) => {
+
+  }
+}
+
 export const findFilteredObjects = (filters, fromIndex=0) => {
   return (dispatch) => {
     let options = {};
 
     if (!filters.ordered || filters.ordered.length === 0) {
+      return getAllObjects()(dispatch);
+    }
+
+    if (filters.ordered.length === 1 && !filters.line.linearity) {
       return getAllObjects()(dispatch);
     }
 
@@ -289,10 +298,23 @@ const buildQueriesFromFilters = (filters) => {
         }
         break;
       case 'line':
-        queries.push(buildRangeQuery(filter, { 'gte': 0.5 }));
+        if (filter.filterGroup === 'composition') {
+          queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.line_threshhold }));
+        } else if (filter.filterGroup === 'linearity') {
+          if (filter.name === 'unbroken') {
+            queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.broken_threshhold }));
+          } else if (filter.name === 'broken') {
+            queries.push(buildRangeQuery(filter, { 'lte': BARNES_SETTINGS.broken_threshhold }));
+          } else if (filter.name === 'all types') {
+            continue;
+          }
+        }
+        break;
       case 'light':
       case 'space':
-        queries.push(buildRangeQuery(filter, { 'gte': filter.value }));
+        const value = filter.value / 100;
+        queries.push(buildRangeQuery(filter, { 'gte': value }));
+        break;
       default:
         break;
     }

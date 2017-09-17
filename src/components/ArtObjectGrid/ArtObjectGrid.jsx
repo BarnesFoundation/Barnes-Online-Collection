@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
@@ -11,9 +11,35 @@ import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
 
 class ArtObjectGrid extends Component {
+
   componentDidMount() {
     if (this.props.objects.length === 0) {
-      this.props.getAllObjects();
+      switch (this.isPageType()) {
+        case 'object':
+          this.props.getRelatedObjects();
+          break;
+        case 'ensemble':
+          debugger;
+          this.props.getEnsembleObjects(this.props.object.ensembleIndex);
+          break;
+        case 'landing':
+        default:
+            this.props.getAllObjects();
+          break;
+      }
+    }
+  }
+
+  isPageType() {
+    const path = window.location.pathname;
+    if (path === '/') {
+      return 'landing';
+    } else if (path.indexOf('objects') > -1) {
+      if (path.indexOf('ensemble') > -1) {
+        return 'ensemble';
+      } else {
+        return 'object';
+      }
     }
   }
 
@@ -62,6 +88,7 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     objects: state.objects,
+    object: state.object
   };
 }
 

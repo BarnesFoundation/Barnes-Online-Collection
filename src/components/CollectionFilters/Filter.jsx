@@ -31,7 +31,7 @@ class Filter extends Component {
   handleUpdate(event) {
     const filter = this.props.filter;
 
-    if (this.props.filters.length === 0) {
+    if (this.props.filters.ordered.length === 0) {
       this.props.addFilter(filter);
     } else {
       const index = this.filterIsApplied();

@@ -17,72 +17,71 @@ const lineFilterObject = {
 };
 
 const filters = (state = initialState, action) => {
+  const filter = action.filter;
   switch(action.type) {
     case ActionTypes.ADD_FILTER:
       let supplementedState = Object.assign({}, state, {
-        ordered: [...state.ordered, action.filter]
+        ordered: [...state.ordered, filter]
       });
 
-      switch (action.filter.filterType) {
+      switch (filter.filterType) {
         case 'color':
-          supplementedState.colors = [...state.colors, action.filter];
+          supplementedState.colors = [...state.colors, filter];
           break;
         case 'line':
-          supplementedState.line = supplementedState.line || lineFilterObject;
+          supplementedState.line = supplementedState.line || {
+            composition: null,
+            linearity: null
+          };
 
-          switch (action.filter.name) {
-            case 'vertical':
-            case 'diagonal':
-            case 'horizontal':
-            case 'curvy':
-              if (supplementedState.line.composition) {
-                supplementedState.line.composition = [...supplementedState.line.composition, action.filter]
-              ;
-              } else {
-                supplementedState.line.composition = [action.filter];
+          if (filter.filterGroup === 'composition') {
+            if (supplementedState.line.composition) {
+              supplementedState.line.composition = [...supplementedState.line.composition, filter];
+            } else {
+              supplementedState.line.composition = [filter];
+            }
+          } else if (filter.filterGroup === 'linearity') {
+            if (filter.name !== 'all types') {
+              supplementedState.line.linearity = filter.name;
+              supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-all types');
+              if (filter.name === 'broken') {
+                supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-unbroken');
+              } else if (filter.name === 'unbroken') {
+                supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-broken');
               }
-              break;
-            case 'broken':
-            case 'unbroken':
-              supplementedState.line.linearity = action.filter.name;
-              break;
-            case 'all-types':
+            } else {
               supplementedState.line.linearity = null;
-              break;
-            default:
-              break;
+              let newOrdered = getReducedFilters(supplementedState.ordered, 'line-unbroken');
+              supplementedState.ordered = getReducedFilters(newOrdered, 'line-broken');
+            }
           }
+          break;
+        case 'light':
+        case 'space':
         default:
           break;
       }
       return supplementedState;
     case ActionTypes.REMOVE_FILTER:
       let reducedState = Object.assign({}, state, {
-        ordered: getReducedFilters(state.ordered, action.filter.slug)
+        ordered: getReducedFilters(state.ordered, filter.slug)
       });
 
-      switch (action.filter.filterType) {
+      switch (filter.filterType) {
         case 'color':
-          reducedState.colors = getReducedFilters(state.colors, action.filter.slug);
+          reducedState.colors = getReducedFilters(state.colors, filter.slug);
           break;
         case 'line':
-          switch(action.filter.name) {
-            case 'vertical':
-            case 'diagonal':
-            case 'horizontal':
-            case 'curvy':
-              reducedState.line.composition = getReducedFilters(state.line.composition, action.filter.slug);
-              break;
-            case 'broken':
-            case 'unbroken':
-              reducedState.line.linearity = getReducedFilters(state.line.linearity, action.filter.slug);
-              break;
-            case 'all-types':
-              break;
-            default:
-              break;
+          if (filter.filterGroup === 'composition') {
+            reducedState.line.composition = getReducedFilters(state.line.composition, filter.slug);
+          } else if (filter.filterGroup === 'linearity') {
+            if (!filter.name === 'all types') {
+              reducedState.line.linearity = getReducedFilters(state.line.linearity, filter.slug);
+            }
           }
           break;
+        case 'light':
+        case 'space':
         default:
           break;
       }
@@ -99,12 +98,16 @@ const filters = (state = initialState, action) => {
   }
 }
 
-function getReducedFilters(filterArray, slug) {
-  const index = findIndexBySlug(filterArray, slug);
-  return [
-    ...filterArray.slice(0, index),
-    ...filterArray.slice(index + 1)
-  ];
+function getReducedFilters(filters, slug) {
+  const index = findIndexBySlug(filters, slug);
+  if (index > -1) {
+    return [
+      ...filters.slice(0, index),
+      ...filters.slice(index + 1)
+    ];
+  } else {
+    return filters;
+  }
 }
 
 function findIndexBySlug(filters, slug) {
