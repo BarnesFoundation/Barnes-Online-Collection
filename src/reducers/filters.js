@@ -6,6 +6,7 @@ const initialState = {
     composition: null,
     linearity: null
   },
+  light: null,
   space: null,
   ordered: []
 };
@@ -23,41 +24,18 @@ const filters = (state = initialState, action) => {
           supplementedState.colors = [...state.colors, filter];
           break;
         case 'line':
-          supplementedState.line = supplementedState.line || {
-            composition: null,
-            linearity: null
-          };
-
-          if (filter.filterGroup === 'composition') {
-            if (supplementedState.line.composition) {
-              supplementedState.line.composition = [...supplementedState.line.composition, filter];
-            } else {
-              supplementedState.line.composition = [filter];
-            }
-          } else if (filter.filterGroup === 'linearity') {
-            if (filter.name !== 'all types') {
-              supplementedState.line.linearity = filter.name;
-              supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-all types');
-              if (filter.name === 'broken') {
-                supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-unbroken');
-              } else if (filter.name === 'unbroken') {
-                supplementedState.ordered = getReducedFilters(supplementedState.ordered, 'line-broken');
-              }
-            } else {
-              supplementedState.line.linearity = null;
-              let newOrdered = getReducedFilters(supplementedState.ordered, 'line-unbroken');
-              supplementedState.ordered = getReducedFilters(newOrdered, 'line-broken');
-            }
-          }
+          supplementedState = addLineFilter(supplementedState, filter);
           break;
         case 'light':
-          debugger;
+          supplementedState.light = filter;
           break;
         case 'space':
+          supplementedState.space = filter;
           break;
         default:
           break;
       }
+      supplementedState.ordered = [...new Set(supplementedState.ordered)];
       return supplementedState;
     case ActionTypes.REMOVE_FILTER:
       let reducedState = Object.assign({}, state, {
@@ -69,18 +47,13 @@ const filters = (state = initialState, action) => {
           reducedState.colors = getReducedFilters(state.colors, filter.slug);
           break;
         case 'line':
-          if (filter.filterGroup === 'composition') {
-            reducedState.line.composition = getReducedFilters(state.line.composition, filter.slug);
-          } else if (filter.filterGroup === 'linearity') {
-            if (!filter.name === 'all types') {
-              reducedState.line.linearity = getReducedFilters(state.line.linearity, filter.slug);
-            }
-          }
+          reducedState = removeLineFilter(state, reducedState, filter);
           break;
         case 'light':
-          debugger;
+          reducedState.light = null;
           break;
         case 'space':
+          reducedState.space = null;
           break;
         default:
           break;
@@ -96,6 +69,39 @@ const filters = (state = initialState, action) => {
     default:
       return state;
   }
+}
+
+function removeLineFilter(state, reducedState, filter) {
+  if (filter.filterGroup === 'composition') {
+    reducedState.line.composition = getReducedFilters(state.line.composition, filter.slug);
+  } else if (filter.filterGroup === 'linearity') {
+    if (!filter.name === 'all types') {
+      reducedState.line.linearity = getReducedFilters(state.line.linearity, filter.slug);
+    }
+  }
+  return reducedState;
+}
+
+function addLineFilter(state, filter) {
+  state.line = state.line || {
+    composition: null,
+    linearity: null
+  };
+
+  if (filter.filterGroup === 'composition') {
+    state.line.composition = state.line.composition ? [...state.line.composition, filter] : [filter];
+  } else if (filter.filterGroup === 'linearity') {
+    if (filter.name !== 'all types') {
+      state.line.linearity = filter.name;
+      state.ordered = getReducedFilters(state.ordered, 'line-all types');
+      filter.name === 'broken' ? state.ordered = getReducedFilters(state.ordered, 'line-unbroken') : state.ordered = getReducedFilters(state.ordered, 'line-broken');
+    } else {
+      state.line.linearity = null;
+      state.ordered = getReducedFilters(state.ordered, 'line-unbroken');
+      state.ordered = getReducedFilters(state.ordered, 'line-broken');
+    }
+  }
+  return state;
 }
 
 function getReducedFilters(filters, slug) {

@@ -3,18 +3,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Filter from './Filter';
 import MediaQuery from 'react-responsive';
-import Slider from '../Slider/Slider.jsx';
 
 class SpaceFilters extends Component {
-  getSpaceFilters() {
-    return (
-      <Slider
-        labelStyle="inline"
-        labelLeft="Shallow"
-        labelRight="Deep"
-      />
-    );
+  buildFilter() {
+    const filter = this.props.filterSets.sets.space.filter;
+    return <Filter filter={filter} />;
   }
 
   render() {
@@ -23,11 +18,11 @@ class SpaceFilters extends Component {
         <MediaQuery maxWidth={425}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Space</h6>
-            {this.getSpaceFilters()}
+            {this.buildFilter()}
           </div>
         </MediaQuery>
         <MediaQuery minWidth={426}>
-          {this.getSpaceFilters()}
+          {this.buildFilter()}
         </MediaQuery>
       </div>
     );

@@ -30,7 +30,6 @@ class Filter extends Component {
 
   handleButtonFilter() {
     const filter = this.props.filter;
-
     if (this.props.filters.ordered.length === 0 || this.filterIsApplied() === -1) {
       this.props.addFilter(filter);
     } else {
@@ -38,8 +37,10 @@ class Filter extends Component {
     }
   }
 
-  handleSliderFilter(filter) {
-
+  handleSliderFilter(value) {
+    let filter = this.props.filter;
+    filter.value = value;
+    this.props.addFilter(filter);
   }
 
   getClasses() {
@@ -68,13 +69,9 @@ class Filter extends Component {
   buildFilter() {
     switch (this.props.filter.filterType) {
       case 'color':
-        const style = {
-          background: this.props.filter.color
-        };
-
         return <ColorFilter
           handleClick={this.handleButtonFilter}
-          style={style}
+          style={{background: this.props.filter.color}}
           classes={this.getClasses()}
           />;
       case 'line':
@@ -88,12 +85,16 @@ class Filter extends Component {
       case 'light':
         return <LightFilter
           handleChange={this.handleSliderFilter}
-          svgId='tool_lights'
+          svgId={this.props.filter.svgId}
+          slug={this.props.filter.slug}
+          name={this.props.filter.name}
         />;
       case 'space':
         return <SpaceFilter
           handleChange={this.handleSliderFilter}
-          svgId='tool_space'
+          svgId={this.props.filter.svgId}
+          slug={this.props.filter.slug}
+          name={this.props.filter.name}
         />;
       default:
         return null;

@@ -312,8 +312,7 @@ const buildQueriesFromFilters = (filters) => {
         break;
       case 'light':
       case 'space':
-        const value = filter.value / 100;
-        queries.push(buildRangeQuery(filter, { 'gte': value }));
+        queries.push(buildRangeQuery(filter, { 'gte': (filter.value / 100) }));
         break;
       default:
         break;

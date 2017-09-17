@@ -26,8 +26,9 @@ const buildInitialState = () => {
         svgId: 'tool_lights',
         filter: {
           filterType: 'light',
-          slug: 'light-',
-          svgId: 'tool_lights'
+          slug: 'light',
+          svgId: 'tool_lights',
+          name: 'light'
         }
       },
       space: {
@@ -36,8 +37,9 @@ const buildInitialState = () => {
         svgId: 'tool_space',
         filter: {
           filterType: 'space',
-          slug: 'space-',
-          svgId: 'tool_space'
+          slug: 'space',
+          svgId: 'tool_space',
+          name: 'space'
         }
       },
       shuffle: {

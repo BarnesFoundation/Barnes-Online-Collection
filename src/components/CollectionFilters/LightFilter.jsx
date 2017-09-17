@@ -9,11 +9,7 @@ class LightFilter extends Component {
   }
 
   handleChange(value) {
-    const filter = {
-      value: value,
-      name: 'light'
-    };
-    this.props.handleChange(filter);
+    this.props.handleChange(value);
   }
 
   render() {
