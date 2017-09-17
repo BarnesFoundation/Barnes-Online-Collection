@@ -28,6 +28,7 @@ class LandingPage extends Component {
             <ArtObjectGrid
               history={this.props.history}
               gridStyle="full-size"
+              pageType="landing"
             />
           </div>
         </div>
