@@ -232,14 +232,15 @@ export const getAllObjects = (fromIndex=0) => {
   let options = {};
 
   if (!fromIndex) {
-    body = addHighlightsFilter(body).build();
+    body = addHighlightsFilter(body);
     options.barnesify = true;
     options.highlights = true;
   } else {
     options.append = true;
     options.barnesify = false;
-    body = body.build();
   }
+
+  body = body.build();
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);
@@ -247,66 +248,78 @@ export const getAllObjects = (fromIndex=0) => {
 };
 
 export const getRelatedObjects = (objectID, fromIndex=0) => {
-  debugger;
-}
-
-export const getEnsembleObjects = (objectID) => {
-  debugger;
   return (dispatch) => {
 
   }
 }
 
-export const findFilteredObjects = (filters, fromIndex=0) => {
+export const getEnsembleObjects = (ensembleIndex) => {
+  let body = buildRequestBody(0, 10000);
+  body = body.query('match', 'ensembleIndex', ensembleIndex);
+  body = body.build();
+
+  let options = {
+    barnesify: false,
+    append: false,
+    highlights: false
+  };
+
   return (dispatch) => {
-    let options = {};
+    fetchResults(body, dispatch, options);
+  }
+}
 
-    if (!filters.ordered || filters.ordered.length === 0) {
-      return getAllObjects()(dispatch);
-    }
-
-    if (filters.ordered.length === 1 && !filters.line.linearity) {
-      return getAllObjects()(dispatch);
-    }
-
-    if (!fromIndex) {
-      options.barnesify = true;
-    } else {
-      options.barnesify = false;
-      options.append = true;
+export const findFilteredObjects = (filters, fromIndex=0) => {
+    if (
+      !filters.ordered ||
+      filters.ordered.length === 0 ||
+      filters.ordered.length === 1 && !filters.line.linearity
+      ) {
+      return (dispatch) => { getAllObjects()(dispatch); }
     }
 
     const queries = buildQueriesFromFilters(filters.ordered);
-    options.queries = queries;
+
+    const options = {
+      queries: queries,
+      barnesify: !fromIndex,
+      append: !!fromIndex
+    };
 
     let body = buildRequestBody(fromIndex);
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
 
+  return (dispatch) => {
     fetchResults(body, dispatch, options);
   }
 }
 
 const buildQueriesFromFilters = (filters) => {
   let queries = [];
-  for (let i = 0; i < filters.length; i++) {
-    const filter = filters[i];
+
+  filters.forEach((filter) => {
     switch (filter.filterType) {
       case 'color':
-        for (let i = 0; i < filter.queries.length; i++) {
-          queries.push(buildColorQuery(filter.queries[i]));
-        }
+        filter.queries.forEach((query) => {
+          queries.push(buildColorQuery(query));
+        })
         break;
       case 'line':
         if (filter.filterGroup === 'composition') {
           queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.line_threshhold }));
         } else if (filter.filterGroup === 'linearity') {
-          if (filter.name === 'unbroken') {
-            queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.broken_threshhold }));
-          } else if (filter.name === 'broken') {
-            queries.push(buildRangeQuery(filter, { 'lte': BARNES_SETTINGS.broken_threshhold }));
-          } else if (filter.name === 'all types') {
-            continue;
+          switch (filter.name) {
+            case 'unbroken':
+              queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.broken_threshhold }));
+              break;
+            case 'broken':
+              queries.push(buildRangeQuery(filter, { 'lte': BARNES_SETTINGS.broken_threshhold }));
+              break;
+            case 'all types':
+              break;
+            default:
+              break;
           }
         }
         break;
@@ -317,7 +330,8 @@ const buildQueriesFromFilters = (filters) => {
       default:
         break;
     }
-  }
+  });
+
   return queries;
 }
 
