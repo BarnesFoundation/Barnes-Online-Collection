@@ -1,21 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-
-const BARNES_SETTINGS = {
-  min2D: 10,
-  minMetalworks: 7,
-  min3D: 5,
-  minKnickKnacks: 2,
-  minObjects: 14,
-  terms2D: ['Architecture', 'Paintings', 'Drawings', 'Works on Paper', 'Prints', 'Enamels', 'Manuscripts', 'Photographs'],
-  termsMetalworks: ['Metalworks'],
-  terms3D: ['Sculptures', 'Furniture', 'Timepieces'],
-  termsKnickKnacks: ['Flatware', 'Jewelry', 'Lighting Devices', 'Textiles', 'Tools and Equipment', 'Vessels'],
-  size: 25,
-  line_threshhold: 0.5,
-  broken_threshhold: 0
-};
+import { BARNES_SETTINGS } from '../barnesSettings';
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
@@ -261,7 +247,8 @@ export const getRelatedObjects = (objectID, fromIndex=0) => {
         '_type': 'object',
         '_id': objectID
       }
-    ]
+    ],
+    'min_term_freq': 1
   });
   body = body.build();
 
@@ -330,14 +317,14 @@ const buildQueriesFromFilters = (filters) => {
         break;
       case 'line':
         if (filter.filterGroup === 'composition') {
-          queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.line_threshhold }));
+          queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
         } else if (filter.filterGroup === 'linearity') {
           switch (filter.name) {
             case 'unbroken':
-              queries.push(buildRangeQuery(filter, { 'gte': BARNES_SETTINGS.broken_threshhold }));
+              queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
               break;
             case 'broken':
-              queries.push(buildRangeQuery(filter, { 'lte': BARNES_SETTINGS.broken_threshhold }));
+              queries.push(buildRangeQuery('line', { 'gte': BARNES_SETTINGS.broken_threshhold }));
               break;
             case 'all types':
               break;
@@ -348,7 +335,7 @@ const buildQueriesFromFilters = (filters) => {
         break;
       case 'light':
       case 'space':
-        queries.push(buildRangeQuery(filter, { 'gte': (filter.value / 100) }));
+        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/50) - 1) }));
         break;
       default:
         break;
@@ -372,15 +359,16 @@ const buildColorQuery = (query) => {
   };
 }
 
-const buildRangeQuery = (filter, query) => {
+const buildRangeQuery = (field, query) => {
   let queryObject = { range: {} };
-  queryObject['range'][filter.name] = query;
+  queryObject['range'][field] = query;
   return queryObject;
 }
 
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {
-    'queries': queries
+    'queries': queries,
+    'tie_breaker': 0.5
   });
 }
 
