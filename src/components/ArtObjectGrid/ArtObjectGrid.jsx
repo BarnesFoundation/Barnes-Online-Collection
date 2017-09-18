@@ -87,7 +87,9 @@ class ArtObjectGrid extends Component {
         {masonryElements.length &&
           <MasonryGrid masonryElements={masonryElements} />
         }
-        <ViewMoreButton />
+        { this.props.pageType !== 'ensemble' &&
+          <ViewMoreButton />
+        }
       </div>
     );
   }
