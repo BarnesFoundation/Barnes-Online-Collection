@@ -30,7 +30,7 @@ class Footer extends Component {
                   <div className="m-block__column">
                     {/* todo: add link urls */}
                     <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/collection/credits">Project Credits &amp; Information</a>
-                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/copyright-and-image-licensing">Open Access &amp; Copyright Considerations​</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/copyright-and-image-licensing">Open Access &amp; Copyright</a>
                     <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/collection">Image Licensing</a>
                   </div>
                   <div className="m-block__column">
