@@ -22,6 +22,9 @@ const mapObjects = (objects) => {
 
 const fetchResults = (body, dispatch, options={}) => {
   DEV_LOG('Fetching results...');
+
+  dispatch(setIsPending(true));
+
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
     let objects = [];
@@ -32,6 +35,7 @@ const fetchResults = (body, dispatch, options={}) => {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
     }
+
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
     dispatch(setMaxHits(maxHits));
@@ -41,6 +45,7 @@ const fetchResults = (body, dispatch, options={}) => {
         barnesifyObjects(objects, dispatch, options);
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
+      dispatch(setIsPending(false));
     }
   });
 }
@@ -170,6 +175,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
 
     checkBarnesificationPossible() ? setBarnesObjects() : dispatch(setObjects(objects));
+    dispatch(setIsPending(false));
   }));
 }
 
@@ -200,6 +206,13 @@ const setLastIndex = (lastIndex) => {
   return {
     type: ActionTypes.SEARCH_SET_LAST_INDEX,
     lastIndex: lastIndex
+  };
+}
+
+const setIsPending = (isPending) => {
+  return {
+    type: ActionTypes.SEARCH_SET_IS_PENDING,
+    isPending: isPending
   };
 }
 

@@ -13,3 +13,10 @@ export const setMaxHits = (maxHits) => {
     maxHits: maxHits
   };
 }
+
+export const setIsPending = (isPending) => {
+  return {
+    type: ActionTypes.SEARCH_SET_IS_PENDING,
+    isPending: isPending
+  };
+}

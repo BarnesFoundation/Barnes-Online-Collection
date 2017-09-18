@@ -3,6 +3,7 @@ import * as ActionTypes from '../constants';
 const initialState = {
   maxHits: null,
   lastIndex: null,
+  isPending: null,
 };
 
 const searchResults = (state = initialState, action) => {
@@ -14,6 +15,10 @@ const searchResults = (state = initialState, action) => {
     case ActionTypes.SEARCH_SET_MAX_HITS:
       return Object.assign({}, state, {
         maxHits: action.maxHits
+      });
+    case ActionTypes.SEARCH_SET_IS_PENDING:
+      return Object.assign({}, state, {
+        isPending: action.isPending
       });
     default:
       return state;

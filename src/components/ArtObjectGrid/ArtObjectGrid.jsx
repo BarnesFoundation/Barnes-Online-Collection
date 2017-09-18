@@ -69,26 +69,34 @@ class ArtObjectGrid extends Component {
     });
   };
 
-  getClasses() {
-    let classes = 'component-art-object-grid';
-    if (this.props.objects.length > 0) {
-      classes += ' fade-in';
-    }
-    return classes;
-  }
-
   render() {
     const masonryElements = this.getMasonryElements();
+    const hasElements = masonryElements.length > 0;
+    const searchIsPending = this.props.searchResults.isPending;
+
     return (
-      <div
-        className={this.getClasses()}
-        data-grid-style={this.props.gridStyle}
-      >
-        {masonryElements.length &&
-          <MasonryGrid masonryElements={masonryElements} />
-        }
-        <ViewMoreButton />
-      </div>
+      hasElements ?
+        <div
+          className="component-art-object-grid fade-in"
+          data-grid-style={this.props.gridStyle}
+        >
+          {masonryElements.length &&
+            <MasonryGrid masonryElements={masonryElements} />
+          }
+          <ViewMoreButton />
+        </div>
+      : (
+        searchIsPending ?
+          <div className="spinner">
+            <div className="bounce1"></div>
+            <div className="bounce2"></div>
+            <div className="bounce3"></div>
+          </div>
+        :
+          <div>
+            No results for this search.
+          </div>
+      )
     );
   }
 }
@@ -96,7 +104,8 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     objects: state.objects,
-    object: state.object
+    object: state.object,
+    searchResults: state.searchResults,
   };
 }
 

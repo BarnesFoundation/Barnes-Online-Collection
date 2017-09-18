@@ -28,6 +28,7 @@ export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
 //searchResults
 export const SEARCH_SET_LAST_INDEX = 'SEARCH_SET_LAST_INDEX';
 export const SEARCH_SET_MAX_HITS = 'SEARCH_SET_MAX_HITS';
+export const SEARCH_SET_IS_PENDING = 'SEARCH_SET_IS_PENDING';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';
