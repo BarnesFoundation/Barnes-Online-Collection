@@ -95,8 +95,3 @@ export const COPYRIGHT_MAP = {
     type: 'small'
   }
 };
-
-// ensemble room
-export const ENSEMBLE_ROOM_IMAGE_ALT = "Barnes Ensemble Room 7 East Wall";
-export const ENSEMBLE_ROOM_TITLE = "Room 7";
-export const ENSEMBLE_ROOM_SUB_TITLE = "East Wall";

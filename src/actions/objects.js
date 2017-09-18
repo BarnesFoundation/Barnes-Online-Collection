@@ -273,7 +273,7 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
     if (
       !filters.ordered ||
       filters.ordered.length === 0 ||
-      filters.ordered.length === 1 && !filters.line.linearity
+      (filters.ordered.length === 1 && !filters.line.linearity)
       ) {
       return (dispatch) => { getAllObjects()(dispatch); }
     }
