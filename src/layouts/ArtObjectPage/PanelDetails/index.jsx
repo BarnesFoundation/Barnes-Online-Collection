@@ -11,6 +11,9 @@ import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
+// use JSON.parse to parse string "true" or "false"
+const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse(process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE);
+
 const getCopyright = (object) => {
   if (!object.objRightsTypeId) return {link: '', copy: 'No Known Copyright', type: 'small'};
 
@@ -61,13 +64,16 @@ class PanelDetails extends Component {
     return (
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
-          <div className="container-inner-narrow">
-            {objectCopyrightDetails.type === "large" ?
-              <Zoom invno={object.invno} />
-            :
+          {(
+            objectCopyrightDetails.type === "large" &&
+            isZoomEnabled
+          ) ?
+            <Zoom invno={object.invno} />
+          :
+            <div className="container-inner-narrow">
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
-            }
-          </div>
+            </div>
+          }
         </div>
         <div className="art-object__more-info m-block m-block--shallow">
           <div className="container-inner-narrow">
