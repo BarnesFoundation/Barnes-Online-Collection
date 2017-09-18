@@ -191,14 +191,14 @@ const appendObjects = (objects) => {
 
 const setMaxHits = (maxHits) => {
   return {
-    type: ActionTypes.SET_MAX_HITS,
+    type: ActionTypes.SEARCH_SET_MAX_HITS,
     maxHits: maxHits
   };
 }
 
 const setLastIndex = (lastIndex) => {
   return {
-    type: ActionTypes.SET_LAST_INDEX,
+    type: ActionTypes.SEARCH_SET_LAST_INDEX,
     lastIndex: lastIndex
   };
 }

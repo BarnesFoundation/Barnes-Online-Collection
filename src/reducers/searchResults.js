@@ -5,13 +5,13 @@ const initialState = {
   lastIndex: null,
 };
 
-const hitsDisplayed = (state = initialState, action) => {
+const searchResults = (state = initialState, action) => {
   switch(action.type) {
-    case ActionTypes.SET_LAST_INDEX:
+    case ActionTypes.SEARCH_SET_LAST_INDEX:
       return Object.assign({}, state, {
         lastIndex: action.lastIndex
       });
-    case ActionTypes.SET_MAX_HITS:
+    case ActionTypes.SEARCH_SET_MAX_HITS:
       return Object.assign({}, state, {
         maxHits: action.maxHits
       });
@@ -20,4 +20,4 @@ const hitsDisplayed = (state = initialState, action) => {
   }
 }
 
-export default hitsDisplayed;
+export default searchResults;

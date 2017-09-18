@@ -25,9 +25,9 @@ export const CLEAR_ALL_FILTERS = 'CLEAR_ALL_FILTERS';
 export const ADD_SEARCH_TERM = 'ADD_SEARCH_TERM';
 export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
 
-//hitsDisplayed
-export const SET_LAST_INDEX = 'SET_LAST_INDEX';
-export const SET_MAX_HITS = 'SET_MAX_HITS';
+//searchResults
+export const SEARCH_SET_LAST_INDEX = 'SEARCH_SET_LAST_INDEX';
+export const SEARCH_SET_MAX_HITS = 'SEARCH_SET_MAX_HITS';
 
 //prints
 export const SET_PRINTS = 'SET_PRINTS';
