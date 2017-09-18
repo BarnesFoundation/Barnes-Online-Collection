@@ -16,6 +16,15 @@ const getDisplayDateAndMedium = (displayDate, medium) => {
 };
 
 class PanelVisuallyRelated extends Component {
+  constructor(props) {
+    super(props);
+    this.getRelatedObjects = this.getRelatedObjects.bind(this);
+  }
+
+  getRelatedObjects(value) {
+    this.props.getRelatedObjects(value, this.props.object.id);
+  }
+
   render() {
     const object = this.props.object;
 
@@ -40,7 +49,7 @@ class PanelVisuallyRelated extends Component {
             <Slider
               labelLeft='More similar'
               labelRight='More surprising'
-              handleChange={this.props.getRelatedObjects}
+              handleChange={this.getRelatedObjects}
             />
             <ArtObjectGrid pageType="visually-related"/>
           </div>
@@ -58,9 +67,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({},
+  return bindActionCreators(Object.assign({},
     ObjectsActions,
-  dispatch);
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelVisuallyRelated);

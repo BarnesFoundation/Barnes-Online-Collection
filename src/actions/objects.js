@@ -235,7 +235,9 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
-export const getRelatedObjects = (objectID, fromIndex=0) => {
+export const getRelatedObjects = (value, objectID, fromIndex=0) => {
+  // todo: We are getting the slider value in here. Need to determine how to apply slider value to adjust filter results.
+
   let body = buildRequestBody(fromIndex);
   body = body.query('more_like_this', {
     'like': [
