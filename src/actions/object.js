@@ -1,6 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
+import { DEV_LOG } from '../devLogging';
 
 // todo: refactor to de-duplicate this logic from the ./objects.js file
 const buildRequestBody = () => {
@@ -49,7 +50,7 @@ export const submitDownloadForm = (invno, field) => {
   return (dispatch) => {
     const newWindow = window.open('', '_blank');
     axios.post(`/api/objects/${invno}/download`, { field }).then((response) => {
-      console.log(response.data.url);
+      DEV_LOG(response.data.url);
       if (response.data.url) {
         newWindow.location = response.data.url;
       } else {
