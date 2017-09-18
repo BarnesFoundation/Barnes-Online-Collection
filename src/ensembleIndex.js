@@ -1,3 +1,10 @@
+const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
+const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
+
+export const ENSEMBLE_IMAGE_URL = (index) => {
+  return `https://s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}/ensembles/${index}.jpg`;
+}
+
 export const ENSEMBLE = {
   1: {
     roomTitle: 'Main Room',

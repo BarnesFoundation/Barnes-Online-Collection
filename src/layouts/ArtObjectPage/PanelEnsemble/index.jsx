@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
-import {ENSEMBLE} from '../../../ensembleIndex';
+import {ENSEMBLE, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 const getRoomImageAlt = (index) => {
@@ -24,7 +24,7 @@ class PanelEnsemble extends Component {
       <div className="art-object-page__panel-ensemble">
         <div className="art-object__header m-block m-block--shallow">
           <div className="">
-            <img className="art-object__image-page-centered" src="/images/ensemble-room-image.jpg" alt={getRoomImageAlt(ensembleIndex)}/>
+            <img className="art-object__image-page-centered" src={ENSEMBLE_IMAGE_URL(ensembleIndex)} alt={getRoomImageAlt(ensembleIndex)}/>
           </div>
           <div>
             <h2 className="h2">{ENSEMBLE[ensembleIndex].roomTitle}</h2>
