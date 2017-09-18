@@ -3,6 +3,8 @@ import './index.css';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import * as ObjectsActions from '../../../actions/objects';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 import Slider from '../../../components/Slider/Slider.jsx';
@@ -38,6 +40,7 @@ class PanelVisuallyRelated extends Component {
             <Slider
               labelLeft='More similar'
               labelRight='More surprising'
+              handleChange={this.props.getRelatedObjects}
             />
             <ArtObjectGrid pageType="visually-related"/>
           </div>
@@ -48,14 +51,16 @@ class PanelVisuallyRelated extends Component {
 }
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {...state.object});
   return {
-    object: state.object
+    object: state.object,
+    objects: state.objects
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({},
+    ObjectsActions,
+  dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelVisuallyRelated);
