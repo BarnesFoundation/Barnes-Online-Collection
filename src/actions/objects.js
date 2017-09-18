@@ -3,6 +3,7 @@ import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
+import { COLOR_FIELDS } from '../filterSettings';
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
@@ -31,12 +32,12 @@ const fetchResults = (body, dispatch, options={}) => {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
     }
-    DEV_LOG('Retrieved', objects.length, 'objects.' );
+    DEV_LOG('Retrieved '+objects.length+' objects.' );
 
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
 
-    if (options.barnesify && maxHits >= 25) {
+    if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
         barnesifyObjects(objects, dispatch, options);
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
@@ -61,33 +62,31 @@ const shuffleObjects = (objects) => {
 
 const barnesifyObjects = (objects, dispatch, options) => {
   DEV_LOG('Beginning Barnesification process...');
-  let barnesObjects = {
-    twoD: [],
-    metalworks: [],
-    threeD: [],
-    objects: [],
-    knickknacks: []
-  };
+
+  let barnesObjects = BARNES_SETTINGS.objectsTemplate;
 
   const updateBarnesObjects = (objects, type) => {
     barnesObjects[type].push(...objects);
   }
 
   const setBarnesObjects = () => {
+    DEV_LOG('Compiling Barnesified object set...');
+
     let ratios = {
       '2D': 0,
       metalworks: 0,
       '3D': 0,
-      '3D+Metalworks': 0,
+      knickknacks: 0,
       total: 0
     };
 
-    DEV_LOG('Compiling Barnesified object set...');
     let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
     ratios['2D'] = refinedBarnesObjects.length;
+
     let metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
     refinedBarnesObjects.push(...metalworks);
     ratios['metalworks'] = metalworks.length;
+
     let metalworksDiff = BARNES_SETTINGS.minMetalworks - metalworks.length;
 
     let threeD = barnesObjects.threeD.slice(0, (BARNES_SETTINGS.min3D + metalworksDiff));
@@ -102,11 +101,11 @@ const barnesifyObjects = (objects, dispatch, options) => {
 
     let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
 
-    DEV_LOG('Total objects:', ratios.total);
-    DEV_LOG('2D:', ratios['2D'], 'objects', '/', ratios['2D']/ratios.total);
-    DEV_LOG('metalworks:', ratios['metalworks'], 'objects', '/', ratios['metalworks']/ratios.total);
-    DEV_LOG('3D:', ratios['3D'], 'objects', '/', ratios['3D']/ratios.total);
-    DEV_LOG('Knick Knacks:', ratios['knickknacks'], 'objects', '/',  ratios['knickknacks']/ratios.total);
+    DEV_LOG('Total objects: '+ratios.total);
+    DEV_LOG('2D: '+ratios['2D']+' objects / '+ratios['2D']/ratios.total);
+    DEV_LOG('metalworks: '+ratios['metalworks']+' objects / '+ratios['metalworks']/ratios.total);
+    DEV_LOG('3D: '+ratios['3D']+' objects / '+ratios['3D']/ratios.total);
+    DEV_LOG('Knick Knacks: '+ratios['knickknacks']+' objects / '+ratios['knickknacks']/ratios.total);
 
     dispatch(setObjects(objects));
   }
@@ -127,39 +126,31 @@ const barnesifyObjects = (objects, dispatch, options) => {
       if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
         return true;
       } else {
-        if ((barnesObjects.threeD.length + barnesObjects.knicknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks)) {
-          return true;
-        } else {
-          return false;
-        }
+        return (barnesObjects.threeD.length + barnesObjects.knickknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks);
       }
     } else {
-      if ((barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.minMetalworks + BARNES_SETTINGS.min3D)) {
-        return true;
-      } else {
-        return false;
-      }
+      return (barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks);
     }
   }
 
   axios.get('/api/search', params(BARNES_SETTINGS.terms2D))
   .then((response) => {
     if (response.data.hits.total >= BARNES_SETTINGS.min2D) {
-      DEV_LOG('Retrieved', response.data.hits.total, '2D objects. Proceeding...');
+      DEV_LOG('Retrieved '+response.data.hits.total+' 2D objects. Proceeding...');
       updateBarnesObjects(response.data.hits.hits, 'twoD');
 
       axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks))
       .then((response) => {
-        DEV_LOG('Retrieved', response.data.hits.total, 'metalworks. Proceeding...');
+        DEV_LOG('Retrieved '+response.data.hits.total+' metalworks. Proceeding...');
         updateBarnesObjects(response.data.hits.hits, 'metalworks');
 
         axios.get('/api/search', params(BARNES_SETTINGS.terms3D))
         .then((response) => {
-          DEV_LOG('Retrieved', response.data.hits.total, '3D objects. Proceeding...');
+          DEV_LOG('Retrieved '+response.data.hits.total+' 3D objects. Proceeding...');
           updateBarnesObjects(response.data.hits.hits, 'threeD');
           axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks))
           .then((response) => {
-            DEV_LOG('Retrieved', response.data.hits.total, 'knickknacks. Proceeding...');
+            DEV_LOG('Retrieved '+response.data.hits.total+' knickknacks. Proceeding...');
             updateBarnesObjects(response.data.hits.hits, 'knickknacks');
 
             if (checkBarnesificationPossible()) {
@@ -240,7 +231,7 @@ export const getAllObjects = (fromIndex=0) => {
 };
 
 export const getRelatedObjects = (objectID, fromIndex=0) => {
-  let body = buildRequestBody(fromIndex, 25);
+  let body = buildRequestBody(fromIndex);
   body = body.query('more_like_this', {
     'like': [
       {
@@ -284,7 +275,7 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
     if (
       !filters.ordered ||
       filters.ordered.length === 0 ||
-      (filters.ordered.length === 1 && !filters.line.linearity)
+      (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
       ) {
       return (dispatch) => { getAllObjects()(dispatch); }
     }

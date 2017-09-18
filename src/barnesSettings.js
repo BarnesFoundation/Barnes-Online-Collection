@@ -11,5 +11,11 @@ export const BARNES_SETTINGS = {
   termsKnickKnacks: ['Flatware', 'Jewelry', 'Lighting Devices', 'Textiles', 'Tools and Equipment', 'Vessels'],
   size: OBJECT_SET_SIZE,
   line_threshhold: 0.7,
-  broken_threshhold: 0.5
+  broken_threshhold: 0.5,
+  objectsTemplate: {
+    twoD: [],
+    metalworks: [],
+    threeD: [],
+    knickknacks: []
+  }
 };
