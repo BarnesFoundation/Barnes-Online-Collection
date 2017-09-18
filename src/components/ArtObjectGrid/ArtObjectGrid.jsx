@@ -11,15 +11,18 @@ import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
 
 class ArtObjectGrid extends Component {
-
   componentDidMount() {
     if (this.props.objects.length === 0) {
       switch (this.props.pageType) {
         case 'visually-related':
-          this.props.getRelatedObjects(this.props.object.id);
+          if (this.props.object) {
+            this.props.getRelatedObjects(this.props.object.id);
+          }
           break;
         case 'ensemble':
-          this.props.getEnsembleObjects(this.props.object.ensembleIndex);
+          if (this.props.object && this.props.object.ensembleIndex) {
+            this.props.getEnsembleObjects(this.props.object.ensembleIndex);
+          }
           break;
         case 'landing':
         default:
@@ -36,7 +39,9 @@ class ArtObjectGrid extends Component {
           this.props.getRelatedObjects(nextProps.object.id);
           break;
         case 'ensemble':
-          this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
+          if (nextProps.object && nextProps.object.ensembleIndex) {
+            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
+          }
           break;
         case 'landing':
         default:

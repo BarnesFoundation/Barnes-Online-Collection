@@ -36,10 +36,15 @@ const fetchResults = (body, dispatch, options={}) => {
   console.log('Fetching results...');
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
-    const objects = mapObjects(response.data.hits.hits);
-    console.log('Retrieved', objects.length, 'objects.' );
-    const maxHits = response.data.hits.total;
+    let objects = [];
+    let maxHits = 0;
     const lastIndex = body.from + body.size;
+
+    if (response.data.hits) {
+      objects = mapObjects(response.data.hits.hits);
+      maxHits = response.data.hits.total;
+    }
+    console.log('Retrieved', objects.length, 'objects.' );
 
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
@@ -248,8 +253,26 @@ export const getAllObjects = (fromIndex=0) => {
 };
 
 export const getRelatedObjects = (objectID, fromIndex=0) => {
-  return (dispatch) => {
+  let body = buildRequestBody(fromIndex, 25);
+  body = body.query('more_like_this', {
+    'like': [
+      {
+        '_index': 'collection',
+        '_type': 'object',
+        '_id': objectID
+      }
+    ]
+  });
+  body = body.build();
 
+  let options = {
+    barnesify: true,
+    append: !!fromIndex,
+    highlights: false
+  };
+
+  return (dispatch) => {
+    fetchResults(body, dispatch, options);
   }
 }
 
