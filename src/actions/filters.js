@@ -7,6 +7,13 @@ export function addFilter(filter) {
   }
 }
 
+export function shuffleFilters(filters) {
+  return {
+    type: ActionTypes.SHUFFLE_FILTERS,
+    filters: filters
+  }
+}
+
 export function removeFilter(filter) {
   return {
     type: ActionTypes.REMOVE_FILTER,

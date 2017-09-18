@@ -3,7 +3,7 @@ import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-import { COLOR_FIELDS } from '../filterSettings';
+import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
@@ -122,50 +122,55 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const checkBarnesificationPossible = () => {
-    if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
-      if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
-        return true;
+    if (barnesObjects.twoD.length >= BARNES_SETTINGS.min2D) {
+      if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
+        if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
+          return true;
+        } else {
+          return (barnesObjects.threeD.length + barnesObjects.knickknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks);
+        }
       } else {
-        return (barnesObjects.threeD.length + barnesObjects.knickknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks);
+        return (barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks);
       }
     } else {
-      return (barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks);
+      return false;
     }
   }
 
-  axios.get('/api/search', params(BARNES_SETTINGS.terms2D))
-  .then((response) => {
-    if (response.data.hits.total >= BARNES_SETTINGS.min2D) {
-      DEV_LOG('Retrieved '+response.data.hits.total+' 2D objects. Proceeding...');
-      updateBarnesObjects(response.data.hits.hits, 'twoD');
+  const get2DObjects = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.terms2D));
+  }
 
-      axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks))
-      .then((response) => {
-        DEV_LOG('Retrieved '+response.data.hits.total+' metalworks. Proceeding...');
-        updateBarnesObjects(response.data.hits.hits, 'metalworks');
+  const getMetalworks = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks));
+  }
 
-        axios.get('/api/search', params(BARNES_SETTINGS.terms3D))
-        .then((response) => {
-          DEV_LOG('Retrieved '+response.data.hits.total+' 3D objects. Proceeding...');
-          updateBarnesObjects(response.data.hits.hits, 'threeD');
-          axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks))
-          .then((response) => {
-            DEV_LOG('Retrieved '+response.data.hits.total+' knickknacks. Proceeding...');
-            updateBarnesObjects(response.data.hits.hits, 'knickknacks');
+  const get3DObjects = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.terms3D));
+  }
 
-            if (checkBarnesificationPossible()) {
-              setBarnesObjects();
-            } else {
-              dispatch(setObjects(objects));
-            }
-          })
-        });
-      });
-    } else {
-      DEV_LOG('Not enough 2D objects to Barnesify. Aborting...')
-      dispatch(setObjects(objects));
-    }
-  });
+  const getKnickKnacks = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
+  }
+
+  axios.all([
+    get2DObjects(),
+    getMetalworks(),
+    get3DObjects(),
+    getKnickKnacks()
+  ]).then(axios.spread((twoD, metalworks, threeD, knickknacks) => {
+    updateBarnesObjects(twoD.data.hits.hits, 'twoD');
+    updateBarnesObjects(metalworks.data.hits.hits, 'metalworks');
+    updateBarnesObjects(threeD.data.hits.hits, 'threeD');
+    updateBarnesObjects(knickknacks.data.hits.hits, 'knickknacks');
+
+    DEV_LOG('Retrieved '+twoD.data.hits.total+' 2D objects.');
+    DEV_LOG('Retrieved '+metalworks.data.hits.total+' metalworks.');
+    DEV_LOG('Retrieved '+threeD.data.hits.total+' 3D objects.');
+    DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
+
+    checkBarnesificationPossible() ? setBarnesObjects() : dispatch(setObjects(objects));
+  }));
 }
 
 const setObjects = (objects) => {
@@ -297,6 +302,17 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
   }
 }
 
+export const findShuffledObjects = (fromIndex=0) => {
+  return {
+    type: ActionTypes.SHUFFLE_FILTERS
+  };
+}
+
+const assembleRandomFilters = () => {
+  let filters = [];
+  return filters;
+}
+
 const buildQueriesFromFilters = (filters) => {
   let queries = [];
 
@@ -326,8 +342,10 @@ const buildQueriesFromFilters = (filters) => {
         }
         break;
       case 'light':
+        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
+        break;
       case 'space':
-        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/50) - 1) }));
+        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
         break;
       default:
         break;

@@ -66,6 +66,27 @@ const filters = (state = initialState, action) => {
       return [...state.slice(0, index), ...state.slice(index+1)];
     case ActionTypes.CLEAR_ALL_FILTERS:
       return initialState;
+    case ActionTypes.SHUFFLE_FILTERS:
+      let newState = initialState;
+      const lightFilter = {
+        filterType: 'light',
+        name: 'light',
+        slug: 'light',
+        svgId: 'tool_lights',
+        value: Math.floor(Math.random() * 101)
+      };
+      const spaceFilter = {
+        filterType: 'space',
+        name: 'space',
+        slug: 'space',
+        svgId: 'tool_space',
+        value: Math.floor(Math.random() * 101)
+      };
+      newState.ordered.push(lightFilter);
+      newState.ordered.push(spaceFilter);
+      newState.light = lightFilter;
+      newState.space = spaceFilter;
+      return newState;
     default:
       return state;
   }
