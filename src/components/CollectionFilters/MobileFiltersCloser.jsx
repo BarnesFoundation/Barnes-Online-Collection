@@ -17,9 +17,6 @@ class MobileFiltersCloser extends Component {
   }
 
   render() {
-    const filterSets = this.props.filterSets.sets;
-    const filterCount = this.props.filters.length;
-
     return (
       <div onClick={this.handleClick} className="mobile-filters-overlay"></div>
     );

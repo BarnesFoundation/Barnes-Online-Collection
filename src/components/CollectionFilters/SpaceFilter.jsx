@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 
+import Slider from '../Slider/Slider';
+
 class SpaceFilter extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleClick(event) {
-    event.preventDefault();
-    this.props.handleClick();
+  handleChange(value) {
+    this.props.handleChange(value);
   }
 
   render() {
-    return <div><p>Space Filter</p></div>;
+    return (
+      <Slider
+        labelStyle="inline"
+        labelLeft="Shallow"
+        labelRight="Deep"
+        defaultValue={this.props.value || 50}
+        handleChange={this.handleChange}
+      />
+    );
   }
 }
 

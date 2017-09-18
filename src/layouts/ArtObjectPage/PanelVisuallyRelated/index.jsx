@@ -14,19 +14,17 @@ const getDisplayDateAndMedium = (displayDate, medium) => {
 };
 
 class PanelVisuallyRelated extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
+    const object = this.props.object;
+
     return (
       <div className="m-block m-block--shallow">
         <div className="m-block__columns">
           <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
-              <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
+              <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
               <div className="art-object__image-information">
-                <p>{getDisplayDateAndMedium(this.props.displayDate, this.props.medium)}</p>
+                <p>{getDisplayDateAndMedium(object.displayDate, object.medium)}</p>
               </div>
 
               {/* tags go here */}
@@ -41,7 +39,7 @@ class PanelVisuallyRelated extends Component {
               labelLeft='More similar'
               labelRight='More surprising'
             />
-            <ArtObjectGrid />
+            <ArtObjectGrid pageType="visually-related"/>
           </div>
         </div>
       </div>
@@ -50,7 +48,10 @@ class PanelVisuallyRelated extends Component {
 }
 
 function mapStateToProps(state) {
-  return Object.assign({}, {...state.object});
+  // return Object.assign({}, {...state.object});
+  return {
+    object: state.object
+  };
 }
 
 function mapDispatchToProps(dispatch) {

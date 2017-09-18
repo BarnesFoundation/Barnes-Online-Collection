@@ -42,7 +42,7 @@ class AccordionMenu extends Component {
               };
 
               return (
-                <div className="m-block m-block--shallow m-support-accordion-element">
+                <div key={idx} className="m-block m-block--shallow m-support-accordion-element">
                   <button type="button"
                     className="font-delta m-block__shallow-title m-support-accordion__title"
                     aria-selected={isSelected}

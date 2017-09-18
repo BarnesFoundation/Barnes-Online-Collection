@@ -1,12 +1,14 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
+import { BARNES_SETTINGS } from '../barnesSettings';
+import { DEV_LOG } from '../devLogging';
+import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
 
-const buildRequestBody = (fromIndex=0, size=25) => {
+const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
-    .from(fromIndex).size(size);
-
+    .from(fromIndex).size(BARNES_SETTINGS.size);
   return body;
 }
 
@@ -18,27 +20,27 @@ const mapObjects = (objects) => {
   return objects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, append=false, barnesify=false, highlights=false) => {
-  axios.get('/api/search', {
-    params: {
-      body: body,
+const fetchResults = (body, dispatch, options={}) => {
+  DEV_LOG('Fetching results...');
+  axios.get('/api/search', { params: { body: body } })
+  .then((response) => {
+    let objects = [];
+    let maxHits = 0;
+    const lastIndex = body.from + body.size;
+
+    if (response.data.hits) {
+      objects = mapObjects(response.data.hits.hits);
+      maxHits = response.data.hits.total;
     }
-  }).then((response) => {
-    const objects = mapObjects(response.data.hits.hits);
-    const maxHits = response.data.hits.total;
+    DEV_LOG('Retrieved '+objects.length+' objects.' );
 
     dispatch(setMaxHits(maxHits));
-    dispatch(setLastIndex(body.from + body.size));
+    dispatch(setLastIndex(lastIndex));
 
-    if (barnesify && maxHits > 25) {
-        console.log('barnesifying...');
-        barnesifyObjects(objects, dispatch, highlights, append);
+    if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
+        barnesifyObjects(objects, dispatch, options);
     } else {
-      if (append) {
-        dispatch(appendObjects(objects));
-      } else {
-        dispatch(setObjects(objects));
-      }
+      options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
     }
   });
 }
@@ -58,93 +60,121 @@ const shuffleObjects = (objects) => {
   return objects;
 }
 
-const barnesifyObjects = (objects, dispatch, highlights=false, append=false) => {
-  let barnesObjects = {
-    twoD: [],
-    metalworks: [],
-    threeD: [],
-    objects: []
-  };
+const barnesifyObjects = (objects, dispatch, options) => {
+  DEV_LOG('Beginning Barnesification process...');
+
+  let barnesObjects = BARNES_SETTINGS.objectsTemplate;
 
   const updateBarnesObjects = (objects, type) => {
     barnesObjects[type].push(...objects);
   }
 
   const setBarnesObjects = () => {
-    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_ALGORITHM.min2D);
+    DEV_LOG('Compiling Barnesified object set...');
 
-    if (barnesObjects.metalworks.length >= BARNES_ALGORITHM.minMetalworks) {
-      refinedBarnesObjects.push(...barnesObjects.metalworks.slice(0, BARNES_ALGORITHM.minMetalworks));
-      refinedBarnesObjects.push(...barnesObjects.threeD.slice(0, BARNES_ALGORITHM.min3D));
-    } else {
-      refinedBarnesObjects.push(...barnesObjects.objects.slice(0, BARNES_ALGORITHM.minObjects));
-    }
+    let ratios = {
+      '2D': 0,
+      metalworks: 0,
+      '3D': 0,
+      knickknacks: 0,
+      total: 0
+    };
+
+    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
+    ratios['2D'] = refinedBarnesObjects.length;
+
+    let metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
+    refinedBarnesObjects.push(...metalworks);
+    ratios['metalworks'] = metalworks.length;
+
+    let metalworksDiff = BARNES_SETTINGS.minMetalworks - metalworks.length;
+
+    let threeD = barnesObjects.threeD.slice(0, (BARNES_SETTINGS.min3D + metalworksDiff));
+    refinedBarnesObjects.push(...threeD);
+    ratios['3D'] = threeD.length;
+
+    let knickknacks = barnesObjects.knickknacks.slice(0, (BARNES_SETTINGS.size - refinedBarnesObjects.length));
+    refinedBarnesObjects.push(...knickknacks);
+    ratios['knickknacks'] = knickknacks.length;
+
+    ratios['total'] = refinedBarnesObjects.length;
 
     let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
 
-    if (append) {
-      dispatch(appendObjects(objects));
-    } else {
-      dispatch(setObjects(objects));
-    }
+    DEV_LOG('Total objects: '+ratios.total);
+    DEV_LOG('2D: '+ratios['2D']+' objects / '+ratios['2D']/ratios.total);
+    DEV_LOG('metalworks: '+ratios['metalworks']+' objects / '+ratios['metalworks']/ratios.total);
+    DEV_LOG('3D: '+ratios['3D']+' objects / '+ratios['3D']/ratios.total);
+    DEV_LOG('Knick Knacks: '+ratios['knickknacks']+' objects / '+ratios['knickknacks']/ratios.total);
+
+    dispatch(setObjects(objects));
   }
 
   const params = (terms) => {
     let body = buildRequestBody().query('terms', 'classification', terms);
 
-    if (highlights) {
-      body = addHighlightsFilter(body);
-    }
+    if (options.highlights) body = addHighlightsFilter(body);
+    if (options.queries) body = assembleDisMaxQuery(body, options.queries);
 
     body = body.build();
 
     return { params: { body: body } };
   }
 
-  axios.get('/api/search', params(BARNES_ALGORITHM.terms2D))
-    .then((response) => {
-      if (response.data.hits.total >= BARNES_ALGORITHM.min2D) {
-        updateBarnesObjects(response.data.hits.hits, 'twoD');
-
-        axios.get('/api/search', params(BARNES_ALGORITHM.termsMetalworks))
-        .then((response) => {
-          if (response.data.hits.total >= BARNES_ALGORITHM.minMetalworks) {
-            updateBarnesObjects(response.data.hits.hits, 'metalworks');
-
-            axios.get('/api/search', params(BARNES_ALGORITHM.terms3D))
-            .then((response) => {
-              updateBarnesObjects(response.data.hits.hits, 'threeD');
-              setBarnesObjects();
-            })
-          } else {
-            axios.get('/api/search', params(['Metalworks', ...BARNES_ALGORITHM.terms3D]))
-            .then((response) => {
-              if (response.data.hits.total >= BARNES_ALGORITHM.minObjects) {
-                updateBarnesObjects(response.data.hits.hits, 'objects');
-                setBarnesObjects();
-              } else {
-                dispatch(setObjects(objects));
-              }
-            });
-          }
-        });
+  const checkBarnesificationPossible = () => {
+    if (barnesObjects.twoD.length >= BARNES_SETTINGS.min2D) {
+      if (barnesObjects.metalworks.length >= BARNES_SETTINGS.minMetalworks) {
+        if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
+          return true;
+        } else {
+          return (barnesObjects.threeD.length + barnesObjects.knickknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks);
+        }
       } else {
-        dispatch(setObjects(objects));
+        return (barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks);
       }
-    });
+    } else {
+      return false;
+    }
+  }
+
+  const get2DObjects = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.terms2D));
+  }
+
+  const getMetalworks = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks));
+  }
+
+  const get3DObjects = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.terms3D));
+  }
+
+  const getKnickKnacks = () => {
+    return axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
+  }
+
+  axios.all([
+    get2DObjects(),
+    getMetalworks(),
+    get3DObjects(),
+    getKnickKnacks()
+  ]).then(axios.spread((twoD, metalworks, threeD, knickknacks) => {
+    updateBarnesObjects(twoD.data.hits.hits, 'twoD');
+    updateBarnesObjects(metalworks.data.hits.hits, 'metalworks');
+    updateBarnesObjects(threeD.data.hits.hits, 'threeD');
+    updateBarnesObjects(knickknacks.data.hits.hits, 'knickknacks');
+
+    DEV_LOG('Retrieved '+twoD.data.hits.total+' 2D objects.');
+    DEV_LOG('Retrieved '+metalworks.data.hits.total+' metalworks.');
+    DEV_LOG('Retrieved '+threeD.data.hits.total+' 3D objects.');
+    DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
+
+    checkBarnesificationPossible() ? setBarnesObjects() : dispatch(setObjects(objects));
+  }));
 }
 
-const BARNES_ALGORITHM = {
-  min2D: 10,
-  minMetalworks: 7,
-  minObjects: 7,
-  min3D: 5,
-  terms2D: ['Paintings', 'Drawings', 'Works on Paper', 'Prints'],
-  termsMetalworks: ['Metalworks'],
-  terms3D: ['Vessels', 'Sculptures', 'Furniture', 'Jewelry', 'Tools and Equipment', 'Lighting Devices'],
-};
-
 const setObjects = (objects) => {
+  DEV_LOG('Setting objects...');
   return {
     type: ActionTypes.SET_OBJECTS,
     payload: objects
@@ -152,6 +182,7 @@ const setObjects = (objects) => {
 }
 
 const appendObjects = (objects) => {
+  DEV_LOG('Appending objects...');
   return {
     type: ActionTypes.APPEND_OBJECTS,
     payload: objects
@@ -174,76 +205,154 @@ const setLastIndex = (lastIndex) => {
 
 export const getNextObjects = (fromIndex, query=null) => {
   return (dispatch) => {
-    const append = true;
     if (!query) {
-      return getAllObjects(fromIndex, append)(dispatch);
+      return getAllObjects(fromIndex)(dispatch);
     } else if (typeof query === 'string') {
-      return searchObjects(query, fromIndex, append)(dispatch);
+      return searchObjects(query, fromIndex)(dispatch);
     } else if (typeof query === 'object') {
-      return findFilteredObjects(query, fromIndex, append)(dispatch);
+      return findFilteredObjects(query, fromIndex)(dispatch);
     }
   }
 }
 
-export const getFirstObjects = () => {
-  let body = buildRequestBody();
-  body = addHighlightsFilter(body).build();
+export const getAllObjects = (fromIndex=0) => {
+  let body = buildRequestBody(fromIndex);
+  let options = {};
 
-  return (dispatch) => {
-    fetchResults(body, dispatch, 'barnesify', true);
-  }
-}
-
-export const getAllObjects = (fromIndex=0, append=false) => {
-  let body = buildRequestBody(fromIndex, 25);
-  let barnesify = false;
-  let highlights = false;
-
-  if (!append) {
-    body = addHighlightsFilter(body).build();
-    barnesify = true;
-    highlights = true;
+  if (!fromIndex) {
+    body = addHighlightsFilter(body);
+    options.barnesify = true;
+    options.highlights = true;
   } else {
-    body = body.build();
+    options.append = true;
+    options.barnesify = false;
   }
 
+  body = body.build();
+
   return (dispatch) => {
-    fetchResults(body, dispatch, append, barnesify, highlights);
+    fetchResults(body, dispatch, options);
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0, append=false, barnesify=false) => {
+export const getRelatedObjects = (objectID, fromIndex=0) => {
+  let body = buildRequestBody(fromIndex);
+  body = body.query('more_like_this', {
+    'like': [
+      {
+        '_index': 'collection',
+        '_type': 'object',
+        '_id': objectID
+      }
+    ],
+    'min_term_freq': 1
+  });
+  body = body.build();
+
+  let options = {
+    barnesify: true,
+    append: !!fromIndex,
+    highlights: false
+  };
+
   return (dispatch) => {
-    if (!filters.ordered || filters.ordered.length === 0) {
-      return getAllObjects()(dispatch);
+    fetchResults(body, dispatch, options);
+  }
+}
+
+export const getEnsembleObjects = (ensembleIndex) => {
+  let body = buildRequestBody(0, 10000);
+  body = body.query('match', 'ensembleIndex', ensembleIndex);
+  body = body.build();
+
+  let options = {
+    barnesify: false,
+    append: false,
+    highlights: false
+  };
+
+  return (dispatch) => {
+    fetchResults(body, dispatch, options);
+  }
+}
+
+export const findFilteredObjects = (filters, fromIndex=0) => {
+    if (
+      !filters.ordered ||
+      filters.ordered.length === 0 ||
+      (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
+      ) {
+      return (dispatch) => { getAllObjects()(dispatch); }
     }
+
+    const queries = buildQueriesFromFilters(filters.ordered);
+
+    const options = {
+      queries: queries,
+      barnesify: !fromIndex,
+      append: !!fromIndex
+    };
 
     let body = buildRequestBody(fromIndex);
-    let queries = [];
-
-    for (let i = 0; i < filters.ordered.length; i++) {
-      const filter = filters.ordered[i];
-      switch (filter.filterType) {
-        case 'color':
-          for (let i = 0; i < filter.queries.length; i++) {
-            queries.push(buildColorQuery(filter.queries[i]));
-          }
-          break;
-        case 'line':
-        case 'light':
-        case 'space':
-          queries.push(buildRangeGteQuery(filter));
-        default:
-          break;
-      }
-    }
     body = assembleDisMaxQuery(body, queries);
     body = body.build();
 
-    if (fromIndex === 0) { barnesify = true; }
-
-    fetchResults(body, dispatch, append, barnesify);
+  return (dispatch) => {
+    fetchResults(body, dispatch, options);
   }
+}
+
+export const findShuffledObjects = (fromIndex=0) => {
+  return {
+    type: ActionTypes.SHUFFLE_FILTERS
+  };
+}
+
+const assembleRandomFilters = () => {
+  let filters = [];
+  return filters;
+}
+
+const buildQueriesFromFilters = (filters) => {
+  let queries = [];
+
+  filters.forEach((filter) => {
+    switch (filter.filterType) {
+      case 'color':
+        filter.queries.forEach((query) => {
+          queries.push(buildColorQuery(query));
+        })
+        break;
+      case 'line':
+        if (filter.filterGroup === 'composition') {
+          queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
+        } else if (filter.filterGroup === 'linearity') {
+          switch (filter.name) {
+            case 'unbroken':
+              queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
+              break;
+            case 'broken':
+              queries.push(buildRangeQuery('line', { 'gte': BARNES_SETTINGS.broken_threshhold }));
+              break;
+            case 'all types':
+              break;
+            default:
+              break;
+          }
+        }
+        break;
+      case 'light':
+        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
+        break;
+      case 'space':
+        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
+        break;
+      default:
+        break;
+    }
+  });
+
+  return queries;
 }
 
 const buildColorQuery = (query) => {
@@ -260,35 +369,23 @@ const buildColorQuery = (query) => {
   };
 }
 
-// const buildLineQuery = (query) => {
-//   let queryObject = { range: {} };
-//   queryObject['range'][query.name] = {
-//     "gte" : 0.5
-//   };
-
-//   return queryObject;
-// }
-
-const buildRangeGteQuery = (query) => {
+const buildRangeQuery = (field, query) => {
   let queryObject = { range: {} };
-  queryObject['range'][query.name] = {
-    "gte": 0.5
-  }
+  queryObject['range'][field] = query;
   return queryObject;
 }
 
-const buildLightQuery = (query) => {}
-
-const buildSpaceQuery = (query) => {}
-
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {
-    'queries': queries
+    'queries': queries,
+    'tie_breaker': 0.5
   });
 }
 
-export const searchObjects = (term, fromIndex=0, append=null) => {
+export const searchObjects = (term, fromIndex=0) => {
   return (dispatch) => {
+    let options = {};
+
     if (term.length === 0) {
       return getAllObjects()(dispatch);
     }
@@ -297,6 +394,8 @@ export const searchObjects = (term, fromIndex=0, append=null) => {
     body = body.query('match', '_all', term);
     body = body.build();
 
-    fetchResults(body, dispatch, append);
+    if (fromIndex >= 25) options.append = true;
+
+    fetchResults(body, dispatch, options);
   }
 }

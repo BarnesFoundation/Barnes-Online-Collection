@@ -5,8 +5,6 @@ const initialState = {
 };
 
 const mobileFilters = (state = initialState, action) => {
-  const isVisible = state.visible;
-
   switch(action.type) {
     case ActionTypes.OPEN_MOBILE_FILTERS:
       return Object.assign({}, state, { visible: true });

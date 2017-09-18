@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Icon from '../Icon';
 
 import * as FilterSetsActions from '../../actions/filterSets';
+import * as ObjectsActions from '../../actions/objects';
 
 class CollectionFiltersMenuItem extends Component {
   constructor(props) {
@@ -14,7 +15,11 @@ class CollectionFiltersMenuItem extends Component {
   }
 
   handleClick(event) {
-    this.props.selectFilterSet(this.props.slug);
+    if (this.props.slug === 'shuffle') {
+      this.props.findShuffledObjects();
+    } else {
+      this.props.selectFilterSet(this.props.slug);
+    }
   }
 
   getClassNames() {
@@ -35,9 +40,6 @@ class CollectionFiltersMenuItem extends Component {
   }
 
   render() {
-    const slug = this.props.slug;
-    const svgId = this.props.svgId;
-
     return (
       <button
         className={this.getClassNames()}
@@ -46,7 +48,7 @@ class CollectionFiltersMenuItem extends Component {
         data-for="collectionFilterMenuItem"
       >
         <div className="button-inner">
-          <Icon svgId={svgId} classes='collection-filter-icon' />
+          <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
           <span>
             {this.props.title}
           </span>
@@ -65,7 +67,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
-    FilterSetsActions
+    FilterSetsActions,
+    ObjectsActions
   ), dispatch);
 }
 

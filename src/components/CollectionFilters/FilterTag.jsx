@@ -21,6 +21,12 @@ class FilterTag extends Component {
     }
   }
 
+  getFilterContent() {
+    if (this.props.filter.filterType === 'light' || this.props.filter.filterType === 'space') {
+      return <span className="filter-tag-text">{this.props.filter.value}%</span>;
+    }
+  }
+
   handleClick(event) {
     event.preventDefault();
     this.props.removeFilter(this.props.filter);
@@ -30,6 +36,7 @@ class FilterTag extends Component {
     return (
       <button className="applied-filter-tag" onClick={this.handleClick}>
         {this.getFilterIcon()}
+        {this.getFilterContent()}
         <Icon svgId='cross_tag' classes='icon-cross-tag'/>
       </button>
     );
