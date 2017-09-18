@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import * as ObjectsActions from '../../actions/objects';
 
+import { DEV_LOG } from '../../devLogging';
+
 class ViewMoreButton extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +30,7 @@ class ViewMoreButton extends Component {
     }
 
     const fromIndex = this.props.hitsDisplayed.lastIndex || 25;
-    console.log(fromIndex);
+    DEV_LOG(fromIndex);
     this.props.getNextObjects(fromIndex, query);
   }
 

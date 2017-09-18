@@ -3,18 +3,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Slider from '../Slider/Slider.jsx';
+import Filter from './Filter';
 import MediaQuery from 'react-responsive';
 
 class LightFilters extends Component {
-  getLightFilters() {
-    return (
-      <Slider
-        labelStyle="inline"
-        labelLeft="Diffused"
-        labelRight="Light"
-      />
-    );
+  buildFilter() {
+    const filter = this.props.filterSets.sets.light.filter;
+    return <Filter filter={filter}/>;
   }
 
   render() {
@@ -23,11 +18,11 @@ class LightFilters extends Component {
         <MediaQuery maxWidth={425}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Light</h6>
-            {this.getLightFilters()}
+            {this.buildFilter()}
           </div>
         </MediaQuery>
         <MediaQuery minWidth={426}>
-          {this.getLightFilters()}
+          {this.buildFilter()}
         </MediaQuery>
       </div>
     );

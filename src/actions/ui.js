@@ -1,7 +1,8 @@
 import * as ActionTypes from '../constants';
+import { DEV_LOG } from '../devLogging';
 
 export const showZoomOverlay = () => {
-  console.log('calling show zoom overlay');
+  DEV_LOG('calling show zoom overlay');
   return {
     type: ActionTypes.SHOW_ZOOM_OVERLAY
   };

@@ -12,6 +12,7 @@ class LineFilters extends Component {
     const filters = this.props.filterSets.sets.lines.options[type];
     return (
       filters.map((option, index) => {
+        option.filterGroup = type;
         return (
           <Filter
             key={index}

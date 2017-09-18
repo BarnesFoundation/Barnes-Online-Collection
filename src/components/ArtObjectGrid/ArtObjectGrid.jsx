@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
@@ -13,7 +13,41 @@ import './artObjectGrid.css';
 class ArtObjectGrid extends Component {
   componentDidMount() {
     if (this.props.objects.length === 0) {
-      this.props.getAllObjects();
+      switch (this.props.pageType) {
+        case 'visually-related':
+          if (this.props.object) {
+            this.props.getRelatedObjects(this.props.object.id);
+          }
+          break;
+        case 'ensemble':
+          if (this.props.object && this.props.object.ensembleIndex) {
+            this.props.getEnsembleObjects(this.props.object.ensembleIndex);
+          }
+          break;
+        case 'landing':
+        default:
+            this.props.getAllObjects();
+          break;
+      }
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    if (this.props.object !== nextProps.object) {
+      switch(nextProps.pageType) {
+        case 'visually-related':
+          this.props.getRelatedObjects(nextProps.object.id);
+          break;
+        case 'ensemble':
+          if (nextProps.object && nextProps.object.ensembleIndex) {
+            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
+          }
+          break;
+        case 'landing':
+        default:
+          this.props.getAllObjects();
+          break;
+      }
     }
   }
 
@@ -62,6 +96,7 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     objects: state.objects,
+    object: state.object
   };
 }
 

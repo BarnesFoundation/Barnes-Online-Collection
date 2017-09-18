@@ -15,6 +15,7 @@ export const CLOSE_MOBILE_FILTERS = 'CLOSE_MOBILE_FILTERS';
 
 //filters
 export const ADD_FILTER = 'ADD_FILTER';
+export const SHUFFLE_FILTERS = 'SHUFFLE_FILTERS';
 export const REMOVE_FILTER = 'REMOVE_FILTER';
 export const REMOVE_FILTER_BY_INDEX = 'REMOVE_FILTER_BY_INDEX';
 export const REMOVE_FILTER_BY_SLUG = 'REMOVE_FILTER_BY_SLUG';
@@ -95,8 +96,3 @@ export const COPYRIGHT_MAP = {
     type: 'small'
   }
 };
-
-// ensemble room
-export const ENSEMBLE_ROOM_IMAGE_ALT = "Barnes Ensemble Room 7 East Wall";
-export const ENSEMBLE_ROOM_TITLE = "Room 7";
-export const ENSEMBLE_ROOM_SUB_TITLE = "East Wall";

@@ -24,11 +24,23 @@ const buildInitialState = () => {
         title: 'Light',
         slug: 'light',
         svgId: 'tool_lights',
+        filter: {
+          filterType: 'light',
+          slug: 'light',
+          svgId: 'tool_lights',
+          name: 'light'
+        }
       },
       space: {
         title: 'Space',
         slug: 'space',
         svgId: 'tool_space',
+        filter: {
+          filterType: 'space',
+          slug: 'space',
+          svgId: 'tool_space',
+          name: 'space'
+        }
       },
       shuffle: {
         title: '',

@@ -11,18 +11,18 @@ import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
 import {COPYRIGHT_MAP} from '../../../constants';
 
-const getCopyright = (id) => {
-  if (!id) return {link: '', copy: 'No Known Copyright', type: 'small'};
+const getCopyright = (object) => {
+  if (!object.objRightsTypeId) return {link: '', copy: 'No Known Copyright', type: 'small'};
 
-  return COPYRIGHT_MAP[id];
+  return COPYRIGHT_MAP[object.objRightsTypeId];
 };
 
-const getUrlWithoutProt = (url) => {
-  if (!url) {
+const getUrlWithoutProt = (object) => {
+  if (!object.imageUrlOriginal) {
     return;
   }
 
-  return url.split(/^(http|https):\/\//)[2];
+  return object.imageUrlOriginal.split(/^(http|https):\/\//)[2];
 }
 
 const getTabList = (artObjectProps) => {
@@ -46,35 +46,32 @@ const getTabList = (artObjectProps) => {
 };
 
 class PanelDetails extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
+    const object = this.props.object;
     const printAvailable = this.props.prints.find((print) => {
-      return print.id === this.props.invno
+      return print.id === object.invno
     });
 
-    const objectCopyrightDetails = getCopyright(this.props.objRightsTypeId);
-    const accordionTabList = getTabList(this.props);
-    const imgUrlPathWithoutProt = getUrlWithoutProt(this.props.imageUrlOriginal);
-    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${this.props.people}&field21=${this.props.title}&field20=${this.props.invno}`;
-    const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${this.props.people}&field372=${this.props.title}&field20=${this.props.invno}&field374=${imgUrlPathWithoutProt}`;
+    const objectCopyrightDetails = getCopyright(object);
+    const accordionTabList = getTabList(object);
+
+    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
+    const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${getUrlWithoutProt(object)}`;
 
     return (
       <div className="art-object-page__panel-details">
         <div className="art-object__header m-block">
           <div className="container-inner-narrow">
             {objectCopyrightDetails.type === "large" ?
-              <Zoom invno={this.props.invno} />
+              <Zoom invno={object.invno} />
             :
-              <img className="art-object__image" src={this.props.imageUrlLarge} alt={this.props.title}/>
+              <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
             }
           </div>
         </div>
         <div className="art-object__more-info m-block m-block--shallow">
           <div className="container-inner-narrow">
-            <SummaryTable {...this.props} objectCopyrightDetails={objectCopyrightDetails}/>
+            <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails}/>
 
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
               {objectCopyrightDetails.type === "large" ?
@@ -95,10 +92,10 @@ class PanelDetails extends Component {
             </div>
 
             {
-              this.props.shortDescription &&
+              object.shortDescription &&
               <div className="art-object__more-info m-block m-block--shallow">
                 <div className="art-object__short-description"
-                  dangerouslySetInnerHTML={{__html: this.props.shortDescription}}
+                  dangerouslySetInnerHTML={{__html: object.shortDescription}}
                 ></div>
               </div>
             }
@@ -194,7 +191,12 @@ class PanelDetails extends Component {
 
 
 function mapStateToProps(state) {
-  return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
+  // return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
+  return {
+    object: state.object,
+    prints: state.prints,
+    ui: state.ui
+  }
 }
 
 function mapDispatchToProps(dispatch) {

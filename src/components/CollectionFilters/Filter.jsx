@@ -14,7 +14,8 @@ import * as FilterSetsActions from '../../actions/filterSets';
 class Filter extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleButtonFilter = this.handleButtonFilter.bind(this);
+    this.handleSliderFilter = this.handleSliderFilter.bind(this);
   }
 
   filterIsApplied() {
@@ -27,19 +28,19 @@ class Filter extends Component {
     return -1;
   }
 
-  handleClick(event) {
+  handleButtonFilter() {
     const filter = this.props.filter;
-
-    if (this.props.filters.length === 0) {
+    if (this.props.filters.ordered.length === 0 || this.filterIsApplied() === -1) {
       this.props.addFilter(filter);
     } else {
-      const index = this.filterIsApplied();
-      if (index === -1) {
-        this.props.addFilter(filter);
-      } else {
-        this.props.removeFilter(filter);
-      }
+      this.props.removeFilter(filter);
     }
+  }
+
+  handleSliderFilter(value) {
+    let filter = this.props.filter;
+    filter.value = value;
+    this.props.addFilter(filter);
   }
 
   getClasses() {
@@ -54,8 +55,6 @@ class Filter extends Component {
       case 'line':
         classes += ' font-smallprint';
         break;
-      case 'light':
-      case 'space':
       default:
         break;
     }
@@ -70,18 +69,14 @@ class Filter extends Component {
   buildFilter() {
     switch (this.props.filter.filterType) {
       case 'color':
-        const style = {
-          background: this.props.filter.color
-        };
-
         return <ColorFilter
-          handleClick={this.handleClick}
-          style={style}
+          handleClick={this.handleButtonFilter}
+          style={{background: this.props.filter.color}}
           classes={this.getClasses()}
           />;
       case 'line':
         return <LineFilter
-          handleClick={this.handleClick}
+          handleClick={this.handleButtonFilter}
           classes={this.getClasses()}
           slug={this.props.filter.slug}
           name={this.props.filter.name}
@@ -89,19 +84,22 @@ class Filter extends Component {
         />;
       case 'light':
         return <LightFilter
-          handleClick={this.handleClick}
-          classes={this.getClasses()}
+          handleChange={this.handleSliderFilter}
           svgId={this.props.filter.svgId}
+          slug={this.props.filter.slug}
+          name={this.props.filter.name}
+          value={this.props.filters.light ? this.props.filters.light.value : null}
         />;
       case 'space':
         return <SpaceFilter
-          handleClick={this.handleClick}
-          classes={this.getClasses()}
+          handleChange={this.handleSliderFilter}
           svgId={this.props.filter.svgId}
+          slug={this.props.filter.slug}
+          name={this.props.filter.name}
+          value={this.props.filters.space ? this.props.filters.space.value : null}
         />;
       default:
         return null;
-        break;
     }
   }
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
@@ -19,9 +18,7 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    const urlPath = this.props.location.pathname;
-    const artObjectId = props.match.params.id;
-    const panelSlug = props.match.params.panel || '';
+    const urlPath = props.location.pathname;
     const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
     if (!baseUrlMatch) {
@@ -30,6 +27,9 @@ class ArtObjectPage extends Component {
       window.location = window.location.pathname + '/';
       return;
     }
+
+    const artObjectId = parseInt(props.match.params.id, 10);
+    const panelSlug = props.match.params.panel || '';
 
     this.state = {
       panelSlug: panelSlug,
@@ -46,29 +46,27 @@ class ArtObjectPage extends Component {
       this.props.getPrints();
     }
 
-    this.updateStaleData();
+    this.props.getObject(this.state.artObjectId);
   }
 
-  componentDidUpdate() {
-    this.updateStaleData();
-  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params !== nextProps.match.params) {
+      const baseUrlMatch = nextProps.location.pathname.match('/objects/[0-9]*/');
+      if (!baseUrlMatch) {
+        window.location = window.location.pathname + '/';
+        return;
+      }
 
-  updateStaleData() {
+      const artObjectId = parseInt(nextProps.match.params.id, 10);
+      const panelSlug = nextProps.match.params.panel || '';
 
-    const newArtObjectId = parseInt(this.props.match.params.id, 10)
-    const currentArtObjectId = parseInt(this.props.artObject.id, 10)
-    const isObjectStale = currentArtObjectId !== newArtObjectId;
-    const newPanelSlug = this.props.match.params.panel || '';
-    const isPanelStale = newPanelSlug !== this.state.panelSlug;
-
-    if(isObjectStale) {
-      this.props.getObject(newArtObjectId);
-    }
-
-    if (isPanelStale) {
       this.setState({
-        panelSlug: newPanelSlug,
+        panelSlug: panelSlug,
+        baseUrl: baseUrlMatch[0],
+        artObjectId: artObjectId
       });
+
+      this.props.getObject(artObjectId);
     }
   }
 
@@ -80,15 +78,15 @@ class ArtObjectPage extends Component {
 
   handleFormSubmit(e) {
     e.preventDefault();
-    this.props.submitDownloadForm(this.props.artObject.invno, this.downloadReason.value);
+    this.props.submitDownloadForm(this.props.object.invno, this.downloadReason.value);
     this.downloadReason.value = '';
     this.downloadToggle.checked = false;
-
   }
 
   render() {
-    const metaTitle = `${META_TITLE} — ${this.props.artObject.culture || this.props.artObject.people}: ${this.props.artObject.title}`;
-    const metaImage = this.props.artObject.imageUrlSmall;
+    const object = this.props.object;
+    const metaTitle = `${META_TITLE} — ${object.culture || object.people}: ${object.title}`;
+    const metaImage = object.imageUrlSmall;
 
     return (
       <div className="app app-art-object-page">
@@ -102,13 +100,13 @@ class ArtObjectPage extends Component {
         {/* todo: temp quick style. Need to get the AI for this page. */}
         {
           <div className="container">
-            <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.artObject.title}</h1>
+            <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{object.title}</h1>
           </div>
         }
         <TabbedContent
           onKeyUp={this.handleKeyUp}
           slug={this.state.panelSlug}
-          artObject={this.props.artObject}
+          object={object}
         />
         <Footer />
       </div>
@@ -117,7 +115,12 @@ class ArtObjectPage extends Component {
 }
 
 function mapStateToProps(state) {
-  return Object.assign({}, {artObject: state.object}, { prints: state.prints }, { ui: state.ui });
+  // return Object.assign({}, {artObject: state.object}, { prints: state.prints }, { ui: state.ui });
+  return {
+    object: state.object,
+    prints: state.prints,
+    ui: state.ui
+  };
 }
 
 function mapDispatchToProps(dispatch) {
