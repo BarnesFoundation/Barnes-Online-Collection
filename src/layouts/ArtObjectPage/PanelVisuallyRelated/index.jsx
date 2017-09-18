@@ -22,7 +22,7 @@ class PanelVisuallyRelated extends Component {
   }
 
   getRelatedObjects(value) {
-    this.props.getRelatedObjects(value, this.props.object.id);
+    this.props.getRelatedObjects(this.props.object.id, value);
   }
 
   render() {

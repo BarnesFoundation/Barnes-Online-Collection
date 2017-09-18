@@ -16,7 +16,7 @@ class ArtObjectGrid extends Component {
       switch (this.props.pageType) {
         case 'visually-related':
           if (this.props.object) {
-            this.props.getRelatedObjects(50, this.props.object.id);
+            this.props.getRelatedObjects(this.props.object.id);
           }
           break;
         case 'ensemble':
@@ -36,7 +36,7 @@ class ArtObjectGrid extends Component {
     if (this.props.object !== nextProps.object) {
       switch(nextProps.pageType) {
         case 'visually-related':
-          this.props.getRelatedObjects(50, nextProps.object.id);
+          this.props.getRelatedObjects(nextProps.object.id);
           break;
         case 'ensemble':
           if (nextProps.object && nextProps.object.ensembleIndex) {
@@ -87,7 +87,9 @@ class ArtObjectGrid extends Component {
         {masonryElements.length &&
           <MasonryGrid masonryElements={masonryElements} />
         }
-        <ViewMoreButton />
+        { this.props.pageType !== 'ensemble' &&
+          <ViewMoreButton />
+        }
       </div>
     );
   }

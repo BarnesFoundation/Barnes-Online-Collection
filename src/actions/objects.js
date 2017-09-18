@@ -235,7 +235,7 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
-export const getRelatedObjects = (value, objectID, fromIndex=0) => {
+export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
   // todo: We are getting the slider value in here. Need to determine how to apply slider value to adjust filter results.
 
   let body = buildRequestBody(fromIndex);
@@ -263,7 +263,7 @@ export const getRelatedObjects = (value, objectID, fromIndex=0) => {
 }
 
 export const getEnsembleObjects = (ensembleIndex) => {
-  let body = buildRequestBody(0, 10000);
+  let body = buildRequestBody(0, 500);
   body = body.query('match', 'ensembleIndex', ensembleIndex);
   body = body.build();
 
