@@ -20,20 +20,23 @@ class Footer extends Component {
                   The Barnes Foundation collection online is made possible<br className="br-large-only" /> by generous support from The John S. and James L. Knight Foundation.
                 </p>
                 <p>
-                  <img width={285} src="/images/knight-foundation-logo.svg" alt="knight foundation logo" />
+                  <a href="https://knightfoundation.org/">
+                    <img width={285} src="/images/knight-foundation-logo.svg" alt="knight foundation logo" />
+                  </a>
                 </p>
               </div>
               <div className="m-block__column">
                 <div className="m-block__columns">
                   <div className="m-block__column">
                     {/* todo: add link urls */}
-                    <a className="a-brand-link a-brand-link--block" href="#">Project Credits &amp; Information</a>
-                    <a className="a-brand-link a-brand-link--block" href="#">Image Licensing</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/collection/credits">Project Credits &amp; Information</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/copyright-and-image-licensing">Open Access &amp; Copyright Considerations​</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/collection">Image Licensing</a>
                   </div>
                   <div className="m-block__column">
-                    <a className="a-brand-link a-brand-link--block" href="#">Collection History</a>
-                    <a className="a-brand-link a-brand-link--block" href="#">Archives and Special Collections</a>
-                    <a className="a-brand-link a-brand-link--block" href="#">Plant Collections</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/collection/library-archives">Collection History</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/arboretum">Archives and Special Collections</a>
+                    <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/collection/open-access-and-copyright">Plant Collections</a>
                   </div>
                 </div>
               </div>
