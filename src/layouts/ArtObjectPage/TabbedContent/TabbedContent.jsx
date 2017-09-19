@@ -49,6 +49,10 @@ class TabbedContent extends Component {
                   .map(tabData => {
                     const isSelected = tabData.slug === this.props.slug;
 
+                    if (!this.props.object.ensembleIndex && tabData.slug === 'ensemble') {
+                      return null;
+                    }
+
                     return (
                       <div key={tabData.slug} className="m-tabs__item">
                         <Link
