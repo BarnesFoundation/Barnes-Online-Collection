@@ -17,9 +17,8 @@ class CollectionFiltersMenuItem extends Component {
 
   handleClick(event) {
     this.props.selectFilterSet(this.props.slug);
-    if (this.props.slug === 'shuffle') {
-      this.props.shuffleFilters();
-    }
+
+    if (this.props.slug === 'shuffle') this.props.shuffleFilters();
   }
 
   getClassNames() {
