@@ -1,4 +1,5 @@
 import * as ActionTypes from '../constants';
+import { selectRandomFilters } from '../reducers/filterSets';
 
 const initialState = {
   colors: [],
@@ -12,25 +13,30 @@ const initialState = {
 };
 
 const filters = (state = initialState, action) => {
-  const filter = action.filter;
   switch(action.type) {
     case ActionTypes.ADD_FILTER:
       let supplementedState = Object.assign({}, state, {
-        ordered: [...state.ordered, filter]
+        ordered: [...state.ordered, action.filter]
       });
 
-      switch (filter.filterType) {
+      switch (action.filter.filterType) {
         case 'color':
-          supplementedState.colors = [...state.colors, filter];
+          supplementedState.colors = [...state.colors, action.filter];
           break;
         case 'line':
-          supplementedState = addLineFilter(supplementedState, filter);
+          supplementedState = addLineFilter(supplementedState, action.filter);
           break;
         case 'light':
-          supplementedState.light = filter;
+          if (state.light) {
+            supplementedState.ordered = getReducedFilters(supplementedState.ordered, state.light.slug);
+          }
+          supplementedState.light = action.filter;
           break;
         case 'space':
-          supplementedState.space = filter;
+          if (state.space) {
+            supplementedState.ordered = getReducedFilters(supplementedState.ordered, state.space.slug);
+          }
+          supplementedState.space = action.filter;
           break;
         default:
           break;
@@ -39,15 +45,15 @@ const filters = (state = initialState, action) => {
       return supplementedState;
     case ActionTypes.REMOVE_FILTER:
       let reducedState = Object.assign({}, state, {
-        ordered: getReducedFilters(state.ordered, filter.slug)
+        ordered: getReducedFilters(state.ordered, action.filter.slug)
       });
 
-      switch (filter.filterType) {
+      switch (action.filter.filterType) {
         case 'color':
-          reducedState.colors = getReducedFilters(state.colors, filter.slug);
+          reducedState.colors = getReducedFilters(state.colors, action.filter.slug);
           break;
         case 'line':
-          reducedState = removeLineFilter(state, reducedState, filter);
+          reducedState = removeLineFilter(state, reducedState, action.filter);
           break;
         case 'light':
           reducedState.light = null;
@@ -67,38 +73,40 @@ const filters = (state = initialState, action) => {
     case ActionTypes.CLEAR_ALL_FILTERS:
       return initialState;
     case ActionTypes.SHUFFLE_FILTERS:
-      let newState = initialState;
-      const lightFilter = {
-        filterType: 'light',
-        name: 'light',
-        slug: 'light',
-        svgId: 'tool_lights',
-        value: Math.floor(Math.random() * 101)
-      };
-      const spaceFilter = {
-        filterType: 'space',
-        name: 'space',
-        slug: 'space',
-        svgId: 'tool_space',
-        value: Math.floor(Math.random() * 101)
-      };
-      // let lineFilter = {
-      //   filterType: 'line'
-      // };
-      // let colorFilter = {
+      const filters = selectRandomFilters();
+      let shuffledState = Object.assign({}, initialState, {
+        ordered: filters
+      });
 
-      // }
-      newState.ordered.push(lightFilter);
-      newState.ordered.push(spaceFilter);
-      newState.light = lightFilter;
-      newState.space = spaceFilter;
-      return newState;
+      filters.forEach((filter) => {
+        switch (filter.filterType) {
+          case 'color':
+            shuffledState.colors.push(filter);
+            break;
+          case 'line':
+            if (filter.filterGroup === 'composition') {
+              shuffledState.line.composition = filter;
+            } else if (filter.filterGroup === 'linearity') {
+              filter.name === 'all types' ? shuffledState.line.linearity = null : shuffledState.line.linearity = filter;
+            }
+            break;
+          case 'light':
+            shuffledState.light = filter;
+            break;
+          case 'space':
+            shuffledState.space = filter;
+            break;
+          default:
+            break;
+        }
+      });
+      return shuffledState;
     default:
       return state;
   }
 }
 
-function removeLineFilter(state, reducedState, filter) {
+const removeLineFilter = (state, reducedState, filter) => {
   if (filter.filterGroup === 'composition') {
     reducedState.line.composition = getReducedFilters(state.line.composition, filter.slug);
   } else if (filter.filterGroup === 'linearity') {
@@ -109,7 +117,7 @@ function removeLineFilter(state, reducedState, filter) {
   return reducedState;
 }
 
-function addLineFilter(state, filter) {
+const addLineFilter = (state, filter) => {
   state.line = state.line || {
     composition: null,
     linearity: null
@@ -131,7 +139,7 @@ function addLineFilter(state, filter) {
   return state;
 }
 
-function getReducedFilters(filters, slug) {
+const getReducedFilters = (filters, slug) => {
   const index = findIndexBySlug(filters, slug);
   if (index > -1) {
     return [
@@ -143,7 +151,7 @@ function getReducedFilters(filters, slug) {
   }
 }
 
-function findIndexBySlug(filters, slug) {
+const findIndexBySlug = (filters, slug) => {
   for (let i = 0; i < filters.length; i++) {
     if (filters[i].slug === slug) {
       return i;

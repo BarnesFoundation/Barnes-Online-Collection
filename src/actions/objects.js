@@ -318,17 +318,6 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
   }
 }
 
-export const findShuffledObjects = (fromIndex=0) => {
-  return {
-    type: ActionTypes.SHUFFLE_FILTERS
-  };
-}
-
-const assembleRandomFilters = () => {
-  let filters = [];
-  return filters;
-}
-
 const buildQueriesFromFilters = (filters) => {
   let queries = [];
 

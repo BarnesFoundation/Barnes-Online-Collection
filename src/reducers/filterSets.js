@@ -94,6 +94,32 @@ const buildInitialState = () => {
 
 const initialState = buildInitialState();
 
+const getRandomFilterFromSet = (setType, group=null) => {
+  let set = initialState.sets[setType].options;
+  if (group) set = set[group];
+  return set[Math.floor(Math.random()*set.length)];
+}
+
+export const selectRandomFilters = () => {
+  const randomColorFilter = getRandomFilterFromSet('colors');
+  const randomLineCompositionFilter = getRandomFilterFromSet('lines', 'composition');
+  const randomLineLinearityFilter = getRandomFilterFromSet('lines', 'linearity');
+
+  let randomLightFilter = initialState.sets.light.filter;
+  randomLightFilter.value = Math.floor(Math.random() * 101);
+
+  let randomSpaceFilter = initialState.sets.space.filter;
+  randomSpaceFilter.value = Math.floor(Math.random() * 101);
+
+  return [
+    randomColorFilter,
+    randomLineCompositionFilter,
+    randomLineLinearityFilter,
+    randomLightFilter,
+    randomSpaceFilter
+  ];
+}
+
 const filterSets = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.SELECT_FILTER_SET:
