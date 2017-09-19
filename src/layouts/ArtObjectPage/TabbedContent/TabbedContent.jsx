@@ -27,10 +27,14 @@ class TabbedContent extends Component {
     this.state = { tabs: tabList };
   }
 
+  sanitizeEnsembleIndex(index) {
+    return index ? index.split(',')[0] : null;
+  }
+
   getTab() {
     switch(this.props.slug) {
       case 'ensemble':
-        return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex}/>;
+        return <PanelEnsemble ensembleIndex={this.sanitizeEnsembleIndex(this.props.object.ensembleIndex)}/>;
       case 'details':
         return <PanelDetails />;
       default:
