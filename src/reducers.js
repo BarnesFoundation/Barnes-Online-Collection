@@ -8,7 +8,7 @@ import search from './reducers/search';
 import htmlClassManager from './reducers/htmlClassManager';
 import prints from './reducers/prints';
 import ui from './reducers/ui';
-import hitsDisplayed from './reducers/hitsDisplayed';
+import queryResults from './reducers/queryResults';
 
 export default combineReducers({
   objects,
@@ -20,5 +20,5 @@ export default combineReducers({
   htmlClassManager,
   prints,
   ui,
-  hitsDisplayed
+  queryResults
 });
