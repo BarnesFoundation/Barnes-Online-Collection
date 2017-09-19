@@ -82,6 +82,12 @@ const filters = (state = initialState, action) => {
         svgId: 'tool_space',
         value: Math.floor(Math.random() * 101)
       };
+      // let lineFilter = {
+      //   filterType: 'line'
+      // };
+      // let colorFilter = {
+
+      // }
       newState.ordered.push(lightFilter);
       newState.ordered.push(spaceFilter);
       newState.light = lightFilter;

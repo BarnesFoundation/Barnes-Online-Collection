@@ -4,7 +4,7 @@ import {ENSEMBLE, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 const getRoomImageAlt = (index) => {
-  const i = parseInt(index);
+  const i = parseInt(index, 10);
   const roomTitle = ENSEMBLE[i].roomTitle;
   const wallTitle = ENSEMBLE[i].wallTitle;
   let roomImageAlt = 'Barnes Ensemble ' + roomTitle;
