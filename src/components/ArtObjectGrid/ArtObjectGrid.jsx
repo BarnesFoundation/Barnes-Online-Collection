@@ -72,7 +72,7 @@ class ArtObjectGrid extends Component {
   render() {
     const masonryElements = this.getMasonryElements();
     const hasElements = masonryElements.length > 0;
-    const searchIsPending = this.props.searchResults.isPending;
+    const searchIsPending = this.props.queryResults.isPending;
 
     return (
       hasElements ?
@@ -107,7 +107,7 @@ function mapStateToProps(state) {
   return {
     objects: state.objects,
     object: state.object,
-    searchResults: state.searchResults,
+    queryResults: state.queryResults,
   };
 }
 

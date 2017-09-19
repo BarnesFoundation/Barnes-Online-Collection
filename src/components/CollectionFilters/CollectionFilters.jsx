@@ -19,7 +19,7 @@ import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as ObjectsActions from '../../actions/objects';
-import * as SearchResultsActions from '../../actions/searchResults';
+import * as QueryResultsActions from '../../actions/queryResults';
 
 import './collectionFilters.css';
 
@@ -99,7 +99,7 @@ const mapStateToProps = state => {
     mobileFilters: state.mobileFilters,
     filters: state.filters,
     search: state.search,
-    searchResults: state.searchResults
+    queryResults: state.queryResults
   }
 }
 
@@ -109,7 +109,7 @@ const mapDispatchToProps = dispatch => {
     SearchActions,
     FilterSetsActions,
     ObjectsActions,
-    SearchResultsActions
+    QueryResultsActions
   ),
   dispatch);
 }

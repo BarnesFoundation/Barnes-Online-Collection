@@ -197,21 +197,21 @@ const appendObjects = (objects) => {
 
 const setMaxHits = (maxHits) => {
   return {
-    type: ActionTypes.SEARCH_SET_MAX_HITS,
+    type: ActionTypes.QUERY_SET_MAX_HITS,
     maxHits: maxHits
   };
 }
 
 const setLastIndex = (lastIndex) => {
   return {
-    type: ActionTypes.SEARCH_SET_LAST_INDEX,
+    type: ActionTypes.QUERY_SET_LAST_INDEX,
     lastIndex: lastIndex
   };
 }
 
 const setIsPending = (isPending) => {
   return {
-    type: ActionTypes.SEARCH_SET_IS_PENDING,
+    type: ActionTypes.QUERY_SET_IS_PENDING,
     isPending: isPending
   };
 }

@@ -29,13 +29,13 @@ class ViewMoreButton extends Component {
       query = filters;
     }
 
-    const fromIndex = this.props.searchResults.lastIndex || 25;
+    const fromIndex = this.props.queryResults.lastIndex || 25;
     DEV_LOG(fromIndex);
     this.props.getNextObjects(fromIndex, query);
   }
 
   shouldShowButton() {
-    return this.props.searchResults.maxHits > this.props.searchResults.lastIndex;
+    return this.props.queryResults.maxHits > this.props.queryResults.lastIndex;
   }
 
   render() {
@@ -61,7 +61,7 @@ const mapStateToProps = state => {
     filters: state.filters,
     search: state.search,
     objects: state.objects,
-    searchResults: state.searchResults
+    queryResults: state.queryResults
   }
 }
 
