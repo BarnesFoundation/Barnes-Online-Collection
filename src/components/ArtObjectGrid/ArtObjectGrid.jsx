@@ -21,7 +21,7 @@ class ArtObjectGrid extends Component {
           break;
         case 'ensemble':
           if (this.props.object && this.props.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.props.object.ensembleIndex);
+            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(this.props.object.ensembleIndex));
           }
           break;
         case 'landing':
@@ -32,6 +32,9 @@ class ArtObjectGrid extends Component {
     }
   }
 
+  sanitizeEnsembleIndex(index) {
+    return index ? index.split(',')[0] : null;
+  }
 
   componentWillUpdate(nextProps) {
     if (this.props.object !== nextProps.object) {
@@ -41,7 +44,7 @@ class ArtObjectGrid extends Component {
           break;
         case 'ensemble':
           if (nextProps.object && nextProps.object.ensembleIndex) {
-            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
+            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(nextProps.object.ensembleIndex));
           }
           break;
         case 'landing':

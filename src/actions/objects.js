@@ -260,12 +260,13 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
         '_id': objectID
       }
     ],
-    'min_term_freq': 1
+    // 'min_term_freq': 100-value+2
+    // 'max_query_terms': 100-value
   });
   body = body.build();
 
   let options = {
-    barnesify: true,
+    barnesify: false,
     append: !!fromIndex,
     highlights: false
   };
