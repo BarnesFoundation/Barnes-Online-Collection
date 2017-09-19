@@ -32,6 +32,7 @@ class ArtObjectGrid extends Component {
     }
   }
 
+
   componentWillUpdate(nextProps) {
     if (this.props.object !== nextProps.object) {
       switch(nextProps.pageType) {
@@ -71,24 +72,48 @@ class ArtObjectGrid extends Component {
 
   getClasses() {
     let classes = 'component-art-object-grid';
+
     if (this.props.objects.length > 0) {
       classes += ' fade-in';
     }
+
     return classes;
   }
 
   render() {
     const masonryElements = this.getMasonryElements();
+    const hasElements = masonryElements.length > 0;
+    const searchIsPending = this.props.queryResults.isPending;
+
     return (
       <div
         className={this.getClasses()}
         data-grid-style={this.props.gridStyle}
       >
-        {masonryElements.length &&
-          <MasonryGrid masonryElements={masonryElements} />
-        }
-        { this.props.pageType !== 'ensemble' &&
-          <ViewMoreButton />
+        { hasElements ?
+          <div className="component-art-object-grid-results">
+            {masonryElements.length &&
+              <MasonryGrid masonryElements={masonryElements} />
+            }
+            { this.props.pageType !== 'ensemble' &&
+              <ViewMoreButton />
+            }
+          </div>
+        : (
+          searchIsPending ?
+            <div className="spinner">
+              <div className="bounce1"></div>
+              <div className="bounce2"></div>
+              <div className="bounce3"></div>
+            </div>
+          :
+            <div className="m-block no-results">
+              <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
+              <div className="no-results-message">
+                No results for this search.
+              </div>
+            </div>
+          )
         }
       </div>
     );
@@ -98,7 +123,8 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     objects: state.objects,
-    object: state.object
+    object: state.object,
+    queryResults: state.queryResults,
   };
 }
 
