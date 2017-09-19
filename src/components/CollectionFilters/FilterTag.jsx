@@ -34,7 +34,7 @@ class FilterTag extends Component {
 
   render() {
     return (
-      <button className="applied-filter-tag" onClick={this.handleClick}>
+      <button className={`applied-filter-tag applied-filter-tag-${this.props.filter.filterType}`} onClick={this.handleClick}>
         {this.getFilterIcon()}
         {this.getFilterContent()}
         <Icon svgId='cross_tag' classes='icon-cross-tag'/>
