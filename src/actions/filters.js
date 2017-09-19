@@ -7,10 +7,9 @@ export function addFilter(filter) {
   }
 }
 
-export function shuffleFilters(filters) {
+export function shuffleFilters() {
   return {
-    type: ActionTypes.SHUFFLE_FILTERS,
-    filters: filters
+    type: ActionTypes.SHUFFLE_FILTERS
   }
 }
 

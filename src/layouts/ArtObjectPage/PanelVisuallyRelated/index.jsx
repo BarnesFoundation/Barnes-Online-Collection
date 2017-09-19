@@ -3,6 +3,8 @@ import './index.css';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import * as ObjectsActions from '../../../actions/objects';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 import Slider from '../../../components/Slider/Slider.jsx';
@@ -14,6 +16,15 @@ const getDisplayDateAndMedium = (displayDate, medium) => {
 };
 
 class PanelVisuallyRelated extends Component {
+  constructor(props) {
+    super(props);
+    this.getRelatedObjects = this.getRelatedObjects.bind(this);
+  }
+
+  getRelatedObjects(value) {
+    this.props.getRelatedObjects(this.props.object.id, value);
+  }
+
   render() {
     const object = this.props.object;
 
@@ -38,6 +49,7 @@ class PanelVisuallyRelated extends Component {
             <Slider
               labelLeft='More similar'
               labelRight='More surprising'
+              handleChange={this.getRelatedObjects}
             />
             <ArtObjectGrid pageType="visually-related"/>
           </div>
@@ -48,14 +60,16 @@ class PanelVisuallyRelated extends Component {
 }
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {...state.object});
   return {
-    object: state.object
+    object: state.object,
+    objects: state.objects
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators(Object.assign({},
+    ObjectsActions,
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelVisuallyRelated);
