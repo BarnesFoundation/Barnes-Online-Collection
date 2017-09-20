@@ -47,8 +47,15 @@ const fetchResults = (body, dispatch, options={}) => {
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
       dispatch(setIsPending(false));
+      dispatch(resetMobileFilters());
     }
   });
+}
+
+const resetMobileFilters = () => {
+  return {
+    type: ActionTypes.RESET_MOBILE_FILTERS,
+  };
 }
 
 const shuffleObjects = (objects) => {

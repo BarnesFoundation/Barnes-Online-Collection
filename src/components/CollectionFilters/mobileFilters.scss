@@ -7,8 +7,8 @@
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
   height: 50px;
-  padding: 0 25px;
-  border: 2px solid rgba(0,0,0,0.2);
+  padding: 0 $mobile-filters-section-padding;
+  border: $collection-filter-border-size solid rgba(0,0,0,0.2);
   border-radius: 25px;
   background: white;
   cursor: pointer;
@@ -31,17 +31,42 @@
 }
 
 .mobile-filters-panel {
-  width: calc(100vw - 50px);
-  padding: 25px 0 0;
+  width: $mobile-filters-panel-width;
   background: white;
   z-index: $z-index-mobile-filters-panel;
   overflow-y: scroll;
+
+  .applied-filter-tags-container {
+    padding: $mobile-filters-section-padding;
+  }
+
+  .mobile-apply-button-placeholder {
+    // make it look nice when the panel is scrolled all the way down
+    padding-bottom: 56px;
+  }
+
+  .mobile-apply-button-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: $mobile-filters-panel-width;
+    padding: $mobile-filters-pill-padding;
+  }
+
+  .mobile-apply-button {
+    width: 100%;
+  }
 }
 
 .mobile-filters-section {
-  padding: 25px;
+  padding: $mobile-filters-section-padding;
   border-top: 1px solid $color-grey-light;
   text-align: left;
+
+  &.search-input {
+    // todo: hide for now!
+    display: none;
+  }
 
   form {
     margin-top: 0;
@@ -81,12 +106,12 @@
       }
 
       &:first-of-type {
-        margin-bottom: 10px;
+        margin-bottom: $mobile-filters-pill-padding;
         flex-wrap: wrap;
 
         .line-filter {
           width: calc(50% - 5px);
-          margin: 0 10px 10px 0;
+          margin: 0 $mobile-filters-pill-padding $mobile-filters-pill-padding 0;
 
           &:nth-of-type(2n) {
             margin-right: 0;
@@ -97,15 +122,15 @@
       &:last-of-type {
         .line-filter {
           width: calc(100%/3);
-          border-width: 2px 1px;
+          border-width: $collection-filter-border-size 1px;
           margin: 0;
 
           &:first-of-type {
-            border-left-width: 2px;
+            border-left-width: $collection-filter-border-size;
           }
 
           &:last-of-type {
-            border-right-width: 2px;
+            border-right-width: $collection-filter-border-size;
           }
         }
       }
