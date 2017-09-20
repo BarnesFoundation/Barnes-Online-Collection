@@ -34,7 +34,11 @@ class TabbedContent extends Component {
   getTab() {
     switch(this.props.slug) {
       case 'ensemble':
-        return <PanelEnsemble ensembleIndex={this.sanitizeEnsembleIndex(this.props.object.ensembleIndex)}/>;
+        if (this.props.object.ensembleIndex) {
+          return <PanelEnsemble ensembleIndex={this.sanitizeEnsembleIndex(this.props.object.ensembleIndex)}/>;
+        } else {
+          return <PanelVisuallyRelated />;
+        }
       case 'details':
         return <PanelDetails />;
       default:

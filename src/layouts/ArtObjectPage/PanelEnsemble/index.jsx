@@ -4,13 +4,17 @@ import {ENSEMBLE, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
 const getRoomImageAlt = (index) => {
+  let roomImageAlt = 'Barnes Ensemble';
   const i = parseInt(index, 10);
-  const roomTitle = ENSEMBLE[i].roomTitle;
-  const wallTitle = ENSEMBLE[i].wallTitle;
-  let roomImageAlt = 'Barnes Ensemble ' + roomTitle;
 
-  if (wallTitle) {
-    roomImageAlt += ' ' + wallTitle;
+  if (i) {
+    const roomTitle = ENSEMBLE[i].roomTitle;
+    const wallTitle = ENSEMBLE[i].wallTitle;
+    roomImageAlt += ' ' + roomTitle;
+
+    if (wallTitle) {
+      roomImageAlt += ' ' + wallTitle;
+    }
   }
 
   return roomImageAlt;
