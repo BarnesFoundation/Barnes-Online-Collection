@@ -16,5 +16,50 @@
       border-top: $border-style;
     }
   }
-}
 
+  // quick fixes. Unify these with the styles in collectionFilters.scss
+  .art-object__search-tags {
+    margin-top: $block-margin-small;
+  }
+
+  .art-object__image-container {
+    .filter-tag-set {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .collection-filter-icon {
+      margin: 0;
+    }
+
+    .filter-tag-text {
+      margin: 0;
+      margin-left: .5em;
+    }
+
+    .applied-filter-tag {
+      height: auto;
+      padding: $collection-filter-padding-y $collection-filter-padding-x;
+      // margin bottom for if they wrap
+      margin: 0 12px 12px 0;
+
+      &.applied-filter-tag-color {
+        padding: $collection-filter-padding-y;
+
+        .color-filter-icon {
+          margin: 0;
+          height: 1em;
+          width: 1em;
+        }
+      }
+
+      .icon-cross-tag {
+        // for now, just hide them this way.
+        // it might be better to remove them with a flag in the component.
+        display: none;
+      }
+    }
+  }
+}

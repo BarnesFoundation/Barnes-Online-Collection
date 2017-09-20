@@ -12,6 +12,7 @@ import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ScrollToTop from './ScrollToTop';
 import history from './history';
+import routeWrapper from './routeWrapper';
 
 class App extends Component {
   render() {
@@ -20,9 +21,9 @@ class App extends Component {
         <Router history={history}>
           <ScrollToTop>
             <Switch>
-              <Route exact path="/" component={LandingPage} />
-              <Route exact path="/objects/:id" component={ArtObjectPage} />
-              <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
+              <Route exact path="/" component={routeWrapper(LandingPage)} />
+              <Route exact path="/objects/:id" component={routeWrapper(ArtObjectPage)} />
+              <Route exact path="/objects/:id/:panel" component={routeWrapper(ArtObjectPage)} />
             </Switch>
           </ScrollToTop>
         </Router>
