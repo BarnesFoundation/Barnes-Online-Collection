@@ -61,4 +61,11 @@
   .component-slider {
     margin-bottom: 20px;
   }
+
+  .component-art-object-grid {
+    .view-more-button {
+      // do not show the view more button on this page.
+      display: none;
+    }
+  }
 }
