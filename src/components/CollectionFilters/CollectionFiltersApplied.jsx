@@ -8,33 +8,32 @@ import FilterTag from './FilterTag';
 import * as FiltersActions from '../../actions/filters';
 
 class CollectionFiltersApplied extends Component {
-  filterTags() {
-    const filters = this.props.filters.ordered;
-    if (!filters) {
-      return null;
-    } else {
-      return filters.map((filter, index) =>
-        <FilterTag
-          key={index}
-          index={index}
-          filter={filter}
-        />
-      );
-    }
-  }
-
-  getClasses() {
-    let classes = 'applied-filter-tags-container';
-    if (!this.props.visible) {
-      classes += 'hidden'
-    }
-    return classes;
+  getFilterTags(filters) {
+    return filters.map((filter, index) =>
+      <FilterTag
+        key={index}
+        index={index}
+        filter={filter}
+      />
+    );
   }
 
   render() {
+    const filters = this.props.filters.ordered;
+
+    if (!filters) {
+      return null;
+    }
+
+    const hasFilters = filters.length > 0;
+
     return (
-      <div className={this.getClasses()}>
-        {this.filterTags()}
+      <div>
+        { hasFilters &&
+          <div className="applied-filter-tags-container">
+            {this.getFilterTags(filters)}
+          </div>
+        }
       </div>
     );
   }
