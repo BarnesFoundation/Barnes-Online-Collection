@@ -155,3 +155,16 @@ export const LINE_FILTERS = {
     }
   ]
 };
+
+export const SLIDER_FILTERS = [
+  {
+    name: 'light',
+    filterType: 'light',
+    svgId: 'tool_lights',
+  },
+  {
+    filterType: 'space',
+    name: 'space',
+    svgId: 'tool_space',
+  }
+];
