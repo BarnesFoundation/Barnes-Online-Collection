@@ -116,6 +116,22 @@
       margin-right: 0;
     }
 
+    &.filter-style-radio {
+      margin-right: 0;
+      border-right-width: $collection-filter-border-size / 2;
+      border-left-width: $collection-filter-border-size / 2;
+
+      &:last-child {
+        // reset just the last child
+        border-right-width: $collection-filter-border-size;
+      }
+
+      &:first-child {
+        // reset just the last child
+        border-left-width: $collection-filter-border-size;
+      }
+    }
+
     &.is-applied {
       background: black;
       border-color: black;
@@ -138,7 +154,7 @@
   background: transparent;
   padding: 0 20px;
   outline: none;
-  border: 2px solid $color-grey-super-light;
+  border: $collection-filter-border-size solid $color-grey-super-light;
   border-radius: 25px;
   margin: 0 12px 0 0;
   cursor: pointer;

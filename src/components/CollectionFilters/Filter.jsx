@@ -45,6 +45,9 @@ class Filter extends Component {
 
   getClasses() {
     const filter = this.props.filter;
+    // todo: this is kind of a quick fix. Maybe this should be defined in a more structured way.
+    const isRadioStyle = filter.filterGroup === 'linearity';
+
     let classes = 'btn ';
     classes += filter.filterType + '-filter';
 
@@ -54,9 +57,14 @@ class Filter extends Component {
         break;
       case 'line':
         classes += ' font-smallprint';
+
         break;
       default:
         break;
+    }
+
+    if (isRadioStyle) {
+      classes += ' filter-style-radio';
     }
 
     if (this.filterIsApplied() > -1) {
