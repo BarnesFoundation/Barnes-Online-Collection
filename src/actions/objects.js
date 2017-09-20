@@ -7,6 +7,7 @@ import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
+    .sort('_score', 'desc')
     .filter('exists', 'imageSecret')
     .from(fromIndex).size(BARNES_SETTINGS.size);
   return body;
@@ -260,8 +261,31 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
         '_id': objectID
       }
     ],
-    // 'min_term_freq': 100-value+2
-    // 'max_query_terms': 100-value
+    'fields': [
+      "tags.*",
+      "tags.*.tag",
+      "color.palette-color-*",
+      "color.average-*",
+      "color.palette-closest-*",
+      "title",
+      "people",
+      "medium",
+      "shortDescription",
+      "longDescription",
+      "visualDescription",
+      "curvy",
+      "vertical",
+      "diagonal",
+      "horizontal",
+      "light",
+      "line",
+      "space",
+      "light_desc_*",
+      "color_desc_*",
+      "comp_desc_*",
+      "generic_desc_*"
+    ],
+    'min_term_freq': 1
   });
   body = body.build();
 
