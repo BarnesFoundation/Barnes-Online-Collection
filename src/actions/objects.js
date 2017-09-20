@@ -285,7 +285,8 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
       "comp_desc_*",
       "generic_desc_*"
     ],
-    'min_term_freq': 1
+    'min_term_freq': 1,
+    'minimum_should_match': `${100-value}%`
   });
   body = body.build();
 
