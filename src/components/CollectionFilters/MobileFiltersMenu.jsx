@@ -34,7 +34,10 @@ class MobileFiltersMenu extends Component {
         <LineFilters />
         <LightFilters />
         <SpaceFilters />
-        <button className="mobile-apply-button" onClick={this.applyMobileFilters}>Apply</button>
+        <div className="mobile-apply-button-placeholder m-block"></div>
+        <div className="mobile-apply-button-wrap">
+          <button className="btn btn--primary mobile-apply-button" onClick={this.applyMobileFilters}>Apply</button>
+        </div>
       </div>
     );
   }
