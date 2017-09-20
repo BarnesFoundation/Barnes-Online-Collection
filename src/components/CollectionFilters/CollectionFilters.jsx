@@ -25,7 +25,7 @@ import * as QueryResultsActions from '../../actions/queryResults';
 import './collectionFilters.css';
 
 class CollectionFilters extends Component {
-  filterSet() {
+  getFilterSet() {
     const slug = this.props.filterSets.visibleFilterSet;
     if (slug === 'search') {
       return <SearchInput />;
@@ -132,6 +132,7 @@ class CollectionFilters extends Component {
     }
 
     const mobileFiltersVisible = this.props.mobileFilters.visible;
+    const filterSet = this.getFilterSet();
 
     return (
       <div className="collection-filters">
@@ -149,7 +150,7 @@ class CollectionFilters extends Component {
         <MediaQuery minWidth={BREAKPOINTS.desktop_min}>
             <CollectionFiltersMenu />
             <div className="m-block m-block--flush">
-              {this.filterSet()}
+              {filterSet}
               {filtersApplied}
             </div>
         </MediaQuery>

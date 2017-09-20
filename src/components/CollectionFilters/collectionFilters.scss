@@ -69,7 +69,8 @@
     padding: 0;
 
     &.is-open {
-      height: 90px;
+      min-height: 90px;
+      height: auto;
       padding-top: 40px;
     }
   }
@@ -101,6 +102,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  align-items: flex-start;
 
   .line-filter {
     height: 50px;
@@ -111,6 +113,8 @@
     font-size: 17px;
     line-height: normal;
     text-transform: capitalize;
+    // margin bottom for if they wrap
+    margin: 0 12px 12px 0;
 
     &:last-of-type {
       margin-right: 0;
@@ -144,34 +148,43 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-top: 20px;
+  padding: $mobile-filters-section-padding 0;
+  // account for pill bottom margin
+  margin-bottom: -12px;
+
+  &.hidden {
+    display: none;
+  }
 }
 
+// todo #unifyFilterTags :Unify these with other filter tag styles
 .applied-filter-tag {
   display: flex;
   align-items: center;
-  height: 40px;
   background: transparent;
-  padding: 0 20px;
   outline: none;
   border: $collection-filter-border-size solid $color-grey-super-light;
   border-radius: 25px;
-  margin: 0 12px 0 0;
   cursor: pointer;
+  padding: $collection-filter-padding-y $collection-filter-padding-x;
+  // margin bottom for if they wrap
+  margin: 0 12px 12px 0;
+
   .filter-tag-text {
     font-size: 16px;
     margin-right: 10px;
   }
+
   .icon-cross-tag {
     width: 10px;
     height: 10px;
   }
+
   .color-filter-icon {
-    width: 17px;
-    height: 17px;
+    height: 1em;
+    width: 1em;
     border-radius: 50%;
     border: 0;
     margin-right: 10px;
-    margin-left: -10px;
   }
 }

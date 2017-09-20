@@ -17,7 +17,8 @@
     }
   }
 
-  // quick fixes. Unify these with the styles in collectionFilters.scss
+  // quick fixes.
+  // todo #unifyFilterTags :Unify these with the styles in collectionFilters.scss
   .art-object__search-tags {
     margin-top: $block-margin-small;
   }
@@ -40,18 +41,12 @@
     }
 
     .applied-filter-tag {
-      height: auto;
-      padding: $collection-filter-padding-y $collection-filter-padding-x;
-      // margin bottom for if they wrap
-      margin: 0 12px 12px 0;
 
       &.applied-filter-tag-color {
         padding: $collection-filter-padding-y;
 
         .color-filter-icon {
           margin: 0;
-          height: 1em;
-          width: 1em;
         }
       }
 

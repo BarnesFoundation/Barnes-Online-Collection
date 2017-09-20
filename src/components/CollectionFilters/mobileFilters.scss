@@ -7,8 +7,8 @@
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
   height: 50px;
-  padding: 0 25px;
-  border: 2px solid rgba(0,0,0,0.2);
+  padding: 0 $mobile-filters-section-padding;
+  border: $collection-filter-border-size solid rgba(0,0,0,0.2);
   border-radius: 25px;
   background: white;
   cursor: pointer;
@@ -32,7 +32,6 @@
 
 .mobile-filters-panel {
   width: $mobile-filters-panel-width;
-  padding: 25px 0 0;
   background: white;
   z-index: $z-index-mobile-filters-panel;
   overflow-y: scroll;
@@ -55,11 +54,12 @@
   }
 
   .mobile-apply-button {
+    width: 100%;
   }
 }
 
 .mobile-filters-section {
-  padding: 25px;
+  padding: $mobile-filters-section-padding;
   border-top: 1px solid $color-grey-light;
   text-align: left;
 
@@ -122,15 +122,15 @@
       &:last-of-type {
         .line-filter {
           width: calc(100%/3);
-          border-width: 2px 1px;
+          border-width: $collection-filter-border-size 1px;
           margin: 0;
 
           &:first-of-type {
-            border-left-width: 2px;
+            border-left-width: $collection-filter-border-size;
           }
 
           &:last-of-type {
-            border-right-width: 2px;
+            border-right-width: $collection-filter-border-size;
           }
         }
       }
