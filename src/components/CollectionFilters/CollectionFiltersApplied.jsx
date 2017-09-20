@@ -18,14 +18,6 @@ class CollectionFiltersApplied extends Component {
     );
   }
 
-  getClasses() {
-    let classes = 'applied-filter-tags-container';
-    if (!this.props.visible) {
-      classes += ' hidden'
-    }
-    return classes;
-  }
-
   render() {
     const filters = this.props.filters.ordered;
 
@@ -38,7 +30,7 @@ class CollectionFiltersApplied extends Component {
     return (
       <div>
         { hasFilters &&
-          <div className={this.getClasses()}>
+          <div className="applied-filter-tags-container">
             {this.getFilterTags(filters)}
           </div>
         }

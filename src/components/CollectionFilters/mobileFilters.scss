@@ -36,8 +36,8 @@
   z-index: $z-index-mobile-filters-panel;
   overflow-y: scroll;
 
-  .component-slider {
-    margin-bottom: 0;
+  .applied-filter-tags-container {
+    padding: $mobile-filters-section-padding;
   }
 
   .mobile-apply-button-placeholder {
