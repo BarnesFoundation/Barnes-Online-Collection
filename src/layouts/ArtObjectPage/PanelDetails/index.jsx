@@ -17,7 +17,7 @@ const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse
 const getCopyright = (object) => {
   if (!object.objRightsTypeId) return {link: '', copy: 'No Known Copyright', type: 'small'};
 
-  return COPYRIGHT_MAP[object.objRightsTypeId];
+  return COPYRIGHT[object.objRightsTypeId];
 };
 
 const getUrlWithoutProt = (object) => {
