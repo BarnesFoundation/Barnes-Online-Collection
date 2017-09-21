@@ -15,6 +15,12 @@ AWS.config.update({
 
 const signedUrlExpireSeconds = 60 * 5;
 
+// temp logging to inspect values on the server
+console.log('**** temp logging to inspect values on the server ****');
+console.log(process.env);
+console.log(process.env.NODE_ENV);
+console.log('**** ------- ****');
+
 const app = express();
 const esClient = new elasticsearch.Client({
   host: [
