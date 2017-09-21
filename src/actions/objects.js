@@ -257,7 +257,7 @@ export const getAllObjects = (fromIndex=0) => {
 };
 
 export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  // todo: We are getting the slider value in here. Need to determine how to apply slider value to adjust filter results.
+  const minShouldMatch = 100 - value;
 
   let body = buildRequestBody(fromIndex, 25);
   body = body.query('more_like_this', {
@@ -293,7 +293,7 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
       "generic_desc_*"
     ],
     'min_term_freq': 1,
-    'minimum_should_match': `${100-value}%`
+    'minimum_should_match': `${minShouldMatch}%`
   });
   body = body.build();
 
@@ -397,10 +397,8 @@ const buildColorQuery = (query) => {
     'multi_match': {
       query: query,
       fields: [
-        'color.palette-closest-*',
-        'color.palette-color-*',
-        'color.average-closest',
-        'color.average-color'
+        'color.palette-*',
+        'color.average-*',
       ]
     }
   };
@@ -415,7 +413,7 @@ const buildRangeQuery = (field, query) => {
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {
     'queries': queries,
-    'tie_breaker': 0.5
+    'tie_breaker': 5
   });
 }
 
@@ -428,7 +426,9 @@ export const searchObjects = (term, fromIndex=0) => {
     }
 
     let body = buildRequestBody(fromIndex);
-    body = body.query('match', '_all', term);
+    body = body.query('match', {
+      '_all': term
+    });
     body = body.build();
 
     if (fromIndex >= 25) options.append = true;

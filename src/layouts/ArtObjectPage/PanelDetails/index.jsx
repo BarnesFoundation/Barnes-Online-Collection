@@ -9,7 +9,7 @@ import * as UIActions from '../../../actions/ui';
 import AccordionMenu from '../../../components/AccordionMenu';
 import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
-import {COPYRIGHT_MAP} from '../../../constants';
+import { COPYRIGHT } from '../../../copyrightMap.js';
 
 // use JSON.parse to parse string "true" or "false"
 const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse(process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE);
@@ -17,7 +17,7 @@ const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse
 const getCopyright = (object) => {
   if (!object.objRightsTypeId) return {link: '', copy: 'No Known Copyright', type: 'small'};
 
-  return COPYRIGHT_MAP[object.objRightsTypeId];
+  return COPYRIGHT[object.objRightsTypeId];
 };
 
 const getUrlWithoutProt = (object) => {
@@ -197,7 +197,6 @@ class PanelDetails extends Component {
 
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
   return {
     object: state.object,
     prints: state.prints,
