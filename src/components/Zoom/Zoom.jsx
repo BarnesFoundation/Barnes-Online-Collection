@@ -14,8 +14,8 @@ class Zoom extends Component {
     const map = leaflet.map('map', {
       center: [0, 0],
       crs: leaflet.CRS.Simple,
-      zoom: 1,
-      minZoom: 1
+      zoom: 2,
+      minZoom: 2
     });
 
     const info = `https://s3.amazonaws.com/${AWS_BUCKET}/tiles/${this.props.invno}/info.json`;

@@ -8,6 +8,10 @@
     // This hides a FOUC that can happen when the grid is resizing itself and a scrollbar appears briefly
     // Note that the grid should not have a specified height so this won't actually hide content
     overflow: hidden;
+    // let the bottom margin be viewable even with the overflow hidden.
+    // this lets you see the bottom most card's hover state.
+    padding-bottom: 110px;
+    margin-bottom: -110px;
   }
 
   &.fade-in {
