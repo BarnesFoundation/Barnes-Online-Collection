@@ -20,7 +20,7 @@ export const COPYRIGHT = {
     type: 'large'
   },
   6: {
-    copy: 'Copyright Uncertain',
+    copy: 'Copyright Undetermined',
     link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
     type: 'small'
   },
