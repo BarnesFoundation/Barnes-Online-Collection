@@ -2,6 +2,9 @@
   .component-summary-table {
     .table-row {
       margin-bottom: 12px;
+      .text {
+        white-space: pre-wrap;
+      }
     }
   }
 

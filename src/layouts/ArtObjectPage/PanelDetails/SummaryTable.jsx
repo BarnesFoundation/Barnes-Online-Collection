@@ -57,7 +57,7 @@ class FlexboxTable extends Component {
         </div>
         <div className="table-row">
           <div className="text"></div>
-          <div className="text">{this.props.creditLine}</div>
+          <div className="text color-light">{this.props.creditLine}</div>
         </div>
       </div>
     );
