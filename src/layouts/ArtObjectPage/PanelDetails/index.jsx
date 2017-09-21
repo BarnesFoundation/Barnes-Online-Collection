@@ -197,7 +197,6 @@ class PanelDetails extends Component {
 
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {...state.object}, { prints: state.prints }, { ui: state.ui });
   return {
     object: state.object,
     prints: state.prints,
