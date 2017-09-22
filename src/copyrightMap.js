@@ -5,7 +5,7 @@ export const COPYRIGHT = {
     type: 'small'
   },
   2: {
-    copy: 'Copyright Uncertain',
+    copy: 'Copyright Undetermined',
     link: 'http://rightsstatements.org/page/UND/1.0/?language=en',
     type: 'small'
   },
