@@ -7,6 +7,8 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const request = require('request');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -55,10 +57,11 @@ app.get('/health', (req, res) => {
   res.json({ success: true });
 });
 
-// if in production, set up authentication
-if (process.env.NODE_ENV === 'production') {
+
+// if in production, and .htpasswd file exists, set up authentication
+if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
   const basic = auth.basic({
-    file: path.resolve(__dirname, '../.htpasswd')
+    file: htpasswdFilePath
   });
   app.use(auth.connect(basic));
 }
