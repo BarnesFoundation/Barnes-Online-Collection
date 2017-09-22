@@ -23,8 +23,8 @@
   }
 
   @include breakpoint('small-') {
-    .art-object__header {
-      display: none;
+    .art-object__image-page-centered {
+      max-width: 100%;
     }
   }
 
