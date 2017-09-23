@@ -6,10 +6,22 @@
    -->
 <html lang="en" class="temp-fix-lock-header">
   <head>
-    <!-- Note: most page-specific meta tags are defined with react-helmet. See: src/components/SiteHtmlHelmetHead/index.jsx -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
+
+    <!-- Note #reactHelmetMetaTags: these page-specific meta tags also need to be duplicated with react-helmet. Please see: src/components/SiteHtmlHelmetHead/index.jsx -->
+    <meta name="title" content={metaTitle} />
+    <meta name="description" content={META_DESCRIPTION} />
+    <meta name="geo.placename" content="Barnes Foundation" />
+    <title>{metaTitle}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={metaTitle} />
+    <meta property="og:description" content={META_DESCRIPTION} />
+    <meta property="og:image" content={metaImage} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!--
       Notice the use of %PUBLIC_URL% in these tags.
