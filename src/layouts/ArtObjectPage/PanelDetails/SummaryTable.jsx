@@ -30,10 +30,6 @@ class FlexboxTable extends Component {
           <div className="text color-light">{this.props.medium}</div>
         </div>
         <div className="table-row">
-          <div className="text">ID</div>
-          <div className="text color-light">{this.props.id}</div>
-        </div>
-        <div className="table-row">
           <div className="text">Accession Number</div>
           <div className="text color-light">{this.props.invno}</div>
         </div>
@@ -58,6 +54,10 @@ class FlexboxTable extends Component {
               <span>{copyrightCopy}</span>
             }
           </div>
+        </div>
+        <div className="table-row">
+          <div className="text"></div>
+          <div className="text color-light">{this.props.creditLine}</div>
         </div>
       </div>
     );
