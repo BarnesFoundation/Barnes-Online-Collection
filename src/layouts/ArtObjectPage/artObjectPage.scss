@@ -1,9 +1,9 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
-@import './PanelDetails/index.scss';
-@import './PanelEnsemble/index.scss';
-@import './PanelVisuallyRelated/index.scss';
+@import '../../components/ArtObjectPageComponents/PanelDetails/index.scss';
+@import '../../components/ArtObjectPageComponents/PanelEnsemble/index.scss';
+@import '../../components/ArtObjectPageComponents/PanelVisuallyRelated/index.scss';
 
 .app-art-object-page {
   @include breakpoint('small-') {

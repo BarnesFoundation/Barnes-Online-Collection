@@ -10,7 +10,7 @@ import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import TabbedContent from '../ArtObjectPage/TabbedContent/TabbedContent';
+import TabbedContent from '../../components/ArtObjectPageComponents/TabbedContent';
 import Footer from '../../components/Footer/Footer';
 
 class ArtObjectPage extends Component {
