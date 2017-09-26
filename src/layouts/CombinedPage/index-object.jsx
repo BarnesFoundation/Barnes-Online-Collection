@@ -10,7 +10,7 @@ import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import TabbedContent from '../../components/ArtObjectPageComponents/TabbedContent';
+import TabbedSubMenu from '../../components/ArtObjectPageComponents/TabbedSubMenu';
 import Footer from '../../components/Footer/Footer';
 
 class ArtObjectPage extends Component {
@@ -102,7 +102,7 @@ class ArtObjectPage extends Component {
             <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{object.title}</h1>
           </div>
         }
-        <TabbedContent
+        <TabbedSubMenu
           onKeyUp={this.handleKeyUp}
           slug={this.state.panelSlug}
           object={object}

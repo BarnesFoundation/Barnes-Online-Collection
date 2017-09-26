@@ -5,7 +5,7 @@ import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
 import { getArtObjectUrlFromId } from '../../../helpers';
 
-class TabbedContent extends Component {
+class TabbedSubMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -96,4 +96,4 @@ class TabbedContent extends Component {
   }
 }
 
-export default TabbedContent;
+export default TabbedSubMenu;
