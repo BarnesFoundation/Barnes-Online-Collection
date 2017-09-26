@@ -10,15 +10,11 @@ import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import TabbedSubMenu from '../../components/ArtObjectPageComponents/TabbedSubMenu';
+import ArtObjectPageShell from '../../components/ArtObjectPageComponents/ArtObjectPageShell';
 import Footer from '../../components/Footer/Footer';
-
 
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
-
-import Icon from '../../components/Icon.jsx';
-
 
 class ArtObjectPage extends Component {
   constructor(props) {
@@ -114,20 +110,10 @@ class ArtObjectPage extends Component {
           />
         </div>
 
-        <div className="art-object-wrap">
-          <Icon svgId='cross_page' classes='icon-cross-page'/>
-
-          {
-            <div className="container">
-              <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{object.title}</h1>
-            </div>
-          }
-          <TabbedSubMenu
-            onKeyUp={this.handleKeyUp}
-            slug={this.state.panelSlug}
-            object={object}
-          />
-        </div>
+        <ArtObjectPageShell
+          slug={this.state.panelSlug}
+          object={object}
+        />
 
         <Footer />
       </div>

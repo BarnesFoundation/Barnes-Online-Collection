@@ -10,7 +10,7 @@ import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import TabbedSubMenu from '../../components/ArtObjectPageComponents/TabbedSubMenu';
+import ArtObjectPageShell from '../../components/ArtObjectPageComponents/ArtObjectPageShell';
 import Footer from '../../components/Footer/Footer';
 import './artObjectPage.css';
 
@@ -37,7 +37,6 @@ class ArtObjectPage extends Component {
       artObjectId: artObjectId,
     };
 
-    this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
@@ -70,12 +69,6 @@ class ArtObjectPage extends Component {
     }
   }
 
-  handleKeyUp(e) {
-    if (e.which === 27) {
-      this.props.hideZoomOverlay();
-    }
-  }
-
   handleFormSubmit(e) {
     e.preventDefault();
     this.props.submitDownloadForm(this.props.object.invno, this.downloadReason.value);
@@ -97,17 +90,11 @@ class ArtObjectPage extends Component {
         <HtmlClassManager />
         <SiteHeader />
 
-        {/* todo: temp quick style. Need to get the AI for this page. */}
-        {
-          <div className="container">
-            <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{object.title}</h1>
-          </div>
-        }
-        <TabbedSubMenu
-          onKeyUp={this.handleKeyUp}
+        <ArtObjectPageShell
           slug={this.state.panelSlug}
           object={object}
         />
+
         <Footer />
       </div>
     );
