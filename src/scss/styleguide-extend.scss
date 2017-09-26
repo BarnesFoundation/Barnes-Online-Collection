@@ -65,3 +65,14 @@ li {
 .__react_component_tooltip {
   padding: $tooltip-padding !important;
 }
+
+
+.art-object-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 100;
+  overflow: scroll;
+  display: none !important;
+}

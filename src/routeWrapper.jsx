@@ -5,7 +5,7 @@ const ReactGA = require('react-ga');
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID);
 
 // with advice from https://github.com/ReactTraining/react-router/issues/4278
-const withTracker = (WrappedComponent) => {
+const routeWrapper = (WrappedComponent) => {
   const trackPage = (page) => {
     ReactGA.set({ page });
     ReactGA.pageview(page);
@@ -23,4 +23,4 @@ const withTracker = (WrappedComponent) => {
   return Wrapper;
 };
 
-export default withTracker;
+export default routeWrapper;
