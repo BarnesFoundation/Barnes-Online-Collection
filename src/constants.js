@@ -2,21 +2,21 @@
 export const SET_OBJECTS = 'SET_OBJECTS';
 export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 
-//object
+// object
 export const SET_OBJECT = 'SET_OBJECT';
 
-//filterSets
+// filterSets
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
 export const CLOSE_FILTER_SET = 'CLOSE_FILTER_SET';
 
-//mobileFilters
+// mobileFilters
 export const OPEN_MOBILE_FILTERS = 'OPEN_MOBILE_FILTERS';
 export const CLOSE_MOBILE_FILTERS = 'CLOSE_MOBILE_FILTERS';
 export const QUEUE_MOBILE_FILTERS = 'QUEUE_MOBILE_FILTERS';
 export const APPLY_MOBILE_FILTERS = 'APPLY_MOBILE_FILTERS';
 export const RESET_MOBILE_FILTERS = 'RESET_MOBILE_FILTERS';
 
-//filters
+// filters
 export const ADD_FILTER = 'ADD_FILTER';
 export const SHUFFLE_FILTERS = 'SHUFFLE_FILTERS';
 export const REMOVE_FILTER = 'REMOVE_FILTER';
@@ -24,28 +24,31 @@ export const REMOVE_FILTER_BY_INDEX = 'REMOVE_FILTER_BY_INDEX';
 export const REMOVE_FILTER_BY_SLUG = 'REMOVE_FILTER_BY_SLUG';
 export const CLEAR_ALL_FILTERS = 'CLEAR_ALL_FILTERS';
 
-//search
+// search
 export const ADD_SEARCH_TERM = 'ADD_SEARCH_TERM';
 export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
 
-//queryResults
+// queryResults
 export const QUERY_SET_LAST_INDEX = 'QUERY_SET_LAST_INDEX';
 export const QUERY_SET_MAX_HITS = 'QUERY_SET_MAX_HITS';
 export const QUERY_SET_IS_PENDING = 'QUERY_SET_IS_PENDING';
 
-//prints
+// prints
 export const SET_PRINTS = 'SET_PRINTS';
 
-//htmlClassManager
+// htmlClassManager
 export const HTML_CLASSES_RESET = 'HTML_CLASSES_RESET';
 export const HTML_CLASSES_ADD = 'HTML_CLASSES_ADD';
 export const HTML_CLASSES_TOGGLE = 'HTML_CLASSES_TOGGLE';
 export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 
-//ui
+// ui
 export const SHOW_ZOOM_OVERLAY = 'SHOW_ZOOM_OVERLAY';
 export const HIDE_ZOOM_OVERLAY = 'HIDE_ZOOM_OVERLAY';
 export const RESET_UI = 'RESET_UI';
+
+// component styles
+export const STYLE_MODAL = 'modal';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';

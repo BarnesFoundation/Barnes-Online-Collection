@@ -6,7 +6,7 @@ import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
 import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
-import { META_TITLE, CANONICAL_ROOT } from '../../constants';
+import { META_TITLE, CANONICAL_ROOT, STYLE_MODAL } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
@@ -113,6 +113,7 @@ class ArtObjectPage extends Component {
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           object={object}
+          componentStyle={STYLE_MODAL}
         />
 
         <Footer />
