@@ -33,8 +33,6 @@ const esClient = new elasticsearch.Client({
   ]
 });
 
-const esIndex = process.env.ELASTICSEARCH_INDEX;
-
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
 
@@ -70,7 +68,7 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.get('/api/objects/:object_id', (req, res) => {
   esClient.get({
-    index: esIndex,
+    index: process.env.ELASTICSEARCH_INDEX,
     type: "object",
     id: req.params.object_id,
   }, function(error, esRes) {
@@ -86,7 +84,7 @@ app.get('/api/search', (req, res) => {
   const body = req.query.body;
 
   esClient.search({
-    index: esIndex,
+    index: process.env.ELASTICSEARCH_INDEX,
     body: body,
   }, function(error, esRes) {
     if (error) {
