@@ -36,17 +36,15 @@ class ArtObjectPage extends Component {
       baseUrl: baseUrlMatch[0],
       artObjectId: artObjectId,
     };
-
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.prints.length === 0) {
-      this.props.getPrints();
-    }
+  // componentDidMount() {
+  //   if (this.props.prints.length === 0) {
+  //     this.props.getPrints();
+  //   }
 
-    this.props.getObject(this.state.artObjectId);
-  }
+  //   this.props.getObject(this.state.artObjectId);
+  // }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params !== nextProps.match.params) {
@@ -69,13 +67,6 @@ class ArtObjectPage extends Component {
     }
   }
 
-  handleFormSubmit(e) {
-    e.preventDefault();
-    this.props.submitDownloadForm(this.props.object.invno, this.downloadReason.value);
-    this.downloadReason.value = '';
-    this.downloadToggle.checked = false;
-  }
-
   render() {
     const object = this.props.object;
     const metaTitle = `${META_TITLE} — ${object.culture || object.people}: ${object.title}`;
@@ -92,6 +83,7 @@ class ArtObjectPage extends Component {
 
         <ArtObjectPageShell
           slug={this.state.panelSlug}
+          artObjectId={this.state.artObjectId}
           object={object}
         />
 
@@ -102,7 +94,6 @@ class ArtObjectPage extends Component {
 }
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {artObject: state.object}, { prints: state.prints }, { ui: state.ui });
   return {
     object: state.object,
     prints: state.prints,

@@ -6,7 +6,7 @@ import * as ObjectActions from '../../actions/object';
 import * as PrintActions from '../../actions/prints';
 import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
-import { META_TITLE, CANONICAL_ROOT, STYLE_MODAL } from '../../constants';
+import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
@@ -115,8 +115,8 @@ class ArtObjectPage extends Component {
         <Modal>
           <ArtObjectPageShell
             slug={this.state.panelSlug}
+            artObjectId={this.state.artObjectId}
             object={object}
-            componentStyle={STYLE_MODAL}
           />
         </Modal>
 
@@ -128,7 +128,6 @@ class ArtObjectPage extends Component {
 }
 
 function mapStateToProps(state) {
-  // return Object.assign({}, {artObject: state.object}, { prints: state.prints }, { ui: state.ui });
   return {
     object: state.object,
     prints: state.prints,

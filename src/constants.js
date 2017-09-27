@@ -41,14 +41,14 @@ export const HTML_CLASSES_RESET = 'HTML_CLASSES_RESET';
 export const HTML_CLASSES_ADD = 'HTML_CLASSES_ADD';
 export const HTML_CLASSES_TOGGLE = 'HTML_CLASSES_TOGGLE';
 export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
+// this should match the class used by the styleguide
+export const CLASSNAME_NAV_ACTIVE = 'nav-active';
+export const CLASSNAME_MODAL_OPEN = 'modal-open';
 
 // ui
 export const MODAL_SHOW = 'MODAL_SHOW';
 export const MODAL_HIDE = 'MODAL_HIDE';
 export const RESET_UI = 'RESET_UI';
-
-// component styles
-export const STYLE_MODAL = 'modal';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';

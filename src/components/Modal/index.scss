@@ -4,8 +4,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
-  overflow: scroll;
+  height: 100%;
+  width: 100%;
+  z-index: $z-index-modal;
+  overflow-y: auto;
   background: $color-white;
 
   &[data-modal-is-open="false"] {

@@ -11,6 +11,12 @@ import MasonryGrid from '../MasonryGrid';
 import './artObjectGrid.css';
 
 class ArtObjectGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.getGridListElement = this.getGridListElement.bind(this);
+  }
+
   componentDidMount() {
     if (this.props.objects.length === 0) {
       switch (this.props.pageType) {
@@ -32,8 +38,53 @@ class ArtObjectGrid extends Component {
     }
   }
 
+  getGridListElement(object) {
+    const clickHandler = function(e) {
+      if (this.props.pageType === 'landing') {
+        e.preventDefault();
+        debugger;
+      }
+    }.bind(this);
+
+    return (
+      <Link
+        to={getArtObjectUrlFromId(object.id)}
+        onClick={clickHandler}
+        className="grid-list-el"
+      >
+        <ArtObject
+          key={object.id}
+          title={object.title}
+          people={object.people}
+          medium={object.medium}
+          imageUrlSmall={object.imageUrlSmall}
+        />
+      </Link>
+    );
+  }
+
   sanitizeEnsembleIndex(index) {
     return index ? index.split(',')[0] : null;
+  }
+
+  getMasonryElements() {
+    return this.props.objects.map(function(object) {
+      return (
+        <li key={object.id} className="masonry-grid-element">
+          {this.getGridListElement(object)}
+        </li>
+      );
+    }.bind(this));
+  };
+
+  getClasses() {
+    let classes = 'component-art-object-grid';
+
+    if (this.props.objects.length > 0) {
+      classes += ' fade-in';
+    }
+
+    return classes;
   }
 
   componentWillUpdate(nextProps) {
@@ -53,34 +104,6 @@ class ArtObjectGrid extends Component {
           break;
       }
     }
-  }
-
-  getMasonryElements() {
-    return this.props.objects.map(function(object) {
-      return (
-        <li key={object.id} className="masonry-grid-element">
-          <Link to={getArtObjectUrlFromId(object.id)}>
-            <ArtObject
-              key={object.id}
-              title={object.title}
-              people={object.people}
-              medium={object.medium}
-              imageUrlSmall={object.imageUrlSmall}
-            />
-          </Link>
-        </li>
-      );
-    });
-  };
-
-  getClasses() {
-    let classes = 'component-art-object-grid';
-
-    if (this.props.objects.length > 0) {
-      classes += ' fade-in';
-    }
-
-    return classes;
   }
 
   render() {

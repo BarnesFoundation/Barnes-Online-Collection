@@ -3,9 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as HtmlClassManagerActions from '../../../actions/htmlClassManager';
-import {MAIN_WEBSITE_DOMAIN} from '../../../constants';
-
-const CLASSNAME_NAV_ACTIVE = 'nav-active';
+import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE} from '../../../constants';
 
 class SiteHeader extends Component {
   constructor(props) {
