@@ -431,7 +431,7 @@ export const searchObjects = (term, fromIndex=0) => {
       'multi_match': {
         'query': term,
         'fields': [
-          "tags.*",
+          "tags",
           "tags.*.tag",
           "title.*",
           "people.*",
