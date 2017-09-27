@@ -43,8 +43,8 @@ export const HTML_CLASSES_TOGGLE = 'HTML_CLASSES_TOGGLE';
 export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 
 // ui
-export const SHOW_ZOOM_OVERLAY = 'SHOW_ZOOM_OVERLAY';
-export const HIDE_ZOOM_OVERLAY = 'HIDE_ZOOM_OVERLAY';
+export const MODAL_SHOW = 'MODAL_SHOW';
+export const MODAL_HIDE = 'MODAL_HIDE';
 export const RESET_UI = 'RESET_UI';
 
 // component styles

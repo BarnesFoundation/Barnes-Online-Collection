@@ -1,0 +1,19 @@
+@import '../../scss/variables.scss';
+
+.component-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow: scroll;
+  background: $color-white;
+
+  &[data-modal-is-open="false"] {
+    display: none;
+  }
+
+  .btn-close {
+    border: none;
+    background: none;
+  }
+}

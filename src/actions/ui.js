@@ -1,16 +1,14 @@
 import * as ActionTypes from '../constants';
-import { DEV_LOG } from '../devLogging';
 
-export const showZoomOverlay = () => {
-  DEV_LOG('calling show zoom overlay');
+export const modalShow = () => {
   return {
-    type: ActionTypes.SHOW_ZOOM_OVERLAY
+    type: ActionTypes.MODAL_SHOW
   };
 }
 
-export const hideZoomOverlay = () => {
+export const modalHide = () => {
   return {
-    type: ActionTypes.HIDE_ZOOM_OVERLAY
+    type: ActionTypes.MODAL_HIDE
   };
 }
 

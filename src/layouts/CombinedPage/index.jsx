@@ -15,6 +15,7 @@ import Footer from '../../components/Footer/Footer';
 
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
+import Modal from '../../components/Modal';
 
 class ArtObjectPage extends Component {
   constructor(props) {
@@ -99,22 +100,26 @@ class ArtObjectPage extends Component {
         <HtmlClassManager />
         <SiteHeader />
 
-        <div className="collection-filters-wrap m-block m-block--flush m-block--shallow m-block--no-border">
-          <CollectionFilters />
-        </div>
-        <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
-          <ArtObjectGrid
-            history={this.props.history}
-            gridStyle="full-size"
-            pageType="landing"
-          />
-        </div>
 
-        <ArtObjectPageShell
-          slug={this.state.panelSlug}
-          object={object}
-          componentStyle={STYLE_MODAL}
-        />
+          <div className="collection-filters-wrap m-block m-block--flush m-block--shallow m-block--no-border">
+            <CollectionFilters />
+          </div>
+          <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
+            <ArtObjectGrid
+              history={this.props.history}
+              gridStyle="full-size"
+              pageType="landing"
+            />
+          </div>
+
+        <Modal>
+          <ArtObjectPageShell
+            slug={this.state.panelSlug}
+            object={object}
+            componentStyle={STYLE_MODAL}
+          />
+        </Modal>
+
 
         <Footer />
       </div>
