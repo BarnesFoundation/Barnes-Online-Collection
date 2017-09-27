@@ -263,7 +263,7 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
   body = body.query('more_like_this', {
     'like': [
       {
-        '_index': 'collection',
+        '_index': process.env.ELASTICSEARCH_INDEX,
         '_type': 'object',
         '_id': objectID
       }
@@ -426,9 +426,23 @@ export const searchObjects = (term, fromIndex=0) => {
     }
 
     let body = buildRequestBody(fromIndex);
-    body = body.query('match', {
-      '_all': term
-    });
+
+    body = body.query(
+      'multi_match': {
+        'query': term,
+        'fields': [
+          "tags.*",
+          "tags.*.tag",
+          "title.*",
+          "people.*",
+          "medium.*",
+          "shortDescription.*",
+          "longDescription.*",
+          "visualDescription.*"
+        ]
+      }
+    );
+
     body = body.build();
 
     if (fromIndex >= 25) options.append = true;
