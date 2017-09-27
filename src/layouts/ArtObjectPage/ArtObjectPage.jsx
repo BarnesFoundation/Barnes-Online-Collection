@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
-// import * as PrintActions from '../../actions/prints';
-// import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
@@ -18,10 +16,10 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = this.getState(this.props);
   }
 
-  loadData(nextProps) {
+  getState(nextProps) {
     const urlPath = nextProps.location.pathname;
     const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
@@ -35,19 +33,15 @@ class ArtObjectPage extends Component {
     const artObjectId = parseInt(nextProps.match.params.id, 10);
     const panelSlug = nextProps.match.params.panel || '';
 
-    this.setState({
+    return {
       panelSlug: panelSlug,
       artObjectId: artObjectId
-    });
-  }
-
-  componentDidMount() {
-    this.loadData(this.props);
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params !== nextProps.match.params) {
-      this.loadData(nextProps);
+      this.setState(this.getState(nextProps));
     }
   }
 
@@ -79,8 +73,6 @@ class ArtObjectPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    // prints: state.prints,
-    // ui: state.ui
   };
 }
 
@@ -88,8 +80,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
     ObjectActions,
-    // PrintActions,
-    // UIActions,
   ), dispatch);
 }
 

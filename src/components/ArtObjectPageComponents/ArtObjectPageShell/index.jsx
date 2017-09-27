@@ -11,22 +11,21 @@ import './index.css';
 class ArtObjectPageShell extends Component {
   constructor(props) {
     super(props);
+
+    this.loadData(this.props);
   }
 
   loadData(nextProps) {
     const isObjectStale = parseInt(nextProps.object.id, 10) !== nextProps.artObjectId;
+    const hasNotLoadedPrints = nextProps.prints.length === 0;
 
-    if (nextProps.prints.length === 0) {
+    if (hasNotLoadedPrints) {
       nextProps.getPrints();
     }
 
     if (isObjectStale) {
       nextProps.getObject(nextProps.artObjectId);
     }
-  }
-
-  componentDidMount() {
-    this.loadData(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
