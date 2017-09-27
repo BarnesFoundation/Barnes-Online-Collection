@@ -20,14 +20,6 @@ const getCopyright = (object) => {
   return COPYRIGHT[object.objRightsTypeId];
 };
 
-const getUrlWithoutProt = (object) => {
-  if (!object.imageUrlOriginal) {
-    return;
-  }
-
-  return object.imageUrlOriginal.split(/^(http|https):\/\//)[2];
-}
-
 const getTabList = (artObjectProps) => {
   return [
     {
@@ -59,7 +51,7 @@ class PanelDetails extends Component {
     const accordionTabList = getTabList(object);
 
     const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
-    const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${getUrlWithoutProt(object)}`;
+    const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
 
     return (
       <div className="art-object-page__panel-details">
