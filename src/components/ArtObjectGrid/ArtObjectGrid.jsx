@@ -42,7 +42,6 @@ class ArtObjectGrid extends Component {
     const clickHandler = function(e) {
       if (this.props.pageType === 'landing') {
         e.preventDefault();
-        debugger;
       }
     }.bind(this);
 
@@ -88,6 +87,7 @@ class ArtObjectGrid extends Component {
   }
 
   componentWillUpdate(nextProps) {
+
     if (this.props.object !== nextProps.object) {
       switch(nextProps.pageType) {
         case 'visually-related':

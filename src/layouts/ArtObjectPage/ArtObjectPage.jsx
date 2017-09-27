@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
-import * as PrintActions from '../../actions/prints';
-import * as UIActions from '../../actions/ui';
+// import * as PrintActions from '../../actions/prints';
+// import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import { META_TITLE, CANONICAL_ROOT } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
@@ -18,52 +18,36 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    const urlPath = props.location.pathname;
+    this.state = {};
+  }
+
+  loadData(nextProps) {
+    const urlPath = nextProps.location.pathname;
     const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
+    // it's missing the slash. Do a quick redirect here for now.
+    // todo: it'd be better to move this to a router later.
     if (!baseUrlMatch) {
-      // it's missing the slash. Do a quick redirect here for now.
-      // todo: it'd be better to move this to a router later.
       window.location = window.location.pathname + '/';
       return;
     }
 
-    const artObjectId = parseInt(props.match.params.id, 10);
-    const panelSlug = props.match.params.panel || '';
+    const artObjectId = parseInt(nextProps.match.params.id, 10);
+    const panelSlug = nextProps.match.params.panel || '';
 
-    this.state = {
+    this.setState({
       panelSlug: panelSlug,
-      baseUrl: baseUrlMatch[0],
-      artObjectId: artObjectId,
-    };
+      artObjectId: artObjectId
+    });
   }
 
-  // componentDidMount() {
-  //   if (this.props.prints.length === 0) {
-  //     this.props.getPrints();
-  //   }
-
-  //   this.props.getObject(this.state.artObjectId);
-  // }
+  componentDidMount() {
+    this.loadData(this.props);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params !== nextProps.match.params) {
-      const baseUrlMatch = nextProps.location.pathname.match('/objects/[0-9]*/');
-      if (!baseUrlMatch) {
-        window.location = window.location.pathname + '/';
-        return;
-      }
-
-      const artObjectId = parseInt(nextProps.match.params.id, 10);
-      const panelSlug = nextProps.match.params.panel || '';
-
-      this.setState({
-        panelSlug: panelSlug,
-        baseUrl: baseUrlMatch[0],
-        artObjectId: artObjectId
-      });
-
-      this.props.getObject(artObjectId);
+      this.loadData(nextProps);
     }
   }
 
@@ -84,7 +68,6 @@ class ArtObjectPage extends Component {
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           artObjectId={this.state.artObjectId}
-          object={object}
         />
 
         <Footer />
@@ -96,13 +79,18 @@ class ArtObjectPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    prints: state.prints,
-    ui: state.ui
+    // prints: state.prints,
+    // ui: state.ui
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
+  return bindActionCreators(Object.assign(
+    {},
+    ObjectActions,
+    // PrintActions,
+    // UIActions,
+  ), dispatch);
 }
 
 const compWithRouter = withRouter(ArtObjectPage);

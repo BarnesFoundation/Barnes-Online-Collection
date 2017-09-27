@@ -13,23 +13,27 @@ class ArtObjectPageShell extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    if (this.props.prints.length === 0) {
-      this.props.getPrints();
+  loadData(nextProps) {
+    const isObjectStale = parseInt(nextProps.object.id, 10) !== nextProps.artObjectId;
+
+    if (nextProps.prints.length === 0) {
+      nextProps.getPrints();
     }
 
-    this.props.getObject(this.props.artObjectId);
+    if (isObjectStale) {
+      nextProps.getObject(nextProps.artObjectId);
+    }
+  }
+
+  componentDidMount() {
+    this.loadData(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.loadData(nextProps);
   }
 
   render() {
-    if (!this.props.object) {
-      return (
-        <div>
-          loading ...
-        </div>
-      );
-    }
-
     return (
       <div className="component-art-object-page-shell">
         <div className="container">
