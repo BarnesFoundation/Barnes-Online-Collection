@@ -9,7 +9,6 @@ class Modal extends Component {
   constructor(props) {
     super(props);
     this.handleClickBtnClose = this.handleClickBtnClose.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   handleClickBtnClose(e) {
@@ -18,10 +17,10 @@ class Modal extends Component {
     this.props.modalHide();
   }
 
-  // todo: this should move to a higher up component so the keyboard event will always be in focus
-  handleKeyUp(e) {
-    if (e.which === 27) {
-      this.props.modalHide();
+  componentDidUpdate(prevProps) {
+    // ensure the modal is always scrolled to the top
+    if (this.el && this.props.modalIsOpen !== prevProps.modalIsOpen) {
+      this.el.scrollTop = 0;
     }
   }
 
@@ -29,8 +28,8 @@ class Modal extends Component {
     return (
       <div
         className="component-modal"
-        onKeyUp={this.handleKeyUp}
         data-modal-is-open={this.props.modalIsOpen}
+        ref={(div) => { this.el = div; }}
       >
         <button
           className="btn btn-close"

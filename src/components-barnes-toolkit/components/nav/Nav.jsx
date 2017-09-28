@@ -9,7 +9,6 @@ class SiteHeader extends Component {
   constructor(props) {
     super(props);
 
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleNavCloseBtnClick = this.handleNavCloseBtnClick.bind(this);
   }
 
@@ -18,28 +17,10 @@ class SiteHeader extends Component {
     this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
   }
 
-  // todo: consider using a single global key watcher instead
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  componentWillUnMount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleKeyDown(event) {
-    // esc
-    if (event.keyCode === 27) {
-      console.log(this.props);
-      this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
-    }
-  }
-
   render() {
     return (
       <div>
         <div
-          onKeyUp={this.handleKeyDown}
           className="g-nav"
           data-behavior="nav"
           tabIndex={-1}

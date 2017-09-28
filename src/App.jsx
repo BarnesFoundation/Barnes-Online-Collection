@@ -10,7 +10,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
-import ScrollToTop from './ScrollToTop';
 import history from './history';
 import routeWrapper from './routeWrapper';
 
@@ -19,13 +18,11 @@ class App extends Component {
     return (
       <Provider store={this.props.store}>
         <Router history={history}>
-          <ScrollToTop>
-            <Switch>
-              <Route exact path="/" component={routeWrapper(LandingPage)} />
-              <Route exact path="/objects/:id" component={routeWrapper(ArtObjectPage)} />
-              <Route exact path="/objects/:id/:panel" component={routeWrapper(ArtObjectPage)} />
-            </Switch>
-          </ScrollToTop>
+          <Switch>
+            <Route exact path="/" component={routeWrapper(LandingPage)} />
+            <Route exact path="/objects/:id" component={routeWrapper(ArtObjectPage)} />
+            <Route exact path="/objects/:id/:panel" component={routeWrapper(ArtObjectPage)} />
+          </Switch>
         </Router>
       </Provider>
     );
