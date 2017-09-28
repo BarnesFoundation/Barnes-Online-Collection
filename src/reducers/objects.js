@@ -13,12 +13,14 @@ export const generateObjectImageUrls = (object) => {
     return object;
   }
 
-  const baseUrl = `https://s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`;
+  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`;
+  const awsUrl = `https://${awsUrlWithoutProt}`;
   const newObject = Object.assign({}, object);
 
-  newObject.imageUrlSmall = `${baseUrl}/${object.id}_${object.imageSecret}_n.jpg`;
-  newObject.imageUrlOriginal = `${baseUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
-  newObject.imageUrlLarge = `${baseUrl}/${object.id}_${object.imageSecret}_b.jpg`;
+  newObject.imageUrlSmall = `${awsUrl}/${object.id}_${object.imageSecret}_n.jpg`;
+  newObject.imageUrlOriginal = `${awsUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
+  newObject.imageUrlForWufoo = `${awsUrlWithoutProt}/${object.id}_${object.imageOriginalSecret}`;
+  newObject.imageUrlLarge = `${awsUrl}/${object.id}_${object.imageSecret}_b.jpg`;
 
   return newObject;
 }
