@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
+import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
@@ -40,8 +41,13 @@ class ArtObjectGrid extends Component {
 
   getGridListElement(object) {
     const clickHandler = function(e) {
+
       if (this.props.pageType === 'landing') {
         e.preventDefault();
+
+        this.props.modalShow();
+
+        this.props.getObject(object.id);
       }
     }.bind(this);
 
@@ -158,6 +164,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
     ObjectsActions,
     ObjectActions,
+    UIActions,
   ), dispatch);
 }
 

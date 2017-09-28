@@ -10,11 +10,6 @@ class Modal extends Component {
     super(props);
     this.handleClickBtnClose = this.handleClickBtnClose.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
-
-    // todo
-    if (!this.props.modalIsOpen) {
-      this.props.modalShow();
-    }
   }
 
   handleClickBtnClose(e) {

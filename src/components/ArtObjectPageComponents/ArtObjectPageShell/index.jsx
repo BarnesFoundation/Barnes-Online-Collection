@@ -16,15 +16,16 @@ class ArtObjectPageShell extends Component {
   }
 
   loadData(nextProps) {
-    const isObjectStale = parseInt(nextProps.object.id, 10) !== nextProps.artObjectId;
-    const hasNotLoadedPrints = nextProps.prints.length === 0;
+    const shouldLoadPrints = nextProps.prints.length === 0;
+    const shouldLoadNewObject = nextProps.requestObjectId &&
+      nextProps.requestObjectId !== parseInt(nextProps.object.id, 10)
 
-    if (hasNotLoadedPrints) {
+    if (shouldLoadPrints) {
       nextProps.getPrints();
     }
 
-    if (isObjectStale) {
-      nextProps.getObject(nextProps.artObjectId);
+    if (shouldLoadNewObject) {
+      nextProps.getObject(nextProps.requestObjectId);
     }
   }
 
@@ -51,7 +52,7 @@ function mapStateToProps(state) {
   return {
     object: state.object,
     prints: state.prints,
-    ui: state.ui
+    ui: state.ui,
   }
 }
 

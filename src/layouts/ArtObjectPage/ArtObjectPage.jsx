@@ -30,12 +30,12 @@ class ArtObjectPage extends Component {
       return;
     }
 
-    const artObjectId = parseInt(nextProps.match.params.id, 10);
+    const requestObjectId = parseInt(nextProps.match.params.id, 10);
     const panelSlug = nextProps.match.params.panel || '';
 
     return {
       panelSlug: panelSlug,
-      artObjectId: artObjectId
+      requestObjectId: requestObjectId
     };
   }
 
@@ -61,7 +61,7 @@ class ArtObjectPage extends Component {
 
         <ArtObjectPageShell
           slug={this.state.panelSlug}
-          artObjectId={this.state.artObjectId}
+          requestObjectId={this.state.requestObjectId}
         />
 
         <Footer />
