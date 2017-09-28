@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .component-modal {
   position: fixed;
@@ -9,13 +10,34 @@
   z-index: $z-index-modal;
   overflow-y: auto;
   background: $color-white;
+  padding-top: $block-margin-small;
 
   &[data-modal-is-open="false"] {
     display: none;
   }
 
+  .btn-wrap {
+    // needed for some screensizes where the container has padding
+    position: relative;
+  }
+
   .btn-close {
+    position: absolute;
+    //
+    z-index: $z-index-modal-x;
     border: none;
     background: none;
+    right: 0;
+    line-height: 70px;
+  }
+
+  @include breakpoint('small-') {
+    .btn-close {
+      position: relative;
+      text-align: right;
+      width: 100%;
+      line-height: 1em;
+      margin-bottom: $block-margin-small / 2
+    }
   }
 }

@@ -31,12 +31,16 @@ class Modal extends Component {
         data-modal-is-open={this.props.modalIsOpen}
         ref={(div) => { this.el = div; }}
       >
-        <button
-          className="btn btn-close"
-          onClick={this.handleClickBtnClose}
-        >
-          <Icon svgId='cross_page' classes='icon-cross-page'/>
-        </button>
+        <div className="container">
+          <div className="btn-wrap">
+            <button
+              className="btn-close"
+              onClick={this.handleClickBtnClose}
+            >
+              <Icon svgId='cross_page' classes='icon-cross-page'/>
+            </button>
+          </div>
+        </div>
         {
           this.props.children
         }
