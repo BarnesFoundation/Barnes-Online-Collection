@@ -23,16 +23,19 @@ class ArtObjectGrid extends Component {
   }
 
   componentDidMount() {
-    if (this.props.objects.length === 0) {
+    const object = this.props.object || {};
+    const objects = this.props.objects || [];
+
+    if (objects.length === 0) {
       switch (this.props.pageType) {
         case 'visually-related':
-          if (this.props.object) {
-            this.props.getRelatedObjects(this.props.object.id);
+          if (object.id) {
+            this.props.getRelatedObjects(object.id);
           }
           break;
         case 'ensemble':
-          if (this.props.object && this.props.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(this.props.object.ensembleIndex));
+          if (object.ensembleIndex) {
+            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(object.ensembleIndex));
           }
           break;
         case 'landing':
@@ -50,7 +53,6 @@ class ArtObjectGrid extends Component {
         e.preventDefault();
 
         this.props.modalShow();
-
         this.props.getObject(object.id);
       }
     }.bind(this);
