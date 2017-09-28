@@ -269,8 +269,8 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
       }
     ],
     'fields': [
-      "tags.*",
-      "tags.*.tag",
+      "tags.tag.*",
+      "tags.category.*",
       "color.palette-color-*",
       "color.average-*",
       "color.palette-closest-*",
@@ -428,11 +428,11 @@ export const searchObjects = (term, fromIndex=0) => {
     let body = buildRequestBody(fromIndex);
 
     body = body.query(
-      'multi_match': {
-        'query': term,
-        'fields': [
-          "tags",
-          "tags.*.tag",
+      "multi_match": {
+        "query": term,
+        "fields": [
+          "tags.tag.*",
+          "tags.category.*",
           "title.*",
           "people.*",
           "medium.*",
