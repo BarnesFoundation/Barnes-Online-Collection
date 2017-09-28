@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CommonWrap from './CommonWrap';
-
 const ReactGA = require('react-ga');
 
 ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID);
-
 
 // with advice from https://github.com/ReactTraining/react-router/issues/4278
 const routeWrapper = (WrappedComponent) => {

@@ -9,7 +9,11 @@ import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
 import MasonryGrid from '../MasonryGrid';
+import { DEV_LOG } from '../../devLogging';
+
 import './artObjectGrid.css';
+
+const uniqBy = require('lodash/uniqBy');
 
 class ArtObjectGrid extends Component {
   constructor(props) {
@@ -73,7 +77,14 @@ class ArtObjectGrid extends Component {
   }
 
   getMasonryElements() {
-    return this.props.objects.map(function(object) {
+    const objects = uniqBy(this.props.objects, 'id');
+    const dedupedObjectLen = this.props.objects.length - objects.length;
+
+    if(dedupedObjectLen > 0) {
+      DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the masonry grid.`);
+    }
+
+    return objects.map(function(object) {
       return (
         <li key={object.id} className="masonry-grid-element">
           {this.getGridListElement(object)}
@@ -124,9 +135,7 @@ class ArtObjectGrid extends Component {
       >
         { hasElements ?
           <div className="component-art-object-grid-results">
-            {masonryElements.length &&
-              <MasonryGrid masonryElements={masonryElements} />
-            }
+            <MasonryGrid masonryElements={masonryElements} />
             { this.props.pageType !== 'ensemble' &&
               <ViewMoreButton />
             }

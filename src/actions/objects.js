@@ -3,7 +3,6 @@ import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()

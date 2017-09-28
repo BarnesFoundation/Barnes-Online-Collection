@@ -10,7 +10,7 @@ import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 import Slider from '../../../components/Slider/Slider.jsx';
 import FilterTagSetGeneric from '../../../components/CollectionFilters/FilterTagSetGeneric.jsx';
 import { BARNES_SETTINGS } from '../../../barnesSettings';
-import { SLIDER_FILTERS, COLOR_FILTERS, LINE_FILTERS } from '../../../filterSettings';
+import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
 
 const getDisplayDateAndMedium = (displayDate, medium) => {
   const connector = displayDate && medium ? '—' : '';

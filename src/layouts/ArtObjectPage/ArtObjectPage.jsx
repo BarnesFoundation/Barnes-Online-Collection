@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
-import { getArtObjectUrlFromId } from '../../helpers';
-import { META_TITLE, CANONICAL_ROOT } from '../../constants';
+import { META_TITLE } from '../../constants';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
