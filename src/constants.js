@@ -2,6 +2,9 @@
 export const SET_OBJECTS = 'SET_OBJECTS';
 export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 
+// relatedObjects
+export const SET_RELATED_OBJECTS = 'SET_RELATED_OBJECTS';
+
 // object
 export const SET_OBJECT = 'SET_OBJECT';
 

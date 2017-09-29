@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import { objects, relatedObjects } from './reducers/objects';
+import objects from './reducers/objects';
+import relatedObjects from './reducers/relatedObjects';
 import object from './reducers/object';
 import filterSets from './reducers/filterSets';
 import mobileFilters from './reducers/mobileFilters';

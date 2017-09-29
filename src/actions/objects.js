@@ -1,7 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS, SEARCH_FIELDS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
+import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
@@ -273,50 +273,50 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
-export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  const minShouldMatch = 100 - value;
+// export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
+//   const minShouldMatch = 100 - value;
 
-  let body = buildRequestBody(fromIndex, 25);
-  body = body.query('more_like_this', {
-    'like': [
-      {
-        '_index': process.env.ELASTICSEARCH_INDEX,
-        '_type': 'object',
-        '_id': objectID
-      }
-    ],
-    'fields': MORE_LIKE_THIS_FIELDS,
-    'min_term_freq': 1,
-    'minimum_should_match': `${minShouldMatch}%`
-  });
-  body = body.build();
+//   let body = buildRequestBody(fromIndex, 25);
+//   body = body.query('more_like_this', {
+//     'like': [
+//       {
+//         '_index': process.env.ELASTICSEARCH_INDEX,
+//         '_type': 'object',
+//         '_id': objectID
+//       }
+//     ],
+//     'fields': MORE_LIKE_THIS_FIELDS,
+//     'min_term_freq': 1,
+//     'minimum_should_match': `${minShouldMatch}%`
+//   });
+//   body = body.build();
 
-  let options = {
-    barnesify: false,
-    append: !!fromIndex,
-    highlights: false
-  };
+//   let options = {
+//     barnesify: false,
+//     append: !!fromIndex,
+//     highlights: false
+//   };
 
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
+//   return (dispatch) => {
+//     fetchResults(body, dispatch, options);
+//   }
+// }
 
-export const getEnsembleObjects = (ensembleIndex) => {
-  let body = buildRequestBody(0, 125);
-  body = body.query('match', 'ensembleIndex', ensembleIndex);
-  body = body.build();
+// export const getEnsembleObjects = (ensembleIndex) => {
+//   let body = buildRequestBody(0, 125);
+//   body = body.query('match', 'ensembleIndex', ensembleIndex);
+//   body = body.build();
 
-  let options = {
-    barnesify: false,
-    append: false,
-    highlights: false
-  };
+//   let options = {
+//     barnesify: false,
+//     append: false,
+//     highlights: false
+//   };
 
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
+//   return (dispatch) => {
+//     fetchResults(body, dispatch, options);
+//   }
+// }
 
 export const findFilteredObjects = (filters, fromIndex=0) => {
     if (
