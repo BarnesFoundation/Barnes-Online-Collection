@@ -87,6 +87,7 @@ class ArtObjectGrid extends Component {
     }
 
     return objects.map(function(object) {
+
       return (
         <li key={object.id} className="masonry-grid-element">
           {this.getGridListElement(object)}
@@ -126,6 +127,10 @@ class ArtObjectGrid extends Component {
   }
 
   render() {
+    // if (this.props.object.id) {
+    //   debugger;
+    // }
+
     const masonryElements = this.getMasonryElements();
     const hasElements = masonryElements.length > 0;
     const searchIsPending = this.props.queryResults.isPending;

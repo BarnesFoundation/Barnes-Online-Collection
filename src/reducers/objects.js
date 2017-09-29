@@ -36,7 +36,7 @@ const dedupeObjects = (objects) => {
   });
 }
 
-const objects = (state = [], action) => {
+const getObjectsPayload = (state = [], action) => {
   switch(action.type) {
     case ActionTypes.SET_OBJECTS:
       return action.payload.map(object => generateObjectImageUrls(object));
@@ -48,4 +48,10 @@ const objects = (state = [], action) => {
   }
 };
 
-export default objects;
+export const objects = (state = [], action) => {
+  return getObjectsPayload(state, action);
+};
+
+export const relatedObjects = (state = [], action) => {
+  return getObjectsPayload(state, action);
+};

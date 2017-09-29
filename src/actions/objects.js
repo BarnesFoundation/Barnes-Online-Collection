@@ -30,7 +30,7 @@ const mapObjects = (objects) => {
 }
 
 const fetchResults = (body, dispatch, options={}) => {
-  debugger;
+  // debugger;
   DEV_LOG('Fetching results...');
 
   dispatch(setIsPending(true));
