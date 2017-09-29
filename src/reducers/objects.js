@@ -51,3 +51,5 @@ const getObjectsPayload = (state = [], action) => {
 export const objects = (state = [], action) => {
   return getObjectsPayload(state, action);
 };
+
+export default objects;

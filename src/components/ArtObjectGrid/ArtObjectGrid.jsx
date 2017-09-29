@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
 import * as UIActions from '../../actions/ui';
@@ -25,24 +26,26 @@ class ArtObjectGrid extends Component {
   componentDidMount() {
     const object = this.props.object || {};
     const objects = this.props.objects || [];
+    const relatedObjects = this.props.relatedObjects || [];
 
-    if (objects.length === 0) {
-      switch (this.props.pageType) {
-        case 'visually-related':
-          if (object.id) {
-            this.props.getRelatedObjects(object.id);
-          }
-          break;
-        case 'ensemble':
-          if (object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(object.ensembleIndex));
-          }
-          break;
-        case 'landing':
-        default:
+    switch (this.props.pageType) {
+      case 'visually-related':
+        if (object.id && !relatedObjects.length) {
+          this.props.getRelatedObjects(object.id);
+        }
+        break;
+      case 'ensemble':
+        // todo check for len
+        if (object.ensembleIndex) {
+          this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(object.ensembleIndex));
+        }
+        break;
+      case 'landing':
+      default:
+          if (!objects.length) {
             this.props.getAllObjects();
-          break;
-      }
+          }
+        break;
     }
   }
 
@@ -78,16 +81,15 @@ class ArtObjectGrid extends Component {
     return index ? index.split(',')[0] : null;
   }
 
-  getMasonryElements() {
-    const objects = uniqBy(this.props.objects, 'id');
-    const dedupedObjectLen = this.props.objects.length - objects.length;
+  getMasonryElements(liveObjects) {
+    const objects = uniqBy(liveObjects, 'id');
+    const dedupedObjectLen = liveObjects.length - objects.length;
 
     if(dedupedObjectLen > 0) {
       DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the masonry grid.`);
     }
 
     return objects.map(function(object) {
-
       return (
         <li key={object.id} className="masonry-grid-element">
           {this.getGridListElement(object)}
@@ -131,9 +133,25 @@ class ArtObjectGrid extends Component {
     //   debugger;
     // }
 
-    const masonryElements = this.getMasonryElements();
+    let liveObjects;
+
+    switch (this.props.pageType) {
+      case 'visually-related':
+        liveObjects = this.props.relatedObjects || [];
+        break;
+      case 'ensemble':
+        liveObjects = this.props.relatedObjects || [];
+        break;
+      case 'landing':
+      default:
+        liveObjects = this.props.objects || [];
+        break;
+    }
+
+    const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
-    const searchIsPending = this.props.queryResults.isPending;
+    // todo - add pending for other things too
+    const searchIsPending = this.props.queryResults ? this.props.queryResults.isPending : false;
 
     return (
       <div
@@ -170,6 +188,7 @@ class ArtObjectGrid extends Component {
 
 function mapStateToProps(state) {
   return {
+    relatedObjects: state.relatedObjects,
     objects: state.objects,
     object: state.object,
     queryResults: state.queryResults,
@@ -178,6 +197,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,
     UIActions,

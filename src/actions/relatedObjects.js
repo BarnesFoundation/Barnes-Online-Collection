@@ -26,7 +26,7 @@ const mapObjects = (objects) => {
 }
 
 const fetchResults = (body, dispatch) => {
-  DEV_LOG('Fetching results...');
+  DEV_LOG('Fetching related Objects results...');
 
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
@@ -43,7 +43,8 @@ const fetchResults = (body, dispatch) => {
 }
 
 const setRelatedObjects = (objects) => {
-  DEV_LOG('Setting objects...');
+  DEV_LOG('Setting related objects...');
+
   return {
     type: ActionTypes.SET_RELATED_OBJECTS,
     payload: objects

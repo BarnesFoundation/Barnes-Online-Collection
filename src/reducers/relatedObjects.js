@@ -37,7 +37,14 @@ export const generateObjectImageUrls = (object) => {
 // }
 
 export const relatedObjects = (state = [], action) => {
-  return action.payload.map(object => {
-    generateObjectImageUrls(object)
-  });
+  switch(action.type) {
+    case ActionTypes.SET_RELATED_OBJECTS:
+      return action.payload.map(object => {
+        return generateObjectImageUrls(object)
+      });
+    default:
+      return state;
+  }
 };
+
+export default relatedObjects;

@@ -37,7 +37,7 @@ class ArtObjectPageShell extends Component {
     return (
       <div className="component-art-object-page-shell">
         <div className="container">
-          <h1 style={{textAlign: 'center', margin: '0 0 2rem 0'}} className="art-object__title font-alpha">{this.props.object.title}</h1>
+          <h1 className="art-object__title font-alpha">{this.props.object.title}</h1>
         </div>
         <TabbedSubMenu
           slug={this.props.slug}

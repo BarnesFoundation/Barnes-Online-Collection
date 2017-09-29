@@ -18,11 +18,15 @@
   }
 
   .art-object__title {
+    text-align: center;
+    margin: 0 0 2rem 0;
+
     .component-modal & {
-      // leave room for the closing X
+      // leave room for the closing X.
+      // Use important because it seems some js is adding styles?
       width: auto;
       margin-left: 40px;
-      margin-left: 40px;
+      margin-right: 40px;
     }
   }
 
