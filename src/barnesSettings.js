@@ -19,3 +19,46 @@ export const BARNES_SETTINGS = {
     knickknacks: []
   }
 };
+
+export const SEARCH_FIELDS = [
+  "tags.tag.*",
+  "tags.category.*",
+  "people.*",
+  "culture.*",
+  "title.*",
+  "invno",
+  "medium.*",
+  "period",
+  "shortDescription.*",
+  "longDescription.*",
+  "visualDescription.*",
+  "exhHistory.*",
+  "bibliography.*"
+];
+
+export const MORE_LIKE_THIS_FIELDS = [
+  "tags.tag.*",
+  "tags.category.*",
+  "color.palette-color-*",
+  "color.average-*",
+  "color.palette-closest-*",
+  "title.*",
+  "people.*",
+  "medium.*",
+  "shortDescription.*",
+  "longDescription.*",
+  "visualDescription.*",
+  "period",
+  "culture.*",
+  "curvy",
+  "vertical",
+  "diagonal",
+  "horizontal",
+  "light",
+  "line",
+  "space",
+  "light_desc_*",
+  "color_desc_*",
+  "comp_desc_*",
+  "generic_desc_*"
+];

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS } from '../barnesSettings';
+import { BARNES_SETTINGS, SEARCH_FIELDS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
@@ -285,30 +285,7 @@ export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
         '_id': objectID
       }
     ],
-    'fields': [
-      "tags.*",
-      "tags.*.tag",
-      "color.palette-color-*",
-      "color.average-*",
-      "color.palette-closest-*",
-      "title",
-      "people",
-      "medium",
-      "shortDescription",
-      "longDescription",
-      "visualDescription",
-      "curvy",
-      "vertical",
-      "diagonal",
-      "horizontal",
-      "light",
-      "line",
-      "space",
-      "light_desc_*",
-      "color_desc_*",
-      "comp_desc_*",
-      "generic_desc_*"
-    ],
+    'fields': MORE_LIKE_THIS_FIELDS,
     'min_term_freq': 1,
     'minimum_should_match': `${minShouldMatch}%`
   });
@@ -442,27 +419,20 @@ export const searchObjects = (term, fromIndex=0) => {
       return getAllObjects()(dispatch);
     }
 
-    let body = buildRequestBody(fromIndex);
+    let body = buildRequestBody(fromIndex).build();
 
-    body = body.query(
-      'multi_match': {
-        'query': term,
-        'fields': [
-          "tags.*",
-          "tags.*.tag",
-          "title.*",
-          "people.*",
-          "medium.*",
-          "shortDescription.*",
-          "longDescription.*",
-          "visualDescription.*"
-        ]
-      }
-    );
+    const query = {
+      'query': term,
+      'fields': SEARCH_FIELDS
+    };
 
-    body = body.build();
+    body.query.bool['must'] = {
+      'multi_match': query
+    };
 
-    if (fromIndex >= 25) options.append = true;
+    DEV_LOG(body);
+
+    if (fromIndex >= 50) options.append = true;
 
     fetchResults(body, dispatch, options);
   }
