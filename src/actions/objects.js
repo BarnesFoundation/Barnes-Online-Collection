@@ -425,27 +425,29 @@ export const searchObjects = (term, fromIndex=0) => {
       return getAllObjects()(dispatch);
     }
 
-    let body = buildRequestBody(fromIndex);
+    let body = buildRequestBody(fromIndex).build();
 
-    body = body.query(
-      "multi_match": {
-        "query": term,
-        "fields": [
-          "tags.tag.*",
-          "tags.category.*",
-          "title.*",
-          "people.*",
-          "medium.*",
-          "shortDescription.*",
-          "longDescription.*",
-          "visualDescription.*"
-        ]
-      }
-    );
+    const query = {
+      'query': term,
+      'fields': [
+        "tags.tag.*",
+        "tags.category.*",
+        "title.*",
+        "people.*",
+        "medium.*",
+        "shortDescription.*",
+        "longDescription.*",
+        "visualDescription.*"
+      ]
+    };
 
-    body = body.build();
+    body.query.bool['must'] = {
+      'multi_match': query
+    };
 
-    if (fromIndex >= 25) options.append = true;
+    DEV_LOG(body);
+
+    if (fromIndex >= 50) options.append = true;
 
     fetchResults(body, dispatch, options);
   }
