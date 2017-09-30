@@ -1,9 +1,10 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS, SEARCH_FIELDS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
+import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
+
+const uniqBy = require('lodash/uniqBy');
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
@@ -18,7 +19,14 @@ const addHighlightsFilter = (body) => {
 }
 
 const mapObjects = (objects) => {
-  return objects.map(object => Object.assign({}, object._source, { id: object._id }));
+  let mappedObjects = uniqBy(objects, '_id');
+  const dedupedObjectLen = objects.length - mappedObjects.length;
+
+  if(dedupedObjectLen > 0) {
+    DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`);
+  }
+
+  return mappedObjects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
 const fetchResults = (body, dispatch, options={}) => {
@@ -82,7 +90,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     barnesObjects[type].push(...objects);
   }
 
-  const setBarnesObjects = () => {
+  const getBarnsifiedObjects = () => {
     DEV_LOG('Compiling Barnesified object set...');
 
     let ratios = {
@@ -112,7 +120,9 @@ const barnesifyObjects = (objects, dispatch, options) => {
 
     ratios['total'] = refinedBarnesObjects.length;
 
-    let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
+    // TODO: @rachel, mapObjects now dedupes objects, so let's consider whether
+    // we need to calc these ratios above after the deduping?
+    let mappedObjects = mapObjects(shuffleObjects(refinedBarnesObjects));
 
     DEV_LOG('Total objects: '+ratios.total);
     DEV_LOG('2D: '+ratios['2D']+' objects / '+ratios['2D']/ratios.total);
@@ -120,7 +130,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     DEV_LOG('3D: '+ratios['3D']+' objects / '+ratios['3D']/ratios.total);
     DEV_LOG('Knick Knacks: '+ratios['knickknacks']+' objects / '+ratios['knickknacks']/ratios.total);
 
-    dispatch(setObjects(objects));
+    return mappedObjects;
   }
 
   const params = (terms) => {
@@ -172,6 +182,8 @@ const barnesifyObjects = (objects, dispatch, options) => {
     get3DObjects(),
     getKnickKnacks()
   ]).then(axios.spread((twoD, metalworks, threeD, knickknacks) => {
+    let retObjects = objects;
+
     updateBarnesObjects(twoD.data.hits.hits, 'twoD');
     updateBarnesObjects(metalworks.data.hits.hits, 'metalworks');
     updateBarnesObjects(threeD.data.hits.hits, 'threeD');
@@ -182,7 +194,11 @@ const barnesifyObjects = (objects, dispatch, options) => {
     DEV_LOG('Retrieved '+threeD.data.hits.total+' 3D objects.');
     DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
 
-    checkBarnesificationPossible() ? setBarnesObjects() : dispatch(setObjects(objects));
+    if (checkBarnesificationPossible()) {
+      retObjects = getBarnsifiedObjects();
+    }
+
+    dispatch(setObjects(retObjects));
     dispatch(setIsPending(false));
   }));
 }
@@ -255,51 +271,6 @@ export const getAllObjects = (fromIndex=0) => {
     fetchResults(body, dispatch, options);
   }
 };
-
-export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  const minShouldMatch = 100 - value;
-
-  let body = buildRequestBody(fromIndex, 25);
-  body = body.query('more_like_this', {
-    'like': [
-      {
-        '_index': process.env.ELASTICSEARCH_INDEX,
-        '_type': 'object',
-        '_id': objectID
-      }
-    ],
-    'fields': MORE_LIKE_THIS_FIELDS,
-    'min_term_freq': 1,
-    'minimum_should_match': `${minShouldMatch}%`
-  });
-  body = body.build();
-
-  let options = {
-    barnesify: false,
-    append: !!fromIndex,
-    highlights: false
-  };
-
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
-
-export const getEnsembleObjects = (ensembleIndex) => {
-  let body = buildRequestBody(0, 125);
-  body = body.query('match', 'ensembleIndex', ensembleIndex);
-  body = body.build();
-
-  let options = {
-    barnesify: false,
-    append: false,
-    highlights: false
-  };
-
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
 
 export const findFilteredObjects = (filters, fromIndex=0) => {
     if (

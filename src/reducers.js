@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import objects from './reducers/objects';
+import relatedObjects from './reducers/relatedObjects';
+import ensembleObjects from './reducers/ensembleObjects';
 import object from './reducers/object';
 import filterSets from './reducers/filterSets';
 import mobileFilters from './reducers/mobileFilters';
@@ -11,8 +13,10 @@ import ui from './reducers/ui';
 import queryResults from './reducers/queryResults';
 
 export default combineReducers({
-  objects,
   object,
+  objects,
+  relatedObjects,
+  ensembleObjects,
   filterSets,
   mobileFilters,
   filters,

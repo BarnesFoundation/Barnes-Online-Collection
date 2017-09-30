@@ -38,14 +38,18 @@ $art-object-overlay-border-width: 20px;
 // src/components-barnes-toolkit/scss/setup/_variables.scss
 $z-index-art-object-grid-overlay: 2;
 $z-index-art-object-grid-view-more: 2;
+$z-index-modal-x: 2;
 $z-index-mobile-filters-overlay: 3;
 $z-index-mobile-filters-panel: 4;
 $z-index-mobile-filters-btn-open: 5;
-$z-index-rc-slider-tooltip: 5;
+// cover the filters-btn-open
+$z-index-modal: 6;
+// stay on top of the modal
+$z-index-rc-slider-tooltip: 7;
 
 
 // icon styles
-$collection-filter-item-margin: 30px;
+$collection-filter-item-margin: $block-margin-small;
 $collection-filter-icon-font-size: 1.75em;
 $collection-filter-icon-font-size-sm-scale: .8;
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { CLASSNAME_MODAL_OPEN } from '../constants';
 import * as HtmlClassManagerActions from '../actions/htmlClassManager';
 
 const updateHtmlClassList = list => {
@@ -31,6 +32,14 @@ class HtmlClassManager extends Component {
   }
 
   componentWillUpdate(nextProps) {
+    if (this.props.modalIsOpen !== nextProps.modalIsOpen) {
+      if (nextProps.modalIsOpen) {
+        this.props.htmlClassesAdd(CLASSNAME_MODAL_OPEN);
+      } else {
+        this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
+      }
+    }
+
     updateHtmlClassList(nextProps.classNameList);
   }
 
@@ -45,7 +54,8 @@ class HtmlClassManager extends Component {
 
 const mapStateToProps = state => {
   return {
-    classNameList: state.htmlClassManager
+    classNameList: state.htmlClassManager,
+    modalIsOpen: state.ui.modalIsOpen,
   }
 }
 

@@ -76,13 +76,13 @@
     transition: left 0.5s ease, top 0.5s ease;
 
     img,
-    a {
+    .grid-list-el {
       // this ensures the masonry calculations work right
       display: block;
       width: 100%;
     }
 
-    a {
+    .grid-list-el {
       &:hover,
       &:focus {
         .art-object-overlay {

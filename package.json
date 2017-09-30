@@ -19,6 +19,7 @@
     "json-schema-traverse": "^0.3.1",
     "leaflet": "^1.0.3",
     "leaflet-iiif": "git+https://github.com/mejackreed/Leaflet-IIIF.git",
+    "lodash": "^4.17.4",
     "morgan": "^1.8.1",
     "node-sass-chokidar": "0.0.3",
     "normalize.css": "^7.0.0",

@@ -2,41 +2,101 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as EnsembleObjectsActions from '../../actions/ensembleObjects';
+import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
+import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
 import MasonryGrid from '../MasonryGrid';
+import { DEV_LOG } from '../../devLogging';
+
 import './artObjectGrid.css';
 
+const uniqBy = require('lodash/uniqBy');
+
 class ArtObjectGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.getGridListElement = this.getGridListElement.bind(this);
+  }
+
   componentDidMount() {
-    if (this.props.objects.length === 0) {
-      switch (this.props.pageType) {
-        case 'visually-related':
-          if (this.props.object) {
-            this.props.getRelatedObjects(this.props.object.id);
-          }
-          break;
-        case 'ensemble':
-          if (this.props.object && this.props.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(this.props.object.ensembleIndex));
-          }
-          break;
-        case 'landing':
-        default:
-            this.props.getAllObjects();
-          break;
-      }
+    const object = this.props.object || {};
+    const objects = this.props.objects || [];
+    const relatedObjects = this.props.relatedObjects || [];
+    const ensembleObjects = this.props.ensembleObjects || [];
+
+    switch (this.props.pageType) {
+      case 'visually-related':
+        if (object.id && !relatedObjects.length) {
+          this.props.getRelatedObjects(object.id);
+        }
+        break;
+      case 'ensemble':
+        if (object.ensembleIndex && !ensembleObjects.length) {
+          this.props.getEnsembleObjects(object.ensembleIndex);
+        }
+        break;
+      case 'landing':
+      default:
+        if (!objects.length) {
+          this.props.getAllObjects();
+        }
+        break;
     }
   }
 
-  sanitizeEnsembleIndex(index) {
-    return index ? index.split(',')[0] : null;
+  getGridListElement(object) {
+    const clickHandler = function(e) {
+
+      if (this.props.pageType === 'landing') {
+        e.preventDefault();
+
+        this.props.modalShow();
+        this.props.getObject(object.id);
+      }
+    }.bind(this);
+
+    return (
+      <Link
+        to={getArtObjectUrlFromId(object.id)}
+        onClick={clickHandler}
+        className="grid-list-el"
+      >
+        <ArtObject
+          key={object.id}
+          title={object.title}
+          people={object.people}
+          medium={object.medium}
+          imageUrlSmall={object.imageUrlSmall}
+        />
+      </Link>
+    );
   }
 
+  getMasonryElements(liveObjects) {
+    const objects = uniqBy(liveObjects, 'id');
+    const dedupedObjectLen = liveObjects.length - objects.length;
+
+    if(dedupedObjectLen > 0) {
+      DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the masonry grid.`);
+    }
+
+    return objects.map(function(object) {
+      return (
+        <li key={object.id} className="masonry-grid-element">
+          {this.getGridListElement(object)}
+        </li>
+      );
+    }.bind(this));
+  };
+
   componentWillUpdate(nextProps) {
+
     if (this.props.object !== nextProps.object) {
       switch(nextProps.pageType) {
         case 'visually-related':
@@ -44,7 +104,7 @@ class ArtObjectGrid extends Component {
           break;
         case 'ensemble':
           if (nextProps.object && nextProps.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(nextProps.object.ensembleIndex));
+            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
           }
           break;
         case 'landing':
@@ -55,49 +115,38 @@ class ArtObjectGrid extends Component {
     }
   }
 
-  getMasonryElements() {
-    return this.props.objects.map(function(object) {
-      return (
-        <li key={object.id} className="masonry-grid-element">
-          <Link to={getArtObjectUrlFromId(object.id)}>
-            <ArtObject
-              key={object.id}
-              title={object.title}
-              people={object.people}
-              medium={object.medium}
-              imageUrlSmall={object.imageUrlSmall}
-            />
-          </Link>
-        </li>
-      );
-    });
-  };
+  render() {
+    // if (this.props.object.id) {
+    // }
 
-  getClasses() {
-    let classes = 'component-art-object-grid';
+    let liveObjects;
 
-    if (this.props.objects.length > 0) {
-      classes += ' fade-in';
+    switch (this.props.pageType) {
+      case 'visually-related':
+        liveObjects = this.props.relatedObjects || [];
+        break;
+      case 'ensemble':
+        liveObjects = this.props.ensembleObjects || [];
+        break;
+      case 'landing':
+      default:
+        liveObjects = this.props.objects || [];
+        break;
     }
 
-    return classes;
-  }
-
-  render() {
-    const masonryElements = this.getMasonryElements();
+    const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
-    const searchIsPending = this.props.queryResults.isPending;
+    // todo - add pending for other things too
+    const searchIsPending = this.props.queryResults ? this.props.queryResults.isPending : false;
 
     return (
       <div
-        className={this.getClasses()}
+        className={`component-art-object-grid ${liveObjects.length > 0 ? 'fade-in' : ''}`}
         data-grid-style={this.props.gridStyle}
       >
         { hasElements ?
           <div className="component-art-object-grid-results">
-            {masonryElements.length &&
-              <MasonryGrid masonryElements={masonryElements} />
-            }
+            <MasonryGrid masonryElements={masonryElements} />
             { this.props.pageType !== 'ensemble' &&
               <ViewMoreButton />
             }
@@ -125,6 +174,8 @@ class ArtObjectGrid extends Component {
 
 function mapStateToProps(state) {
   return {
+    ensembleObjects: state.ensembleObjects,
+    relatedObjects: state.relatedObjects,
     objects: state.objects,
     object: state.object,
     queryResults: state.queryResults,
@@ -133,8 +184,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    EnsembleObjectsActions,
+    RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,
+    UIActions,
   ), dispatch);
 }
 

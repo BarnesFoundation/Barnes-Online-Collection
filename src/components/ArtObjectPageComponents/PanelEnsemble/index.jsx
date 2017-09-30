@@ -24,6 +24,10 @@ class PanelEnsemble extends Component {
   render() {
     const ensembleIndex = this.props.ensembleIndex;
 
+    if (!ensembleIndex) {
+      return null;
+    }
+
     return (
       <div className="art-object-page__panel-ensemble">
         <div className="art-object__header m-block m-block--shallow">

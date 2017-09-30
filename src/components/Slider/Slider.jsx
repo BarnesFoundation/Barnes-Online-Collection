@@ -14,19 +14,10 @@ class CustomSlider extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      value: this.props.defaultValue || 50,
-    };
-
     this.onSliderChange = this.onSliderChange.bind(this);
   }
 
   onSliderChange(value) {
-    // This will set state.value to the active value between 0-100.
-    this.setState({
-      value: value
-    });
-
     this.props.handleChange(value);
   }
 
@@ -42,7 +33,7 @@ class CustomSlider extends Component {
         <SliderWithTooltip
           tipFormatter={percentFormatter}
           className="slider"
-          defaultValue={this.state.value}
+          defaultValue={this.props.defaultValue || 50}
           onAfterChange={this.onSliderChange}
         />
         <span className="slider-label slider-label-left font-smallprint hide-for-style-inline">{this.props.labelLeft}</span>
