@@ -8,7 +8,7 @@
   height: 100%;
   width: 100%;
   z-index: $z-index-modal;
-  overflow-y: auto;
+  overflow-y: scroll;
   background: $color-white;
   padding-top: $block-margin-small;
 
@@ -23,7 +23,6 @@
 
   .btn-close {
     position: absolute;
-    //
     z-index: $z-index-modal-x;
     border: none;
     background: none;

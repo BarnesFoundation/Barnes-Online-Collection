@@ -42,9 +42,9 @@ class ArtObjectGrid extends Component {
         break;
       case 'landing':
       default:
-          if (!objects.length) {
-            this.props.getAllObjects();
-          }
+        if (!objects.length) {
+          this.props.getAllObjects();
+        }
         break;
     }
   }

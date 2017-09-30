@@ -46,13 +46,13 @@ class LandingPage extends Component {
           </div>
         </div>
 
-
-        <Modal>
-          <ArtObjectPageShell
-            slug=""
-          />
-        </Modal>
-
+        { this.props.modalIsOpen &&
+          <Modal>
+            <ArtObjectPageShell
+              slug=""
+            />
+          </Modal>
+        }
         <Footer />
       </div>
     );
