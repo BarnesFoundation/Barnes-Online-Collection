@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as EnsembleObjectsActions from '../../actions/ensembleObjects';
 import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
@@ -27,6 +28,7 @@ class ArtObjectGrid extends Component {
     const object = this.props.object || {};
     const objects = this.props.objects || [];
     const relatedObjects = this.props.relatedObjects || [];
+    const ensembleObjects = this.props.ensembleObjects || [];
 
     switch (this.props.pageType) {
       case 'visually-related':
@@ -35,8 +37,7 @@ class ArtObjectGrid extends Component {
         }
         break;
       case 'ensemble':
-        // todo check for len
-        if (object.ensembleIndex) {
+        if (object.ensembleIndex && !ensembleObjects.length) {
           this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(object.ensembleIndex));
         }
         break;
@@ -98,16 +99,6 @@ class ArtObjectGrid extends Component {
     }.bind(this));
   };
 
-  getClasses() {
-    let classes = 'component-art-object-grid';
-
-    if (this.props.objects.length > 0) {
-      classes += ' fade-in';
-    }
-
-    return classes;
-  }
-
   componentWillUpdate(nextProps) {
 
     if (this.props.object !== nextProps.object) {
@@ -130,7 +121,6 @@ class ArtObjectGrid extends Component {
 
   render() {
     // if (this.props.object.id) {
-    //   debugger;
     // }
 
     let liveObjects;
@@ -140,7 +130,7 @@ class ArtObjectGrid extends Component {
         liveObjects = this.props.relatedObjects || [];
         break;
       case 'ensemble':
-        liveObjects = this.props.relatedObjects || [];
+        liveObjects = this.props.ensembleObjects || [];
         break;
       case 'landing':
       default:
@@ -155,7 +145,7 @@ class ArtObjectGrid extends Component {
 
     return (
       <div
-        className={this.getClasses()}
+        className={`component-art-object-grid ${liveObjects.length > 0 ? 'fade-in' : ''}`}
         data-grid-style={this.props.gridStyle}
       >
         { hasElements ?
@@ -188,6 +178,7 @@ class ArtObjectGrid extends Component {
 
 function mapStateToProps(state) {
   return {
+    ensembleObjects: state.ensembleObjects,
     relatedObjects: state.relatedObjects,
     objects: state.objects,
     object: state.object,
@@ -197,6 +188,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    EnsembleObjectsActions,
     RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,

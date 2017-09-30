@@ -27,18 +27,10 @@ class TabbedSubMenu extends Component {
     this.state = { tabs: tabList };
   }
 
-  sanitizeEnsembleIndex(index) {
-    return index ? index.split(',')[0] : null;
-  }
-
   getTab() {
     switch(this.props.slug) {
       case 'ensemble':
-        if (this.props.object.ensembleIndex) {
-          return <PanelEnsemble ensembleIndex={this.sanitizeEnsembleIndex(this.props.object.ensembleIndex)}/>;
-        } else {
-          return <PanelVisuallyRelated />;
-        }
+        return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />;
       case 'details':
         return <PanelDetails />;
       default:
@@ -57,9 +49,9 @@ class TabbedSubMenu extends Component {
                   .map(tabData => {
                     const isSelected = tabData.slug === this.props.slug;
 
-                    if (!this.props.object.ensembleIndex && tabData.slug === 'ensemble') {
-                      return null;
-                    }
+                    // if (!this.props.object.ensembleIndex && tabData.slug === 'ensemble') {
+                    //   return null;
+                    // }
 
                     return (
                       <div key={tabData.slug} className="m-tabs__item">

@@ -5,6 +5,9 @@ export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 // relatedObjects
 export const SET_RELATED_OBJECTS = 'SET_RELATED_OBJECTS';
 
+// ensembleObjects
+export const SET_ENSEMBLE_OBJECTS = 'SET_ENSEMBLE_OBJECTS';
+
 // object
 export const SET_OBJECT = 'SET_OBJECT';
 

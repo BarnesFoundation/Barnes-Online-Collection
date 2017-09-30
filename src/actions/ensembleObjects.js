@@ -26,7 +26,7 @@ const mapObjects = (objects) => {
 }
 
 const fetchResults = (body, dispatch) => {
-  DEV_LOG('Fetching related Objects results...');
+  DEV_LOG('Fetching Ensemble Objects results...');
 
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
@@ -38,35 +38,22 @@ const fetchResults = (body, dispatch) => {
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
-    dispatch(setRelatedObjects(objects));
+    dispatch(setEnsembleObjects(objects));
   });
 }
 
-const setRelatedObjects = (objects) => {
-  DEV_LOG('Setting related objects...');
+const setEnsembleObjects = (objects) => {
+  DEV_LOG('Setting Ensemble objects...');
 
   return {
-    type: ActionTypes.SET_RELATED_OBJECTS,
+    type: ActionTypes.SET_ENSEMBLE_OBJECTS,
     payload: objects
   };
 }
 
-export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  const minShouldMatch = 100 - value;
-
-  let body = buildRequestBody(fromIndex, 25);
-  body = body.query('more_like_this', {
-    'like': [
-      {
-        '_index': process.env.ELASTICSEARCH_INDEX,
-        '_type': 'object',
-        '_id': objectID
-      }
-    ],
-    'fields': MORE_LIKE_THIS_FIELDS,
-    'min_term_freq': 1,
-    'minimum_should_match': `${minShouldMatch}%`
-  });
+export const getEnsembleObjects = (ensembleIndex) => {
+  let body = buildRequestBody(0, 125);
+  body = body.query('match', 'ensembleIndex', ensembleIndex);
   body = body.build();
 
   return (dispatch) => {

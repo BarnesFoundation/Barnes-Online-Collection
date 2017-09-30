@@ -25,20 +25,9 @@ export const generateObjectImageUrls = (object) => {
   return newObject;
 }
 
-// const dedupeObjects = (objects) => {
-//   let hashTable = {};
-
-//   return objects.filter(function(object) {
-//     let key = object.id;
-//     let match = Boolean(hashTable[key]);
-
-//     return (match ? false : hashTable[key] = true);
-//   });
-// }
-
-const relatedObjects = (state = [], action) => {
+export const ensembleObjects = (state = [], action) => {
   switch(action.type) {
-    case ActionTypes.SET_RELATED_OBJECTS:
+    case ActionTypes.SET_ENSEMBLE_OBJECTS:
       return action.payload.map(object => {
         return generateObjectImageUrls(object)
       });
@@ -47,4 +36,4 @@ const relatedObjects = (state = [], action) => {
   }
 };
 
-export default relatedObjects;
+export default ensembleObjects;
