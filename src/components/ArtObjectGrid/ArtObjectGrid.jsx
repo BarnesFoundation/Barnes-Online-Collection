@@ -38,7 +38,7 @@ class ArtObjectGrid extends Component {
         break;
       case 'ensemble':
         if (object.ensembleIndex && !ensembleObjects.length) {
-          this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(object.ensembleIndex));
+          this.props.getEnsembleObjects(object.ensembleIndex);
         }
         break;
       case 'landing':
@@ -78,10 +78,6 @@ class ArtObjectGrid extends Component {
     );
   }
 
-  sanitizeEnsembleIndex(index) {
-    return index ? index.split(',')[0] : null;
-  }
-
   getMasonryElements(liveObjects) {
     const objects = uniqBy(liveObjects, 'id');
     const dedupedObjectLen = liveObjects.length - objects.length;
@@ -108,7 +104,7 @@ class ArtObjectGrid extends Component {
           break;
         case 'ensemble':
           if (nextProps.object && nextProps.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(nextProps.object.ensembleIndex));
+            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
           }
           break;
         case 'landing':
