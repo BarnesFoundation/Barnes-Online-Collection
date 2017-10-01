@@ -77,10 +77,11 @@ class ArtObjectGrid extends Component {
   getGridListElement(object) {
     const clickHandler = function(e) {
 
-      // todo
       if (this.props.pageType === 'landing') {
         e.preventDefault();
 
+        // clear the object first to avoid a FOUC
+        this.props.clearObject();
         this.props.modalShow();
         this.props.getObject(object.id);
       }

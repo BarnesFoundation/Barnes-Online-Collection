@@ -29,9 +29,8 @@ const fetchResults = (body, dispatch) => {
   DEV_LOG('Fetching related Objects results...');
 
   dispatch(setIsPending(true));
-  // debugger;
-  // todo: test this
-  // dispatch(clearRelatedObjects());
+  // quick fix to avoid fouc.
+  dispatch(clearRelatedObjects());
 
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {

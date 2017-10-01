@@ -54,6 +54,8 @@
     }
 
     .applied-filter-tag {
+      cursor: initial;
+
       &.applied-filter-tag-color {
         padding: $collection-filter-padding-y;
 
