@@ -29,18 +29,12 @@ class ViewMoreButton extends Component {
       query = filters;
     }
 
-    const fromIndex = this.props.objectsQuery.lastIndex || 25;
-    DEV_LOG(fromIndex);
-    this.props.getNextObjects(fromIndex, query);
-  }
-
-  shouldShowButton() {
-    debugger;
-    return this.props.objectsQuery.maxHits > this.props.objectsQuery.lastIndex;
+    this.props.getNextObjects(this.props.objectsQuery.lastIndex, query);
   }
 
   render() {
-    if (this.shouldShowButton()) {
+    const shouldShowButton = this.props.objectsQuery.hasMoreResults;
+    if (shouldShowButton) {
       return (
         <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
           <button

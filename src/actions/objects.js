@@ -38,18 +38,22 @@ const fetchResults = (body, dispatch, options={}) => {
   .then((response) => {
     let objects = [];
     let maxHits = 0;
-    const lastIndex = body.from + body.size;
+    // Note: confirm that we don't need this 25 default. The front end logic was using it before
+    // let lastIndex = (body.from + body.size) || 25;
+    let lastIndex = body.from + body.size;
+    let hasMoreResults = false;
 
     if (response.data.hits) {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
+      hasMoreResults = maxHits > lastIndex;
+
     }
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
-    dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
-
+    dispatch(setHasMoreResults(hasMoreResults));
 
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
         barnesifyObjects(objects, dispatch, options);
@@ -220,17 +224,10 @@ const appendObjects = (objects) => {
   };
 }
 
-const setMaxHits = (maxHits) => {
+const setHasMoreResults = (hasMoreResults) => {
   return {
-    type: ActionTypes.OBJECTS_QUERY_SET_MAX_HITS,
-    maxHits: maxHits
-  };
-}
-
-const setLastIndex = (lastIndex) => {
-  return {
-    type: ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX,
-    lastIndex: lastIndex
+    type: ActionTypes.OBJECTS_QUERY_SET_HAS_MORE_RESULTS,
+    hasMoreResults: hasMoreResults
   };
 }
 
@@ -238,6 +235,13 @@ const setIsPending = (isPending) => {
   return {
     type: ActionTypes.OBJECTS_QUERY_SET_IS_PENDING,
     isPending: isPending
+  };
+}
+
+const setLastIndex = (lastIndex) => {
+  return {
+    type: ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX,
+    lastIndex: lastIndex
   };
 }
 
