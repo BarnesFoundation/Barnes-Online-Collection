@@ -56,7 +56,10 @@ const fetchResults = (body, dispatch, options={}) => {
     dispatch(setHasMoreResults(hasMoreResults));
 
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
-        barnesifyObjects(objects, dispatch, options);
+        barnesifyObjects(objects, dispatch, options).then(() => {
+          // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
+          dispatch(setIsPending(false));
+        });
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
       dispatch(setIsPending(false));
@@ -181,7 +184,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     return axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
   }
 
-  axios.all([
+  return axios.all([
     get2DObjects(),
     getMetalworks(),
     get3DObjects(),
@@ -204,7 +207,6 @@ const barnesifyObjects = (objects, dispatch, options) => {
     }
 
     dispatch(setObjects(retObjects));
-    dispatch(setIsPending(false));
   }));
 }
 
@@ -278,25 +280,26 @@ export const getAllObjects = (fromIndex=0) => {
 };
 
 export const findFilteredObjects = (filters, fromIndex=0) => {
-    if (
-      !filters.ordered ||
-      filters.ordered.length === 0 ||
-      (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
-      ) {
-      return (dispatch) => { getAllObjects()(dispatch); }
-    }
+  if (
+    !filters.ordered ||
+    filters.ordered.length === 0 ||
+    (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
+    ) {
+    return (dispatch) => { getAllObjects()(dispatch); }
+  }
 
-    const queries = buildQueriesFromFilters(filters.ordered);
+  const queries = buildQueriesFromFilters(filters.ordered);
 
-    const options = {
-      queries: queries,
-      barnesify: !fromIndex,
-      append: !!fromIndex
-    };
+  const options = {
+    queries: queries,
+    barnesify: !fromIndex,
+    append: !!fromIndex
+  };
 
-    let body = buildRequestBody(fromIndex);
-    body = assembleDisMaxQuery(body, queries);
-    body = body.build();
+  let body = buildRequestBody(fromIndex);
+  body = assembleDisMaxQuery(body, queries);
+  body = body.build();
+
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);

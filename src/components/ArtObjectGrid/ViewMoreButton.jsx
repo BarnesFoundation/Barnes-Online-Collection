@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import * as ObjectsActions from '../../actions/objects';
+import SpinnerLoader from './SpinnerLoader';
 
 import { DEV_LOG } from '../../devLogging';
 
@@ -33,21 +33,27 @@ class ViewMoreButton extends Component {
   }
 
   render() {
-    const shouldShowButton = this.props.objectsQuery.hasMoreResults;
-    if (shouldShowButton) {
-      return (
-        <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
-          <button
-            className="btn"
-            onClick={this.handleClick}
-          >
-            View More
-          </button>
-        </div>
-      );
-    } else {
+    const searchIsPending = this.props.objectsQuery.isPending;
+    const hasMoreResults = this.props.objectsQuery.hasMoreResults;
+
+    if (!hasMoreResults) {
       return <div></div>;
     }
+
+    if (searchIsPending) {
+      return <SpinnerLoader />;
+    }
+
+    return (
+      <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
+        <button
+          className="btn"
+          onClick={this.handleClick}
+        >
+          View More
+        </button>
+      </div>
+    );
   }
 }
 

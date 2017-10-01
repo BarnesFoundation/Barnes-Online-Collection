@@ -10,6 +10,7 @@ import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
+import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
 import { DEV_LOG } from '../../devLogging';
 
@@ -136,28 +137,31 @@ class ArtObjectGrid extends Component {
 
     const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
-    // todo - add pending for other things too
-    const searchIsPending = this.props.objectsQuery ? this.props.objectsQuery.isPending : false;
+    const searchIsPending = this.props.objectsQuery.isPending;
+    const shouldShowViewMoreBtn = this.props.pageType !== 'ensemble';
+    const fadeInClass = liveObjects.length > 0 ? 'fade-in' : '';
+    const isPendingClass = searchIsPending ? 'is-pending' : '';
 
     return (
       <div
-        className={`component-art-object-grid ${liveObjects.length > 0 ? 'fade-in' : ''}`}
+        className={`component-art-object-grid ${fadeInClass} ${isPendingClass}`}
         data-grid-style={this.props.gridStyle}
       >
         { hasElements ?
-          <div className="component-art-object-grid-results">
-            <MasonryGrid masonryElements={masonryElements} />
-            { this.props.pageType !== 'ensemble' &&
-              <ViewMoreButton />
-            }
+          <div>
+            <div className="component-art-object-grid-results">
+              <MasonryGrid masonryElements={masonryElements} />
+              { shouldShowViewMoreBtn &&
+                <ViewMoreButton />
+              }
+            </div>
+            <div className="loading-overlay">
+              <SpinnerLoader />
+            </div>
           </div>
         : (
           searchIsPending ?
-            <div className="spinner">
-              <div className="bounce1"></div>
-              <div className="bounce2"></div>
-              <div className="bounce3"></div>
-            </div>
+            <SpinnerLoader />
           :
             <div className="m-block no-results">
               <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
