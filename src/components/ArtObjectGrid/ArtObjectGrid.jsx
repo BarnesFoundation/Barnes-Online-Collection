@@ -137,7 +137,7 @@ class ArtObjectGrid extends Component {
     const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
     // todo - add pending for other things too
-    const searchIsPending = this.props.queryResults ? this.props.queryResults.isPending : false;
+    const searchIsPending = this.props.objectsQuery ? this.props.objectsQuery.isPending : false;
 
     return (
       <div
@@ -178,7 +178,7 @@ function mapStateToProps(state) {
     relatedObjects: state.relatedObjects,
     objects: state.objects,
     object: state.object,
-    queryResults: state.queryResults,
+    objectsQuery: state.objectsQuery,
   };
 }
 

@@ -6,17 +6,17 @@ const initialState = {
   isPending: null,
 };
 
-const queryResults = (state = initialState, action) => {
+const objectsQuery = (state = initialState, action) => {
   switch(action.type) {
-    case ActionTypes.QUERY_SET_LAST_INDEX:
+    case ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX:
       return Object.assign({}, state, {
         lastIndex: action.lastIndex
       });
-    case ActionTypes.QUERY_SET_MAX_HITS:
+    case ActionTypes.OBJECTS_QUERY_SET_MAX_HITS:
       return Object.assign({}, state, {
         maxHits: action.maxHits
       });
-    case ActionTypes.QUERY_SET_IS_PENDING:
+    case ActionTypes.OBJECTS_QUERY_SET_IS_PENDING:
       return Object.assign({}, state, {
         isPending: action.isPending
       });
@@ -25,4 +25,4 @@ const queryResults = (state = initialState, action) => {
   }
 }
 
-export default queryResults;
+export default objectsQuery;

@@ -50,6 +50,7 @@ const fetchResults = (body, dispatch, options={}) => {
     dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
 
+
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
         barnesifyObjects(objects, dispatch, options);
     } else {
@@ -221,21 +222,21 @@ const appendObjects = (objects) => {
 
 const setMaxHits = (maxHits) => {
   return {
-    type: ActionTypes.QUERY_SET_MAX_HITS,
+    type: ActionTypes.OBJECTS_QUERY_SET_MAX_HITS,
     maxHits: maxHits
   };
 }
 
 const setLastIndex = (lastIndex) => {
   return {
-    type: ActionTypes.QUERY_SET_LAST_INDEX,
+    type: ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX,
     lastIndex: lastIndex
   };
 }
 
 const setIsPending = (isPending) => {
   return {
-    type: ActionTypes.QUERY_SET_IS_PENDING,
+    type: ActionTypes.OBJECTS_QUERY_SET_IS_PENDING,
     isPending: isPending
   };
 }

@@ -10,7 +10,7 @@ import search from './reducers/search';
 import htmlClassManager from './reducers/htmlClassManager';
 import prints from './reducers/prints';
 import ui from './reducers/ui';
-import queryResults from './reducers/queryResults';
+import objectsQuery from './reducers/objectsQuery';
 
 export default combineReducers({
   object,
@@ -24,5 +24,5 @@ export default combineReducers({
   htmlClassManager,
   prints,
   ui,
-  queryResults
+  objectsQuery,
 });
