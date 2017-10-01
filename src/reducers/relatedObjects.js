@@ -7,6 +7,8 @@ const relatedObjects = (state = [], action) => {
       return action.payload.map(object => {
         return parseObject(object)
       });
+    case ActionTypes.CLEAR_RELATED_OBJECTS:
+      return [];
     default:
       return state;
   }

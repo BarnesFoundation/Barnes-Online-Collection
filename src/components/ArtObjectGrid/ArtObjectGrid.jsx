@@ -27,6 +27,9 @@ class ArtObjectGrid extends Component {
     switch (this.props.pageType) {
       case 'visually-related':
         this.getLiveObjects = () => {return this.props.relatedObjects};
+        this.getObjectsQuery = () => {
+          return this.props.relatedObjectsQuery
+        };
         this.fetchObjects = function(newId) {
           const fetchKey = newId || this.props.object.id;
           if (fetchKey) {
@@ -36,6 +39,7 @@ class ArtObjectGrid extends Component {
         break;
       case 'ensemble':
         this.getLiveObjects = () => {return this.props.ensembleObjects};
+        this.getObjectsQuery = () => {return this.props.ensembleObjectsQuery};
         this.fetchObjects = function(newId) {
           const fetchKey = newId || this.props.object.ensembleIndex;
           if (fetchKey) {
@@ -46,6 +50,7 @@ class ArtObjectGrid extends Component {
       case 'landing':
       default:
         this.getLiveObjects = () => {return this.props.objects};
+        this.getObjectsQuery = () => {return this.props.objectsQuery};
         this.fetchObjects = this.props.getAllObjects;
         break;
     }
@@ -53,6 +58,7 @@ class ArtObjectGrid extends Component {
 
   // overwritten in the constructor
   getLiveObjects () {}
+  getObjectsQuery () {}
   fetchObjects () {}
 
   componentDidMount() {
@@ -126,10 +132,10 @@ class ArtObjectGrid extends Component {
 
     const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
-    const searchIsPending = this.props.objectsQuery.isPending;
+    const isSearchPending = this.getObjectsQuery().isPending;
     const shouldShowViewMoreBtn = this.props.pageType !== 'ensemble';
     const fadeInClass = liveObjects.length > 0 ? 'fade-in' : '';
-    const isPendingClass = searchIsPending ? 'is-pending' : '';
+    const isPendingClass = isSearchPending ? 'is-pending' : '';
 
     return (
       <div
@@ -149,7 +155,7 @@ class ArtObjectGrid extends Component {
             </div>
           </div>
         : (
-          searchIsPending ?
+          isSearchPending ?
             <SpinnerLoader />
           :
             <div className="m-block no-results">

@@ -4,12 +4,14 @@ export const APPEND_OBJECTS = 'APPEND_OBJECTS';
 
 // relatedObjects
 export const SET_RELATED_OBJECTS = 'SET_RELATED_OBJECTS';
+export const CLEAR_RELATED_OBJECTS = 'CLEAR_RELATED_OBJECTS';
 
 // ensembleObjects
 export const SET_ENSEMBLE_OBJECTS = 'SET_ENSEMBLE_OBJECTS';
 
 // object
 export const SET_OBJECT = 'SET_OBJECT';
+export const CLEAR_OBJECT = 'CLEAR_OBJECT';
 
 // filterSets
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';

@@ -5,6 +5,8 @@ const object = (state = {}, action) => {
   switch(action.type) {
     case ActionTypes.SET_OBJECT:
       return parseObject(action.payload);
+    case ActionTypes.CLEAR_OBJECT:
+      return {};
     default:
       return state;
   }

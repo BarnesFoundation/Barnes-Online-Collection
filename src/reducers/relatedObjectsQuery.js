@@ -1,7 +1,7 @@
 import * as ActionTypes from '../constants';
 
 const initialState = {
-  isPending: null,
+  isPending: true,
 };
 
 const relatedObjectsQuery = (state = initialState, action) => {

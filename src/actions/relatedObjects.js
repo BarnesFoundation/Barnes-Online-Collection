@@ -28,6 +28,11 @@ const mapObjects = (objects) => {
 const fetchResults = (body, dispatch) => {
   DEV_LOG('Fetching related Objects results...');
 
+  dispatch(setIsPending(true));
+  // debugger;
+  // todo: test this
+  // dispatch(clearRelatedObjects());
+
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
     let objects = [];
@@ -38,8 +43,16 @@ const fetchResults = (body, dispatch) => {
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
+    dispatch(setIsPending(false));
     dispatch(setRelatedObjects(objects));
   });
+}
+
+const setIsPending = (isPending) => {
+  return {
+    type: ActionTypes.RELATED_OBJECTS_QUERY_SET_IS_PENDING,
+    isPending: isPending
+  };
 }
 
 const setRelatedObjects = (objects) => {
@@ -48,6 +61,12 @@ const setRelatedObjects = (objects) => {
   return {
     type: ActionTypes.SET_RELATED_OBJECTS,
     payload: objects
+  };
+}
+
+const clearRelatedObjects = () => {
+  return {
+    type: ActionTypes.CLEAR_RELATED_OBJECTS,
   };
 }
 

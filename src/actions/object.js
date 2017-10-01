@@ -19,11 +19,22 @@ export const setObject = (object) => {
   }
 }
 
+export const clearObject = () => {
+  return {
+    type: ActionTypes.CLEAR_OBJECT,
+  }
+}
+
 export const getObject = (id) => {
   let body = buildRequestBody();
   body = body.query('match', '_id', id).build();
 
   return (dispatch) => {
+    // clear the object first to avoid a FOUC when the modal changes to a new object
+    // todo test this
+    // dispatch(clearObject());
+    // debugger;
+
     axios.get('/api/search', {
       params: {
         body: body

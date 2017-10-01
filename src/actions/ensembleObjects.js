@@ -28,6 +28,8 @@ const mapObjects = (objects) => {
 const fetchResults = (body, dispatch) => {
   DEV_LOG('Fetching Ensemble Objects results...');
 
+  dispatch(setIsPending(true));
+
   axios.get('/api/search', { params: { body: body } })
   .then((response) => {
     let objects = [];
@@ -38,8 +40,16 @@ const fetchResults = (body, dispatch) => {
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
+    dispatch(setIsPending(false));
     dispatch(setEnsembleObjects(objects));
   });
+}
+
+const setIsPending = (isPending) => {
+  return {
+    type: ActionTypes.ENSEMBLE_OBJECTS_QUERY_SET_IS_PENDING,
+    isPending: isPending
+  };
 }
 
 const setEnsembleObjects = (objects) => {
