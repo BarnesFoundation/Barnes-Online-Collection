@@ -140,9 +140,9 @@
   }
 
   .loading-overlay {
-    background: white;
-    z-index: 2;
-    opacity: .6;
+    background: $color-white;
+    z-index: $z-index-loading-overlay;
+    opacity: $loading-overlay-opacity;
     position: absolute;
     height: 100%;
     width: 100%;

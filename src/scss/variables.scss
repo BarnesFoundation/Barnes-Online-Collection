@@ -38,6 +38,7 @@ $art-object-overlay-border-width: 20px;
 // src/components-barnes-toolkit/scss/setup/_variables.scss
 $z-index-art-object-grid-overlay: 2;
 $z-index-art-object-grid-view-more: 2;
+$z-index-loading-overlay: 2;
 $z-index-modal-x: 2;
 $z-index-mobile-filters-overlay: 3;
 $z-index-mobile-filters-panel: 4;
@@ -80,3 +81,5 @@ $tooltip-padding: 8px 14px;
 $mapbox-aspect-ratio: .65;
 $mapbox-controls-border: 2px solid $color-white;
 $mapbox-controls-size: 1.75em;
+
+$loading-overlay-opacity: .6;

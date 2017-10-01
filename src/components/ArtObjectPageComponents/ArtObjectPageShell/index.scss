@@ -82,4 +82,11 @@
       display: none;
     }
   }
+
+  .m-tabs__link {
+    &[data-is-disabled="true"] {
+      cursor: default;
+      pointer-events: none;
+    }
+  }
 }

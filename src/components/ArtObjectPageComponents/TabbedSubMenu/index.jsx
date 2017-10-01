@@ -39,6 +39,8 @@ class TabbedSubMenu extends Component {
   }
 
   render() {
+    const ensembleIsDisabled = !this.props.object.ensembleIndex;
+
     return (
       <div>
         <div className="container">
@@ -49,17 +51,14 @@ class TabbedSubMenu extends Component {
                   .map(tabData => {
                     const isSelected = tabData.slug === this.props.slug;
 
-                    // if (!this.props.object.ensembleIndex && tabData.slug === 'ensemble') {
-                    //   return null;
-                    // }
-
                     return (
                       <div key={tabData.slug} className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
                           to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
-                          onClick={this.handleContentTabClick(tabData.slug)}
+                          onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
+                          data-is-disabled={ensembleIsDisabled}
                         >
                           {tabData.title}
                         </Link>
@@ -81,8 +80,13 @@ class TabbedSubMenu extends Component {
     this.setState({selectedTab: tabKey});
   }
 
-  handleContentTabClick(slug) {
+  handleContentTabClick(slug, isDisabled) {
     return function(e) {
+      if(isDisabled) {
+        e.preventDefault();
+        return;
+      }
+
       this.selectTab(slug);
     }.bind(this);
   }
