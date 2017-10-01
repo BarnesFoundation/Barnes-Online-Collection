@@ -23,37 +23,55 @@ class ArtObjectGrid extends Component {
     super(props);
 
     this.getGridListElement = this.getGridListElement.bind(this);
-  }
-
-  componentDidMount() {
-    const object = this.props.object || {};
-    const objects = this.props.objects || [];
-    const relatedObjects = this.props.relatedObjects || [];
-    const ensembleObjects = this.props.ensembleObjects || [];
 
     switch (this.props.pageType) {
       case 'visually-related':
-        if (object.id && !relatedObjects.length) {
-          this.props.getRelatedObjects(object.id);
-        }
+        this.getLiveObjects = () => {return this.props.relatedObjects};
+        this.fetchObjects = function(newId) {
+          const fetchKey = newId || this.props.object.id;
+          if (fetchKey) {
+            this.props.getRelatedObjects(fetchKey);
+          }
+        }.bind(this);
         break;
       case 'ensemble':
-        if (object.ensembleIndex && !ensembleObjects.length) {
-          this.props.getEnsembleObjects(object.ensembleIndex);
-        }
+        this.getLiveObjects = () => {return this.props.ensembleObjects};
+        this.fetchObjects = function(newId) {
+          const fetchKey = newId || this.props.object.ensembleIndex;
+          if (fetchKey) {
+            this.props.getEnsembleObjects(fetchKey);
+          }
+        }.bind(this);
         break;
       case 'landing':
       default:
-        if (!objects.length) {
-          this.props.getAllObjects();
-        }
+        this.getLiveObjects = () => {return this.props.objects};
+        this.fetchObjects = this.props.getAllObjects;
         break;
+    }
+  }
+
+  // overwritten in the constructor
+  getLiveObjects () {}
+  fetchObjects () {}
+
+  componentDidMount() {
+    const liveObjects = this.getLiveObjects();
+
+    // todo: do we need to check the length won't it always be zero?
+    if (liveObjects.lenth) {
+      debugger;
+    }
+
+    if (!liveObjects.lenth) {
+      this.fetchObjects();
     }
   }
 
   getGridListElement(object) {
     const clickHandler = function(e) {
 
+      // todo
       if (this.props.pageType === 'landing') {
         e.preventDefault();
 
@@ -81,6 +99,7 @@ class ArtObjectGrid extends Component {
 
   getMasonryElements(liveObjects) {
     const objects = uniqBy(liveObjects, 'id');
+    // todo: remove this dedouping if we can do it upstream instead
     const dedupedObjectLen = liveObjects.length - objects.length;
 
     if(dedupedObjectLen > 0) {
@@ -97,43 +116,13 @@ class ArtObjectGrid extends Component {
   };
 
   componentWillUpdate(nextProps) {
-
-    if (this.props.object !== nextProps.object) {
-      switch(nextProps.pageType) {
-        case 'visually-related':
-          this.props.getRelatedObjects(nextProps.object.id);
-          break;
-        case 'ensemble':
-          if (nextProps.object && nextProps.object.ensembleIndex) {
-            this.props.getEnsembleObjects(nextProps.object.ensembleIndex);
-          }
-          break;
-        case 'landing':
-        default:
-          this.props.getAllObjects();
-          break;
-      }
+    if (this.props.object.id !== nextProps.object.id) {
+      this.fetchObjects(nextProps.object.id);
     }
   }
 
   render() {
-    // if (this.props.object.id) {
-    // }
-
-    let liveObjects;
-
-    switch (this.props.pageType) {
-      case 'visually-related':
-        liveObjects = this.props.relatedObjects || [];
-        break;
-      case 'ensemble':
-        liveObjects = this.props.ensembleObjects || [];
-        break;
-      case 'landing':
-      default:
-        liveObjects = this.props.objects || [];
-        break;
-    }
+    const liveObjects = this.getLiveObjects();
 
     const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
@@ -183,6 +172,8 @@ function mapStateToProps(state) {
     objects: state.objects,
     object: state.object,
     objectsQuery: state.objectsQuery,
+    relatedObjectsQuery: state.relatedObjectsQuery,
+    ensembleObjectsQuery: state.ensembleObjectsQuery,
   };
 }
 

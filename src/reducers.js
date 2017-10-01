@@ -11,6 +11,8 @@ import htmlClassManager from './reducers/htmlClassManager';
 import prints from './reducers/prints';
 import ui from './reducers/ui';
 import objectsQuery from './reducers/objectsQuery';
+import relatedObjectsQuery from './reducers/relatedObjectsQuery';
+import ensembleObjectsQuery from './reducers/ensembleObjectsQuery';
 
 export default combineReducers({
   object,
@@ -25,4 +27,6 @@ export default combineReducers({
   prints,
   ui,
   objectsQuery,
+  relatedObjectsQuery,
+  ensembleObjectsQuery,
 });
