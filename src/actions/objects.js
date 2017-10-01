@@ -18,6 +18,7 @@ const addHighlightsFilter = (body) => {
   return body.filter('match', 'highlight', 'true');
 }
 
+// todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
   let mappedObjects = uniqBy(objects, '_id');
   const dedupedObjectLen = objects.length - mappedObjects.length;

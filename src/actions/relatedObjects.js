@@ -14,6 +14,7 @@ const buildRequestBody = (fromIndex=0) => {
   return body;
 }
 
+// todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
   let mappedObjects = uniqBy(objects, '_id');
   const dedupedObjectLen = objects.length - mappedObjects.length;

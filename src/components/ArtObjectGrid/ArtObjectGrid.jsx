@@ -12,11 +12,8 @@ import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
 import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
-import { DEV_LOG } from '../../devLogging';
 
 import './artObjectGrid.css';
-
-const uniqBy = require('lodash/uniqBy');
 
 class ArtObjectGrid extends Component {
   constructor(props) {
@@ -62,16 +59,7 @@ class ArtObjectGrid extends Component {
   fetchObjects () {}
 
   componentDidMount() {
-    const liveObjects = this.getLiveObjects();
-
-    // todo: do we need to check the length won't it always be zero?
-    if (liveObjects.lenth) {
-      debugger;
-    }
-
-    if (!liveObjects.lenth) {
-      this.fetchObjects();
-    }
+    this.fetchObjects();
   }
 
   getGridListElement(object) {
@@ -104,15 +92,7 @@ class ArtObjectGrid extends Component {
     );
   }
 
-  getMasonryElements(liveObjects) {
-    const objects = uniqBy(liveObjects, 'id');
-    // todo: remove this dedouping if we can do it upstream instead
-    const dedupedObjectLen = liveObjects.length - objects.length;
-
-    if(dedupedObjectLen > 0) {
-      DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the masonry grid.`);
-    }
-
+  getMasonryElements(objects) {
     return objects.map(function(object) {
       return (
         <li key={object.id} className="masonry-grid-element">

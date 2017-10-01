@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import * as ObjectsActions from '../../actions/objects';
 import SpinnerLoader from './SpinnerLoader';
 
-import { DEV_LOG } from '../../devLogging';
-
 class ViewMoreButton extends Component {
   constructor(props) {
     super(props);

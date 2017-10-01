@@ -1,7 +1,7 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
+import { BARNES_SETTINGS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
@@ -14,6 +14,7 @@ const buildRequestBody = (fromIndex=0) => {
   return body;
 }
 
+// todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
   let mappedObjects = uniqBy(objects, '_id');
   const dedupedObjectLen = objects.length - mappedObjects.length;
