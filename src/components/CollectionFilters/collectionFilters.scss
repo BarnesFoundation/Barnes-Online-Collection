@@ -6,6 +6,7 @@
     vertical-align: middle;
     // make it appear slightly more centered with the font
     margin-top: -0.08em;
+    font-size: $collection-filter-icon-font-size;
   }
 
   .btn-collection-filter {
@@ -53,14 +54,17 @@
           // use scale instead of a smaller font so that the
           // height stays consistent to ensure the border below doesn't jump
           transform: scale($collection-filter-icon-font-size-sm-scale);
-          margin-right: 0;
         }
       }
     }
 
+    &--shuffle {
+      .collection-filter-icon {
+        margin-right: 0;
+      }
+    }
+
     .collection-filter-icon {
-      margin-right: 15px;
-      font-size: $collection-filter-icon-font-size;
     }
   }
 
