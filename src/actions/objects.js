@@ -1,9 +1,10 @@
 import axios from 'axios';
 import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS, SEARCH_FIELDS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
+import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-import { COLOR_FIELDS, COLOR_FILTERS } from '../filterSettings';
+
+const uniqBy = require('lodash/uniqBy');
 
 const buildRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
@@ -17,8 +18,16 @@ const addHighlightsFilter = (body) => {
   return body.filter('match', 'highlight', 'true');
 }
 
+// todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
-  return objects.map(object => Object.assign({}, object._source, { id: object._id }));
+  let mappedObjects = uniqBy(objects, '_id');
+  const dedupedObjectLen = objects.length - mappedObjects.length;
+
+  if(dedupedObjectLen > 0) {
+    DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`);
+  }
+
+  return mappedObjects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
 const fetchResults = (body, dispatch, options={}) => {
@@ -30,20 +39,28 @@ const fetchResults = (body, dispatch, options={}) => {
   .then((response) => {
     let objects = [];
     let maxHits = 0;
-    const lastIndex = body.from + body.size;
+    // Note: confirm that we don't need this 25 default. The front end logic was using it before
+    // let lastIndex = (body.from + body.size) || 25;
+    let lastIndex = body.from + body.size;
+    let hasMoreResults = false;
 
     if (response.data.hits) {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
+      hasMoreResults = maxHits > lastIndex;
+
     }
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
 
-    dispatch(setMaxHits(maxHits));
     dispatch(setLastIndex(lastIndex));
+    dispatch(setHasMoreResults(hasMoreResults));
 
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
-        barnesifyObjects(objects, dispatch, options);
+        barnesifyObjects(objects, dispatch, options).then(() => {
+          // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
+          dispatch(setIsPending(false));
+        });
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
       dispatch(setIsPending(false));
@@ -82,7 +99,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     barnesObjects[type].push(...objects);
   }
 
-  const setBarnesObjects = () => {
+  const getBarnsifiedObjects = () => {
     DEV_LOG('Compiling Barnesified object set...');
 
     let ratios = {
@@ -112,7 +129,9 @@ const barnesifyObjects = (objects, dispatch, options) => {
 
     ratios['total'] = refinedBarnesObjects.length;
 
-    let objects = mapObjects(shuffleObjects(refinedBarnesObjects));
+    // TODO: @rachel, mapObjects now dedupes objects, so let's consider whether
+    // we need to calc these ratios above after the deduping?
+    let mappedObjects = mapObjects(shuffleObjects(refinedBarnesObjects));
 
     DEV_LOG('Total objects: '+ratios.total);
     DEV_LOG('2D: '+ratios['2D']+' objects / '+ratios['2D']/ratios.total);
@@ -120,7 +139,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     DEV_LOG('3D: '+ratios['3D']+' objects / '+ratios['3D']/ratios.total);
     DEV_LOG('Knick Knacks: '+ratios['knickknacks']+' objects / '+ratios['knickknacks']/ratios.total);
 
-    dispatch(setObjects(objects));
+    return mappedObjects;
   }
 
   const params = (terms) => {
@@ -166,12 +185,14 @@ const barnesifyObjects = (objects, dispatch, options) => {
     return axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
   }
 
-  axios.all([
+  return axios.all([
     get2DObjects(),
     getMetalworks(),
     get3DObjects(),
     getKnickKnacks()
   ]).then(axios.spread((twoD, metalworks, threeD, knickknacks) => {
+    let retObjects = objects;
+
     updateBarnesObjects(twoD.data.hits.hits, 'twoD');
     updateBarnesObjects(metalworks.data.hits.hits, 'metalworks');
     updateBarnesObjects(threeD.data.hits.hits, 'threeD');
@@ -182,8 +203,11 @@ const barnesifyObjects = (objects, dispatch, options) => {
     DEV_LOG('Retrieved '+threeD.data.hits.total+' 3D objects.');
     DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
 
-    checkBarnesificationPossible() ? setBarnesObjects() : dispatch(setObjects(objects));
-    dispatch(setIsPending(false));
+    if (checkBarnesificationPossible()) {
+      retObjects = getBarnsifiedObjects();
+    }
+
+    dispatch(setObjects(retObjects));
   }));
 }
 
@@ -203,24 +227,24 @@ const appendObjects = (objects) => {
   };
 }
 
-const setMaxHits = (maxHits) => {
+const setHasMoreResults = (hasMoreResults) => {
   return {
-    type: ActionTypes.QUERY_SET_MAX_HITS,
-    maxHits: maxHits
-  };
-}
-
-const setLastIndex = (lastIndex) => {
-  return {
-    type: ActionTypes.QUERY_SET_LAST_INDEX,
-    lastIndex: lastIndex
+    type: ActionTypes.OBJECTS_QUERY_SET_HAS_MORE_RESULTS,
+    hasMoreResults: hasMoreResults
   };
 }
 
 const setIsPending = (isPending) => {
   return {
-    type: ActionTypes.QUERY_SET_IS_PENDING,
+    type: ActionTypes.OBJECTS_QUERY_SET_IS_PENDING,
     isPending: isPending
+  };
+}
+
+const setLastIndex = (lastIndex) => {
+  return {
+    type: ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX,
+    lastIndex: lastIndex
   };
 }
 
@@ -256,71 +280,27 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
-export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  const minShouldMatch = 100 - value;
-
-  let body = buildRequestBody(fromIndex, 25);
-  body = body.query('more_like_this', {
-    'like': [
-      {
-        '_index': process.env.ELASTICSEARCH_INDEX,
-        '_type': 'object',
-        '_id': objectID
-      }
-    ],
-    'fields': MORE_LIKE_THIS_FIELDS,
-    'min_term_freq': 1,
-    'minimum_should_match': `${minShouldMatch}%`
-  });
-  body = body.build();
-
-  let options = {
-    barnesify: false,
-    append: !!fromIndex,
-    highlights: false
-  };
-
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
-
-export const getEnsembleObjects = (ensembleIndex) => {
-  let body = buildRequestBody(0, 125);
-  body = body.query('match', 'ensembleIndex', ensembleIndex);
-  body = body.build();
-
-  let options = {
-    barnesify: false,
-    append: false,
-    highlights: false
-  };
-
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
-  }
-}
-
 export const findFilteredObjects = (filters, fromIndex=0) => {
-    if (
-      !filters.ordered ||
-      filters.ordered.length === 0 ||
-      (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
-      ) {
-      return (dispatch) => { getAllObjects()(dispatch); }
-    }
+  if (
+    !filters.ordered ||
+    filters.ordered.length === 0 ||
+    (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
+    ) {
+    return (dispatch) => { getAllObjects()(dispatch); }
+  }
 
-    const queries = buildQueriesFromFilters(filters.ordered);
+  const queries = buildQueriesFromFilters(filters.ordered);
 
-    const options = {
-      queries: queries,
-      barnesify: !fromIndex,
-      append: !!fromIndex
-    };
+  const options = {
+    queries: queries,
+    barnesify: !fromIndex,
+    append: !!fromIndex
+  };
 
-    let body = buildRequestBody(fromIndex);
-    body = assembleDisMaxQuery(body, queries);
-    body = body.build();
+  let body = buildRequestBody(fromIndex);
+  body = assembleDisMaxQuery(body, queries);
+  body = body.build();
+
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);

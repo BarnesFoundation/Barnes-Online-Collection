@@ -5,7 +5,7 @@ import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
 import { getArtObjectUrlFromId } from '../../../helpers';
 
-class TabbedContent extends Component {
+class TabbedSubMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -27,18 +27,10 @@ class TabbedContent extends Component {
     this.state = { tabs: tabList };
   }
 
-  sanitizeEnsembleIndex(index) {
-    return index ? index.split(',')[0] : null;
-  }
-
   getTab() {
     switch(this.props.slug) {
       case 'ensemble':
-        if (this.props.object.ensembleIndex) {
-          return <PanelEnsemble ensembleIndex={this.sanitizeEnsembleIndex(this.props.object.ensembleIndex)}/>;
-        } else {
-          return <PanelVisuallyRelated />;
-        }
+        return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />;
       case 'details':
         return <PanelDetails />;
       default:
@@ -47,6 +39,8 @@ class TabbedContent extends Component {
   }
 
   render() {
+    const ensembleIsDisabled = !this.props.object.ensembleIndex;
+
     return (
       <div>
         <div className="container">
@@ -57,17 +51,14 @@ class TabbedContent extends Component {
                   .map(tabData => {
                     const isSelected = tabData.slug === this.props.slug;
 
-                    if (!this.props.object.ensembleIndex && tabData.slug === 'ensemble') {
-                      return null;
-                    }
-
                     return (
                       <div key={tabData.slug} className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
                           to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
-                          onClick={this.handleContentTabClick(tabData.slug)}
+                          onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
+                          data-is-disabled={ensembleIsDisabled}
                         >
                           {tabData.title}
                         </Link>
@@ -89,11 +80,16 @@ class TabbedContent extends Component {
     this.setState({selectedTab: tabKey});
   }
 
-  handleContentTabClick(slug) {
+  handleContentTabClick(slug, isDisabled) {
     return function(e) {
+      if(isDisabled) {
+        e.preventDefault();
+        return;
+      }
+
       this.selectTab(slug);
     }.bind(this);
   }
 }
 
-export default TabbedContent;
+export default TabbedSubMenu;

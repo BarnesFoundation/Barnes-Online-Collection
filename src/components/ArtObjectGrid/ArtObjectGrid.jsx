@@ -2,113 +2,142 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as EnsembleObjectsActions from '../../actions/ensembleObjects';
+import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
+import * as UIActions from '../../actions/ui';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
+import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
+
 import './artObjectGrid.css';
 
 class ArtObjectGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.getGridListElement = this.getGridListElement.bind(this);
+
+    switch (this.props.pageType) {
+      case 'visually-related':
+        this.getLiveObjects = () => {return this.props.relatedObjects};
+        this.getObjectsQuery = () => {
+          return this.props.relatedObjectsQuery
+        };
+        this.fetchObjects = function(newId) {
+          const fetchKey = newId || this.props.object.id;
+          if (fetchKey) {
+            this.props.getRelatedObjects(fetchKey);
+          }
+        }.bind(this);
+        break;
+      case 'ensemble':
+        this.getLiveObjects = () => {return this.props.ensembleObjects};
+        this.getObjectsQuery = () => {return this.props.ensembleObjectsQuery};
+        this.fetchObjects = function(newId) {
+          const fetchKey = newId || this.props.object.ensembleIndex;
+          if (fetchKey) {
+            this.props.getEnsembleObjects(fetchKey);
+          }
+        }.bind(this);
+        break;
+      case 'landing':
+      default:
+        this.getLiveObjects = () => {return this.props.objects};
+        this.getObjectsQuery = () => {return this.props.objectsQuery};
+        this.fetchObjects = this.props.getAllObjects;
+        break;
+    }
+  }
+
+  // overwritten in the constructor
+  getLiveObjects () {}
+  getObjectsQuery () {}
+  fetchObjects () {}
+
   componentDidMount() {
-    if (this.props.objects.length === 0) {
-      switch (this.props.pageType) {
-        case 'visually-related':
-          if (this.props.object) {
-            this.props.getRelatedObjects(this.props.object.id);
-          }
-          break;
-        case 'ensemble':
-          if (this.props.object && this.props.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(this.props.object.ensembleIndex));
-          }
-          break;
-        case 'landing':
-        default:
-            this.props.getAllObjects();
-          break;
+    this.fetchObjects();
+  }
+
+  getGridListElement(object) {
+    const clickHandler = function(e) {
+
+      if (this.props.pageType === 'landing') {
+        e.preventDefault();
+
+        // clear the object first to avoid a FOUC
+        this.props.clearObject();
+        this.props.modalShow();
+        this.props.getObject(object.id);
       }
-    }
+    }.bind(this);
+
+    return (
+      <Link
+        to={getArtObjectUrlFromId(object.id)}
+        onClick={clickHandler}
+        className="grid-list-el"
+      >
+        <ArtObject
+          key={object.id}
+          title={object.title}
+          people={object.people}
+          medium={object.medium}
+          imageUrlSmall={object.imageUrlSmall}
+        />
+      </Link>
+    );
   }
 
-  sanitizeEnsembleIndex(index) {
-    return index ? index.split(',')[0] : null;
-  }
-
-  componentWillUpdate(nextProps) {
-    if (this.props.object !== nextProps.object) {
-      switch(nextProps.pageType) {
-        case 'visually-related':
-          this.props.getRelatedObjects(nextProps.object.id);
-          break;
-        case 'ensemble':
-          if (nextProps.object && nextProps.object.ensembleIndex) {
-            this.props.getEnsembleObjects(this.sanitizeEnsembleIndex(nextProps.object.ensembleIndex));
-          }
-          break;
-        case 'landing':
-        default:
-          this.props.getAllObjects();
-          break;
-      }
-    }
-  }
-
-  getMasonryElements() {
-    return this.props.objects.map(function(object) {
+  getMasonryElements(objects) {
+    return objects.map(function(object) {
       return (
         <li key={object.id} className="masonry-grid-element">
-          <Link to={getArtObjectUrlFromId(object.id)}>
-            <ArtObject
-              key={object.id}
-              title={object.title}
-              people={object.people}
-              medium={object.medium}
-              imageUrlSmall={object.imageUrlSmall}
-            />
-          </Link>
+          {this.getGridListElement(object)}
         </li>
       );
-    });
+    }.bind(this));
   };
 
-  getClasses() {
-    let classes = 'component-art-object-grid';
-
-    if (this.props.objects.length > 0) {
-      classes += ' fade-in';
+  componentWillUpdate(nextProps) {
+    if (this.props.object.id !== nextProps.object.id) {
+      this.fetchObjects(nextProps.object.id);
     }
-
-    return classes;
   }
 
   render() {
-    const masonryElements = this.getMasonryElements();
+    const liveObjects = this.getLiveObjects();
+
+    const masonryElements = this.getMasonryElements(liveObjects);
     const hasElements = masonryElements.length > 0;
-    const searchIsPending = this.props.queryResults.isPending;
+    const isSearchPending = this.getObjectsQuery().isPending;
+    const shouldShowViewMoreBtn = this.props.pageType !== 'ensemble';
+    const fadeInClass = liveObjects.length > 0 ? 'fade-in' : '';
+    const isPendingClass = isSearchPending ? 'is-pending' : '';
 
     return (
       <div
-        className={this.getClasses()}
+        className={`component-art-object-grid ${fadeInClass} ${isPendingClass}`}
         data-grid-style={this.props.gridStyle}
       >
         { hasElements ?
-          <div className="component-art-object-grid-results">
-            {masonryElements.length &&
+          <div>
+            <div className="component-art-object-grid-results">
               <MasonryGrid masonryElements={masonryElements} />
-            }
-            { this.props.pageType !== 'ensemble' &&
-              <ViewMoreButton />
-            }
+              { shouldShowViewMoreBtn &&
+                <ViewMoreButton />
+              }
+            </div>
+            <div className="loading-overlay">
+              <SpinnerLoader />
+            </div>
           </div>
         : (
-          searchIsPending ?
-            <div className="spinner">
-              <div className="bounce1"></div>
-              <div className="bounce2"></div>
-              <div className="bounce3"></div>
-            </div>
+          isSearchPending ?
+            <SpinnerLoader />
           :
             <div className="m-block no-results">
               <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
@@ -125,16 +154,23 @@ class ArtObjectGrid extends Component {
 
 function mapStateToProps(state) {
   return {
+    ensembleObjects: state.ensembleObjects,
+    relatedObjects: state.relatedObjects,
     objects: state.objects,
     object: state.object,
-    queryResults: state.queryResults,
+    objectsQuery: state.objectsQuery,
+    relatedObjectsQuery: state.relatedObjectsQuery,
+    ensembleObjectsQuery: state.ensembleObjectsQuery,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    EnsembleObjectsActions,
+    RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,
+    UIActions,
   ), dispatch);
 }
 

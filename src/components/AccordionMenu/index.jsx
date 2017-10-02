@@ -34,13 +34,6 @@ class AccordionMenu extends Component {
               const isSelected = idx === this.state.selectedIdx;
               const tabContent = tabData.tabContent;
 
-              const props = {
-                ...tabData,
-                idx: idx,
-                isSelected: isSelected,
-                handleContentTabClick: this.handleContentTabClick,
-              };
-
               return (
                 <div key={idx} className="m-block m-block--shallow m-support-accordion-element">
                   <button type="button"

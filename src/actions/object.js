@@ -19,6 +19,13 @@ export const setObject = (object) => {
   }
 }
 
+export const clearObject = () => {
+  return {
+    type: ActionTypes.CLEAR_OBJECT,
+    payload: {},
+  }
+}
+
 export const getObject = (id) => {
   let body = buildRequestBody();
   body = body.query('match', '_id', id).build();

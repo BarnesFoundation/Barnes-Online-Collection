@@ -14,6 +14,12 @@
     margin-bottom: -110px;
   }
 
+  &:not(.is-pending) {
+    .loading-overlay {
+      display: none;
+    }
+  }
+
   &.fade-in {
     .component-art-object-grid-results {
       opacity: 1;
@@ -76,13 +82,13 @@
     transition: left 0.5s ease, top 0.5s ease;
 
     img,
-    a {
+    .grid-list-el {
       // this ensures the masonry calculations work right
       display: block;
       width: 100%;
     }
 
-    a {
+    .grid-list-el {
       &:hover,
       &:focus {
         .art-object-overlay {
@@ -131,5 +137,16 @@
 
   .no-results-image {
     margin-bottom: 30px;
+  }
+
+  .loading-overlay {
+    background: $color-white;
+    z-index: $z-index-loading-overlay;
+    opacity: $loading-overlay-opacity;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
   }
 }

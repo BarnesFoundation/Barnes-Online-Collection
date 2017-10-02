@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import * as ObjectsActions from '../../actions/objects';
-
-import { DEV_LOG } from '../../devLogging';
+import SpinnerLoader from './SpinnerLoader';
 
 class ViewMoreButton extends Component {
   constructor(props) {
@@ -29,30 +27,31 @@ class ViewMoreButton extends Component {
       query = filters;
     }
 
-    const fromIndex = this.props.queryResults.lastIndex || 25;
-    DEV_LOG(fromIndex);
-    this.props.getNextObjects(fromIndex, query);
-  }
-
-  shouldShowButton() {
-    return this.props.queryResults.maxHits > this.props.queryResults.lastIndex;
+    this.props.getNextObjects(this.props.objectsQuery.lastIndex, query);
   }
 
   render() {
-    if (this.shouldShowButton()) {
-      return (
-        <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
-          <button
-            className="btn"
-            onClick={this.handleClick}
-          >
-            View More
-          </button>
-        </div>
-      );
-    } else {
+    const searchIsPending = this.props.objectsQuery.isPending;
+    const hasMoreResults = this.props.objectsQuery.hasMoreResults;
+
+    if (!hasMoreResults) {
       return <div></div>;
     }
+
+    if (searchIsPending) {
+      return <SpinnerLoader />;
+    }
+
+    return (
+      <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
+        <button
+          className="btn"
+          onClick={this.handleClick}
+        >
+          View More
+        </button>
+      </div>
+    );
   }
 }
 
@@ -61,7 +60,7 @@ const mapStateToProps = state => {
     filters: state.filters,
     search: state.search,
     objects: state.objects,
-    queryResults: state.queryResults
+    objectsQuery: state.objectsQuery
   }
 }
 

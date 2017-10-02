@@ -1,10 +1,12 @@
 import * as ActionTypes from '../constants';
-import { generateObjectImageUrls } from './objects';
+import { parseObject } from '../objectDataUtils';
 
 const object = (state = {}, action) => {
   switch(action.type) {
     case ActionTypes.SET_OBJECT:
-      return generateObjectImageUrls(action.payload);
+      return parseObject(action.payload);
+    case ActionTypes.CLEAR_OBJECT:
+      return {};
     default:
       return state;
   }

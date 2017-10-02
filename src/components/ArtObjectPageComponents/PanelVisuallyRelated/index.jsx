@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import './index.css';
-
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import * as ObjectsActions from '../../../actions/objects';
+import * as RelatedObjectsActions from '../../../actions/relatedObjects';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
-
 import Slider from '../../../components/Slider/Slider.jsx';
 import FilterTagSetGeneric from '../../../components/CollectionFilters/FilterTagSetGeneric.jsx';
 import { BARNES_SETTINGS } from '../../../barnesSettings';
-import { SLIDER_FILTERS, COLOR_FILTERS, LINE_FILTERS } from '../../../filterSettings';
+import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
 
 const getDisplayDateAndMedium = (displayDate, medium) => {
   const connector = displayDate && medium ? '—' : '';
@@ -94,6 +91,7 @@ class PanelVisuallyRelated extends Component {
   render() {
     const object = this.props.object;
     const filterTags = this.getFilterTags();
+
     return (
       <div className="m-block m-block--shallow">
         <div className="m-block__columns">
@@ -115,6 +113,7 @@ class PanelVisuallyRelated extends Component {
               labelLeft='More similar'
               labelRight='More surprising'
               handleChange={this.getRelatedObjects}
+              defaultValue={50}
             />
             <ArtObjectGrid pageType="visually-related"/>
           </div>
@@ -127,13 +126,12 @@ class PanelVisuallyRelated extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    objects: state.objects
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
-    ObjectsActions,
+    RelatedObjectsActions,
   ), dispatch);
 }
 
