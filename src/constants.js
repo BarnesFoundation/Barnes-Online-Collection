@@ -75,6 +75,6 @@ export const META_DESCRIPTION = 'The Barnes Foundation in Philadelphia is home t
 
 // breakpoints
 export const BREAKPOINTS = {
-  desktop_min: 426,
+  tablet_max: 990,
   mobile_max: 425
 };

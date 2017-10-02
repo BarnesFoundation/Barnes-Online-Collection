@@ -22,6 +22,10 @@ const getObjectMetaDataHtml = (object) => {
     </p>
   );
 
+  if (!object.id) {
+    return null;
+  }
+
   return metaData;
 };
 

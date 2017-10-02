@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import Filter from './Filter';
 import MediaQuery from 'react-responsive';
+import { BREAKPOINTS } from '../../constants';
 
 class LightFilters extends Component {
   buildFilter() {
@@ -15,13 +16,13 @@ class LightFilters extends Component {
   render() {
     return (
       <div className='light-filters-container'>
-        <MediaQuery maxWidth={425}>
+        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Light</h6>
             {this.buildFilter()}
           </div>
         </MediaQuery>
-        <MediaQuery minWidth={426}>
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
           {this.buildFilter()}
         </MediaQuery>
       </div>

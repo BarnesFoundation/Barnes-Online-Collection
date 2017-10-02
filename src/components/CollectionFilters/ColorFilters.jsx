@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
-
+import { BREAKPOINTS } from '../../constants';
 import Filter from './Filter';
 
 class ColorFilters extends Component {
@@ -25,12 +25,12 @@ class ColorFilters extends Component {
 
     return (
       <div>
-        <MediaQuery minWidth={426}>
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
           <div className="color-filters-container">
             {this.buildFilters()}
           </div>
         </MediaQuery>
-        <MediaQuery maxWidth={425}>
+        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Colors</h6>
             <div className="color-filters-container">

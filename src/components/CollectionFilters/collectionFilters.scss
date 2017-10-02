@@ -6,7 +6,6 @@
     vertical-align: middle;
     // make it appear slightly more centered with the font
     margin-top: -0.08em;
-    font-size: $collection-filter-icon-font-size;
   }
 
   .btn-collection-filter {
@@ -65,6 +64,7 @@
     }
 
     .collection-filter-icon {
+      font-size: $collection-filter-icon-font-size;
     }
   }
 
