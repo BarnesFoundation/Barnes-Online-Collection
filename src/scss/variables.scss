@@ -20,7 +20,9 @@ $content-narrow-width: 800px;
 $image-page-centered-perc: 65%;
 
 $color-site: $color-black;
-$font-family: sans-serif;
+
+// from ../components-barnes-toolkit/scss/setup/_typography.scss
+$font-family: 'Calibre', sans-serif;
 $font_path: '/fonts/';
 
 $border-style: 1px solid $color-border;
