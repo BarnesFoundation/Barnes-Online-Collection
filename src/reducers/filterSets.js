@@ -50,11 +50,11 @@ const buildInitialState = () => {
         type: 'shuffle'
       },
       search: {
-        title: '',
+        title: 'Keyword',
         slug: 'search',
         svgId: 'search',
         tooltip: 'Search a keyword, artist…',
-        type: 'search'
+        type: 'search',
       }
     }
   };

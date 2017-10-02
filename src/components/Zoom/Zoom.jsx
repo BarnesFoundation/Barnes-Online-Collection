@@ -15,7 +15,7 @@ class Zoom extends Component {
       center: [0, 0],
       crs: leaflet.CRS.Simple,
       zoom: 2,
-      minZoom: 2
+      minZoom: 2,
     });
 
     const info = `https://s3.amazonaws.com/${AWS_BUCKET}/tiles/${this.props.invno}/info.json`;
@@ -27,6 +27,7 @@ class Zoom extends Component {
     };
 
     map.addLayer(leaflet.tileLayer.iiif(info, opts));
+    map.scrollWheelZoom.disable();
   }
 
   render() {
