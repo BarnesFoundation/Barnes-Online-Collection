@@ -28,6 +28,8 @@ class PanelEnsemble extends Component {
       return null;
     }
 
+    const headerH2Text = `On view: ${ENSEMBLE[ensembleIndex].roomTitle}, ${ENSEMBLE[ensembleIndex].wallTitle}`;
+
     return (
       <div className="art-object-page__panel-ensemble">
         <div className="art-object__header m-block m-block--shallow">
@@ -35,11 +37,13 @@ class PanelEnsemble extends Component {
             <img className="art-object__image-page-centered" src={ENSEMBLE_IMAGE_URL(ensembleIndex)} alt={getRoomImageAlt(ensembleIndex)}/>
           </div>
           <div>
-            <h2 className="h2">{ENSEMBLE[ensembleIndex].roomTitle}</h2>
-            <h3 className="h3">{ENSEMBLE[ensembleIndex].wallTitle}</h3>
+            <h3 className="h3">
+              Barnes arranged his collection in "ensembles"<br className="br-large-only" /> to bring out visual relationships.
+            </h3>
+            <h2 className="h2">{headerH2Text}</h2>
           </div>
         </div>
-        <div className="m-block m-block--shallow">
+        <div className="m-block m-block--shallow m-block--flush-top m-block--no-border">
           <ArtObjectGrid gridStyle="full-size" pageType="ensemble"/>
         </div>
       </div>

@@ -6,19 +6,18 @@
     display: block;
     text-align: center;
 
-    .h2,
     .h3 {
-      margin-top: 0;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 1.25em;
     }
 
-    // todo: try to find styleguide standards instead
     .h2 {
-      font-size: 25px;
+      margin-top: 50px;
+      font-size: 48px;
+      line-height: 1.08em;
       font-weight: bold;
-    }
-    .h3 {
-      font-size: 19px;
-      color: $color-grey-medium;
     }
   }
 
@@ -27,8 +26,11 @@
       max-width: 100%;
     }
 
-    .art-object__header .h2 {
-      margin-top: 15px;
+    .art-object__header {
+      .h2 {
+        margin-top: 40px;
+        font-size: 40px;
+      }
     }
   }
 
