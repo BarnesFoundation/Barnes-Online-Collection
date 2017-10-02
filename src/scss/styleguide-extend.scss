@@ -63,7 +63,12 @@ li {
 // do our best to use a custom break to make text look like the mock.
 // but let smaller screen sizes wrap as they need to
 @include breakpoint('large-') {
-  .br-large-only {
+  .large-only {
+    display: none;
+  }
+}
+@include breakpoint('small-') {
+  .medium-and-up {
     display: none;
   }
 }
