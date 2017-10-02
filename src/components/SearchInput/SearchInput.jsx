@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import MediaQuery from 'react-responsive';
+import { BREAKPOINTS } from '../../constants';
 
 import * as SearchActions from '../../actions/search';
 
@@ -36,7 +37,7 @@ class SearchInput extends Component {
   render() {
     return (
       <div>
-        <MediaQuery maxWidth={425}>
+        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section search-input">
             <h6 className="mobile-filters-header font-zeta">Search</h6>
             <form onSubmit={this.handleSubmit}>
@@ -53,7 +54,7 @@ class SearchInput extends Component {
           </div>
         </MediaQuery>
 
-        <MediaQuery minWidth={426}>
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
           <div className="search-input">
             <form onSubmit={this.handleSubmit}>
               <div className="form-field">

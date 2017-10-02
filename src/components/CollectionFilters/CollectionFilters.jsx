@@ -135,7 +135,7 @@ class CollectionFilters extends Component {
 
     return (
       <div className="collection-filters">
-        <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
+        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           { mobileFiltersVisible &&
             <div>
               <MobileFiltersMenu />
@@ -146,7 +146,7 @@ class CollectionFilters extends Component {
             <MobileFiltersOpener />
           }
         </MediaQuery>
-        <MediaQuery minWidth={BREAKPOINTS.desktop_min}>
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
             <CollectionFiltersMenu />
             <div className="m-block m-block--flush">
               {filterSet}
