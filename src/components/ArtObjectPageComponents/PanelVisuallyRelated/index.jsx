@@ -8,11 +8,21 @@ import Slider from '../../../components/Slider/Slider.jsx';
 import FilterTagSetGeneric from '../../../components/CollectionFilters/FilterTagSetGeneric.jsx';
 import { BARNES_SETTINGS } from '../../../barnesSettings';
 import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
+import { getObjectCopyright } from '../../../copyrightMap';
 
-const getDisplayDateAndMedium = (displayDate, medium) => {
-  const connector = displayDate && medium ? '—' : '';
+const getObjectMetaDataHtml = (object) => {
+  const objectCopyright = getObjectCopyright(object);
+  const metaData = (
+    <p>
+      <span>{`${object.people}. `}</span>
+      <span>{`${object.title}, ${object.displayDate}. `}</span>
+      <span>{`${object.medium}, ${object.dimensions}. `}</span>
+      <span>{`${object.invno}. `}</span>
+      <span>{`${objectCopyright.copy}. `}</span>
+    </p>
+  );
 
-  return (displayDate || '') + connector + (medium || '');
+  return metaData;
 };
 
 const getArtObjectFilters = (object) => {
@@ -99,7 +109,7 @@ class PanelVisuallyRelated extends Component {
             <div className="art-object__image-container">
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
               <div className="art-object__image-information">
-                <p>{getDisplayDateAndMedium(object.displayDate, object.medium)}</p>
+                {getObjectMetaDataHtml(object)}
               </div>
               { filterTags &&
                 <div className="art-object__search-tags">
