@@ -69,10 +69,10 @@ export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
 export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
 
 // meta tag content
-export const META_TITLE = process.env.REACT_APP_META_TITLE;
-export const META_IMAGE = CANONICAL_ROOT + process.env.REACT_APP_META_IMAGE_RELATIVE_PATH;
-export const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION;
-export const META_PLACENAME = process.env.REACT_APP_META_PLACENAME;
+export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
+export const META_IMAGE = CANONICAL_ROOT + process.env.REACT_APP_META_IMAGE_RELATIVE_PATH || '';
+export const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || '';
+export const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || '';
 
 // breakpoints
 export const BREAKPOINTS = {
