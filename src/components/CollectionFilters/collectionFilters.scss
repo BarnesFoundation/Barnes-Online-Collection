@@ -148,6 +148,18 @@
   }
 }
 
+.applied-filter-tags-container-wrap {
+
+  .applied-filter-tags-container {
+    float: left;
+  }
+
+  .clear-all {
+    float: right;
+    padding-top: 18px;
+  }
+}
+
 .applied-filter-tags-container {
   display: flex;
   flex-direction: row;

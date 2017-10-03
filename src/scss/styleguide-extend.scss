@@ -81,3 +81,14 @@ li {
 .__react_component_tooltip {
   padding: $tooltip-padding !important;
 }
+
+.btn-no-style {
+  width: auto;
+  min-width: auto;
+  height: auto;
+  min-height: auto;
+  padding: 0;
+  border: none;
+  outline: none;
+  margin: 0;
+}
