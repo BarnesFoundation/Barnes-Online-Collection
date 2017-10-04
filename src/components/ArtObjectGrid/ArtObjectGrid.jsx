@@ -64,20 +64,19 @@ class ArtObjectGrid extends Component {
 
   getGridListElement(object) {
     const clickHandler = function(e) {
-
-      if (this.props.pageType === 'landing') {
-        e.preventDefault();
-
+      if (this.props.shouldLinksUseModal) {
         // clear the object first to avoid a FOUC
         this.props.clearObject();
         this.props.modalShow();
-        this.props.getObject(object.id);
       }
     }.bind(this);
 
     return (
       <Link
-        to={getArtObjectUrlFromId(object.id)}
+        to={{
+          pathname: getArtObjectUrlFromId(object.id),
+          state: { modal: !!this.props.shouldLinksUseModal }
+        }}
         onClick={clickHandler}
         className="grid-list-el"
       >
@@ -103,6 +102,7 @@ class ArtObjectGrid extends Component {
   };
 
   componentWillUpdate(nextProps) {
+    // debugger;
     if (this.props.object.id !== nextProps.object.id) {
       this.fetchObjects(nextProps.object.id);
     }

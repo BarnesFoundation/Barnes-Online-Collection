@@ -15,11 +15,7 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getState(this.props);
-  }
-
-  getState(nextProps) {
-    const urlPath = nextProps.location.pathname;
+    const urlPath = props.location.pathname;
     const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
 
     // it's missing the slash. Do a quick redirect here for now.
@@ -29,6 +25,10 @@ class ArtObjectPage extends Component {
       return;
     }
 
+    this.state = this.getState(this.props);
+  }
+
+  getState(nextProps) {
     const requestObjectId = parseInt(nextProps.match.params.id, 10);
     const panelSlug = nextProps.match.params.panel || '';
 

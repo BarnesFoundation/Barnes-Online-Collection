@@ -12,6 +12,7 @@ class ArtObjectPageShell extends Component {
   constructor(props) {
     super(props);
 
+    // debugger;
     this.loadData(this.props);
   }
 
@@ -30,6 +31,8 @@ class ArtObjectPageShell extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // debugger;
+    // todo: confirm that we need this here
     this.loadData(nextProps);
   }
 

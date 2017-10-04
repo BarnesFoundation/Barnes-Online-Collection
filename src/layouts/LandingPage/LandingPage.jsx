@@ -9,8 +9,6 @@ import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
-import Modal from '../../components/Modal';
-import ArtObjectPageShell from '../../components/ArtObjectPageComponents/ArtObjectPageShell';
 import Footer from '../../components/Footer/Footer';
 
 import './landingPage.css';
@@ -39,20 +37,12 @@ class LandingPage extends Component {
           </div>
           <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
             <ArtObjectGrid
-              history={this.props.history}
               gridStyle="full-size"
               pageType="landing"
+              shouldLinksUseModal={true}
             />
           </div>
         </div>
-
-        { this.props.modalIsOpen &&
-          <Modal>
-            <ArtObjectPageShell
-              slug=""
-            />
-          </Modal>
-        }
         <Footer />
       </div>
     );
