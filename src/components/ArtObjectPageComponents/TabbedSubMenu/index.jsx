@@ -34,7 +34,7 @@ class TabbedSubMenu extends Component {
       case 'details':
         return <PanelDetails />;
       default:
-        return <PanelVisuallyRelated />;
+        return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>;
     }
   }
 
@@ -56,7 +56,13 @@ class TabbedSubMenu extends Component {
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
-                          to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
+                          to={{
+                            pathname: getArtObjectUrlFromId(this.props.object.id, tabData.slug),
+                            state: {
+                              isModal: !!this.props.modalPreviousLocation,
+                              modalPreviousLocation: this.props.modalPreviousLocation
+                            },
+                          }}
                           onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
                           data-is-disabled={ensembleIsDisabled}
                         >

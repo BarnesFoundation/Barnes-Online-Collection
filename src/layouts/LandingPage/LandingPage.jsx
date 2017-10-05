@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
-import * as UIActions from '../../actions/ui';
+import * as ModalActions from '../../actions/modal'
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
@@ -40,6 +40,7 @@ class LandingPage extends Component {
               gridStyle="full-size"
               pageType="landing"
               shouldLinksUseModal={true}
+              modalPreviousLocation="/"
             />
           </div>
         </div>
@@ -52,14 +53,14 @@ class LandingPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
-    UIActions,
+    ModalActions,
     ObjectActions,
   ), dispatch);
 }

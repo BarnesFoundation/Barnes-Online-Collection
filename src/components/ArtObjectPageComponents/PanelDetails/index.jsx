@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
-import * as UIActions from '../../../actions/ui';
 import AccordionMenu from '../../../components/AccordionMenu';
 import SummaryTable from './SummaryTable';
 import Zoom from '../../../components/Zoom/Zoom';
@@ -108,12 +107,11 @@ function mapStateToProps(state) {
   return {
     object: state.object,
     prints: state.prints,
-    ui: state.ui
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
+  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelDetails);

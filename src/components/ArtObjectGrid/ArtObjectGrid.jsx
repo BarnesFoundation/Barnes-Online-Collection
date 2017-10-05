@@ -6,7 +6,7 @@ import * as EnsembleObjectsActions from '../../actions/ensembleObjects';
 import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
-import * as UIActions from '../../actions/ui';
+import * as ModalActions from '../../actions/modal';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
@@ -74,7 +74,10 @@ class ArtObjectGrid extends Component {
       <Link
         to={{
           pathname: getArtObjectUrlFromId(object.id),
-          state: { modal: !!this.props.shouldLinksUseModal }
+          state: {
+            isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
+            modalPreviousLocation: this.props.modalPreviousLocation
+          },
         }}
         onClick={clickHandler}
         className="grid-list-el"
@@ -168,7 +171,7 @@ function mapDispatchToProps(dispatch) {
     RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,
-    UIActions,
+    ModalActions,
   ), dispatch);
 }
 

@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { withRouter } from 'react-router'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
-import { withRouter } from 'react-router'
+import * as ModalActions from './actions/modal';
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -22,45 +26,60 @@ const PropsRoute = ({ component, ...rest }) => {
 
 // Note: with tips from  https://reacttraining.com/react-router/web/example/modal-gallery
 class ModalSwitch extends Component {
-  previousLocation = this.props.location
+  modalPreviousLocation = this.props.location
 
   componentWillUpdate(nextProps) {
     const { location } = this.props
-    // set previousLocation if props.location is not modal
+    // set modalPreviousLocation if props.location is not modal
     if (
       nextProps.history.action !== 'POP' &&
-      (!location.state || !location.state.modal)
+      (!location.state || !location.state.isModal)
     ) {
-      this.previousLocation = this.props.location
+      this.modalPreviousLocation = this.props.location
     }
   }
 
   render() {
     const { location } = this.props
+    const locationState = location.state || {};
 
     let isModal = !!(
-      location.state &&
-      location.state.modal &&
-      this.previousLocation !== location // not initial render
+      locationState.isModal &&
+      this.modalPreviousLocation !== location // not initial render
     )
 
-    // todo: temp fix for slightly-broken react-docs implmentation.
-    // If you click through urls, then reload the page, then go back, the previousLocation is no longer correct..
-    // which breaks our app. So for now, since we only have a modal on the landing page, use this quick fix,
-    // until we think through the better solution
-    if (this.previousLocation && this.previousLocation.pathname !== '/') {
-      isModal = false;
+    let modalPreviousLocation = locationState.modalPreviousLocation ? {
+      pathname: locationState.modalPreviousLocation,
+    } : this.modalPreviousLocation;
+
+    const currModalParentState = this.props.modalParentState
+
+    if (isModal && modalPreviousLocation.pathname !== currModalParentState.pathname) {
+      this.props.modalSetParentState({
+        pathname: modalPreviousLocation.pathname,
+      });
     }
 
     return (
       <div>
-        <Switch location={isModal ? this.previousLocation : location}>
+        <Switch location={isModal ? modalPreviousLocation : location}>
           <Route exact path='/' component={LandingPage}/>
           <Route exact path='/objects/:id' component={ArtObjectPage}/>
           <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
         </Switch>
         {isModal ?
-          <PropsRoute path='/objects/:id' component={ArtObjectPageModal} isModal={isModal} />
+          <div>
+            <PropsRoute exact path='/objects/:id'
+              component={ArtObjectPageModal}
+              isModal={isModal}
+              modalPreviousLocation={modalPreviousLocation.pathname || null}
+            />
+            <PropsRoute exact path='/objects/:id/:panel'
+              component={ArtObjectPageModal}
+              isModal={isModal}
+              modalPreviousLocation={modalPreviousLocation.pathname || null}
+            />
+          </div>
           : null
         }
       </div>
@@ -68,4 +87,17 @@ class ModalSwitch extends Component {
   }
 }
 
-export default withRouter(ModalSwitch);
+function mapStateToProps(state) {
+  return {
+    modalIsOpen: state.modal.modalIsOpen,
+    modalParentState: state.modal.modalParentState,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Object.assign({},
+    ModalActions,
+  ), dispatch);
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModalSwitch));

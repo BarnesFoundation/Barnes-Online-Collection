@@ -1,20 +1,21 @@
 import * as ActionTypes from '../constants';
 
 const initialState = {
-  modalIsOpen: false
+  modalIsOpen: false,
+  modalParentState: {},
 };
 
-const ui = (state = initialState, action) => {
+const modal = (state = initialState, action) => {
   switch(action.type) {
     case ActionTypes.MODAL_SHOW:
       return Object.assign({}, state, { modalIsOpen: true });
     case ActionTypes.MODAL_HIDE:
       return Object.assign({}, state, { modalIsOpen: false });
-    case ActionTypes.RESET_UI:
-      return initialState;
+    case ActionTypes.MODAL_SET_PARENT_STATE:
+      return Object.assign({}, state, { modalParentState: action.state });
     default:
       return state;
   }
 };
 
-export default ui;
+export default modal;

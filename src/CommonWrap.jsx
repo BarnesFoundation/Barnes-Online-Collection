@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as HtmlClassManagerActions from './actions/htmlClassManager';
-import * as UIActions from './actions/ui';
+import * as ModalActions from './actions/modal';
 import { withRouter } from 'react-router'
 import { CLASSNAME_NAV_ACTIVE } from './constants';
 
@@ -51,7 +51,7 @@ class CommonWrap extends Component {
 
 const mapStateToProps = state => {
   return {
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   }
 }
 
@@ -59,7 +59,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
     HtmlClassManagerActions,
-    UIActions,
+    ModalActions,
   ), dispatch);
 }
 
