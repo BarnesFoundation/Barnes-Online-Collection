@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
-import { withRouter } from 'react-router'
+import * as ModalActions from './actions/modal';
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -47,19 +48,16 @@ class ModalSwitch extends Component {
       this.previousLocation !== location // not initial render
     )
 
-    // do this in the next commit...
-    // let modalPreviousLocation = locationState.previousLocation ? {
-    //   pathname: locationState.previousLocation,
-    // } : this.previousLocation;
+    let modalPreviousLocation = locationState.previousLocation ? {
+      pathname: locationState.previousLocation,
+    } : this.previousLocation;
 
-    let modalPreviousLocation = this.previousLocation;
+    const currModalParentState = this.props.modalParentState
 
-    // todo: temp fix for slightly-broken react-docs implmentation.
-    // If you click through urls, then reload the page, then go back, the previousLocation is no longer correct..
-    // which breaks our app. So for now, since we only have a modal on the landing page, use this quick fix,
-    // until we think through the better solution
-    if (this.previousLocation && this.previousLocation.pathname !== '/') {
-      isModal = false;
+    if (isModal && modalPreviousLocation.pathname !== currModalParentState.pathname) {
+      this.props.modalSetParentState({
+        pathname: modalPreviousLocation.pathname,
+      });
     }
 
     return (
@@ -92,11 +90,13 @@ class ModalSwitch extends Component {
 function mapStateToProps(state) {
   return {
     modalIsOpen: state.modal.modalIsOpen,
+    modalParentState: state.modal.modalParentState,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    ModalActions,
   ), dispatch);
 }
 

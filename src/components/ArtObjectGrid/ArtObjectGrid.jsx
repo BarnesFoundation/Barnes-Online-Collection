@@ -75,9 +75,7 @@ class ArtObjectGrid extends Component {
         to={{
           pathname: getArtObjectUrlFromId(object.id),
           state: {
-            isModal: !!this.props.shouldLinksUseModal,
-            // todo: do this in the next commit
-            // isModal: this.props.shouldLinksUseModal || !!this.props.previousLocation,
+            isModal: this.props.shouldLinksUseModal || !!this.props.previousLocation,
             previousLocation: this.props.previousLocation
           },
         }}

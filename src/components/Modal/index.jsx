@@ -22,9 +22,11 @@ class Modal extends Component {
   }
 
   closeModal() {
-    // todo #historyGoBack ensure we're going back to the exact history state
-    this.props.history.goBack();
+    const modalParentPathname = this.props.modalParentState.pathname;
+
     this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
+
+    this.props.history.push(modalParentPathname);
   }
 
   componentDidUpdate(prevProps) {
@@ -65,6 +67,7 @@ class Modal extends Component {
 function mapStateToProps(state) {
   return {
     modalIsOpen: state.modal.modalIsOpen,
+    modalParentState: state.modal.modalParentState,
   };
 }
 

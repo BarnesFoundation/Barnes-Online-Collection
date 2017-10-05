@@ -1,7 +1,8 @@
 import * as ActionTypes from '../constants';
 
 const initialState = {
-  modalIsOpen: false
+  modalIsOpen: false,
+  modalParentState: {},
 };
 
 const modal = (state = initialState, action) => {
@@ -10,6 +11,8 @@ const modal = (state = initialState, action) => {
       return Object.assign({}, state, { modalIsOpen: true });
     case ActionTypes.MODAL_HIDE:
       return Object.assign({}, state, { modalIsOpen: false });
+    case ActionTypes.MODAL_SET_PARENT_STATE:
+      return Object.assign({}, state, { modalParentState: action.state });
     default:
       return state;
   }

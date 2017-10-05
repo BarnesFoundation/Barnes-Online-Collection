@@ -11,3 +11,10 @@ export const modalHide = () => {
     type: ActionTypes.MODAL_HIDE
   };
 }
+
+export const modalSetParentState = (state) => {
+  return {
+    type: ActionTypes.MODAL_SET_PARENT_STATE,
+    state: state,
+  };
+}

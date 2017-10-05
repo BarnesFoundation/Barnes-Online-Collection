@@ -56,7 +56,13 @@ class TabbedSubMenu extends Component {
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
-                          to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
+                          to={{
+                            pathname: getArtObjectUrlFromId(this.props.object.id, tabData.slug),
+                            state: {
+                              isModal: !!this.props.previousLocation,
+                              previousLocation: this.props.previousLocation
+                            },
+                          }}
                           onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
                           data-is-disabled={ensembleIsDisabled}
                         >

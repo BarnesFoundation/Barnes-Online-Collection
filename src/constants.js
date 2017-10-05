@@ -62,6 +62,7 @@ export const CLASSNAME_MODAL_OPEN = 'modal-open';
 // modal
 export const MODAL_SHOW = 'MODAL_SHOW';
 export const MODAL_HIDE = 'MODAL_HIDE';
+export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
