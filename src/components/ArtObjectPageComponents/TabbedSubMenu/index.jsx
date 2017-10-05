@@ -40,6 +40,7 @@ class TabbedSubMenu extends Component {
 
   render() {
     const ensembleIsDisabled = !this.props.object.ensembleIndex;
+    const props = this.props;
 
     return (
       <div>
@@ -49,18 +50,17 @@ class TabbedSubMenu extends Component {
               {
                 this.state.tabs
                   .map(tabData => {
-                    const isSelected = tabData.slug === this.props.slug;
-
+                    const isSelected = tabData.slug === props.slug;
                     return (
                       <div key={tabData.slug} className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
                           to={{
-                            pathname: getArtObjectUrlFromId(this.props.object.id, tabData.slug),
+                            pathname: getArtObjectUrlFromId(props.object.id, tabData.slug),
                             state: {
-                              isModal: !!this.props.modalPreviousLocation,
-                              modalPreviousLocation: this.props.modalPreviousLocation
+                              isModal: !!props.modalPreviousLocation,
+                              modalPreviousLocation: props.modalPreviousLocation
                             },
                           }}
                           onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
