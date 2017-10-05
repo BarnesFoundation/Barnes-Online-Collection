@@ -27,8 +27,12 @@ class CommonWrap extends Component {
 
   handleKeyDown(event) {
     // esc
-    if (event.keyCode === 27) {
+    const isEscKey = event.keyCode === 27;
+    if (isEscKey) {
       this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
+    }
+
+    if (isEscKey && this.props.modalIsOpen) {
       this.props.modalHide();
     }
   }
@@ -47,7 +51,7 @@ class CommonWrap extends Component {
 
 const mapStateToProps = state => {
   return {
-    // htmlClassManager: state.htmlClassManager,
+    modalIsOpen: state.ui.modalIsOpen,
   }
 }
 

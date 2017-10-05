@@ -64,20 +64,18 @@ class ArtObjectGrid extends Component {
 
   getGridListElement(object) {
     const clickHandler = function(e) {
-
-      if (this.props.pageType === 'landing') {
-        e.preventDefault();
-
-        // clear the object first to avoid a FOUC
+      if (this.props.shouldLinksUseModal) {
+        // clear the object right away to avoid a FOUC while the new object loads
         this.props.clearObject();
-        this.props.modalShow();
-        this.props.getObject(object.id);
       }
     }.bind(this);
 
     return (
       <Link
-        to={getArtObjectUrlFromId(object.id)}
+        to={{
+          pathname: getArtObjectUrlFromId(object.id),
+          state: { modal: !!this.props.shouldLinksUseModal }
+        }}
         onClick={clickHandler}
         className="grid-list-el"
       >

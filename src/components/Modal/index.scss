@@ -27,7 +27,8 @@
     border: none;
     background: none;
     right: 0;
-    line-height: 70px;
+    top: 26px;
+    cursor: pointer;
   }
 
   @include breakpoint('small-') {
@@ -35,7 +36,7 @@
       position: relative;
       text-align: right;
       width: 100%;
-      line-height: 1em;
+      top: 0;
       margin-bottom: $block-margin-small / 2
     }
   }

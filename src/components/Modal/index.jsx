@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as UIActions from '../../actions/ui';
+import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 import Icon from '../../components/Icon.jsx';
+import { CLASSNAME_MODAL_OPEN } from '../../constants';
+import { withRouter } from 'react-router'
+
 import './index.css';
 
 class Modal extends Component {
@@ -17,10 +21,20 @@ class Modal extends Component {
     this.props.modalHide();
   }
 
+  closeModal() {
+    // todo #historyGoBack ensure we're going back to the exact history state
+    this.props.history.goBack();
+    this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
+  }
+
   componentDidUpdate(prevProps) {
     // ensure the modal is always scrolled to the top
     if (this.el && this.props.modalIsOpen !== prevProps.modalIsOpen) {
       this.el.scrollTop = 0;
+    }
+
+    if (prevProps.modalIsOpen && !this.props.modalIsOpen) {
+      this.closeModal();
     }
   }
 
@@ -28,7 +42,6 @@ class Modal extends Component {
     return (
       <div
         className="component-modal"
-        data-modal-is-open={this.props.modalIsOpen}
         ref={(div) => { this.el = div; }}
       >
         <div className="container">
@@ -51,12 +64,15 @@ class Modal extends Component {
 
 function mapStateToProps(state) {
   return {
-    modalIsOpen: state.ui.modalIsOpen
+    modalIsOpen: state.ui.modalIsOpen,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, UIActions), dispatch);
+  return bindActionCreators(Object.assign({},
+    UIActions,
+    HtmlClassManagerActions
+  ), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Modal));
