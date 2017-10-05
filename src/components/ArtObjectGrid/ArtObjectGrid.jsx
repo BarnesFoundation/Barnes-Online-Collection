@@ -65,9 +65,8 @@ class ArtObjectGrid extends Component {
   getGridListElement(object) {
     const clickHandler = function(e) {
       if (this.props.shouldLinksUseModal) {
-        // clear the object first to avoid a FOUC
-        this.props.clearObject();
-        this.props.modalShow();
+        // clear the object right away to avoid a FOUC while the new object loads
+        // this.props.clearObject();
       }
     }.bind(this);
 
