@@ -61,7 +61,7 @@ class HtmlClassManager extends Component {
 const mapStateToProps = state => {
   return {
     classNameList: state.htmlClassManager,
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   }
 }
 

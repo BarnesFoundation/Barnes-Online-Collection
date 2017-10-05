@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as UIActions from '../../actions/ui';
+import * as ModalActions from '../../actions/modal'
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 import Icon from '../../components/Icon.jsx';
 import { CLASSNAME_MODAL_OPEN } from '../../constants';
@@ -64,13 +64,13 @@ class Modal extends Component {
 
 function mapStateToProps(state) {
   return {
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
-    UIActions,
+    ModalActions,
     HtmlClassManagerActions
   ), dispatch);
 }

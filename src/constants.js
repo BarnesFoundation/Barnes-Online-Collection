@@ -59,10 +59,9 @@ export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 export const CLASSNAME_NAV_ACTIVE = 'nav-active';
 export const CLASSNAME_MODAL_OPEN = 'modal-open';
 
-// ui
+// modal
 export const MODAL_SHOW = 'MODAL_SHOW';
 export const MODAL_HIDE = 'MODAL_HIDE';
-export const RESET_UI = 'RESET_UI';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';

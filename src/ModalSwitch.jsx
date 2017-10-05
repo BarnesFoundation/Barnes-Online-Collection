@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
@@ -29,7 +32,7 @@ class ModalSwitch extends Component {
     // set previousLocation if props.location is not modal
     if (
       nextProps.history.action !== 'POP' &&
-      (!location.state || !location.state.modal)
+      (!location.state || !location.state.isModal)
     ) {
       this.previousLocation = this.props.location
     }
@@ -37,12 +40,19 @@ class ModalSwitch extends Component {
 
   render() {
     const { location } = this.props
+    const locationState = location.state || {};
 
     let isModal = !!(
-      location.state &&
-      location.state.modal &&
+      locationState.isModal &&
       this.previousLocation !== location // not initial render
     )
+
+    // do this in the next commit...
+    // let modalPreviousLocation = locationState.previousLocation ? {
+    //   pathname: locationState.previousLocation,
+    // } : this.previousLocation;
+
+    let modalPreviousLocation = this.previousLocation;
 
     // todo: temp fix for slightly-broken react-docs implmentation.
     // If you click through urls, then reload the page, then go back, the previousLocation is no longer correct..
@@ -54,13 +64,24 @@ class ModalSwitch extends Component {
 
     return (
       <div>
-        <Switch location={isModal ? this.previousLocation : location}>
+        <Switch location={isModal ? modalPreviousLocation : location}>
           <Route exact path='/' component={LandingPage}/>
           <Route exact path='/objects/:id' component={ArtObjectPage}/>
           <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
         </Switch>
         {isModal ?
-          <PropsRoute path='/objects/:id' component={ArtObjectPageModal} isModal={isModal} />
+          <div>
+            <PropsRoute exact path='/objects/:id'
+              component={ArtObjectPageModal}
+              isModal={isModal}
+              previousLocation={modalPreviousLocation.pathname || null}
+            />
+            <PropsRoute exact path='/objects/:id/:panel'
+              component={ArtObjectPageModal}
+              isModal={isModal}
+              previousLocation={modalPreviousLocation.pathname || null}
+            />
+          </div>
           : null
         }
       </div>
@@ -68,4 +89,15 @@ class ModalSwitch extends Component {
   }
 }
 
-export default withRouter(ModalSwitch);
+function mapStateToProps(state) {
+  return {
+    modalIsOpen: state.modal.modalIsOpen,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Object.assign({},
+  ), dispatch);
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModalSwitch));

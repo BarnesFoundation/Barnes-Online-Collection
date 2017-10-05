@@ -34,7 +34,7 @@ class TabbedSubMenu extends Component {
       case 'details':
         return <PanelDetails />;
       default:
-        return <PanelVisuallyRelated />;
+        return <PanelVisuallyRelated previousLocation={this.props.previousLocation}/>;
     }
   }
 

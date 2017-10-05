@@ -3,7 +3,7 @@ import ArtObjectPageShell from '../ArtObjectPageShell';
 import Modal from '../../Modal';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as UIActions from '../../../actions/ui';
+import * as ModalActions from '../../../actions/modal';
 
 import './index.css';
 
@@ -42,6 +42,7 @@ class ModalArtObjectPage extends Component {
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           requestObjectId={this.state.requestObjectId}
+          previousLocation={this.props.previousLocation}
         />
       </Modal>
     );
@@ -54,7 +55,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
-    UIActions,
+    ModalActions,
   ), dispatch);
 }
 

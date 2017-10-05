@@ -11,9 +11,3 @@ export const modalHide = () => {
     type: ActionTypes.MODAL_HIDE
   };
 }
-
-export const resetUI = () => {
-  return {
-    type: ActionTypes.RESET_UI
-  };
-}

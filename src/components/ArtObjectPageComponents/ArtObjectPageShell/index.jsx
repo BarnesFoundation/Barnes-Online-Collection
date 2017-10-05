@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import TabbedSubMenu from '../../../components/ArtObjectPageComponents/TabbedSubMenu';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
-import * as UIActions from '../../../actions/ui';
 
 import './index.css';
 
@@ -47,6 +46,7 @@ class ArtObjectPageShell extends Component {
         <TabbedSubMenu
           slug={this.props.slug}
           object={this.props.object}
+          previousLocation={this.props.previousLocation}
         />
       </div>
     );
@@ -57,12 +57,11 @@ function mapStateToProps(state) {
   return {
     object: state.object,
     prints: state.prints,
-    ui: state.ui,
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions, UIActions), dispatch);
+  return bindActionCreators(Object.assign({}, ObjectActions, PrintActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectPageShell);
