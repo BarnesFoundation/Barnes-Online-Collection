@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as UIActions from '../../actions/ui';
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 import Icon from '../../components/Icon.jsx';
-import { CLASSNAME_NAV_ACTIVE } from '../../constants';
+import { CLASSNAME_MODAL_OPEN } from '../../constants';
 import { withRouter } from 'react-router'
 
 import './index.css';
@@ -24,7 +24,7 @@ class Modal extends Component {
   closeModal() {
     // todo #historyGoBack ensure we're going back to the exact history state
     this.props.history.goBack();
-    this.props.htmlClassesRemove(CLASSNAME_NAV_ACTIVE);
+    this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
   }
 
   componentDidUpdate(prevProps) {
