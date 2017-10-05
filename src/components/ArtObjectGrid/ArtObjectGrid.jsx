@@ -102,7 +102,6 @@ class ArtObjectGrid extends Component {
   };
 
   componentWillUpdate(nextProps) {
-    // debugger;
     if (this.props.object.id !== nextProps.object.id) {
       this.fetchObjects(nextProps.object.id);
     }

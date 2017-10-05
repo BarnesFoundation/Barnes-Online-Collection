@@ -12,28 +12,30 @@ class ArtObjectPageShell extends Component {
   constructor(props) {
     super(props);
 
-    // debugger;
-    this.loadData(this.props);
+    this.loadInitialData(this.props);
   }
 
-  loadData(nextProps) {
-    const shouldLoadPrints = nextProps.prints.length === 0;
-    const shouldLoadNewObject = nextProps.requestObjectId &&
-      nextProps.requestObjectId !== parseInt(nextProps.object.id, 10)
+  loadInitialData(props) {
+    const shouldLoadPrints = props.prints.length === 0;
 
     if (shouldLoadPrints) {
-      nextProps.getPrints();
+      props.getPrints();
     }
+
+    props.getObject(props.requestObjectId);
+  }
+
+  updateObjectData(nextProps) {
+    const shouldLoadNewObject = nextProps.requestObjectId &&
+      nextProps.requestObjectId !== parseInt(nextProps.object.id, 10)
 
     if (shouldLoadNewObject) {
       nextProps.getObject(nextProps.requestObjectId);
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    // debugger;
-    // todo: confirm that we need this here
-    this.loadData(nextProps);
+  componentWillUpdate(nextProps) {
+    this.updateObjectData(nextProps);
   }
 
   render() {

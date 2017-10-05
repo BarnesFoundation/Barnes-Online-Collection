@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
+import { withRouter } from 'react-router'
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -36,11 +37,21 @@ class ModalSwitch extends Component {
 
   render() {
     const { location } = this.props
-    const isModal = !!(
+
+    let isModal = !!(
       location.state &&
       location.state.modal &&
       this.previousLocation !== location // not initial render
     )
+
+    // todo: temp fix for slightly-broken react-docs implmentation.
+    // If you click through urls, then reload the page, then go back, the previousLocation is no longer correct..
+    // which breaks our app. So for now, since we only have a modal on the landing page, use this quick fix,
+    // until we think through the better solution
+    if (this.previousLocation && this.previousLocation.pathname !== '/') {
+      isModal = false;
+    }
+
     return (
       <div>
         <Switch location={isModal ? this.previousLocation : location}>
@@ -57,4 +68,4 @@ class ModalSwitch extends Component {
   }
 }
 
-export default ModalSwitch;
+export default withRouter(ModalSwitch);
