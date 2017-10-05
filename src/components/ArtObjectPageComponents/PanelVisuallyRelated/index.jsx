@@ -129,7 +129,7 @@ class PanelVisuallyRelated extends Component {
               handleChange={this.getRelatedObjects}
               defaultValue={50}
             />
-            <ArtObjectGrid pageType="visually-related" previousLocation={this.props.previousLocation}/>
+            <ArtObjectGrid pageType="visually-related" modalPreviousLocation={this.props.modalPreviousLocation}/>
           </div>
         </div>
       </div>

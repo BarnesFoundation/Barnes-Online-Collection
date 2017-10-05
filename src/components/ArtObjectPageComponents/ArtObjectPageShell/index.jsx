@@ -46,7 +46,7 @@ class ArtObjectPageShell extends Component {
         <TabbedSubMenu
           slug={this.props.slug}
           object={this.props.object}
-          previousLocation={this.props.previousLocation}
+          modalPreviousLocation={this.props.modalPreviousLocation}
         />
       </div>
     );

@@ -26,16 +26,16 @@ const PropsRoute = ({ component, ...rest }) => {
 
 // Note: with tips from  https://reacttraining.com/react-router/web/example/modal-gallery
 class ModalSwitch extends Component {
-  previousLocation = this.props.location
+  modalPreviousLocation = this.props.location
 
   componentWillUpdate(nextProps) {
     const { location } = this.props
-    // set previousLocation if props.location is not modal
+    // set modalPreviousLocation if props.location is not modal
     if (
       nextProps.history.action !== 'POP' &&
       (!location.state || !location.state.isModal)
     ) {
-      this.previousLocation = this.props.location
+      this.modalPreviousLocation = this.props.location
     }
   }
 
@@ -45,12 +45,12 @@ class ModalSwitch extends Component {
 
     let isModal = !!(
       locationState.isModal &&
-      this.previousLocation !== location // not initial render
+      this.modalPreviousLocation !== location // not initial render
     )
 
-    let modalPreviousLocation = locationState.previousLocation ? {
-      pathname: locationState.previousLocation,
-    } : this.previousLocation;
+    let modalPreviousLocation = locationState.modalPreviousLocation ? {
+      pathname: locationState.modalPreviousLocation,
+    } : this.modalPreviousLocation;
 
     const currModalParentState = this.props.modalParentState
 
@@ -72,12 +72,12 @@ class ModalSwitch extends Component {
             <PropsRoute exact path='/objects/:id'
               component={ArtObjectPageModal}
               isModal={isModal}
-              previousLocation={modalPreviousLocation.pathname || null}
+              modalPreviousLocation={modalPreviousLocation.pathname || null}
             />
             <PropsRoute exact path='/objects/:id/:panel'
               component={ArtObjectPageModal}
               isModal={isModal}
-              previousLocation={modalPreviousLocation.pathname || null}
+              modalPreviousLocation={modalPreviousLocation.pathname || null}
             />
           </div>
           : null

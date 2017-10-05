@@ -40,7 +40,7 @@ class LandingPage extends Component {
               gridStyle="full-size"
               pageType="landing"
               shouldLinksUseModal={true}
-              previousLocation="/"
+              modalPreviousLocation="/"
             />
           </div>
         </div>

@@ -75,8 +75,8 @@ class ArtObjectGrid extends Component {
         to={{
           pathname: getArtObjectUrlFromId(object.id),
           state: {
-            isModal: this.props.shouldLinksUseModal || !!this.props.previousLocation,
-            previousLocation: this.props.previousLocation
+            isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
+            modalPreviousLocation: this.props.modalPreviousLocation
           },
         }}
         onClick={clickHandler}

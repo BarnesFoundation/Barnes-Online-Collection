@@ -42,7 +42,7 @@ class ModalArtObjectPage extends Component {
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           requestObjectId={this.state.requestObjectId}
-          previousLocation={this.props.previousLocation}
+          modalPreviousLocation={this.props.modalPreviousLocation}
         />
       </Modal>
     );

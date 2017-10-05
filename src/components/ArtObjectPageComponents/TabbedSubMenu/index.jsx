@@ -34,7 +34,7 @@ class TabbedSubMenu extends Component {
       case 'details':
         return <PanelDetails />;
       default:
-        return <PanelVisuallyRelated previousLocation={this.props.previousLocation}/>;
+        return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>;
     }
   }
 
@@ -59,8 +59,8 @@ class TabbedSubMenu extends Component {
                           to={{
                             pathname: getArtObjectUrlFromId(this.props.object.id, tabData.slug),
                             state: {
-                              isModal: !!this.props.previousLocation,
-                              previousLocation: this.props.previousLocation
+                              isModal: !!this.props.modalPreviousLocation,
+                              modalPreviousLocation: this.props.modalPreviousLocation
                             },
                           }}
                           onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
