@@ -31,11 +31,6 @@ class ModalArtObjectPage extends Component {
     }
   }
 
-  componentWillUnmount() {
-    // ensure it's hidden because otherwise if the page navigates before it's hidden the "true" state might stick around
-    this.props.modalHide();
-  }
-
   render() {
     return (
       <Modal>
