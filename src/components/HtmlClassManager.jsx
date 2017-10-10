@@ -32,15 +32,21 @@ class HtmlClassManager extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.modalIsOpen !== nextProps.modalIsOpen) {
-      if (nextProps.modalIsOpen) {
-        this.props.htmlClassesAdd(CLASSNAME_MODAL_OPEN);
-      } else {
-        this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
-      }
+    // update the classList to the latest
+    updateHtmlClassList(nextProps.classNameList);
+
+    // then also, check if we need to update the classList with the modal state
+    const modalHasChanged = this.props.modalIsOpen !== nextProps.modalIsOpen;
+
+    if (!modalHasChanged) {
+      return;
     }
 
-    updateHtmlClassList(nextProps.classNameList);
+    if (nextProps.modalIsOpen) {
+      this.props.htmlClassesAdd(CLASSNAME_MODAL_OPEN);
+    } else {
+      this.props.htmlClassesRemove(CLASSNAME_MODAL_OPEN);
+    }
   }
 
   componentWillUnmount() {
@@ -55,7 +61,7 @@ class HtmlClassManager extends Component {
 const mapStateToProps = state => {
   return {
     classNameList: state.htmlClassManager,
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   }
 }
 

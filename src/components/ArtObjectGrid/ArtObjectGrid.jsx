@@ -6,7 +6,7 @@ import * as EnsembleObjectsActions from '../../actions/ensembleObjects';
 import * as RelatedObjectsActions from '../../actions/relatedObjects';
 import * as ObjectsActions from '../../actions/objects';
 import * as ObjectActions from '../../actions/object';
-import * as UIActions from '../../actions/ui';
+import * as ModalActions from '../../actions/modal';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import ViewMoreButton from './ViewMoreButton';
@@ -64,20 +64,21 @@ class ArtObjectGrid extends Component {
 
   getGridListElement(object) {
     const clickHandler = function(e) {
-
-      if (this.props.pageType === 'landing') {
-        e.preventDefault();
-
-        // clear the object first to avoid a FOUC
+      if (this.props.shouldLinksUseModal) {
+        // clear the object right away to avoid a FOUC while the new object loads
         this.props.clearObject();
-        this.props.modalShow();
-        this.props.getObject(object.id);
       }
     }.bind(this);
 
     return (
       <Link
-        to={getArtObjectUrlFromId(object.id)}
+        to={{
+          pathname: getArtObjectUrlFromId(object.id),
+          state: {
+            isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
+            modalPreviousLocation: this.props.modalPreviousLocation
+          },
+        }}
         onClick={clickHandler}
         className="grid-list-el"
       >
@@ -170,7 +171,7 @@ function mapDispatchToProps(dispatch) {
     RelatedObjectsActions,
     ObjectsActions,
     ObjectActions,
-    UIActions,
+    ModalActions,
   ), dispatch);
 }
 

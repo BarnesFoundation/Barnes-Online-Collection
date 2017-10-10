@@ -9,7 +9,7 @@ import filters from './reducers/filters';
 import search from './reducers/search';
 import htmlClassManager from './reducers/htmlClassManager';
 import prints from './reducers/prints';
-import ui from './reducers/ui';
+import modal from './reducers/modal';
 import objectsQuery from './reducers/objectsQuery';
 import relatedObjectsQuery from './reducers/relatedObjectsQuery';
 import ensembleObjectsQuery from './reducers/ensembleObjectsQuery';
@@ -25,7 +25,7 @@ export default combineReducers({
   search,
   htmlClassManager,
   prints,
-  ui,
+  modal,
   objectsQuery,
   relatedObjectsQuery,
   ensembleObjectsQuery,
