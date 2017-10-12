@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import history from './history';
-import ModalSwitch from './ModalSwitch';
+import RouteSwitcher from './RouteSwitcher';
 import routeWrapper from './routeWrapper';
 
 class App extends Component {
@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <Provider store={this.props.store}>
         <Router history={history}>
-          <Route component={routeWrapper(ModalSwitch)} />
+          <Route component={routeWrapper(RouteSwitcher)} />
         </Router>
       </Provider>
     );
