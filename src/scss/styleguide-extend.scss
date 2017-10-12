@@ -1,6 +1,7 @@
 @import './variables.scss';
 @import './mixins.scss';
 @import './style-components/loading-icon.scss';
+@import './style-components/nav.scss';
 
 html {
   &.modal-open {
@@ -28,12 +29,6 @@ li {
 .container-inner-narrow {
   max-width: $content-narrow-width;
   margin: 0 auto;
-}
-
-// todo:
-.todo-slider {
-  color: #ddd;
-  padding: 6px 0;
 }
 
 .no-br {

@@ -25,7 +25,7 @@ const PropsRoute = ({ component, ...rest }) => {
 }
 
 // Note: with tips from  https://reacttraining.com/react-router/web/example/modal-gallery
-class ModalSwitch extends Component {
+class RouteSwitcher extends Component {
   modalPreviousLocation = this.props.location
 
   componentWillUpdate(nextProps) {
@@ -100,4 +100,4 @@ function mapDispatchToProps(dispatch) {
   ), dispatch);
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModalSwitch));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RouteSwitcher));

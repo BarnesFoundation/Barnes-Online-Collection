@@ -6,6 +6,8 @@ import SiteNavSidebar from '../../components-barnes-toolkit/components/nav/Nav.j
 import * as Actions from '../../actions/htmlClassManager';
 import {MAIN_WEBSITE_DOMAIN} from '../../constants';
 
+import './siteHeader.css';
+
 class SiteHeader extends Component {
 
   handleNavBtnClick(e) {
@@ -44,7 +46,7 @@ class SiteHeader extends Component {
               <a className="g-header__nav__link" href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
               <a
                 href={MAIN_WEBSITE_DOMAIN + '/search'}
-                className="g-header__nav__btn btn btn--icon-only html4-hidden"
+                className="g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden"
               >
                 <svg width="26" height="26">
                   <title id="search-open-title">Search</title>
