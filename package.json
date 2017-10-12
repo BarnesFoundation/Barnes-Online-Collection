@@ -58,5 +58,5 @@
     "sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
   },
-  "proxy": "http://127.0.0.1:4000"
+  "proxy": "http://localhost:4000"
 }
