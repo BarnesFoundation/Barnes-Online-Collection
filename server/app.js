@@ -9,6 +9,7 @@ const request = require('request');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
+const prerendercloud = require('prerendercloud');
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -59,6 +60,10 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
   });
   app.use(auth.connect(basic));
 }
+
+// set prerendercloud
+prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN);
+app.use(prerendercloud);
 
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
