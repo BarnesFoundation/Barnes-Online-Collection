@@ -1,16 +1,7 @@
 import axios from 'axios';
-import bodybuilder from 'bodybuilder';
+import { getObjectRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { DEV_LOG } from '../devLogging';
-
-// todo: refactor to de-duplicate this logic from the ./objects.js file
-const buildRequestBody = () => {
-  let body = bodybuilder()
-    .filter('exists', 'imageSecret')
-    .from(0).size(25);
-
-  return body;
-}
 
 export const setObject = (object) => {
   return {
@@ -27,7 +18,7 @@ export const clearObject = () => {
 }
 
 export const getObject = (id) => {
-  let body = buildRequestBody();
+  let body = getObjectRequestBody();
   body = body.query('match', '_id', id).build();
 
   return (dispatch) => {
