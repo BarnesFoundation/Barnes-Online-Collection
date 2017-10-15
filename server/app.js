@@ -36,10 +36,6 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// set prerendercloud
-prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN);
-app.use(prerendercloud);
-
 // redirect http to https
 if (process.env.NODE_ENV === "production") {
   app.enable('trust proxy');
@@ -61,6 +57,11 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
     file: htpasswdFilePath
   });
   app.use(auth.connect(basic));
+}
+
+if (process.env.NODE_ENV === 'production' && process.env.PRERENDER_TOKEN) {
+  prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN);
+  app.use(prerendercloud);
 }
 
 // Serve static assets
