@@ -36,6 +36,10 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// set prerendercloud
+prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN);
+app.use(prerendercloud);
+
 // redirect http to https
 if (process.env.NODE_ENV === "production") {
   app.enable('trust proxy');
@@ -47,11 +51,9 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-
 app.get('/health', (req, res) => {
   res.json({ success: true });
 });
-
 
 // if in production, and .htpasswd file exists, set up authentication
 if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
@@ -61,12 +63,10 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
   app.use(auth.connect(basic));
 }
 
-// set prerendercloud
-prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN);
-app.use(prerendercloud);
-
 // Serve static assets
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
+// let index fall through to the wild card route
+app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false }));
+
 
 app.get('/api/objects/:object_id', (req, res) => {
   esClient.get({
@@ -130,14 +130,13 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
   });
 });
 
-// Always return the main index.html, so react-router render the route in the client
-app.get('*/:page', (req, res) => {
+// Always return the main index.html, so react-router renders the route in the client
+app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
 
 app.use(function(req, res) {
   res.status(404).send('Page does not exist!');
 });
-
 
 module.exports = app;
