@@ -48,7 +48,6 @@ const fetchResults = (body, dispatch, options={}) => {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
       hasMoreResults = maxHits > lastIndex;
-
     }
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );

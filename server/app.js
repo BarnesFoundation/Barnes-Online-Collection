@@ -9,6 +9,36 @@ const request = require('request');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
+const axios = require('axios');
+const BARNES_SETTINGS = {
+  size: 50
+}
+const MORE_LIKE_THIS_FIELDS = [
+  "tags.tag.*",
+  "tags.category.*",
+  "color.palette-color-*",
+  "color.average-*",
+  "color.palette-closest-*",
+  "title.*",
+  "people.*",
+  "medium.*",
+  "shortDescription.*",
+  "longDescription.*",
+  "visualDescription.*",
+  "period",
+  "culture.*",
+  "curvy",
+  "vertical",
+  "diagonal",
+  "horizontal",
+  "light",
+  "line",
+  "space",
+  "light_desc_*",
+  "color_desc_*",
+  "comp_desc_*",
+  "generic_desc_*"
+];
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -78,7 +108,9 @@ app.get('/api/objects/:object_id', (req, res) => {
 });
 
 app.get('/api/search', (req, res) => {
+  console.log('got search')
   const body = req.query.body;
+  console.log(body)
 
   esClient.search({
     index: process.env.ELASTICSEARCH_INDEX,
@@ -90,6 +122,86 @@ app.get('/api/search', (req, res) => {
       res.json(esRes);
     }
   });
+});
+
+app.get('/api/related', (req, res) => {
+  console.log(req.query)
+  const {objectID, similarRatio} = req.query;
+
+  axios
+    .get(`/api/objects/${objectID}`)
+    .then((response) => {
+      console.log(response)
+      if (response.hits.hits) {
+        const objectToCompare = response.hits.hits[0];
+        const objectDescriptors = objectToCompare.sliceFields(MORE_LIKE_THIS_FIELDS)
+
+        let body = bodybuilder()
+          .sort('_score', 'desc')
+          .filter('exists', 'imageSecret')
+          .from(fromIndex)
+          .size(1000)
+          .query('more_like_this', {
+            'like': [
+              {
+                '_index': process.env.ELASTICSEARCH_INDEX,
+                '_type': 'object',
+                '_id': objectID
+              }
+            ],
+            'fields': MORE_LIKE_THIS_FIELDS,
+            'min_term_freq': 1,
+            'minimum_should_match': '1%'
+          })
+          .build();
+
+        axios
+          .get('/api/search', body)
+          .then((response) => {
+            let objects = [];
+
+            if (response.hits.hits) {
+              const distances = response.hits.hits.map(object => {
+                MORE_LIKE_THIS_FIELDS.reduce((sum, field) => {
+                  return sum + (objectDescriptors[field] - object[field]) ** 2
+                }, 0)
+              })
+
+              const maxDistance = Math.max(distances);
+              const sortedDistances = distances.slice().sort();
+              const median = sortedDistances[Math.floor(distances.length/2)]
+
+              let indices = new Set();
+
+              // Add similar items
+              while(indices.size < Math.floor(BARNES_SETTINGS.size * similarRatio)) {
+                const randomIndex = Math.floor(Math.random() * distances.length)
+                if (distances[randomIndex] < median) {
+                  indices.add(randomIndex)
+                }
+              }
+
+              // Add disimilar items
+              while(indices.size < BARNES_SETTINGS.size) {
+                const randomIndex = Math.floor(Math.random() * distances.length)
+                if (distances[randomIndex] > median) {
+                  indices.add(randomIndex)
+                }
+              }
+
+              objects = indices.map(index => response.hits.hits[index])
+            }
+
+            res.json(objects)
+          })
+          .catch((error) => {
+            res.json(error)
+          });
+      }
+    })
+    .catch((error) => {
+      res.json(error)
+    });
 });
 
 const getSignedUrl = (invno) => {
