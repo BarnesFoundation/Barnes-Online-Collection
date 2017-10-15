@@ -1,4 +1,12 @@
 .g-nav {
+  // shift these values over so that the pre-render doesn't cause a FOUC
+  left: 100%;
+  transform: translate3d(0, 0, 0);
+
+  .nav-active & {
+    transform: translate3d(-100%, 0, 0);
+  }
+
   .g-nav__search {
     // hide on the collections site
     display: none;
