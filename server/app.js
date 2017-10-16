@@ -10,6 +10,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 const prerendercloud = require('prerendercloud');
+const bodybuilder = require('bodybuilder');
+const axios = require('axios');
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -131,9 +133,72 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
   });
 });
 
+
+// todo - temp copy -- move this / consolidate
+const getObject = (id) => {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(25);
+
+  body = body.query('match', '_id', id).build();
+
+  // todo: don't hardcode url
+  return axios.get('http://localhost:4000/api/search', {
+    params: {
+      body: body
+    }
+  }).then((response) => {
+    const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+    const object = objects.find(object => {
+      return parseInt(object.id, 10)  ===  parseInt(id, 10);
+    });
+
+    debugger;
+    return object;
+  }).catch((e) => {
+    // temp catch error and send fake data.
+    debugger;
+  });
+}
+
+const renderApp = (res) => {
+  return res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+}
+
+app.get('/objects/:id', (req, res) => {
+  console.log('objects/:id');
+  const objectId = req.params.id;
+
+  let htmlFilePromise = new Promise((resolve, reject) => {
+    fs.readFile(path.resolve(__dirname, '..', 'build', 'index.html'), 'utf8', (err, data) => {
+      err ? reject(err) : resolve(data);
+    });
+  });
+
+  console.log(objectId);
+
+  getObject(objectId).then((objectData) => {
+    console.log(objectData);
+
+    htmlFilePromise.then(htmlFileContent => {
+      // todo: use ejs or something to template the objectData into the the html text.
+      res.send(htmlFileContent);
+    }).catch(next);
+  }).catch((error) => {
+    debugger;
+  });
+});
+
+app.get('/objects/:id/:panel', (req, res) => {
+  console.log('objects/:id/:panel');
+  // renderApp(res);
+  // todo: consolidate with above.
+});
+
 // Always return the main index.html, so react-router renders the route in the client
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+  // todo
+  renderApp(res);
 });
 
 app.use(function(req, res) {
