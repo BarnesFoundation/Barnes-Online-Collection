@@ -1,4 +1,4 @@
-const DEV_LOGGING_ON = true;
+const DEV_LOGGING_ON = false;
 
 export const DEV_LOG = (message) => {
   if (DEV_LOGGING_ON) {
