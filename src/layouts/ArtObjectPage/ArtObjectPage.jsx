@@ -15,16 +15,6 @@ class ArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    const urlPath = props.location.pathname;
-    const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
-
-    // it's missing the slash. Do a quick redirect here for now.
-    // todo: it'd be better to move this to a router later.
-    if (!baseUrlMatch) {
-      window.location = window.location.pathname + '/';
-      return;
-    }
-
     this.state = this.getState(this.props);
   }
 

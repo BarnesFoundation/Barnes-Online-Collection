@@ -12,6 +12,41 @@ const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 const prerendercloud = require('prerendercloud');
 const bodybuilder = require('bodybuilder');
 const axios = require('axios');
+// using this instead of ejs to template from the express routes after we fetch object data.
+// because the webpack compiler is already using ejs.
+const Handlebars = require('handlebars');
+const canonicalBase = 'https://collection.barnesfoundation.org';
+
+// todo #switchImportToRequire - consolidate with constants (can't use import yet.)
+const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
+const metaPlacename = process.env.REACT_APP_META_PLACENAME || '';
+const metaDescription = process.env.REACT_APP_META_DESCRIPTION || '';
+
+// todo #switchImportToRequire - consolidate with src/objectDataUtils.js
+const generateObjectImageUrls = (object) => {
+  const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
+  const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
+
+  if (!object) {
+    return {};
+  }
+
+  if (!object.imageSecret) {
+    return object;
+  }
+
+  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`;
+  const awsUrl = `https://${awsUrlWithoutProt}`;
+  const newObject = Object.assign({}, object);
+
+  newObject.imageUrlSmall = `${awsUrl}/${object.id}_${object.imageSecret}_n.jpg`;
+  newObject.imageUrlOriginal = `${awsUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
+  newObject.imageUrlForWufoo = `${awsUrlWithoutProt}/${object.id}_${object.imageOriginalSecret}`;
+  newObject.imageUrlLarge = `${awsUrl}/${object.id}_${object.imageSecret}_b.jpg`;
+
+  return newObject;
+}
+
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -134,7 +169,7 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
 });
 
 
-// todo - temp copy -- move this / consolidate
+// todo #switchImportToRequire - temp copy, move this / consolidate
 const getObject = (id) => {
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
@@ -143,7 +178,7 @@ const getObject = (id) => {
   body = body.query('match', '_id', id).build();
 
   // todo: don't hardcode url
-  return axios.get('http://localhost:4000/api/search', {
+  return axios.get(`${canonicalBase}/api/search`, {
     params: {
       body: body
     }
@@ -153,11 +188,7 @@ const getObject = (id) => {
       return parseInt(object.id, 10)  ===  parseInt(id, 10);
     });
 
-    debugger;
     return object;
-  }).catch((e) => {
-    // temp catch error and send fake data.
-    debugger;
   });
 }
 
@@ -165,8 +196,7 @@ const renderApp = (res) => {
   return res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 }
 
-app.get('/objects/:id', (req, res) => {
-  console.log('objects/:id');
+const renderAppObjectPage = (req, res, next) => {
   const objectId = req.params.id;
 
   let htmlFilePromise = new Promise((resolve, reject) => {
@@ -175,29 +205,47 @@ app.get('/objects/:id', (req, res) => {
     });
   });
 
-  console.log(objectId);
+  return getObject(objectId).then((objectData) => {
+    const canonicalUrl = canonicalBase + req.originalUrl;
 
-  getObject(objectId).then((objectData) => {
-    console.log(objectData);
+    if (!objectData.id) {
+      throw `bad object Id in url: ${objectId}`;
+    }
+
+    objectData = generateObjectImageUrls(objectData);
 
     htmlFilePromise.then(htmlFileContent => {
-      // todo: use ejs or something to template the objectData into the the html text.
-      res.send(htmlFileContent);
+      const template = Handlebars.compile(htmlFileContent);
+
+      const html = template({
+        metaCanonical: canonicalUrl,
+        metaDescription: metaDescription,
+        metaPlacename: metaPlacename,
+        metaImage: objectData.imageUrlSmall,
+        metaTitle: `${META_TITLE} — ${objectData.culture || objectData.people}: ${objectData.title}`,
+      });
+
+      res.send(html);
     }).catch(next);
   }).catch((error) => {
-    debugger;
+    res.status(404).send('Page does not exist!');
   });
+}
+
+app.get('/objects/:id', (req, res, next) => {
+  if (!req.url.endsWith('/')) {
+    res.redirect(301, req.url + '/')
+  }
+
+  renderAppObjectPage(req, res, next);
 });
 
-app.get('/objects/:id/:panel', (req, res) => {
-  console.log('objects/:id/:panel');
-  // renderApp(res);
-  // todo: consolidate with above.
+app.get('/objects/:id/:panel', (req, res, next) => {
+  renderAppObjectPage(req, res, next);
 });
 
 // Always return the main index.html, so react-router renders the route in the client
 app.get('*', (req, res) => {
-  // todo
   renderApp(res);
 });
 
