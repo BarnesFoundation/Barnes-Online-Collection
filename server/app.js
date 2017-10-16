@@ -11,6 +11,9 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 const axios = require('axios');
+
+const canonicalRoot = process.env.REACT_APP_CANONICAL_ROOT || '';
+
 const BARNES_SETTINGS = {
   size: 50
 }
@@ -135,7 +138,7 @@ function getObjectDescriptors(objectID) {
     .build()
 
   return axios
-    .get(`http://localhost:4000/api/search`, { params: { body } })
+    .get(`${canonicalRoot}/api/search`, { params: { body } })
     .then(response => {
       const hits = response.data.hits.hits;
       return hits[0]._source
@@ -164,7 +167,7 @@ function getRelatedObjects(objectID) {
     .build();
 
   return axios
-    .get('http://localhost:4000/api/search', { params: { body } })
+    .get(`${canonicalRoot}/api/search`, { params: { body } })
     .then(response => response.data.hits.hits)
     .catch((error) => console.error(error.message))
 }
