@@ -3,6 +3,8 @@ import { getObjectRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { DEV_LOG } from '../devLogging';
 
+const source = axios.CancelToken.source();
+
 export const setObject = (object) => {
   return {
     type: ActionTypes.SET_OBJECT,
@@ -25,14 +27,25 @@ export const getObject = (id) => {
     axios.get('/api/search', {
       params: {
         body: body
-      }
+      },
+      cancelToken: source.token
     }).then((response) => {
-      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
-      const object = objects.find(object => {
-        return parseInt(object.id, 10)  ===  parseInt(id, 10);
-      });
+      if (response.data.hits.total === 0) {
+        source.cancel(`No object with id '${id}' found`);
+      } else {
+        const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+        const object = objects.find(object => {
+          return parseInt(object.id, 10)  ===  parseInt(id, 10);
+        });
 
-      dispatch(setObject(object));
+        dispatch(setObject(object));
+      }
+    }).catch((thrown) => {
+      if (axios.isCancel(thrown)) {
+        console.log('Request canceled', thrown.message);
+      } else {
+        console.error(thrown.message);
+      }
     });
   }
 }
