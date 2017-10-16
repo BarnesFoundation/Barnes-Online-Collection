@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
 import * as ModalActions from '../../actions/modal'
+import {getMetaTagsFromObject} from '../../helpers';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
@@ -21,9 +22,12 @@ class LandingPage extends Component {
   }
 
   render() {
+    const object = this.props.object;
+    const metaTags = getMetaTagsFromObject(object);
+
     return (
       <div className="app app-landing-page">
-        <SiteHtmlHelmetHead />
+        <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />
 

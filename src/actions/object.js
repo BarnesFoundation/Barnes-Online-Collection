@@ -1,16 +1,9 @@
 import axios from 'axios';
-import bodybuilder from 'bodybuilder';
+import { getObjectRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { DEV_LOG } from '../devLogging';
 
-// todo: refactor to de-duplicate this logic from the ./objects.js file
-const buildRequestBody = () => {
-  let body = bodybuilder()
-    .filter('exists', 'imageSecret')
-    .from(0).size(25);
-
-  return body;
-}
+const source = axios.CancelToken.source();
 
 export const setObject = (object) => {
   return {
@@ -27,21 +20,32 @@ export const clearObject = () => {
 }
 
 export const getObject = (id) => {
-  let body = buildRequestBody();
+  let body = getObjectRequestBody();
   body = body.query('match', '_id', id).build();
 
   return (dispatch) => {
     axios.get('/api/search', {
       params: {
         body: body
-      }
+      },
+      cancelToken: source.token
     }).then((response) => {
-      const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
-      const object = objects.find(object => {
-        return parseInt(object.id, 10)  ===  parseInt(id, 10);
-      });
+      if (response.data.hits.total === 0) {
+        source.cancel(`No object with id '${id}' found`);
+      } else {
+        const objects = response.data.hits.hits.map(object => Object.assign({}, object._source, { id: object._id }));
+        const object = objects.find(object => {
+          return parseInt(object.id, 10)  ===  parseInt(id, 10);
+        });
 
-      dispatch(setObject(object));
+        dispatch(setObject(object));
+      }
+    }).catch((thrown) => {
+      if (axios.isCancel(thrown)) {
+        console.log('Request canceled', thrown.message);
+      } else {
+        console.error(thrown.message);
+      }
     });
   }
 }

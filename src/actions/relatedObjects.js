@@ -1,18 +1,10 @@
 import axios from 'axios';
-import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS, MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
+import { getObjectsRequestBody } from '../helpers';
+import { MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
-
-const buildRequestBody = (fromIndex=0) => {
-  let body = bodybuilder()
-    .sort('_score', 'desc')
-    .filter('exists', 'imageSecret')
-    .from(fromIndex).size(BARNES_SETTINGS.size);
-  return body;
-}
 
 // todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
@@ -73,7 +65,7 @@ const clearRelatedObjects = () => {
 export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
   const minShouldMatch = 100 - value;
 
-  let body = buildRequestBody(fromIndex, 25);
+  let body = getObjectsRequestBody(fromIndex);
   body = body.query('more_like_this', {
     'like': [
       {

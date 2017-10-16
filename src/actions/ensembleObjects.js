@@ -1,18 +1,9 @@
 import axios from 'axios';
-import bodybuilder from 'bodybuilder';
 import * as ActionTypes from '../constants';
-import { BARNES_SETTINGS } from '../barnesSettings';
+import { getObjectsRequestBody } from '../helpers';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
-
-const buildRequestBody = (fromIndex=0) => {
-  let body = bodybuilder()
-    .sort('_score', 'desc')
-    .filter('exists', 'imageSecret')
-    .from(fromIndex).size(BARNES_SETTINGS.size);
-  return body;
-}
 
 // todo: refactor to consolidate these helper functions
 const mapObjects = (objects) => {
@@ -63,7 +54,7 @@ const setEnsembleObjects = (objects) => {
 }
 
 export const getEnsembleObjects = (ensembleIndex) => {
-  let body = buildRequestBody(0, 125);
+  let body = getObjectsRequestBody();
   body = body.query('match', 'ensembleIndex', ensembleIndex);
   body = body.build();
 

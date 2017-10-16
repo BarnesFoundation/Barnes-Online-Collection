@@ -65,7 +65,7 @@ class RouteSwitcher extends Component {
         <Switch location={isModal ? modalPreviousLocation : location}>
           <Route exact path='/' component={LandingPage}/>
           <Route exact path='/objects/:id' component={ArtObjectPage}/>
-          <Route exact path="/objects/:id/:panel" component={ArtObjectPage} />
+          <Route exact path='/objects/:id/:panel' component={ArtObjectPage} />
         </Switch>
         {isModal ?
           <div>

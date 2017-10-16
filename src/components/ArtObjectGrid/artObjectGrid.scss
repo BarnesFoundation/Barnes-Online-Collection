@@ -20,8 +20,9 @@
     }
   }
 
-  &.fade-in {
+  &.has-elements {
     .component-art-object-grid-results {
+      display: block;
       opacity: 1;
       transition: opacity 0.75s ease;
     }
