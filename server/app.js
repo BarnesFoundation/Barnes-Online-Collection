@@ -15,7 +15,7 @@ const axios = require('axios');
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
 const Handlebars = require('handlebars');
-const canonicalBase = 'https://collection.barnesfoundation.org';
+const canonicalRoot = process.env.REACT_APP_CANONICAL_ROOT || '/';
 
 // todo #switchImportToRequire - consolidate with constants (can't use import yet.)
 const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
@@ -178,7 +178,7 @@ const getObject = (id) => {
   body = body.query('match', '_id', id).build();
 
   // todo: don't hardcode url
-  return axios.get(`${canonicalBase}/api/search`, {
+  return axios.get(`${canonicalRoot}/api/search`, {
     params: {
       body: body
     }
@@ -206,7 +206,7 @@ const renderAppObjectPage = (req, res, next) => {
   });
 
   return getObject(objectId).then((objectData) => {
-    const canonicalUrl = canonicalBase + req.originalUrl;
+    const canonicalUrl = canonicalRoot + req.originalUrl;
 
     if (!objectData.id) {
       throw `bad object Id in url: ${objectId}`;
