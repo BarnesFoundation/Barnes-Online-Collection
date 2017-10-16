@@ -4,9 +4,10 @@ import { META_TITLE, META_DESCRIPTION, CANONICAL_ROOT, META_IMAGE, META_PLACENAM
 
 class SiteHtmlHelmetHead extends Component {
   render() {
-    const metaTitle = this.props.metaTitle || META_TITLE;
-    const metaDescription = this.props.metaDescription || META_DESCRIPTION;
-    const metaImage = this.props.metaImage || META_IMAGE;
+    const metaTags = this.props.metaTags || {};
+    const metaTitle = metaTags.title || META_TITLE;
+    const metaDescription = metaTags.description || META_DESCRIPTION;
+    const metaImage = metaTags.image || META_IMAGE;
     const canonicalUrl = CANONICAL_ROOT + window.location.pathname;
 
     return (

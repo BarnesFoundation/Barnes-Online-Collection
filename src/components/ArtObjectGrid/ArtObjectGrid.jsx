@@ -116,12 +116,12 @@ class ArtObjectGrid extends Component {
     const hasElements = masonryElements.length > 0;
     const isSearchPending = this.getObjectsQuery().isPending;
     const shouldShowViewMoreBtn = this.props.pageType !== 'ensemble';
-    const fadeInClass = liveObjects.length > 0 ? 'fade-in' : '';
+    const hasElementsClass = liveObjects.length > 0 ? 'has-elements' : '';
     const isPendingClass = isSearchPending ? 'is-pending' : '';
 
     return (
       <div
-        className={`component-art-object-grid ${fadeInClass} ${isPendingClass}`}
+        className={`component-art-object-grid ${hasElementsClass} ${isPendingClass}`}
         data-grid-style={this.props.gridStyle}
       >
         { hasElements ?
