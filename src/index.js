@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 
 import App from './App';
 import { configureStore } from './store';
-import registerServiceWorker from './registerServiceWorker';
+import { unregister as unregisterServiceWorker } from './registerServiceWorker';
 
 const store = configureStore(window.__INITIAL_STATE__);
 const mountApp = document.getElementById('root');
@@ -25,4 +25,4 @@ render(
 //     );
 //   });
 // }
-registerServiceWorker();
+unregisterServiceWorker();

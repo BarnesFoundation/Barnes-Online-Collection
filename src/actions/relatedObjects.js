@@ -25,7 +25,6 @@ const clearRelatedObjects = () => {
 }
 
 export const getRelatedObjects = (objectID, value=50) => {
-  console.log('getrelatedobjects')
   return (dispatch) => {
     DEV_LOG('Fetching related Objects results...');
 
@@ -38,11 +37,15 @@ export const getRelatedObjects = (objectID, value=50) => {
     axios
       .get(`/api/related`, { params })
       .then((response) => {
-        console.log(response)
+        const hits = response.data.hits.hits
+        const objects = hits.map(object => Object.assign({}, object._source, { id: object._id }))
 
-        DEV_LOG('Retrieved '+response.length+' objects.' );
+        DEV_LOG('Retrieved '+objects.length+' objects.' );
         dispatch(setIsPending(false));
-        dispatch(setRelatedObjects([]));
+        dispatch(setRelatedObjects(objects));
+      })
+      .catch((thrown) => {
+        console.error(`[error] getRelatedObjects: ${thrown.message}`)
       });
   }
 }

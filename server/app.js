@@ -1,4 +1,5 @@
 const express = require('express');
+const bodybuilder = require('bodybuilder');
 const morgan = require('morgan');
 const path = require('path');
 const elasticsearch = require('elasticsearch');
@@ -13,7 +14,7 @@ const axios = require('axios');
 const BARNES_SETTINGS = {
   size: 50
 }
-const MORE_LIKE_THIS_FIELDS = [
+const ALL_MORE_LIKE_THIS_FIELDS = [
   "tags.tag.*",
   "tags.category.*",
   "color.palette-color-*",
@@ -25,8 +26,8 @@ const MORE_LIKE_THIS_FIELDS = [
   "shortDescription.*",
   "longDescription.*",
   "visualDescription.*",
-  "period",
   "culture.*",
+  "period",
   "curvy",
   "vertical",
   "diagonal",
@@ -37,6 +38,9 @@ const MORE_LIKE_THIS_FIELDS = [
   "light_desc_*",
   "color_desc_*",
   "comp_desc_*",
+  "generic_desc_*"
+]
+const MORE_LIKE_THIS_FIELDS = [
   "generic_desc_*"
 ];
 
@@ -94,27 +98,25 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.get('/api/objects/:object_id', (req, res) => {
-  esClient.get({
+  const options = {
     index: process.env.ELASTICSEARCH_INDEX,
-    type: "object",
-    id: req.params.object_id,
-  }, function(error, esRes) {
+    type: 'object',
+    id: req.params.object_id
+  }
+  esClient.get(options, function(error, esRes) {
     if (error) {
-      res.json(error);
+      console.error(`[error] esClient: ${error.message}`)
+      res.json(error)
     } else {
-      res.json(esRes._source);
+      res.json(esRes._source)
     }
-  });
+  })
 });
 
 app.get('/api/search', (req, res) => {
-  console.log('got search')
-  const body = req.query.body;
-  console.log(body)
-
   esClient.search({
     index: process.env.ELASTICSEARCH_INDEX,
-    body: body,
+    body: req.query.body,
   }, function(error, esRes) {
     if (error) {
       res.json(error);
@@ -124,84 +126,120 @@ app.get('/api/search', (req, res) => {
   });
 });
 
+function getObjectDescriptors(objectID) {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(1)
+    .query('match', '_id', objectID)
+    .rawOption('_source', MORE_LIKE_THIS_FIELDS)
+    .build()
+
+  return axios
+    .get(`http://localhost:4000/api/search`, { params: { body } })
+    .then(response => {
+      const hits = response.data.hits.hits;
+      return hits[0]._source
+    })
+    .catch((error) => {
+      console.error(`[error] getObjectDescriptors:`, error.message)
+    })
+}
+
+function getRelatedObjects(objectID) {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(1000)
+    .query('more_like_this', {
+      'like': [
+        {
+          '_index': process.env.ELASTICSEARCH_INDEX,
+          '_type': 'object',
+          '_id': objectID
+        }
+      ],
+      'fields': ALL_MORE_LIKE_THIS_FIELDS,
+      'min_term_freq': 1,
+      'minimum_should_match': '10%'
+    })
+    .build();
+
+  return axios
+    .get('http://localhost:4000/api/search', { params: { body } })
+    .then(response => response.data.hits.hits)
+    .catch((error) => console.error(error.message))
+}
+
 app.get('/api/related', (req, res) => {
-  console.log(req.query)
   const {objectID, similarRatio} = req.query;
 
   axios
-    .get(`/api/objects/${objectID}`)
-    .then((response) => {
-      console.log(response)
-      if (response.hits.hits) {
-        const objectToCompare = response.hits.hits[0];
-        const objectDescriptors = objectToCompare.sliceFields(MORE_LIKE_THIS_FIELDS)
+    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
+    .then(axios.spread((objectDescriptors, relatedObjects) => {
+      const sources = relatedObjects.map(object => object._source)
 
-        let body = bodybuilder()
-          .sort('_score', 'desc')
-          .filter('exists', 'imageSecret')
-          .from(fromIndex)
-          .size(1000)
-          .query('more_like_this', {
-            'like': [
-              {
-                '_index': process.env.ELASTICSEARCH_INDEX,
-                '_type': 'object',
-                '_id': objectID
-              }
-            ],
-            'fields': MORE_LIKE_THIS_FIELDS,
-            'min_term_freq': 1,
-            'minimum_should_match': '1%'
-          })
-          .build();
+      const distances = sources.map(source => {
+        const keys = Object.keys(source)
 
-        axios
-          .get('/api/search', body)
-          .then((response) => {
-            let objects = [];
+        const more_like_this_keys = MORE_LIKE_THIS_FIELDS.map(field => {
+          return (field[field.length-1] === '*') ? field.slice(field, field.length-1) : field
+        })
 
-            if (response.hits.hits) {
-              const distances = response.hits.hits.map(object => {
-                MORE_LIKE_THIS_FIELDS.reduce((sum, field) => {
-                  return sum + (objectDescriptors[field] - object[field]) ** 2
-                }, 0)
-              })
+        const filtered_keys = keys.filter(key => more_like_this_keys.some(more_like_this_key => key.indexOf(more_like_this_key) === 0 ))
 
-              const maxDistance = Math.max(distances);
-              const sortedDistances = distances.slice().sort();
-              const median = sortedDistances[Math.floor(distances.length/2)]
+        const descriptor_keys = filtered_keys.filter(key => key in objectDescriptors)
 
-              let indices = new Set();
+        const distance = descriptor_keys.reduce((sum, key) => {
+          const absolute_distance = parseFloat(objectDescriptors[key]) - parseFloat(source[key])
+          return sum + (absolute_distance * absolute_distance)
+        }, 0)
 
-              // Add similar items
-              while(indices.size < Math.floor(BARNES_SETTINGS.size * similarRatio)) {
-                const randomIndex = Math.floor(Math.random() * distances.length)
-                if (distances[randomIndex] < median) {
-                  indices.add(randomIndex)
-                }
-              }
+        const normalized_distance =  distance / descriptor_keys.length
 
-              // Add disimilar items
-              while(indices.size < BARNES_SETTINGS.size) {
-                const randomIndex = Math.floor(Math.random() * distances.length)
-                if (distances[randomIndex] > median) {
-                  indices.add(randomIndex)
-                }
-              }
+        return normalized_distance
+      })
 
-              objects = indices.map(index => response.hits.hits[index])
-            }
+      const sortedDistances = distances.slice().sort();
 
-            res.json(objects)
-          })
-          .catch((error) => {
-            res.json(error)
-          });
+      const median = sortedDistances[Math.floor(distances.length/2)]
+
+      const max_size = Math.min(BARNES_SETTINGS.size, distances.length)
+
+      const similarItemCount = Math.floor(max_size * similarRatio / 100.0)
+
+      let indices = new Set()
+      // Add similar items
+      while(indices.size < similarItemCount) {
+        const randomIndex = Math.floor(Math.random() * distances.length)
+        if (distances[randomIndex] <= median) {
+          indices.add(randomIndex)
+        }
       }
-    })
+
+      // Add disimilar items
+      while(indices.size < max_size - 1) {
+        const randomIndex = Math.floor(Math.random() * distances.length)
+        if (distances[randomIndex] >= median) {
+          indices.add(randomIndex)
+        }
+      }
+
+      const objects = Array.from(indices).map(index => ({ 
+        _index: process.env.ELASTICSEARCH_INDEX,
+        _type: 'object',
+        _id: sources[index].id,
+        _score: distances[index],
+        _source: sources[index]})
+      )
+
+      res.json({hits: {
+        total: objects.length,
+        hits: objects
+      }})
+    }))
     .catch((error) => {
-      res.json(error)
-    });
+      console.error(`[error] axios.all: ${error.message}`);
+      res.json(error.message);
+    })
 });
 
 const getSignedUrl = (invno) => {
