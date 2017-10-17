@@ -1,44 +1,6 @@
 import axios from 'axios';
 import * as ActionTypes from '../constants';
-import { getObjectsRequestBody } from '../helpers';
-import { MORE_LIKE_THIS_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-
-const uniqBy = require('lodash/uniqBy');
-
-// todo: refactor to consolidate these helper functions
-const mapObjects = (objects) => {
-  let mappedObjects = uniqBy(objects, '_id');
-  const dedupedObjectLen = objects.length - mappedObjects.length;
-
-  if(dedupedObjectLen > 0) {
-    DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`);
-  }
-
-  return mappedObjects.map(object => Object.assign({}, object._source, { id: object._id }));
-}
-
-const fetchResults = (body, dispatch) => {
-  DEV_LOG('Fetching related Objects results...');
-
-  dispatch(setIsPending(true));
-  // quick fix to avoid fouc.
-  dispatch(clearRelatedObjects());
-
-  axios.get('/api/search', { params: { body: body } })
-  .then((response) => {
-    let objects = [];
-
-    if (response.data.hits) {
-      objects = mapObjects(response.data.hits.hits);
-    }
-
-    DEV_LOG('Retrieved '+objects.length+' objects.' );
-
-    dispatch(setIsPending(false));
-    dispatch(setRelatedObjects(objects));
-  });
-}
 
 const setIsPending = (isPending) => {
   return {
@@ -62,25 +24,28 @@ const clearRelatedObjects = () => {
   };
 }
 
-export const getRelatedObjects = (objectID, value=50, fromIndex=0) => {
-  const minShouldMatch = 100 - value;
-
-  let body = getObjectsRequestBody(fromIndex);
-  body = body.query('more_like_this', {
-    'like': [
-      {
-        '_index': process.env.ELASTICSEARCH_INDEX,
-        '_type': 'object',
-        '_id': objectID
-      }
-    ],
-    'fields': MORE_LIKE_THIS_FIELDS,
-    'min_term_freq': 1,
-    'minimum_should_match': `${minShouldMatch}%`
-  });
-  body = body.build();
-
+export const getRelatedObjects = (objectID, value=50) => {
   return (dispatch) => {
-    fetchResults(body, dispatch);
+    DEV_LOG('Fetching related Objects results...');
+
+    dispatch(setIsPending(true));
+    // quick fix to avoid fouc.
+    dispatch(clearRelatedObjects());
+
+    const params = { objectID, similarRatio: value }
+
+    axios
+      .get(`/api/related`, { params })
+      .then((response) => {
+        const hits = response.data.hits.hits
+        const objects = hits.map(object => Object.assign({}, object._source, { id: object._id }))
+
+        DEV_LOG('Retrieved '+objects.length+' objects.' );
+        dispatch(setIsPending(false));
+        dispatch(setRelatedObjects(objects));
+      })
+      .catch((thrown) => {
+        console.error(`[error] getRelatedObjects: ${thrown.message}`)
+      });
   }
 }
