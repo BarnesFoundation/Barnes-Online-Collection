@@ -1,14 +1,14 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from '../constants'
 
-export function selectFilterSet(slug) {
+export function selectFilterSet (slug) {
   return {
     type: ActionTypes.SELECT_FILTER_SET,
     slug: slug
   }
 }
 
-export function closeFilterSet() {
+export function closeFilterSet () {
   return {
-    type: ActionTypes.CLOSE_FILTER_SET,
+    type: ActionTypes.CLOSE_FILTER_SET
   }
 }

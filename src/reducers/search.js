@@ -1,14 +1,14 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from '../constants'
 
 const search = (state = '', action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.ADD_SEARCH_TERM:
-      return action.term;
+      return action.term
     case ActionTypes.CLEAR_SEARCH_TERM:
-      return '';
+      return ''
     default:
-      return state;
+      return state
   }
 }
 
-export default search;
+export default search

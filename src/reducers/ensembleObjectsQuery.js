@@ -1,18 +1,18 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from '../constants'
 
 const initialState = {
-  isPending: null,
-};
+  isPending: null
+}
 
 const ensembleObjectsQuery = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.ENSEMBLE_OBJECTS_QUERY_SET_IS_PENDING:
       return Object.assign({}, state, {
         isPending: action.isPending
-      });
+      })
     default:
-      return state;
+      return state
   }
 }
 
-export default ensembleObjectsQuery;
+export default ensembleObjectsQuery

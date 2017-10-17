@@ -1,12 +1,12 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from '../constants'
 
 const prints = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SET_PRINTS:
-      return action.payload;
+      return action.payload
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default prints;
+export default prints

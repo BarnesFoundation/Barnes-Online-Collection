@@ -1,5 +1,5 @@
-import * as ActionTypes from '../constants';
-import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings';
+import * as ActionTypes from '../constants'
+import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings'
 
 const buildInitialState = () => {
   var initialState = {
@@ -54,62 +54,62 @@ const buildInitialState = () => {
         slug: 'search',
         svgId: 'search',
         tooltip: 'Search a keyword, artist…',
-        type: 'search',
+        type: 'search'
       }
     }
-  };
+  }
 
   for (let i = 0; i < COLOR_FILTERS.length; i++) {
     let colorFilter = {
       filterType: 'color',
-      slug: 'color-'+COLOR_FILTERS[i].name,
+      slug: 'color-' + COLOR_FILTERS[i].name,
       name: COLOR_FILTERS[i].name,
       color: COLOR_FILTERS[i].buttonColor,
-      queries: COLOR_FILTERS[i].queries,
-    };
+      queries: COLOR_FILTERS[i].queries
+    }
 
-    initialState.sets.colors.options.push(colorFilter);
+    initialState.sets.colors.options.push(colorFilter)
   }
 
   for (let i = 0; i < LINE_FILTERS.composition.length; i++) {
-    let lineFilter = LINE_FILTERS.composition[i];
-    lineFilter.filterType = 'line';
-    lineFilter.slug = 'line-'+lineFilter.name;
-    lineFilter.svgId = lineFilter.svgId;
+    let lineFilter = LINE_FILTERS.composition[i]
+    lineFilter.filterType = 'line'
+    lineFilter.slug = 'line-' + lineFilter.name
+    lineFilter.svgId = lineFilter.svgId
 
-    initialState.sets.lines.options.composition.push(lineFilter);
+    initialState.sets.lines.options.composition.push(lineFilter)
   }
 
   for (let i = 0; i < LINE_FILTERS.linearity.length; i++) {
-    let lineFilter = LINE_FILTERS.linearity[i];
-    lineFilter.filterType = 'line';
-    lineFilter.slug = 'line-'+lineFilter.name;
-    lineFilter.svgId = lineFilter.svgId;
+    let lineFilter = LINE_FILTERS.linearity[i]
+    lineFilter.filterType = 'line'
+    lineFilter.slug = 'line-' + lineFilter.name
+    lineFilter.svgId = lineFilter.svgId
 
-    initialState.sets.lines.options.linearity.push(lineFilter);
+    initialState.sets.lines.options.linearity.push(lineFilter)
   }
 
-  return initialState;
+  return initialState
 }
 
-const initialState = buildInitialState();
+const initialState = buildInitialState()
 
-const getRandomFilterFromSet = (setType, group=null) => {
-  let set = initialState.sets[setType].options;
-  if (group) set = set[group];
-  return set[Math.floor(Math.random()*set.length)];
+const getRandomFilterFromSet = (setType, group = null) => {
+  let set = initialState.sets[setType].options
+  if (group) set = set[group]
+  return set[Math.floor(Math.random() * set.length)]
 }
 
 export const selectRandomFilters = () => {
-  const randomColorFilter = getRandomFilterFromSet('colors');
-  const randomLineCompositionFilter = getRandomFilterFromSet('lines', 'composition');
-  const randomLineLinearityFilter = getRandomFilterFromSet('lines', 'linearity');
+  const randomColorFilter = getRandomFilterFromSet('colors')
+  const randomLineCompositionFilter = getRandomFilterFromSet('lines', 'composition')
+  const randomLineLinearityFilter = getRandomFilterFromSet('lines', 'linearity')
 
-  let randomLightFilter = initialState.sets.light.filter;
-  randomLightFilter.value = Math.floor(Math.random() * 101);
+  let randomLightFilter = initialState.sets.light.filter
+  randomLightFilter.value = Math.floor(Math.random() * 101)
 
-  let randomSpaceFilter = initialState.sets.space.filter;
-  randomSpaceFilter.value = Math.floor(Math.random() * 101);
+  let randomSpaceFilter = initialState.sets.space.filter
+  randomSpaceFilter.value = Math.floor(Math.random() * 101)
 
   return [
     randomColorFilter,
@@ -117,18 +117,18 @@ export const selectRandomFilters = () => {
     randomLineLinearityFilter,
     randomLightFilter,
     randomSpaceFilter
-  ];
+  ]
 }
 
 const filterSets = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SELECT_FILTER_SET:
-      return Object.assign({}, state, { visibleFilterSet: action.slug });
+      return Object.assign({}, state, { visibleFilterSet: action.slug })
     case ActionTypes.CLOSE_FILTER_SET:
-      return Object.assign({}, state, { visibleFilterSet: null });
+      return Object.assign({}, state, { visibleFilterSet: null })
     default:
-      return state;
+      return state
   }
 }
 
-export default filterSets;
+export default filterSets

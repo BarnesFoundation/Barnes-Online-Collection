@@ -1,17 +1,17 @@
-import * as ActionTypes from '../constants';
-import { parseObject } from '../objectDataUtils';
+import * as ActionTypes from '../constants'
+import { parseObject } from '../objectDataUtils'
 
 const relatedObjects = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SET_RELATED_OBJECTS:
       return action.payload.map(object => {
         return parseObject(object)
-      });
+      })
     case ActionTypes.CLEAR_RELATED_OBJECTS:
-      return [];
+      return []
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default relatedObjects;
+export default relatedObjects
