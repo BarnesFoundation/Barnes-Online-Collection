@@ -44,7 +44,8 @@ export const getObject = (id) => {
       if (axios.isCancel(thrown)) {
         console.log('Request canceled', thrown.message);
       } else {
-        console.error(thrown.message);
+        console.error(body);
+        console.error(thrown);
       }
     });
   }

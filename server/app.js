@@ -1,4 +1,5 @@
 const express = require('express');
+const bodybuilder = require('bodybuilder');
 const morgan = require('morgan');
 const path = require('path');
 const elasticsearch = require('elasticsearch');
@@ -10,7 +11,6 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 const prerendercloud = require('prerendercloud');
-const bodybuilder = require('bodybuilder');
 const axios = require('axios');
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
@@ -55,6 +55,41 @@ const getIndexHtmlPromise = () => {
     });
   });
 }
+
+const BARNES_SETTINGS = {
+  size: 50
+}
+
+const ALL_MORE_LIKE_THIS_FIELDS = [
+  "tags.tag.*",
+  "tags.category.*",
+  "color.palette-color-*",
+  "color.average-*",
+  "color.palette-closest-*",
+  "title.*",
+  "people.*",
+  "medium.*",
+  "shortDescription.*",
+  "longDescription.*",
+  "visualDescription.*",
+  "culture.*",
+  "period",
+  "curvy",
+  "vertical",
+  "diagonal",
+  "horizontal",
+  "light",
+  "line",
+  "space",
+  "light_desc_*",
+  "color_desc_*",
+  "comp_desc_*",
+  "generic_desc_*"
+]
+
+const MORE_LIKE_THIS_FIELDS = [
+  "generic_desc_*"
+];
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -115,25 +150,25 @@ app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false })
 
 
 app.get('/api/objects/:object_id', (req, res) => {
-  esClient.get({
+  const options = {
     index: process.env.ELASTICSEARCH_INDEX,
-    type: "object",
-    id: req.params.object_id,
-  }, function(error, esRes) {
+    type: 'object',
+    id: req.params.object_id
+  }
+  esClient.get(options, function(error, esRes) {
     if (error) {
-      res.json(error);
+      console.error(`[error] esClient: ${error.message}`)
+      res.json(error)
     } else {
-      res.json(esRes._source);
+      res.json(esRes._source)
     }
-  });
+  })
 });
 
 app.get('/api/search', (req, res) => {
-  const body = req.query.body;
-
   esClient.search({
     index: process.env.ELASTICSEARCH_INDEX,
-    body: body,
+    body: req.query.body,
   }, function(error, esRes) {
     if (error) {
       res.json(error);
@@ -141,6 +176,122 @@ app.get('/api/search', (req, res) => {
       res.json(esRes);
     }
   });
+});
+
+function getObjectDescriptors(objectID) {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(1)
+    .query('match', '_id', objectID)
+    .rawOption('_source', MORE_LIKE_THIS_FIELDS)
+    .build()
+
+  return axios
+    .get(`${canonicalRoot}/api/search`, { params: { body } })
+    .then(response => {
+      const hits = response.data.hits.hits;
+      return hits[0]._source
+    })
+    .catch((error) => {
+      console.error(`[error] getObjectDescriptors:`, error.message)
+    })
+}
+
+function getRelatedObjects(objectID) {
+  let body = bodybuilder()
+    .filter('exists', 'imageSecret')
+    .from(0).size(1000)
+    .query('more_like_this', {
+      'like': [
+        {
+          '_index': process.env.ELASTICSEARCH_INDEX,
+          '_type': 'object',
+          '_id': objectID
+        }
+      ],
+      'fields': ALL_MORE_LIKE_THIS_FIELDS,
+      'min_term_freq': 1,
+      'minimum_should_match': '10%'
+    })
+    .build();
+
+  return axios
+    .get(`${canonicalRoot}/api/search`, { params: { body } })
+    .then(response => response.data.hits.hits)
+    .catch((error) => console.error(error.message))
+}
+
+app.get('/api/related', (req, res) => {
+  const {objectID, similarRatio} = req.query;
+
+  axios
+    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
+    .then(axios.spread((objectDescriptors, relatedObjects) => {
+      const sources = relatedObjects.map(object => object._source)
+
+      const distances = sources.map(source => {
+        const keys = Object.keys(source)
+
+        const more_like_this_keys = MORE_LIKE_THIS_FIELDS.map(field => {
+          return (field[field.length-1] === '*') ? field.slice(field, field.length-1) : field
+        })
+
+        const filtered_keys = keys.filter(key => more_like_this_keys.some(more_like_this_key => key.indexOf(more_like_this_key) === 0 ))
+
+        const descriptor_keys = filtered_keys.filter(key => key in objectDescriptors)
+
+        const distance = descriptor_keys.reduce((sum, key) => {
+          const absolute_distance = parseFloat(objectDescriptors[key]) - parseFloat(source[key])
+          return sum + (absolute_distance * absolute_distance)
+        }, 0)
+
+        const normalized_distance =  distance / descriptor_keys.length
+
+        return normalized_distance
+      })
+
+      const sortedDistances = distances.slice().sort();
+
+      const median = sortedDistances[Math.floor(distances.length/2)]
+
+      const max_size = Math.min(BARNES_SETTINGS.size, distances.length)
+
+      const similarItemCount = Math.floor(max_size * similarRatio / 100.0)
+
+      let indices = new Set()
+      // Add similar items
+      while(indices.size < similarItemCount) {
+        const randomIndex = Math.floor(Math.random() * distances.length)
+        if (distances[randomIndex] <= median) {
+          indices.add(randomIndex)
+        }
+      }
+
+      // Add disimilar items
+      while(indices.size < max_size - 1) {
+        const randomIndex = Math.floor(Math.random() * distances.length)
+        if (distances[randomIndex] >= median) {
+          indices.add(randomIndex)
+        }
+      }
+
+      const objects = Array.from(indices).map(index => ({ 
+        _index: process.env.ELASTICSEARCH_INDEX,
+        _type: 'object',
+        _id: sources[index].id,
+        _score: distances[index],
+        _source: sources[index]})
+      )
+
+      res.json({hits: {
+        total: objects.length,
+        hits: objects
+      }})
+    }))
+    .catch((error) => {
+      console.error(`[error] axios.all: ${error.message}`);
+      res.json(error.message);
+    })
 });
 
 const getSignedUrl = (invno) => {
