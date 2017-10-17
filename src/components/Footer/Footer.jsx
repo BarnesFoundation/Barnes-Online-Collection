@@ -64,7 +64,7 @@ class Footer extends Component {
               </div>
               <div className="g-footer__hours">
                 <h2 className="h2 font-zeta">Hours</h2>
-                <p>Wed — Mon: 10am – 5pm<br />First Friday: 6 – 9pm<br />Tuesday closed</p>
+                <p>Wed–Mon: 11am–5pm<br />Closed Tuesdays</p>
               </div>
             </div>
           </div>
