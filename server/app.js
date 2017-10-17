@@ -21,6 +21,7 @@ const canonicalRoot = process.env.REACT_APP_CANONICAL_ROOT || '/';
 const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
 const metaPlacename = process.env.REACT_APP_META_PLACENAME || '';
 const metaDescription = process.env.REACT_APP_META_DESCRIPTION || '';
+const metaImage = process.env.REACT_APP_META_IMAGE || '';
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
@@ -47,6 +48,13 @@ const generateObjectImageUrls = (object) => {
   return newObject;
 }
 
+const getIndexHtmlPromise = () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path.resolve(__dirname, '..', 'build', 'index.html'), 'utf8', (err, data) => {
+      err ? reject(err) : resolve(data);
+    });
+  });
+}
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -198,12 +206,7 @@ const renderApp = (res) => {
 
 const renderAppObjectPage = (req, res, next) => {
   const objectId = req.params.id;
-
-  let htmlFilePromise = new Promise((resolve, reject) => {
-    fs.readFile(path.resolve(__dirname, '..', 'build', 'index.html'), 'utf8', (err, data) => {
-      err ? reject(err) : resolve(data);
-    });
-  });
+  const htmlFilePromise = getIndexHtmlPromise();
 
   return getObject(objectId).then((objectData) => {
     const canonicalUrl = canonicalRoot + req.originalUrl;
@@ -231,6 +234,29 @@ const renderAppObjectPage = (req, res, next) => {
     res.status(404).send('Page does not exist!');
   });
 }
+
+const renderAppLandingPage = (req, res, next) => {
+  const htmlFilePromise = getIndexHtmlPromise();
+  const canonicalUrl = canonicalRoot + '/';
+
+  htmlFilePromise.then(htmlFileContent => {
+    const template = Handlebars.compile(htmlFileContent);
+
+    const html = template({
+      metaCanonical: canonicalUrl,
+      metaDescription: metaDescription,
+      metaPlacename: metaPlacename,
+      metaImage: metaImage,
+      metaTitle: META_TITLE,
+    });
+
+    res.send(html);
+  });
+}
+
+app.get('/', (req, res, next) => {
+  renderAppLandingPage(req, res, next);
+});
 
 app.get('/objects/:id', (req, res, next) => {
   if (!req.url.endsWith('/')) {
