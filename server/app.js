@@ -275,7 +275,7 @@ app.get('/api/related', (req, res) => {
         }
       }
 
-      const objects = Array.from(indices).map(index => ({ 
+      const objects = Array.from(indices).map(index => ({
         _index: process.env.ELASTICSEARCH_INDEX,
         _type: 'object',
         _id: sources[index].id,
@@ -421,10 +421,7 @@ app.get('/objects/:id/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next);
 });
 
-// Always return the main index.html, so react-router renders the route in the client
-app.get('*', (req, res) => {
-  renderApp(res);
-});
+// Note: The '*' catch all route is removed so that express can template the appropriate pages.
 
 app.use(function(req, res) {
   res.status(404).send('Page does not exist!');
