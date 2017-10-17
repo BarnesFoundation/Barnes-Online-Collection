@@ -34,12 +34,13 @@ class TabbedSubMenu extends Component {
       case 'details':
         return <PanelDetails />;
       default:
-        return <PanelVisuallyRelated />;
+        return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>;
     }
   }
 
   render() {
     const ensembleIsDisabled = !this.props.object.ensembleIndex;
+    const props = this.props;
 
     return (
       <div>
@@ -49,14 +50,19 @@ class TabbedSubMenu extends Component {
               {
                 this.state.tabs
                   .map(tabData => {
-                    const isSelected = tabData.slug === this.props.slug;
-
+                    const isSelected = tabData.slug === props.slug;
                     return (
                       <div key={tabData.slug} className="m-tabs__item">
                         <Link
                           className="m-tabs__link"
                           aria-current={isSelected}
-                          to={getArtObjectUrlFromId(this.props.object.id, tabData.slug)}
+                          to={{
+                            pathname: getArtObjectUrlFromId(props.object.id, tabData.slug),
+                            state: {
+                              isModal: !!props.modalPreviousLocation,
+                              modalPreviousLocation: props.modalPreviousLocation
+                            },
+                          }}
                           onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
                           data-is-disabled={ensembleIsDisabled}
                         >

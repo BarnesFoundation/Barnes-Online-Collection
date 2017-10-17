@@ -62,6 +62,7 @@
   padding: $mobile-filters-section-padding;
   border-top: 1px solid $color-grey-light;
   text-align: left;
+  clear: both;
 
   &.search-input {
     // todo: hide for now!

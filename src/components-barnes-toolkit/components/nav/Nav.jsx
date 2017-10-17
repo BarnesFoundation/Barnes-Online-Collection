@@ -70,7 +70,7 @@ class SiteHeader extends Component {
                   <span>Plan your Visit</span>
                 </a>
                 <a
-                  className="g-nav__link g-nav__link--important"
+                  className="g-nav__link g-nav__link--important" aria-current="true"
                   href="/"
                 >
                   <span>Our Collection</span>

@@ -125,9 +125,12 @@ class CollectionFilters extends Component {
   }
 
   render() {
-    let filtersApplied = <CollectionFiltersApplied visible={!!this.props.filterSets.visibleFilterSet}/>;
+    let filtersApplied;
+
     if (this.props.search.length > 0) {
       filtersApplied = <SearchApplied />;
+    } else {
+      filtersApplied = <CollectionFiltersApplied visible={!!this.props.filterSets.visibleFilterSet} />;
     }
 
     const mobileFiltersVisible = this.props.mobileFilters.visible;

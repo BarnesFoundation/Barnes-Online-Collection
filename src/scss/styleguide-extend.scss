@@ -1,6 +1,7 @@
 @import './variables.scss';
 @import './mixins.scss';
 @import './style-components/loading-icon.scss';
+@import './style-components/nav.scss';
 
 html {
   &.modal-open {
@@ -28,12 +29,6 @@ li {
 .container-inner-narrow {
   max-width: $content-narrow-width;
   margin: 0 auto;
-}
-
-// todo:
-.todo-slider {
-  color: #ddd;
-  padding: 6px 0;
 }
 
 .no-br {
@@ -80,4 +75,15 @@ li {
 // Small style tweak for this plugin's default padding.
 .__react_component_tooltip {
   padding: $tooltip-padding !important;
+}
+
+.btn-no-style {
+  width: auto;
+  min-width: auto;
+  height: auto;
+  min-height: auto;
+  padding: 0;
+  border: none;
+  outline: none;
+  margin: 0;
 }

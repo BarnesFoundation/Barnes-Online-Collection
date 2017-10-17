@@ -16,8 +16,8 @@ class LightFilter extends Component {
     return (
       <Slider
         labelStyle="inline"
-        labelLeft="Diffused"
-        labelRight="Light"
+        labelLeft="Diffuse"
+        labelRight="Concentrated"
         defaultValue={this.props.value || 50}
         handleChange={this.handleChange}
       />

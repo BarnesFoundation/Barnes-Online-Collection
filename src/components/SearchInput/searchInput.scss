@@ -1,9 +1,15 @@
 @import '../../scss/variables.scss';
 
 .search-input {
+  form {
+    margin-top: 45px;
+  }
+
   .form-field {
     display: flex;
+    margin-bottom: 0;
   }
+
   .input {
     border: none;
     padding-left: 0;
@@ -15,17 +21,13 @@
     :-moz-placeholder {
       color: $color-grey-light;
     }
+
     &.mobile {
       font-size: 17px;
     }
   }
+
   .btn.btn-submit {
-    width: auto;
-    min-width: auto;
-    padding: 0;
-    border: none;
-    outline: none;
-    margin: 0;
     color: $color-red-barnes;
   }
 }
@@ -38,18 +40,8 @@
   text-align: left;
   font-family: 'Calibre';
   font-size: 30px;
+
   p {
     margin-top: 0;
-  }
-
-  .btn {
-    width: auto;
-    min-width: auto;
-    height: auto;
-    min-height: auto;
-    padding: 0;
-    border: none;
-    outline: none;
-    margin: 0;
   }
 }

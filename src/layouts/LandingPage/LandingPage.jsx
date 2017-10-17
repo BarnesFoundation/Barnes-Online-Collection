@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectActions from '../../actions/object';
-import * as UIActions from '../../actions/ui';
+import * as ModalActions from '../../actions/modal'
+import {getMetaTagsFromObject} from '../../helpers';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
-import Modal from '../../components/Modal';
-import ArtObjectPageShell from '../../components/ArtObjectPageComponents/ArtObjectPageShell';
 import Footer from '../../components/Footer/Footer';
 
 import './landingPage.css';
@@ -23,9 +22,12 @@ class LandingPage extends Component {
   }
 
   render() {
+    const object = this.props.object;
+    const metaTags = getMetaTagsFromObject(object);
+
     return (
       <div className="app app-landing-page">
-        <SiteHtmlHelmetHead />
+        <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />
 
@@ -39,20 +41,13 @@ class LandingPage extends Component {
           </div>
           <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
             <ArtObjectGrid
-              history={this.props.history}
               gridStyle="full-size"
               pageType="landing"
+              shouldLinksUseModal={true}
+              modalPreviousLocation="/"
             />
           </div>
         </div>
-
-        { this.props.modalIsOpen &&
-          <Modal>
-            <ArtObjectPageShell
-              slug=""
-            />
-          </Modal>
-        }
         <Footer />
       </div>
     );
@@ -62,14 +57,14 @@ class LandingPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    modalIsOpen: state.ui.modalIsOpen,
+    modalIsOpen: state.modal.modalIsOpen,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
-    UIActions,
+    ModalActions,
     ObjectActions,
   ), dispatch);
 }

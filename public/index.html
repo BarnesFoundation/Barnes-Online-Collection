@@ -19,12 +19,27 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="manifest" href="/manifest.json">
+
+    <meta data-react-helmet="true" name="title" content="{{metaTitle}}" />
+    <meta data-react-helmet="true" name="description" content="{{metaDescription}}" />
+    <meta data-react-helmet="true" name="geo.placename" content="{{metaPlacename}}" />
+
+    <title data-react-helmet="true">{{metaTitle}}</title>
+
+    <meta data-react-helmet="true" property="og:type" content="website" />
+    <meta data-react-helmet="true" property="og:title" content="{{metaTitle}}" />
+    <meta data-react-helmet="true" property="og:url" content="{{metaCanonical}}" />
+    <meta data-react-helmet="true" property="og:site_name" content="{{metaTitle}}" />
+    <meta data-react-helmet="true" property="og:description" content="{{metaDescription}}" />
+    <meta data-react-helmet="true" property="og:image" content="{{metaImage}}" />
+
+    <link data-react-helmet="true" rel="canonical" href="{{metaCanonical}}" />
 
     <!-- note: google analytics is done by react-ga plugin in routeWrapper.jsx -->
   </head>
@@ -163,7 +178,6 @@
         </symbol>
         </defs>
       </svg>
-
       <div id="root"></div>
     </div>
     <!--

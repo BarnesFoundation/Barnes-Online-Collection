@@ -67,7 +67,7 @@ class SearchInput extends Component {
                   onChange={this.handleChange}
                 />
                 <input
-                  className="btn btn-submit"
+                  className="btn btn-no-style btn-submit"
                   type="submit"
                 />
               </div>

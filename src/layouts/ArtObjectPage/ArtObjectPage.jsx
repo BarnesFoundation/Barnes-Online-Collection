@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
-import { META_TITLE } from '../../constants';
+import {getMetaTagsFromObject} from '../../helpers';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
@@ -19,16 +19,6 @@ class ArtObjectPage extends Component {
   }
 
   getState(nextProps) {
-    const urlPath = nextProps.location.pathname;
-    const baseUrlMatch = urlPath.match('/objects/[0-9]*/');
-
-    // it's missing the slash. Do a quick redirect here for now.
-    // todo: it'd be better to move this to a router later.
-    if (!baseUrlMatch) {
-      window.location = window.location.pathname + '/';
-      return;
-    }
-
     const requestObjectId = parseInt(nextProps.match.params.id, 10);
     const panelSlug = nextProps.match.params.panel || '';
 
@@ -46,23 +36,17 @@ class ArtObjectPage extends Component {
 
   render() {
     const object = this.props.object;
-    const metaTitle = `${META_TITLE} — ${object.culture || object.people}: ${object.title}`;
-    const metaImage = object.imageUrlSmall;
+    const metaTags = getMetaTagsFromObject(object);
 
     return (
       <div className="app app-art-object-page">
-        <SiteHtmlHelmetHead
-          metaTitle={metaTitle}
-          metaImage={metaImage}
-        />
+        <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />
-
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           requestObjectId={this.state.requestObjectId}
         />
-
         <Footer />
       </div>
     );

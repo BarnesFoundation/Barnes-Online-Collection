@@ -59,19 +59,20 @@ export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 export const CLASSNAME_NAV_ACTIVE = 'nav-active';
 export const CLASSNAME_MODAL_OPEN = 'modal-open';
 
-// ui
+// modal
 export const MODAL_SHOW = 'MODAL_SHOW';
 export const MODAL_HIDE = 'MODAL_HIDE';
-export const RESET_UI = 'RESET_UI';
+export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 
 // urls
 export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
 export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
 
 // meta tag content
-export const META_TITLE = 'Barnes Collection Online';
-export const META_IMAGE = CANONICAL_ROOT + '/barnes-logo.svg';
-export const META_DESCRIPTION = 'The Barnes Foundation in Philadelphia is home to one of the world\'s greatest collections of impressionist, post-impressionist and early modern paintings.';
+export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
+export const META_IMAGE = process.env.REACT_APP_META_IMAGE || '';
+export const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || '';
+export const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || '';
 
 // breakpoints
 export const BREAKPOINTS = {

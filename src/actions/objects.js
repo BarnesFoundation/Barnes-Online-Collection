@@ -1,18 +1,10 @@
 import axios from 'axios';
-import bodybuilder from 'bodybuilder';
+import { getObjectsRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 
 const uniqBy = require('lodash/uniqBy');
-
-const buildRequestBody = (fromIndex=0) => {
-  let body = bodybuilder()
-    .sort('_score', 'desc')
-    .filter('exists', 'imageSecret')
-    .from(fromIndex).size(BARNES_SETTINGS.size);
-  return body;
-}
 
 const addHighlightsFilter = (body) => {
   return body.filter('match', 'highlight', 'true');
@@ -48,7 +40,6 @@ const fetchResults = (body, dispatch, options={}) => {
       objects = mapObjects(response.data.hits.hits);
       maxHits = response.data.hits.total;
       hasMoreResults = maxHits > lastIndex;
-
     }
 
     DEV_LOG('Retrieved '+objects.length+' objects.' );
@@ -143,7 +134,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }
 
   const params = (terms) => {
-    let body = buildRequestBody().query('terms', 'classification', terms);
+    let body = getObjectsRequestBody().query('terms', 'classification', terms);
 
     if (options.highlights) body = addHighlightsFilter(body);
     if (options.queries) body = assembleDisMaxQuery(body, options.queries);
@@ -261,7 +252,7 @@ export const getNextObjects = (fromIndex, query=null) => {
 }
 
 export const getAllObjects = (fromIndex=0) => {
-  let body = buildRequestBody(fromIndex);
+  let body = getObjectsRequestBody(fromIndex);
   let options = {};
 
   if (!fromIndex) {
@@ -297,7 +288,7 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
     append: !!fromIndex
   };
 
-  let body = buildRequestBody(fromIndex);
+  let body = getObjectsRequestBody(fromIndex);
   body = assembleDisMaxQuery(body, queries);
   body = body.build();
 
@@ -382,7 +373,7 @@ export const searchObjects = (term, fromIndex=0) => {
       return getAllObjects()(dispatch);
     }
 
-    let body = buildRequestBody(fromIndex).build();
+    let body = getObjectsRequestBody(fromIndex).build();
 
     const query = {
       'query': term,

@@ -12,8 +12,9 @@ export const modalHide = () => {
   };
 }
 
-export const resetUI = () => {
+export const modalSetParentState = (state) => {
   return {
-    type: ActionTypes.RESET_UI
+    type: ActionTypes.MODAL_SET_PARENT_STATE,
+    state: state,
   };
 }
