@@ -39,16 +39,16 @@ const COPYRIGHT = {
     link: 'https://creativecommons.org/publicdomain/mark/1.0/',
     type: 'large'
   }
-};
+}
 
 export const getObjectCopyright = (object) => {
   if (!object || !object.objRightsTypeId) {
     return {
       link: '',
       copy: 'No Known Copyright',
-      type: 'small',
-    };
+      type: 'small'
+    }
   }
 
-  return COPYRIGHT[object.objRightsTypeId];
-};
+  return COPYRIGHT[object.objRightsTypeId]
+}
