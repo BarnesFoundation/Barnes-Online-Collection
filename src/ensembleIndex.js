@@ -401,5 +401,9 @@ export const ENSEMBLE = {
   99: {
     roomTitle: 'Balcony West',
     wallTitle: 'West Wall'
+  },
+  100: {
+    roomTitle: 'Gallery Foyer',
+    wallTitle: null
   }
 };
