@@ -12,6 +12,7 @@ const fs = require('fs');
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd');
 const prerendercloud = require('prerendercloud');
 const axios = require('axios');
+
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
 const Handlebars = require('handlebars');
@@ -190,7 +191,9 @@ function getObjectDescriptors(objectID) {
     .get(`${canonicalRoot}/api/search`, { params: { body } })
     .then(response => {
       const hits = response.data.hits.hits;
-      return hits[0]._source
+      const hitSource = hits.length ? hits[0]._source : {};
+
+      return hitSource;
     })
     .catch((error) => {
       console.error(`[error] getObjectDescriptors:`, error.message)
@@ -259,8 +262,12 @@ app.get('/api/related', (req, res) => {
       const similarItemCount = Math.floor(max_size * similarRatio / 100.0)
 
       let indices = new Set()
+
       // Add similar items
-      while(indices.size < similarItemCount) {
+      let similarMaxAttempts = 1000
+      let disimilarMaxAttempts = 1000
+
+      while((indices.size < similarItemCount) && (--similarMaxAttempts > 0 )) {
         const randomIndex = Math.floor(Math.random() * distances.length)
         if (distances[randomIndex] <= median) {
           indices.add(randomIndex)
@@ -268,7 +275,7 @@ app.get('/api/related', (req, res) => {
       }
 
       // Add disimilar items
-      while(indices.size < max_size - 1) {
+      while((indices.size < max_size - 1) && (--disimilarMaxAttempts > 0 )) {
         const randomIndex = Math.floor(Math.random() * distances.length)
         if (distances[randomIndex] >= median) {
           indices.add(randomIndex)
@@ -336,7 +343,6 @@ const getObject = (id) => {
 
   body = body.query('match', '_id', id).build();
 
-  // todo: don't hardcode url
   return axios.get(`${canonicalRoot}/api/search`, {
     params: {
       body: body
@@ -403,6 +409,8 @@ const renderAppLandingPage = (req, res, next) => {
 
     res.send(html);
   }).catch(next);
+
+
 }
 
 app.get('/', (req, res, next) => {
@@ -421,10 +429,12 @@ app.get('/objects/:id/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next);
 });
 
-// Note: The '*' catch all route is removed so that express can template the appropriate pages.
-
 app.use(function(req, res) {
-  res.status(404).send('Page does not exist!');
+  res.status(404).send('Error 404: Page not Found');
+});
+
+app.use(function(error, req, res, next) {
+   res.status(500).send('Error 500: Sorry, something went wrong.');
 });
 
 module.exports = app;
