@@ -402,7 +402,7 @@ const renderAppLandingPage = (req, res, next) => {
     });
 
     res.send(html);
-  });
+  }).catch(next);
 }
 
 app.get('/', (req, res, next) => {
@@ -411,7 +411,7 @@ app.get('/', (req, res, next) => {
 
 app.get('/objects/:id', (req, res, next) => {
   if (!req.url.endsWith('/')) {
-    res.redirect(301, req.url + '/')
+    return res.redirect(301, req.url + '/')
   }
 
   renderAppObjectPage(req, res, next);
