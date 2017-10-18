@@ -267,7 +267,7 @@ app.get('/api/related', (req, res) => {
       let similarMaxAttempts = 1000
       let disimilarMaxAttempts = 1000
 
-      while((indices.size < similarItemCount) && similarMaxAttempts--) {
+      while((indices.size < similarItemCount) && (--similarMaxAttempts > 0 )) {
         const randomIndex = Math.floor(Math.random() * distances.length)
         if (distances[randomIndex] <= median) {
           indices.add(randomIndex)
@@ -275,7 +275,7 @@ app.get('/api/related', (req, res) => {
       }
 
       // Add disimilar items
-      while((indices.size < max_size - 1) && disimilarMaxAttempts--) {
+      while((indices.size < max_size - 1) && (--disimilarMaxAttempts > 0 )) {
         const randomIndex = Math.floor(Math.random() * distances.length)
         if (distances[randomIndex] >= median) {
           indices.add(randomIndex)
