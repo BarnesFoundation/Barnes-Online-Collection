@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PanelVisuallyRelated from '../PanelVisuallyRelated'
 import PanelEnsemble from '../PanelEnsemble'
 import PanelDetails from '../PanelDetails'
-import { getArtObjectUrlFromId } from '../../../helpers';
-import MediaQuery from 'react-responsive';
-import { BREAKPOINTS } from '../../../constants';
+import { getArtObjectUrlFromId } from '../../../helpers'
+import MediaQuery from 'react-responsive'
+import { BREAKPOINTS } from '../../../constants'
 
 // note: #flickityWorkaround link directly to the js, because otherwise flickity requires you to change the webpack config,
 // and react-scripts doesn't let you do that without "ejecting".
-const Flickity = require('../../../../node_modules/flickity/dist/flickity.pkgd.js');
+const Flickity = require('../../../../node_modules/flickity/dist/flickity.pkgd.js')
 
 class TabbedSubMenu extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     const tabList = [
       {
@@ -28,16 +28,16 @@ class TabbedSubMenu extends Component {
         title: 'Details',
         slug: 'details',
       },
-    ];
+    ]
 
-    this.state = { tabs: tabList };
+    this.state = { tabs: tabList }
   }
 
   componentDidMount() {
     // this should always find a value
     const selectedIndex = this.state.tabs.map(function(tab) {
-      return tab.slug;
-    }).indexOf(this.props.slug);
+      return tab.slug
+    }).indexOf(this.props.slug)
 
     const options = {
       // align the first one to the left, otherwise, center it.
@@ -47,36 +47,37 @@ class TabbedSubMenu extends Component {
       pageDots: false,
       prevNextButtons: false,
       wrapAround: false,
-    };
+    }
 
     // note: #flickityWorkaround - because we can't use react-flickity without changing webpack configs
-    this.flickityInstance = new Flickity( '.tabs-flickity', options);
+    this.flickityInstance = new Flickity( '.tabs-flickity', options)
   }
 
   componentWillUnMount() {
     // note: #flickityWorkaround - because we can't use react-flickity without changing webpack configs
     if (this.flickityInstance) {
-      this.flickityInstance.destroy();
+      this.flickityInstance.destroy()
     }
-    this.flickityInstance = null;
+
+    this.flickityInstance = null
   }
 
   getTab() {
     switch(this.props.slug) {
       case 'ensemble':
-        return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />;
+        return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />
       case 'details':
-        return <PanelDetails />;
+        return <PanelDetails />
       default:
-        return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>;
+        return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>
     }
   }
 
   render() {
-    const ensembleIsDisabled = !this.props.object.ensembleIndex;
-    const props = this.props;
+    const ensembleIsDisabled = !this.props.object.ensembleIndex
+    const props = this.props
     const tabsList = this.state.tabs.map(tabData => {
-      const isSelected = tabData.slug === props.slug;
+      const isSelected = tabData.slug === props.slug
       return (
         <div key={tabData.slug} className="m-tabs__item">
           <Link
@@ -95,8 +96,8 @@ class TabbedSubMenu extends Component {
             {tabData.title}
           </Link>
         </div>
-      );
-    });
+      )
+    })
 
     return (
       <div>
@@ -119,23 +120,24 @@ class TabbedSubMenu extends Component {
           {this.getTab()}
         </div>
       </div>
-    );
+    )
   }
 
   selectTab(tabKey) {
-    this.setState({selectedTab: tabKey});
+    this.setState({selectedTab: tabKey})
   }
 
   handleContentTabClick(slug, isDisabled) {
     return function(e) {
       if(isDisabled) {
-        e.preventDefault();
-        return;
+        e.preventDefault()
+
+        return
       }
 
-      this.selectTab(slug);
-    }.bind(this);
+      this.selectTab(slug)
+    }.bind(this)
   }
 }
 
-export default TabbedSubMenu;
+export default TabbedSubMenu
