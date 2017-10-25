@@ -265,7 +265,11 @@ app.get('/api/related', (req, res) => {
 
       const sortedDistances = distances.slice().sort()
 
-      const median = sortedDistances[Math.floor(distances.length / 2)]
+      const quartiles = [
+        sortedDistances[Math.floor(1 * distances.length / 4)],
+        sortedDistances[Math.floor(2 * distances.length / 4)],
+        sortedDistances[Math.floor(3 * distances.length / 4)]
+      ]
 
       const maxSize = Math.min(BARNES_SETTINGS.size, distances.length)
 
@@ -279,7 +283,7 @@ app.get('/api/related', (req, res) => {
 
       while ((indices.size < similarItemCount) && (--similarMaxAttempts > 0)) {
         const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] <= median) {
+        if (distances[randomIndex] <= quartiles[0]) {
           indices.add(randomIndex)
         }
       }
@@ -287,7 +291,7 @@ app.get('/api/related', (req, res) => {
       // Add disimilar items
       while ((indices.size < maxSize - 1) && (--disimilarMaxAttempts > 0)) {
         const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] >= median) {
+        if (distances[randomIndex] >= quartiles[2]) {
           indices.add(randomIndex)
         }
       }
