@@ -27,7 +27,7 @@ const metaImage = process.env.REACT_APP_META_IMAGE || ''
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET
-  const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX
+  const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX
 
   if (!object) {
     return {}
@@ -37,7 +37,7 @@ const generateObjectImageUrls = (object) => {
     return object
   }
 
-  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`
+  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`
   const awsUrl = `https://${awsUrlWithoutProt}`
   const newObject = Object.assign({}, object)
 

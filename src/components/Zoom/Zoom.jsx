@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import leaflet from 'leaflet';
-import jQuery from 'jquery';
-import 'leaflet-iiif';
-import 'leaflet/dist/leaflet.css';
-import './zoom.css';
+import React, { Component } from 'react'
+import leaflet from 'leaflet'
+import jQuery from 'jquery'
+import 'leaflet-iiif'
+import 'leaflet/dist/leaflet.css'
+import './zoom.css'
 
-const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
 
-window.$ = window.jQuery = jQuery;
+window.$ = window.jQuery = jQuery
 
 class Zoom extends Component {
   componentDidMount() {
@@ -16,18 +16,16 @@ class Zoom extends Component {
       crs: leaflet.CRS.Simple,
       zoom: 2,
       minZoom: 2,
-    });
+    })
 
-    const info = `https://s3.amazonaws.com/${AWS_BUCKET}/tiles/${this.props.invno}/info.json`;
-    console.log(info);
-
+    const info = `${IMAGE_BASE_URL}/tiles/${this.props.invno}/info.json`
     const opts = {
       'quality': 'color',
       'tileFormat': 'jpg',
-    };
+    }
 
-    map.addLayer(leaflet.tileLayer.iiif(info, opts));
-    map.scrollWheelZoom.disable();
+    map.addLayer(leaflet.tileLayer.iiif(info, opts))
+    map.scrollWheelZoom.disable()
   }
 
   render() {
@@ -38,8 +36,8 @@ class Zoom extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
 
-export default Zoom;
+export default Zoom
