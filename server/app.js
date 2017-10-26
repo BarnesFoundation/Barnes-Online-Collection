@@ -283,7 +283,7 @@ app.get('/api/related', (req, res) => {
 
       while ((indices.size < similarItemCount) && (--similarMaxAttempts > 0)) {
         const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] <= quartiles[0]) {
+        if (distances[randomIndex] >= quartiles[2]) {
           indices.add(randomIndex)
         }
       }
@@ -291,7 +291,7 @@ app.get('/api/related', (req, res) => {
       // Add disimilar items
       while ((indices.size < maxSize - 1) && (--disimilarMaxAttempts > 0)) {
         const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] >= quartiles[2]) {
+        if (distances[randomIndex] <= quartiles[0]) {
           indices.add(randomIndex)
         }
       }
