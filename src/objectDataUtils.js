@@ -1,5 +1,6 @@
 const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
-const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
+const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
 
 const generateObjectImageUrls = (object) => {
   // temp fix for imageSecret missing on some images
@@ -11,14 +12,14 @@ const generateObjectImageUrls = (object) => {
     return object;
   }
 
-  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}`;
-  const awsUrl = `https://${awsUrlWithoutProt}`;
+  const wufooImageKeyPrefix = `s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`;
+  const imageUrlBase = `${IMAGE_BASE_URL}/${IMAGES_PREFIX}`;
   const newObject = Object.assign({}, object);
 
-  newObject.imageUrlSmall = `${awsUrl}/${object.id}_${object.imageSecret}_n.jpg`;
-  newObject.imageUrlOriginal = `${awsUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
-  newObject.imageUrlForWufoo = `${awsUrlWithoutProt}/${object.id}_${object.imageOriginalSecret}`;
-  newObject.imageUrlLarge = `${awsUrl}/${object.id}_${object.imageSecret}_b.jpg`;
+  newObject.imageUrlSmall = `${imageUrlBase}/${object.id}_${object.imageSecret}_n.jpg`;
+  newObject.imageUrlOriginal = `${imageUrlBase}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
+  newObject.imageUrlLarge = `${imageUrlBase}/${object.id}_${object.imageSecret}_b.jpg`;
+  newObject.imageUrlForWufoo = `${wufooImageKeyPrefix}/${object.id}_${object.imageOriginalSecret}`;
 
   return newObject;
 }

@@ -1,8 +1,8 @@
-const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
-const AWS_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
+const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
 
 export const ENSEMBLE_IMAGE_URL = (index) => {
-  return `https://s3.amazonaws.com/${AWS_BUCKET}/${AWS_PREFIX}/ensembles/${index}.jpg`;
+  return `${IMAGE_BASE_URL}/${IMAGES_PREFIX}/ensembles/${index}.jpg`;
 }
 
 export const ENSEMBLE = {
