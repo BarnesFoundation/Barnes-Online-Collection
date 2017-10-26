@@ -10,7 +10,7 @@ class FlickityMenu extends Component {
   }
 
   componentDidMount() {
-    const selectedIndex = this.props.selectedIndex;
+    const selectedIndex = this.props.selectedIndex
     const options = {
       // align the first one to the left, otherwise, center it.
       cellAlign: selectedIndex === 0 ? 'left' : 'center',
@@ -27,10 +27,11 @@ class FlickityMenu extends Component {
 
   componentWillUnMount() {
     // note: #flickityWorkaround - because we can't use react-flickity without changing webpack configs
-    if (this.flickityInstance) {
-      this.flickityInstance.destroy()
+    if (!this.flickityInstance) {
+      return
     }
 
+    this.flickityInstance.destroy()
     this.flickityInstance = null
   }
 
