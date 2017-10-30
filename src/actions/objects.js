@@ -308,23 +308,24 @@ const buildQueriesFromFilters = (filters) => {
           queries.push(buildColorQuery(query));
         })
         break;
-      case 'line':
-        if (filter.filterGroup === 'composition') {
-          queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
-        } else if (filter.filterGroup === 'linearity') {
-          switch (filter.name) {
-            case 'unbroken':
-              queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
-              break;
-            case 'broken':
-              queries.push(buildRangeQuery('line', { 'gte': BARNES_SETTINGS.broken_threshhold }));
-              break;
-            case 'all types':
-              break;
-            default:
-              break;
-          }
+      case 'lineComposition':
+        queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
+        break;
+      case 'lineLinearity':
+        switch (filter.name) {
+          case 'unbroken':
+            queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
+            break;
+          case 'broken':
+            queries.push(buildRangeQuery('line', { 'gte': BARNES_SETTINGS.broken_threshhold }));
+            break;
+          case 'all types':
+            break;
+          default:
+            throw 'unexpected filterType';
+            break;
         }
+
         break;
       case 'light':
         queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
