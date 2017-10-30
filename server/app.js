@@ -255,7 +255,7 @@ const getDistance = (from, to) => {
     return sum + Math.pow(absoluteDistance, 2)
   }, 0)
 
-  return distance / distanceKeys.length
+  return distanceKeys.length > 0 ? distance / distanceKeys.length : Infinity
 }
 
 app.get('/api/related', (req, res) => {
