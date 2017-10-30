@@ -3,10 +3,8 @@ import { selectRandomFilters } from '../reducers/filterSets';
 
 const initialState = {
   colors: null,
-  line: {
-    composition: null,
-    linearity: null,
-  },
+  lineComposition: null,
+  lineLinearity: null,
   light: null,
   space: null,
   ordered: [],
@@ -31,9 +29,9 @@ const filters = (state = initialState, action) => {
         ordered: [...state.ordered, action.filter]
       });
 
-      // temp exception
-      if (filterType === 'line') {
-        supplementedState = addLineFilter(supplementedState, action.filter);
+      // the all types works differently -- it acts as a clear
+      if (filterType === 'lineLinearity' && action.filter.name === 'all types') {
+        supplementedState[filterType] = null;
       } else {
         supplementedState[filterType] = action.filter;
       }
@@ -45,6 +43,8 @@ const filters = (state = initialState, action) => {
       let reducedState = Object.assign({}, state, {
         ordered: state.ordered
       });
+
+      reducedState[filterType] = null;
 
       return reducedState;
     case ActionTypes.CLEAR_ALL_FILTERS:
@@ -59,22 +59,6 @@ const filters = (state = initialState, action) => {
     default:
       return state;
   }
-}
-
-const addLineFilter = (state, filter) => {
-  state.line = state.line || {
-    composition: null,
-    linearity: null
-  };
-
-  state.line[filter.filterGroup] = filter;
-
-  // todo - try to remove special cases
-  if (filter.filterGroup === 'linearity' && filter.name === 'all types') {
-    state.line.linearity = null;
-  }
-
-  return state;
 }
 
 export default filters;
