@@ -24,7 +24,6 @@ const filters = (state = initialState, action) => {
       // Clone it
       let supplementedState = Object.assign({}, state);
 
-      debugger;
       // first clean it up since there can be only one filter of each type now
       supplementedState.ordered = removeFromOrderedSet(state.ordered, filterType);
       // and add the new one to the ordered set
