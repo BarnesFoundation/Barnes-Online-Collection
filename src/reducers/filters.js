@@ -21,13 +21,14 @@ const filters = (state = initialState, action) => {
 
   switch(action.type) {
     case ActionTypes.ADD_FILTER:
-      // clean the set
-      state.ordered = removeFromOrderedSet(state.ordered, filterType);
+      // Clone it
+      let supplementedState = Object.assign({}, state);
 
-      // add the new one to the ordered set
-      let supplementedState = Object.assign({}, state, {
-        ordered: [...state.ordered, action.filter]
-      });
+      debugger;
+      // first clean it up since there can be only one filter of each type now
+      supplementedState.ordered = removeFromOrderedSet(state.ordered, filterType);
+      // and add the new one to the ordered set
+      supplementedState.ordered.push(action.filter);
 
       // the all types works differently -- it acts as a clear
       if (filterType === 'lineLinearity' && action.filter.name === 'all types') {
@@ -35,15 +36,13 @@ const filters = (state = initialState, action) => {
       } else {
         supplementedState[filterType] = action.filter;
       }
-
       return supplementedState;
     case ActionTypes.REMOVE_FILTER:
-      state.ordered = removeFromOrderedSet(state.ordered, filterType);
+      // clone it
+      let reducedState = Object.assign({}, state);
 
-      let reducedState = Object.assign({}, state, {
-        ordered: state.ordered
-      });
-
+      // and clean up the state
+      reducedState.ordered = removeFromOrderedSet(state.ordered, filterType);
       reducedState[filterType] = null;
 
       return reducedState;
