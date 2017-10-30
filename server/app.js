@@ -69,6 +69,7 @@ const ALL_MORE_LIKE_THIS_FIELDS = [
   'color.palette-closest-*',
   'title.*',
   'people.*',
+  'people',
   'medium.*',
   'shortDescription.*',
   'longDescription.*',
@@ -88,6 +89,7 @@ const ALL_MORE_LIKE_THIS_FIELDS = [
 ]
 
 const MORE_LIKE_THIS_FIELDS = [
+  'people',
   'generic_desc_*',
   'curvy',
   'vertical',
@@ -184,13 +186,11 @@ app.get('/api/search', (req, res) => {
 })
 
 function getObjectDescriptors (objectID) {
-  const descriptorFields = MORE_LIKE_THIS_FIELDS.concat('people')
-
   let body = bodybuilder()
     .filter('exists', 'imageSecret')
     .from(0).size(1)
     .query('match', '_id', objectID)
-    .rawOption('_source', descriptorFields)
+    .rawOption('_source', MORE_LIKE_THIS_FIELDS)
     .build()
 
   return axios
@@ -230,6 +230,34 @@ function getRelatedObjects (objectID) {
     .catch((error) => console.error(error.message))
 }
 
+const getDistance = (from, to) => {
+  const fromKeys = Object.keys(from)
+  const toKeys = Object.keys(to)
+  const commonKeys = fromKeys.filter(key => toKeys.includes(key))
+
+  const descriptorKeys = MORE_LIKE_THIS_FIELDS.map((field) => {
+    if (field.match(/(.*)[_-]\*$/)) {
+      return field.slice(0, field.length - 1)
+    } else if (field.match(/(.*)[\.]\*$/)) {
+      return field.slice(0, field.length - 2)
+    }
+    return field
+  })
+
+  const distanceKeys = descriptorKeys.filter(descriptorKey => commonKeys.some(commonKey => commonKey.indexOf(descriptorKey) === 0))
+
+  const distance = distanceKeys.reduce((sum, key) => {
+    let absoluteDistance = 0
+    switch(key) {
+      case 'people': absoluteDistance = from[key] === to[key] ? 0 : 100; break;
+      default: absoluteDistance = parseFloat(to[key]) - parseFloat(from[key]); break;
+    }
+    return sum + Math.pow(absoluteDistance, 2)
+  }, 0)
+
+  return distance / distanceKeys.length
+}
+
 app.get('/api/related', (req, res) => {
   const {objectID, similarRatio} = req.query
 
@@ -238,70 +266,21 @@ app.get('/api/related', (req, res) => {
     .then(axios.spread((objectDescriptors, relatedObjects) => {
       const sources = relatedObjects.map(object => object._source)
 
-      const distances = sources.map(source => {
-        const keys = Object.keys(source)
+      const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
 
-        const moreLikeThisKeys = MORE_LIKE_THIS_FIELDS.map(field => {
-          return (field[field.length - 1] === '*') ? field.slice(field, field.length - 1) : field
-        })
-
-        const filteredKeys = keys.filter(key => moreLikeThisKeys.some(moreLikeThisKey => key.indexOf(moreLikeThisKey) === 0))
-
-        const descriptorKeys = filteredKeys.filter(key => (key !== 'people') && key in objectDescriptors)
-
-        const distance = descriptorKeys.reduce((sum, key) => {
-          const absoluteDistance = parseFloat(objectDescriptors[key]) - parseFloat(source[key])
-          return sum + (absoluteDistance * absoluteDistance)
-        }, 0)
-
-        let normalizedDistance = distance / descriptorKeys.length
-
-        if (source.people !== objectDescriptors.people) {
-          normalizedDistance += 250
-        }
-
-        return normalizedDistance
-      })
-
-      const sortedDistances = distances.slice().sort()
-
-      const quartiles = [
-        sortedDistances[Math.floor(1 * distances.length / 4)],
-        sortedDistances[Math.floor(2 * distances.length / 4)],
-        sortedDistances[Math.floor(3 * distances.length / 4)]
-      ]
-
-      const maxSize = Math.min(BARNES_SETTINGS.size, distances.length)
+      const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
 
       const similarItemCount = Math.floor(maxSize * similarRatio / 100.0)
 
-      let indices = new Set()
+      const similarItems = sorted.slice(0, similarItemCount)
 
-      // Add similar items
-      let similarMaxAttempts = 1000
-      let disimilarMaxAttempts = 1000
+      const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
 
-      while ((indices.size < similarItemCount) && (--similarMaxAttempts > 0)) {
-        const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] >= quartiles[2]) {
-          indices.add(randomIndex)
-        }
-      }
-
-      // Add disimilar items
-      while ((indices.size < maxSize - 1) && (--disimilarMaxAttempts > 0)) {
-        const randomIndex = Math.floor(Math.random() * distances.length)
-        if (distances[randomIndex] <= quartiles[0]) {
-          indices.add(randomIndex)
-        }
-      }
-
-      const objects = Array.from(indices).map(index => ({
+      const objects = similarItems.concat(dissimilarItems).map(object => ({
         _index: process.env.ELASTICSEARCH_INDEX,
         _type: 'object',
-        _id: sources[index].id,
-        _score: distances[index],
-        _source: sources[index]})
+        _id: object.id,
+        _source: object})
       )
 
       res.json({hits: {
@@ -368,10 +347,6 @@ const getObject = (id) => {
 
     return object
   })
-}
-
-const renderApp = (res) => {
-  return res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
 }
 
 const renderAppObjectPage = (req, res, next) => {
