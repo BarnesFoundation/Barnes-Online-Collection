@@ -266,7 +266,7 @@ app.get('/api/related', (req, res) => {
     .then(axios.spread((objectDescriptors, relatedObjects) => {
       const sources = relatedObjects.map(object => object._source)
 
-      const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
+      const sorted = sources.sort((a, b) => getDistance(b, objectDescriptors) - getDistance(a, objectDescriptors))
 
       const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
 
