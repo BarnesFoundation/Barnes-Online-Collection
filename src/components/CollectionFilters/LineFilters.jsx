@@ -11,6 +11,8 @@ import Filter from './Filter';
 class LineFilters extends Component {
   buildFilters(type) {
     const filters = this.props.filterSets.sets.lines.options[type];
+
+
     return (
       filters.map((option, index) => {
         option.filterGroup = type;

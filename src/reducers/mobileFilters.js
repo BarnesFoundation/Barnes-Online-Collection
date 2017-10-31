@@ -15,11 +15,9 @@ const mobileFilters = (state = initialState, action) => {
     case ActionTypes.QUEUE_MOBILE_FILTERS:
       return Object.assign({}, state, { filtersPending: true });
     case ActionTypes.APPLY_MOBILE_FILTERS:
-      // if (action.filters.length) {
-        return Object.assign({}, state, {
-          filtersApplied: true
-        });
-      // }
+      return Object.assign({}, state, {
+        filtersApplied: true
+      });
     case ActionTypes.RESET_MOBILE_FILTERS:
       return Object.assign({}, state, {
         filtersPending: false,

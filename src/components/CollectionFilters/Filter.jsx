@@ -18,22 +18,19 @@ class Filter extends Component {
     this.handleSliderFilter = this.handleSliderFilter.bind(this);
   }
 
-  filterIsApplied() {
-    const filters = this.props.filters.ordered;
-    for (let i = 0; i < filters.length; i++) {
-      if (filters[i].slug === this.props.filter.slug) {
-        return i;
-      }
-    }
-    return -1;
+  isFilterApplied() {
+    return this.props.filters.ordered.filter((filter) => {
+      return filter.slug === this.props.filter.slug;
+    }).length > 0;
   }
 
   handleButtonFilter() {
     const filter = this.props.filter;
-    if (this.props.filters.ordered.length === 0 || this.filterIsApplied() === -1) {
-      this.props.addFilter(filter);
-    } else {
+
+    if (this.isFilterApplied()) {
       this.props.removeFilter(filter);
+    } else {
+      this.props.addFilter(filter);
     }
   }
 
@@ -48,7 +45,7 @@ class Filter extends Component {
     // todo: this is kind of a quick fix. Maybe this should be defined in a more structured way.
     const isRadioStyle = filter.filterGroup === 'linearity';
 
-    let classes = 'btn ';
+    let classes = 'btn btn-filter ';
     classes += filter.filterType + '-filter';
 
     switch(filter.filterType) {
@@ -67,7 +64,7 @@ class Filter extends Component {
       classes += ' filter-style-radio';
     }
 
-    if (this.filterIsApplied() > -1) {
+    if (this.isFilterApplied()) {
       classes += ' is-applied';
     }
 
@@ -82,7 +79,8 @@ class Filter extends Component {
           style={{background: this.props.filter.color}}
           classes={this.getClasses()}
           />;
-      case 'line':
+      case 'lineComposition':
+      case 'lineLinearity':
         return <LineFilter
           handleClick={this.handleButtonFilter}
           classes={this.getClasses()}

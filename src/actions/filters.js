@@ -20,20 +20,6 @@ export function removeFilter(filter) {
   }
 }
 
-export function removeFilterByIndex(index) {
-  return {
-    type: ActionTypes.REMOVE_FILTER_BY_INDEX,
-    index: index
-  }
-}
-
-export function removeFilterBySlug(slug) {
-  return {
-    type: ActionTypes.REMOVE_FILTER_BY_SLUG,
-    slug: slug
-  }
-}
-
 export function clearAllFilters() {
   return {
     type: ActionTypes.CLEAR_ALL_FILTERS

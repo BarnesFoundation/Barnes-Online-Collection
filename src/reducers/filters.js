@@ -2,74 +2,49 @@ import * as ActionTypes from '../constants';
 import { selectRandomFilters } from '../reducers/filterSets';
 
 const initialState = {
-  colors: [],
-  line: {
-    composition: null,
-    linearity: null
-  },
+  colors: null,
+  lineComposition: null,
+  lineLinearity: null,
   light: null,
   space: null,
-  ordered: []
+  ordered: [],
 };
 
+const removeFromOrderedSet = (orderedSet, filterType) => {
+  return orderedSet.filter((filterEl) => {
+    return filterEl.filterType !== filterType;
+  });
+}
+
 const filters = (state = initialState, action) => {
+  const filterType = action.filter ? action.filter.filterType : null;
+
   switch(action.type) {
     case ActionTypes.ADD_FILTER:
-      let supplementedState = Object.assign({}, state, {
-        ordered: [...state.ordered, action.filter]
-      });
+      // Clone it
+      let supplementedState = Object.assign({}, state);
 
-      switch (action.filter.filterType) {
-        case 'color':
-          supplementedState.colors = [...state.colors, action.filter];
-          break;
-        case 'line':
-          supplementedState = addLineFilter(supplementedState, action.filter);
-          break;
-        case 'light':
-          if (state.light) {
-            supplementedState.ordered = getReducedFilters(supplementedState.ordered, state.light.slug);
-          }
-          supplementedState.light = action.filter;
-          break;
-        case 'space':
-          if (state.space) {
-            supplementedState.ordered = getReducedFilters(supplementedState.ordered, state.space.slug);
-          }
-          supplementedState.space = action.filter;
-          break;
-        default:
-          break;
+      // first clean it up since there can be only one filter of each type now
+      supplementedState.ordered = removeFromOrderedSet(state.ordered, filterType);
+      // and add the new one to the ordered set
+      supplementedState.ordered.push(action.filter);
+
+      // the all types works differently -- it acts as a clear
+      if (filterType === 'lineLinearity' && action.filter.name === 'all types') {
+        supplementedState[filterType] = null;
+      } else {
+        supplementedState[filterType] = action.filter;
       }
-      supplementedState.ordered = [...new Set(supplementedState.ordered)];
       return supplementedState;
     case ActionTypes.REMOVE_FILTER:
-      let reducedState = Object.assign({}, state, {
-        ordered: getReducedFilters(state.ordered, action.filter.slug)
-      });
+      // clone it
+      let reducedState = Object.assign({}, state);
 
-      switch (action.filter.filterType) {
-        case 'color':
-          reducedState.colors = getReducedFilters(state.colors, action.filter.slug);
-          break;
-        case 'line':
-          reducedState = removeLineFilter(state, reducedState, action.filter);
-          break;
-        case 'light':
-          reducedState.light = null;
-          break;
-        case 'space':
-          reducedState.space = null;
-          break;
-        default:
-          break;
-      }
+      // and clean up the state
+      reducedState.ordered = removeFromOrderedSet(state.ordered, filterType);
+      reducedState[filterType] = null;
+
       return reducedState;
-    case ActionTypes.REMOVE_FILTER_BY_INDEX:
-      return [...state.slice(0, action.index), ...state.slice(action.index + 1)];
-    case ActionTypes.REMOVE_FILTER_BY_SLUG:
-      const index = findIndexBySlug(state, action.slug);
-      return [...state.slice(0, index), ...state.slice(index+1)];
     case ActionTypes.CLEAR_ALL_FILTERS:
       return initialState;
     case ActionTypes.SHUFFLE_FILTERS:
@@ -78,86 +53,10 @@ const filters = (state = initialState, action) => {
         ordered: filters
       });
 
-      filters.forEach((filter) => {
-        switch (filter.filterType) {
-          case 'color':
-            shuffledState.colors.push(filter);
-            break;
-          case 'line':
-            if (filter.filterGroup === 'composition') {
-              shuffledState.line.composition = filter;
-            } else if (filter.filterGroup === 'linearity') {
-              filter.name === 'all types' ? shuffledState.line.linearity = null : shuffledState.line.linearity = filter;
-            }
-            break;
-          case 'light':
-            shuffledState.light = filter;
-            break;
-          case 'space':
-            shuffledState.space = filter;
-            break;
-          default:
-            break;
-        }
-      });
       return shuffledState;
     default:
       return state;
   }
-}
-
-const removeLineFilter = (state, reducedState, filter) => {
-  if (filter.filterGroup === 'composition') {
-    reducedState.line.composition = getReducedFilters(state.line.composition, filter.slug);
-  } else if (filter.filterGroup === 'linearity') {
-    if (!filter.name === 'all types') {
-      reducedState.line.linearity = getReducedFilters(state.line.linearity, filter.slug);
-    }
-  }
-  return reducedState;
-}
-
-const addLineFilter = (state, filter) => {
-  state.line = state.line || {
-    composition: null,
-    linearity: null
-  };
-
-  if (filter.filterGroup === 'composition') {
-    state.line.composition = state.line.composition ? [...state.line.composition, filter] : [filter];
-  } else if (filter.filterGroup === 'linearity') {
-    if (filter.name !== 'all types') {
-      state.line.linearity = filter.name;
-      state.ordered = getReducedFilters(state.ordered, 'line-all types');
-      filter.name === 'broken' ? state.ordered = getReducedFilters(state.ordered, 'line-unbroken') : state.ordered = getReducedFilters(state.ordered, 'line-broken');
-    } else {
-      state.line.linearity = null;
-      state.ordered = getReducedFilters(state.ordered, 'line-unbroken');
-      state.ordered = getReducedFilters(state.ordered, 'line-broken');
-    }
-  }
-  return state;
-}
-
-const getReducedFilters = (filters, slug) => {
-  const index = findIndexBySlug(filters, slug);
-  if (index > -1) {
-    return [
-      ...filters.slice(0, index),
-      ...filters.slice(index + 1)
-    ];
-  } else {
-    return filters;
-  }
-}
-
-const findIndexBySlug = (filters, slug) => {
-  for (let i = 0; i < filters.length; i++) {
-    if (filters[i].slug === slug) {
-      return i;
-    }
-  }
-  return -1;
 }
 
 export default filters;
