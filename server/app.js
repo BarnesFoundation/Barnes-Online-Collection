@@ -20,9 +20,9 @@ const canonicalRoot = process.env.REACT_APP_CANONICAL_ROOT || '/'
 
 // todo #switchImportToRequire - consolidate with constants (can't use import yet.)
 const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online'
-const metaPlacename = process.env.REACT_APP_META_PLACENAME || ''
-const metaDescription = process.env.REACT_APP_META_DESCRIPTION || ''
-const metaImage = process.env.REACT_APP_META_IMAGE || ''
+const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || ''
+const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || ''
+const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
@@ -365,12 +365,17 @@ const renderAppObjectPage = (req, res, next) => {
     htmlFilePromise.then(htmlFileContent => {
       const template = Handlebars.compile(htmlFileContent)
 
+      const artistOrCulture = objectData.culture || objectData.people;
+      const metaTitle = `${META_TITLE} — ${artistOrCulture}: ${objectData.title}`;
+      const metaImage = objectData.imageUrlSmall;
+      const metaDescription = `Barnes Foundation Collection: ${artistOrCulture}. ${objectData.title} -- ${META_DESCRIPTION}`;
+
       const html = template({
         metaCanonical: canonicalUrl,
         metaDescription: metaDescription,
-        metaPlacename: metaPlacename,
-        metaImage: objectData.imageUrlSmall,
-        metaTitle: `${META_TITLE} — ${objectData.culture || objectData.people}: ${objectData.title}`
+        metaPlacename: META_PLACENAME,
+        metaImage: metaImage,
+        metaTitle: metaTitle,
       })
 
       res.send(html)
@@ -389,9 +394,9 @@ const renderAppLandingPage = (req, res, next) => {
 
     const html = template({
       metaCanonical: canonicalUrl,
-      metaDescription: metaDescription,
-      metaPlacename: metaPlacename,
-      metaImage: metaImage,
+      metaDescription: META_DESCRIPTION,
+      metaPlacename: META_PLACENAME,
+      metaImage: META_IMAGE,
       metaTitle: META_TITLE
     })
 
