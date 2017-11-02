@@ -87,3 +87,11 @@ li {
   outline: none;
   margin: 0;
 }
+
+.g-nav {
+  z-index: $z-index-g-nav;
+}
+
+.g-nav__important-links {
+  border-top: none;
+}
