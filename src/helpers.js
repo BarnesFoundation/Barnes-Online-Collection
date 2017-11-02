@@ -1,7 +1,6 @@
 import bodybuilder from 'bodybuilder';
 import { BARNES_SETTINGS } from './barnesSettings';
-import { META_TITLE } from './constants';
-
+import { META_TITLE, META_DESCRIPTION } from './constants';
 export const getArtObjectUrlFromId = (objectId, slug) => {
   slug = slug || '';
 
@@ -9,8 +8,10 @@ export const getArtObjectUrlFromId = (objectId, slug) => {
 }
 
 export const getMetaTagsFromObject = (object) => {
-  const metaTitle = `${META_TITLE} — ${object.culture || object.people}: ${object.title}`;
+  const artistOrCulture = object.culture || object.people;
+  const metaTitle = `${META_TITLE} — ${artistOrCulture}: ${object.title}`;
   const metaImage = object.imageUrlSmall;
+  const metaDescription = `Barnes Foundation Collection: ${artistOrCulture}. ${object.title} -- ${META_DESCRIPTION}`;
 
   if (!object || !object.id) {
     return null;
@@ -19,6 +20,7 @@ export const getMetaTagsFromObject = (object) => {
   return {
     title: metaTitle,
     image: metaImage,
+    description: metaDescription,
   };
 }
 
