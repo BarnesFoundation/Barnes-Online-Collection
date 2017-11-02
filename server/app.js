@@ -259,7 +259,8 @@ const getDistance = (from, to) => {
 }
 
 app.get('/api/related', (req, res) => {
-  const {objectID, similarRatio} = req.query
+  const {objectID, dissimilarPercent} = req.query
+  const similarRatio = (100 - dissimilarPercent) / 100.0
 
   axios
     .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
@@ -270,7 +271,7 @@ app.get('/api/related', (req, res) => {
 
       const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
 
-      const similarItemCount = Math.floor(maxSize * similarRatio / 100.0)
+      const similarItemCount = Math.floor(maxSize * similarRatio)
 
       const similarItems = sorted.slice(0, similarItemCount)
 
