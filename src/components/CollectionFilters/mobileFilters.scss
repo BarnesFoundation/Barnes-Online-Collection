@@ -92,7 +92,7 @@
       flex-direction: row;
       width: 100%;
 
-      .line-filter {
+      .btn-filter {
         height: auto;
         min-height: 50px;
         min-width: 0;
@@ -110,7 +110,7 @@
         margin-bottom: $mobile-filters-pill-padding;
         flex-wrap: wrap;
 
-        .line-filter {
+        .btn-filter {
           width: calc(50% - 5px);
           margin: 0 $mobile-filters-pill-padding $mobile-filters-pill-padding 0;
 
@@ -121,7 +121,7 @@
       }
 
       &:last-of-type {
-        .line-filter {
+        .btn-filter {
           width: calc(100%/3);
           border-width: $collection-filter-border-size 1px;
           margin: 0;
