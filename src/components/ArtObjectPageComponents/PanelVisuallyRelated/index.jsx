@@ -19,6 +19,10 @@ const getObjectMetaDataHtml = (object) => {
       <span>{`${object.medium}, ${object.dimensions}. `}</span>
       <span>{`${object.invno}. `}</span>
       <span>{`${objectCopyright.copy}. `}</span>
+      {
+        object.creditLine &&
+        <span>{`${object.creditLine}. `}</span>
+      }
     </p>
   );
 
