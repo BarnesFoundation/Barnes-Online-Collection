@@ -24,6 +24,8 @@ const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || ''
 const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || ''
 const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
 
+const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
+
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET
@@ -260,7 +262,8 @@ const getDistance = (from, to) => {
 
 app.get('/api/related', (req, res) => {
   const {objectID, dissimilarPercent} = req.query
-  const similarRatio = (100 - dissimilarPercent) / 100.0
+  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
+  const similarRatio = similarPercent / 100.0
 
   axios
     .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
