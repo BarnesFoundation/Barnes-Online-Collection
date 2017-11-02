@@ -32,7 +32,7 @@ export const getRelatedObjects = (objectID, value=50) => {
     // quick fix to avoid fouc.
     dispatch(clearRelatedObjects());
 
-    const params = { objectID, similarRatio: value }
+    const params = { objectID, dissimilarPercent: value }
 
     axios
       .get(`/api/related`, { params })
