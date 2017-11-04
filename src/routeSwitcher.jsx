@@ -30,6 +30,11 @@ class RouteSwitcher extends Component {
 
   componentWillUpdate(nextProps) {
     const { location } = this.props
+    const nextLocation = nextProps.location
+    const locationState = nextLocation.state || {};
+
+    debugger;
+
     // set modalPreviousLocation if props.location is not modal
     if (
       nextProps.history.action !== 'POP' &&
@@ -37,16 +42,8 @@ class RouteSwitcher extends Component {
     ) {
       this.modalPreviousLocation = this.props.location
     }
-  }
 
-  render() {
-    const { location } = this.props
-    const locationState = location.state || {};
-
-    let isModal = !!(
-      locationState.isModal &&
-      this.modalPreviousLocation !== location // not initial render
-    )
+    let isModal = locationState.isModal;
 
     let modalPreviousLocation = locationState.modalPreviousLocation ? {
       pathname: locationState.modalPreviousLocation,
@@ -60,6 +57,39 @@ class RouteSwitcher extends Component {
       });
     }
 
+    this.switchLocation = isModal ? modalPreviousLocation : nextLocation
+
+    this.modalDivs = isModal ?
+      (<div>
+        <PropsRoute exact path='/objects/:id'
+          component={ArtObjectPageModal}
+          isModal={true}
+          modalPreviousLocation={modalPreviousLocation.pathname || null}
+        />
+        <PropsRoute exact path='/objects/:id/:panel'
+          component={ArtObjectPageModal}
+          isModal={true}
+          modalPreviousLocation={modalPreviousLocation.pathname || null}
+        />
+      </div>)
+      : null
+  }
+
+  render() {
+    debugger;
+
+    const { location } = this.props
+    const locationState = location.state || {};
+
+    let isModal = !!(
+      locationState.isModal &&
+      this.modalPreviousLocation !== location // not initial render
+    )
+
+    let modalPreviousLocation = locationState.modalPreviousLocation ? {
+      pathname: locationState.modalPreviousLocation,
+    } : this.modalPreviousLocation;
+
     return (
       <div>
         <Switch location={isModal ? modalPreviousLocation : location}>
@@ -67,21 +97,7 @@ class RouteSwitcher extends Component {
           <Route exact path='/objects/:id' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:panel' component={ArtObjectPage} />
         </Switch>
-        {isModal ?
-          <div>
-            <PropsRoute exact path='/objects/:id'
-              component={ArtObjectPageModal}
-              isModal={isModal}
-              modalPreviousLocation={modalPreviousLocation.pathname || null}
-            />
-            <PropsRoute exact path='/objects/:id/:panel'
-              component={ArtObjectPageModal}
-              isModal={isModal}
-              modalPreviousLocation={modalPreviousLocation.pathname || null}
-            />
-          </div>
-          : null
-        }
+        {this.modalDivs}
       </div>
     )
   }
