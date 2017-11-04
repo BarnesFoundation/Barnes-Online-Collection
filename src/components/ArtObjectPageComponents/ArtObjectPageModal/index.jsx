@@ -11,7 +11,6 @@ class ModalArtObjectPage extends Component {
   constructor(props) {
     super(props);
 
-    this.props.modalShow();
     this.state = this.getState(this.props);
   }
 
@@ -25,7 +24,11 @@ class ModalArtObjectPage extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidMount(nextProps) {
+    this.props.modalShow();
+  }
+
+  componentWillUpdate(nextProps) {
     if (this.props.match.params !== nextProps.match.params) {
       this.setState(this.getState(nextProps));
     }

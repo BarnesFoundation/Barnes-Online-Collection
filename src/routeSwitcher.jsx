@@ -33,8 +33,6 @@ class RouteSwitcher extends Component {
     const nextLocation = nextProps.location
     const locationState = nextLocation.state || {};
 
-    debugger;
-
     // set modalPreviousLocation if props.location is not modal
     if (
       nextProps.history.action !== 'POP' &&
@@ -76,8 +74,6 @@ class RouteSwitcher extends Component {
   }
 
   render() {
-    debugger;
-
     const { location } = this.props
     const locationState = location.state || {};
 
@@ -105,7 +101,6 @@ class RouteSwitcher extends Component {
 
 function mapStateToProps(state) {
   return {
-    modalIsOpen: state.modal.modalIsOpen,
     modalParentState: state.modal.modalParentState,
   };
 }
