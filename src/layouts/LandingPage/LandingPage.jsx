@@ -57,7 +57,6 @@ class LandingPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    modalIsOpen: state.modal.modalIsOpen,
   };
 }
 
