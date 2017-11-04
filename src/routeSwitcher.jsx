@@ -26,38 +26,44 @@ const PropsRoute = ({ component, ...rest }) => {
 
 // Note: with tips from  https://reacttraining.com/react-router/web/example/modal-gallery
 class RouteSwitcher extends Component {
-  modalPreviousLocation = this.props.location
+  constructor(props) {
+    super(props)
+
+    this.modalPreviousLocation = this.props.location
+  }
+
 
   componentWillUpdate(nextProps) {
     const { location } = this.props
     const nextLocation = nextProps.location
-    const locationState = nextLocation.state || {};
+    const locationState = nextLocation.state || {}
+    const previousLocationState = location.state || {}
+    const currModalParentState = this.props.modalParentState
 
-    // set modalPreviousLocation if props.location is not modal
-    if (
-      nextProps.history.action !== 'POP' &&
-      (!location.state || !location.state.isModal)
-    ) {
+    let isModal = locationState.isModal
+
+    // if props.location is not modal, update modalPreviousLocation
+    if (nextProps.history.action !== 'POP' && !previousLocationState.isModal) {
       this.modalPreviousLocation = this.props.location
     }
 
-    let isModal = locationState.isModal;
-
+    // parse the modalPreviousLocation -- either from the state passed in to the nextProps
+    // or from the router component's 'this.modalPreviousLocation'
     let modalPreviousLocation = locationState.modalPreviousLocation ? {
       pathname: locationState.modalPreviousLocation,
     } : this.modalPreviousLocation;
 
-    const currModalParentState = this.props.modalParentState
-
+    // it it's a modal, and it the pathname is different, we need to update the parentState modalPreviousLocation
+    // this is used by the modal component to change the url via pushstate when the modal closes.
     if (isModal && modalPreviousLocation.pathname !== currModalParentState.pathname) {
       this.props.modalSetParentState({
         pathname: modalPreviousLocation.pathname,
       });
     }
 
-    this.switchLocation = isModal ? modalPreviousLocation : nextLocation
-
-    this.modalDivs = isModal ?
+    // set these to be used by the render function
+    this.primaryRouteLocation = isModal ? modalPreviousLocation : nextLocation
+    this.modalRouteComponents = isModal ?
       (<div>
         <PropsRoute exact path='/objects/:id'
           component={ArtObjectPageModal}
@@ -74,26 +80,18 @@ class RouteSwitcher extends Component {
   }
 
   render() {
-    const { location } = this.props
-    const locationState = location.state || {};
-
-    let isModal = !!(
-      locationState.isModal &&
-      this.modalPreviousLocation !== location // not initial render
-    )
-
-    let modalPreviousLocation = locationState.modalPreviousLocation ? {
-      pathname: locationState.modalPreviousLocation,
-    } : this.modalPreviousLocation;
+    // the first render will default to the live url
+    // the modal logic above will sometimes set this.primaryRouteLocation to be something other than props.location
+    const primaryRouteLocation = this.primaryRouteLocation || this.props.location
 
     return (
       <div>
-        <Switch location={isModal ? modalPreviousLocation : location}>
+        <Switch location={primaryRouteLocation}>
           <Route exact path='/' component={LandingPage}/>
           <Route exact path='/objects/:id' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:panel' component={ArtObjectPage} />
         </Switch>
-        {this.modalDivs}
+        {this.modalRouteComponents}
       </div>
     )
   }
