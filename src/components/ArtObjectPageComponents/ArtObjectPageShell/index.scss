@@ -17,6 +17,13 @@
     }
   }
 
+  .component-modal & {
+    // override - no need to clear the header
+    .art-object__image-container {
+      top: 0;
+    }
+  }
+
   .art-object__title {
     text-align: center;
     margin: 0 0 2rem 0;
@@ -37,6 +44,22 @@
   }
 
   .art-object__image-container {
+    position: sticky;
+    top: $g-header-height-xsmall;
+
+    // match the header heights in the styleguide
+    @include breakpoint('medium+') {
+      top: $g-header-height-medium;
+    }
+
+    @include breakpoint('large+') {
+      top: $g-header-height-large;
+    }
+
+    @include breakpoint('xlarge+') {
+      top: $g-header-height-xlarge;
+    }
+
     .filter-tag-set {
       display: flex;
       flex-direction: row;

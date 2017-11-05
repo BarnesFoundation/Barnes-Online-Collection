@@ -20,6 +20,12 @@ body {
   font-family: $font-family;
 }
 
+html,
+body {
+  // the styleguide sets this to hidden. But that breaks 'position: sticky'.
+  overflow-x: initial;
+}
+
 ul,
 li {
   list-style: none;
