@@ -2,6 +2,9 @@
 import 'normalize.css';
 import './index.css';
 
+// just for you, IE11.
+import 'babel-polyfill';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
