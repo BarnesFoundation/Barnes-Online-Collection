@@ -2,7 +2,8 @@
 import 'normalize.css';
 import './index.css';
 
-// just for you, IE11.
+// just for you, IE11
+// We could make this more efficient by only loading this for IE11 and below.
 import 'babel-polyfill';
 
 import React, { Component } from 'react';
