@@ -65,6 +65,12 @@ class FlexboxTable extends Component {
           <div className="text color-light">{this.props.provenance}</div>
         </div>
         }
+        {this.props.exhibitionHistory &&
+        <div className="table-row">
+          <div className="text">Exhibition History</div>
+          <div className="text color-light">{this.props.exhibitionHistory}</div>
+        </div>
+        }
       </div>
     );
   }
