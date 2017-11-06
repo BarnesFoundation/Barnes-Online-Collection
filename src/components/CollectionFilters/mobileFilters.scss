@@ -19,7 +19,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
+  // use this instead of 100vh, otherwise mobile safari doesn't work right
+  bottom: 0;
 }
 
 .mobile-filters-overlay {
@@ -42,7 +43,7 @@
 
   .mobile-apply-button-placeholder {
     // make it look nice when the panel is scrolled all the way down
-    padding-bottom: 56px;
+    height: 85px;
   }
 
   .mobile-apply-button-wrap {
