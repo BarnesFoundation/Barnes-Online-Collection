@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getRoomAndTitleText } from '../../../ensembleIndex';
 
 import '../../../components/FlexboxTable/index.css';
 
@@ -7,17 +8,20 @@ class FlexboxTable extends Component {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
     const ensembleUrl = '/objects/' + this.props.id + '/ensemble';
+    const roomAndTitleText = this.props.onview && getRoomAndTitleText(this.props.ensembleIndex) || ''
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
         <div className="table-row">
           <div className="text">Location</div>
+          <div className="text color-light">
           {this.props.onview &&
-            <div className="text color-light"><a href={ensembleUrl}>On View</a></div>
+              <span>On View: <a href={ensembleUrl}>{roomAndTitleText}</a></span>
           }
           {!this.props.onview &&
-            <div className="text color-light">Not On View</div>
+              <span>Off View</span>
           }
+          </div>
         </div>
         {this.props.people &&
           <div className="table-row">

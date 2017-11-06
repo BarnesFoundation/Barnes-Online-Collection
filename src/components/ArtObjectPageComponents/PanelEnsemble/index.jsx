@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import './index.css';
-import {ENSEMBLE, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
+import {getRoomAndTitleText, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
 
-const getRoomAndTitleText = (ensembleIndex) => {
-  const wallTitle = ENSEMBLE[ensembleIndex].wallTitle;
-  const wallTitleStr = wallTitle ? `, ${wallTitle}` : '';
-
-  return `${ENSEMBLE[ensembleIndex].roomTitle}${wallTitleStr}`;
-}
 
 class PanelEnsemble extends Component {
   render() {

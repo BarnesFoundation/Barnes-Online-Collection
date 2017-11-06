@@ -407,3 +407,10 @@ export const ENSEMBLE = {
     wallTitle: null
   }
 };
+
+export const getRoomAndTitleText = (ensembleIndex) => {
+  const wallTitle = ENSEMBLE[ensembleIndex].wallTitle;
+  const wallTitleStr = wallTitle ? `, ${wallTitle}` : '';
+
+  return `${ENSEMBLE[ensembleIndex].roomTitle}${wallTitleStr}`;
+}
