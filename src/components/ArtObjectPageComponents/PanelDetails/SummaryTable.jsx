@@ -10,11 +10,15 @@ class FlexboxTable extends Component {
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
-        {this.props.onview &&
-          <div className="table-row">
-            <a className="btn btn-primary" href={ensembleUrl}>On View</a>
-          </div>
-        }
+        <div className="table-row">
+          <div className="text">Location</div>
+          {this.props.onview &&
+            <div className="text color-light"><a href={ensembleUrl}>On View</a></div>
+          }
+          {!this.props.onview &&
+            <div className="text color-light">Not On View</div>
+          }
+        </div>
         {this.props.people &&
           <div className="table-row">
             <div className="text">Artist</div>
