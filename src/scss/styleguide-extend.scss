@@ -4,12 +4,21 @@
 @import './style-components/nav.scss';
 
 html {
-  &.modal-open {
+  &.modal-open,
+  &.nav-open,
+  &.mobile-filters-open {
     &,
     body {
       height: 100%;
       width: 100%;
       overflow: auto;
+    }
+  }
+
+  &.mobile-filters-open {
+    &,
+    body {
+      overflow: hidden;
     }
   }
 }
