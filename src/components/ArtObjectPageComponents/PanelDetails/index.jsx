@@ -27,6 +27,10 @@ const getTabList = (artObjectProps) => {
       title: 'Bibliography',
       tabContent: artObjectProps.bibliography,
     },
+    {
+      title: 'Exhibition History',
+      tabContent: artObjectProps.exhibitionHistory,
+    },
   ].filter((obj) => {
     // filter out ones with no content
     return !!obj.tabContent;
