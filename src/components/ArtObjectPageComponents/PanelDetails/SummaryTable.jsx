@@ -6,9 +6,15 @@ class FlexboxTable extends Component {
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
+    const ensembleUrl = '/objects/' + this.props.id + '/ensemble';
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
+        {this.props.onview &&
+          <div className="table-row">
+            <a className="btn btn-primary" href={ensembleUrl}>On View</a>
+          </div>
+        }
         {this.props.people &&
           <div className="table-row">
             <div className="text">Artist</div>
