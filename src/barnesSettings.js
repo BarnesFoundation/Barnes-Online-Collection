@@ -32,8 +32,7 @@ export const SEARCH_FIELDS = [
   "shortDescription.*",
   "longDescription.*",
   "visualDescription.*",
-  "exhHistory.*",
-  "bibliography.*"
+  "exhHistory.*"
 ];
 
 export const MORE_LIKE_THIS_FIELDS = [
