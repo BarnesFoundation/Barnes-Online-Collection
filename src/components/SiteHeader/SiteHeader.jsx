@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import SiteNavSidebar from '../../components-barnes-toolkit/components/nav/Nav.jsx';
 import * as Actions from '../../actions/htmlClassManager';
-import {MAIN_WEBSITE_DOMAIN} from '../../constants';
+import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE } from '../../constants';
 
 import './siteHeader.css';
 
@@ -12,7 +12,7 @@ class SiteHeader extends Component {
 
   handleNavBtnClick(e) {
     e.preventDefault();
-    this.props.htmlClassesToggle('nav-active');
+    this.props.htmlClassesToggle(CLASSNAME_NAV_ACTIVE);
   }
 
   render() {

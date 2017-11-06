@@ -39,7 +39,10 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}, MobileFiltersActions), dispatch);
+  return bindActionCreators(Object.assign(
+    {},
+    MobileFiltersActions,
+  ), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersOpener);

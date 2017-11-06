@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { BREAKPOINTS } from '../../constants';
+import { BREAKPOINTS, CLASSNAME_MOBILE_FILTERS_OPEN } from '../../constants';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
@@ -20,6 +20,7 @@ import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as ObjectsActions from '../../actions/objects';
+import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 
 import './collectionFilters.css';
 
@@ -62,6 +63,14 @@ class CollectionFilters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
+    const willBeOpen = this.inMobileFilterMode(nextProps);
+
+    if (willBeOpen) {
+      this.props.htmlClassesAdd(CLASSNAME_MOBILE_FILTERS_OPEN);
+    } else {
+      this.props.htmlClassesRemove(CLASSNAME_MOBILE_FILTERS_OPEN);
+    }
 
     // if we're not currently editing mobile filters, behave normally
     if (!this.inMobileFilterMode(this.props)) {
@@ -177,6 +186,7 @@ const mapDispatchToProps = dispatch => {
     FilterSetsActions,
     MobileFiltersActions,
     ObjectsActions,
+    HtmlClassManagerActions,
   ),
   dispatch);
 }
