@@ -1,11 +1,15 @@
 @import '../../scss/variables.scss';
 
 .collection-filters {
-  .collection-filter-icon {
-    margin-right: .5em;
+  .icon {
     vertical-align: middle;
     // make it appear slightly more centered with the font
     margin-top: -0.08em;
+    margin-right: .5em;
+  }
+
+  .label {
+    margin-left: .5em;
   }
 
   .btn-collection-filter {

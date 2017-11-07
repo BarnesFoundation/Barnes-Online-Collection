@@ -1,17 +1,30 @@
 @import '../../scss/variables.scss';
 
-.btn-open-mobile-filters {
+.mobile-buttons-set {
   position: fixed;
-  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
+  bottom: 40px;
+
+  .collection-search-icon {
+    font-size: 1.1em;
+    margin-right: 0;
+  }
+}
+
+.btn-mobile {
   height: 50px;
-  padding: 0 $mobile-filters-section-padding;
+  min-width: 50px;
   border: $collection-filter-border-size solid rgba(0,0,0,0.2);
   border-radius: 25px;
   background: white;
   cursor: pointer;
+  margin-left: 1rem;
+}
+
+.btn-open-mobile-filters {
+  padding: 0 $mobile-filters-section-padding;
 }
 
 .mobile-filters-overlay,

@@ -11,21 +11,34 @@ class MobileFiltersOpener extends Component {
   constructor(props) {
     super(props);
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickFilterBtn = this.handleClickFilterBtn.bind(this);
+    this.handleClickSearchBtn = this.handleClickSearchBtn.bind(this);
   }
 
-  handleClick() {
+  handleClickFilterBtn() {
     this.props.openMobileFilters();
+  }
+
+  handleClickSearchBtn() {
+    // debugger;
+    // this.props.openMobileSearch();
   }
 
   render() {
     const filterCount = this.props.filters.length;
 
     return (
-      <button onClick={this.handleClick} className="btn-open-mobile-filters font-zeta color-light">
-        <Icon svgId='filters' classes='collection-filter-icon' />
-        Filter{ filterCount > 0 && ` (${filterCount})` }
-      </button>
+      <div className="mobile-buttons-set">
+        <button onClick={this.handleClickFilterBtn} className="btn-mobile btn-open-mobile-filters font-zeta color-light">
+          <Icon svgId='filters' classes='icon collection-filter-icon' />
+          <span className="label">
+            Filter{ filterCount > 0 && ` (${filterCount})` }
+          </span>
+        </button>
+        <button onClick={this.handleClickFilterBtn} className="btn-mobile btn-open-mobile-search font-zeta color-light">
+          <Icon svgId='search' classes='icon collection-search-icon' />
+        </button>
+      </div>
     );
   }
 }
