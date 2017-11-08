@@ -68,6 +68,11 @@
 
   .applied-filter-tags-container-wrap {
     padding: $mobile-filters-section-padding;
+    position: sticky;
+    top: 0;
+    background: $color-white;
+    box-shadow: $box-shadow-style;
+    z-index: $z-sticky-filter-tags;
   }
 
   .applied-filter-tags-container {

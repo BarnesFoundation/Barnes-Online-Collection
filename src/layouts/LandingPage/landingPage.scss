@@ -29,8 +29,9 @@
     text-align: center;
 
     @include breakpoint('medium-') {
+      @include set-top-header-height();
+
       position: sticky;
-      top: $g-header-height-xsmall;
       background: $color-white;
 
       // stay under the header. Unless the mobile-panel is open

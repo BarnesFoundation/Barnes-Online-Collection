@@ -156,6 +156,7 @@
 .applied-filter-tags-container-wrap {
   @include clearfix();
 
+  padding-bottom: $mobile-filters-section-padding;
   width: 100%;
   display: flex;
   justify-content: space-between;

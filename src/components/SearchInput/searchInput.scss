@@ -42,7 +42,7 @@
   font-family: 'Calibre';
   font-size: 30px;
 
-  @include breakpoint('small-') {
+  @include breakpoint('medium-') {
     font-size: inherit;
   }
 

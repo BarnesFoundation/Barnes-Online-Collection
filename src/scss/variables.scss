@@ -26,6 +26,7 @@ $font-family: 'Calibre', sans-serif;
 $font_path: '/fonts/';
 
 $border-style: 1px solid $color-border;
+$box-shadow-style: 0px 1px 4px $color-border;
 
 // block margins
 // from /src/components-barnes-toolkit/components/block/_block.scss
@@ -52,7 +53,7 @@ $z-index-modal: 7;
 $z-index-g-nav: 8;
 // stay on top of the modal
 $z-index-rc-slider-tooltip: 9;
-
+$z-sticky-filter-tags: 10;
 
 // icon styles
 $collection-filter-item-margin: $block-margin-small;
