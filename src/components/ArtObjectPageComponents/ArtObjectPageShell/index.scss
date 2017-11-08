@@ -44,21 +44,9 @@
   }
 
   .art-object__image-container {
+    @include set-top-header-height();
+
     position: sticky;
-    top: $g-header-height-xsmall;
-
-    // match the header heights in the styleguide
-    @include breakpoint('medium+') {
-      top: $g-header-height-medium;
-    }
-
-    @include breakpoint('large+') {
-      top: $g-header-height-large;
-    }
-
-    @include breakpoint('xlarge+') {
-      top: $g-header-height-xlarge;
-    }
 
     .filter-tag-set {
       display: flex;

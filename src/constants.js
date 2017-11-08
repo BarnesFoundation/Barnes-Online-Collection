@@ -24,6 +24,10 @@ export const QUEUE_MOBILE_FILTERS = 'QUEUE_MOBILE_FILTERS';
 export const APPLY_MOBILE_FILTERS = 'APPLY_MOBILE_FILTERS';
 export const RESET_MOBILE_FILTERS = 'RESET_MOBILE_FILTERS';
 
+// mobileSearch
+export const OPEN_MOBILE_SEARCH = 'OPEN_MOBILE_SEARCH';
+export const CLOSE_MOBILE_SEARCH = 'CLOSE_MOBILE_SEARCH';
+
 // filters
 export const ADD_FILTER = 'ADD_FILTER';
 export const SHUFFLE_FILTERS = 'SHUFFLE_FILTERS';
@@ -58,7 +62,7 @@ export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 // this should match the class used by the styleguide
 export const CLASSNAME_NAV_ACTIVE = 'nav-active';
 export const CLASSNAME_MODAL_OPEN = 'modal-open';
-export const CLASSNAME_MOBILE_FILTERS_OPEN = 'mobile-filters-open';
+export const CLASSNAME_MOBILE_PANEL_OPEN = 'mobile-panel-open';
 
 // modal
 export const MODAL_SHOW = 'MODAL_SHOW';

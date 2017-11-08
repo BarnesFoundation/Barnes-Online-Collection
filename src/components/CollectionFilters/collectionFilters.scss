@@ -1,11 +1,16 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .collection-filters {
-  .collection-filter-icon {
-    margin-right: .5em;
+  .icon {
     vertical-align: middle;
     // make it appear slightly more centered with the font
     margin-top: -0.08em;
+    margin-right: .5em;
+  }
+
+  .label {
+    margin-left: .5em;
   }
 
   .btn-collection-filter {
@@ -149,14 +154,17 @@
 }
 
 .applied-filter-tags-container-wrap {
+  @include clearfix();
 
-  .applied-filter-tags-container {
-    float: left;
-  }
+  padding-bottom: $mobile-filters-section-padding;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  .clear-all {
-    float: right;
-    padding-top: 18px;
+  .flex-right {
+    // make them stay left and right
+    margin-left: auto;
   }
 }
 
@@ -198,6 +206,7 @@
   .icon-cross-tag {
     width: 10px;
     height: 10px;
+    margin: 0;
   }
 
   .color-filter-icon {

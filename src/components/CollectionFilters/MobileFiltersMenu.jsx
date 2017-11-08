@@ -7,7 +7,6 @@ import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as FiltersActions from '../../actions/filters';
 
 import CollectionFiltersApplied from './CollectionFiltersApplied';
-import SearchInput from '../SearchInput/SearchInput';
 import ColorFilters from './ColorFilters';
 import LineFilters from './LineFilters';
 import LightFilters from './LightFilters';
@@ -27,9 +26,8 @@ class MobileFiltersMenu extends Component {
 
   render() {
     return (
-      <div className="mobile-filters-panel">
+      <div className="mobile-panel mobile-filters-panel">
         <CollectionFiltersApplied />
-        <SearchInput />
         <ColorFilters />
         <LineFilters />
         <LightFilters />
@@ -47,7 +45,8 @@ const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
-    filters: state.filters
+    filters: state.filters,
+    search: state.search,
   }
 }
 

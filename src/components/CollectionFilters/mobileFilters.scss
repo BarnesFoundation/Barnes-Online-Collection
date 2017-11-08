@@ -1,44 +1,82 @@
 @import '../../scss/variables.scss';
 
-.btn-open-mobile-filters {
+.mobile-buttons-set {
   position: fixed;
-  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
+  bottom: 40px;
+  // don't let it wrap on small screens. There's enough room.
+  white-space: nowrap;
+
+  .collection-search-icon {
+    font-size: 1.1em;
+    margin-right: 0;
+  }
+}
+
+.btn-mobile {
   height: 50px;
-  padding: 0 $mobile-filters-section-padding;
+  min-width: 50px;
   border: $collection-filter-border-size solid rgba(0,0,0,0.2);
   border-radius: 25px;
   background: white;
   cursor: pointer;
+  margin-left: 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
 }
 
-.mobile-filters-overlay,
-.mobile-filters-panel {
+.btn-open-mobile-filters {
+  padding: 0 $mobile-filters-section-padding;
+}
+
+.mobile-panel-overlay,
+.mobile-panel {
   position: fixed;
   top: 0;
   left: 0;
   // use this instead of 100vh, otherwise mobile safari doesn't work right
   bottom: 0;
+
+  &.mobile-search-panel {
+    bottom: auto;
+    width: 100%;
+
+    .mobile-filters-section {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
 }
 
-.mobile-filters-overlay {
+.mobile-panel-overlay {
   min-width: 100%;
   width: 100vw;
   background: rgba(0,0,0,0.7);
-  z-index: $z-index-mobile-filters-overlay;
+  z-index: $z-index-mobile-panel-overlay;
   cursor: pointer;
 }
 
-.mobile-filters-panel {
-  width: $mobile-filters-panel-width;
+.mobile-panel {
+  width: $mobile-panel-width;
   background: white;
-  z-index: $z-index-mobile-filters-panel;
-  overflow-y: scroll;
+  z-index: $z-index-mobile-panel;
+  overflow-y: auto;
+
+  .applied-filter-tags-container-wrap {
+    padding: $mobile-filters-section-padding;
+    position: sticky;
+    top: 0;
+    background: $color-white;
+    box-shadow: $box-shadow-style;
+    z-index: $z-sticky-filter-tags;
+  }
 
   .applied-filter-tags-container {
-    padding: $mobile-filters-section-padding;
+    padding: 0;
   }
 
   .mobile-apply-button-placeholder {
@@ -50,7 +88,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: $mobile-filters-panel-width;
+    width: $mobile-panel-width;
     padding: $mobile-filters-pill-padding;
     background: $color-white;
   }
@@ -65,11 +103,6 @@
   border-top: 1px solid $color-grey-light;
   text-align: left;
   clear: both;
-
-  &.search-input {
-    // todo: hide for now!
-    display: none;
-  }
 
   form {
     margin-top: 0;
@@ -136,6 +169,21 @@
             border-right-width: $collection-filter-border-size;
           }
         }
+      }
+    }
+  }
+
+  .mobile-filters-form {
+    .btn-panel-close {
+      font-size: .75rem;
+      padding: 0;
+      border: none;
+      // undo a couple btn styles
+      width: auto;
+      min-width: 1.5rem;
+
+      .icon {
+        margin-right: 0;
       }
     }
   }

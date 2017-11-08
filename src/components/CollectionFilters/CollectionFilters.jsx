@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { BREAKPOINTS, CLASSNAME_MOBILE_FILTERS_OPEN } from '../../constants';
+import { BREAKPOINTS, CLASSNAME_MOBILE_PANEL_OPEN } from '../../constants';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
@@ -12,13 +12,15 @@ import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchApplied from '../SearchInput/SearchApplied';
 
 import MobileFiltersMenu from './MobileFiltersMenu';
+import MobileSearchMenu from './MobileSearchMenu';
 import MobileFiltersOpener from './MobileFiltersOpener';
-import MobileFiltersCloser from './MobileFiltersCloser';
+import MobilePanelCloser from './MobilePanelCloser';
 
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as MobileFiltersActions from '../../actions/mobileFilters';
+import * as MobileSearchActions from '../../actions/mobileSearch';
 import * as ObjectsActions from '../../actions/objects';
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 
@@ -42,20 +44,26 @@ class CollectionFilters extends Component {
   }
 
   hasNewFilters(props) {
-    return props.filters.ordered &&
-      props.filters.ordered.length > 0 &&
+    return props.filters.ordered.length > 0 &&
       props.filters.ordered !== this.props.filters.ordered;
   }
 
   hasBeenReset(props) {
-    return (props.search.length === 0 ||
-      !props.filters.ordered) &&
-      (props.search !== this.props.search ||
-      props.filters.ordered !== this.props.filters.ordered);
+    const hasNothingSet = props.search.length === 0 && props.filters.ordered.length === 0;
+    const searchHasChanged = props.search !== this.props.search;
+    const filtersHaveChanged = props.filters.ordered !== this.props.filters.ordered;
+
+    return hasNothingSet && (
+      searchHasChanged || filtersHaveChanged
+    );
   }
 
   inMobileFilterMode(props) {
     return props.mobileFilters.visible;
+  }
+
+  inMobileSearchMode(props) {
+    return props.mobileSearch.visible;
   }
 
   mobileFiltersApplied(props) {
@@ -63,50 +71,60 @@ class CollectionFilters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const mobileFiltersWasOpen = this.inMobileFilterMode(this.props);
+    const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
+    const mobileSearchWillBeOpen = this.inMobileSearchMode(nextProps);
 
-    const willBeOpen = this.inMobileFilterMode(nextProps);
-
-    if (willBeOpen) {
-      this.props.htmlClassesAdd(CLASSNAME_MOBILE_FILTERS_OPEN);
+    // this will keep these html class states correct.
+    if (mobileFiltersWillBeOpen || mobileSearchWillBeOpen) {
+      this.props.htmlClassesAdd(CLASSNAME_MOBILE_PANEL_OPEN);
     } else {
-      this.props.htmlClassesRemove(CLASSNAME_MOBILE_FILTERS_OPEN);
+      this.props.htmlClassesRemove(CLASSNAME_MOBILE_PANEL_OPEN);
     }
 
-    // if we're not currently editing mobile filters, behave normally
-    if (!this.inMobileFilterMode(this.props)) {
-      if (this.hasNewSearch(nextProps)) {
-        this.props.searchObjects(nextProps.search);
-        this.props.clearAllFilters();
-        this.props.closeFilterSet();
-
-      } else if (this.hasNewFilters(nextProps)) {
-        this.props.findFilteredObjects(nextProps.filters);
-        this.props.clearSearchTerm();
-
-      } else if (this.hasBeenReset(nextProps)) {
-        this.props.getAllObjects();
-      }
+    // if a search was just submitted
+    if (this.hasNewSearch(nextProps)) {
+      this.props.searchObjects(nextProps.search);
+      this.props.clearAllFilters();
+      this.props.closeFilterSet();
+      this.props.closeMobileFilters();
+      this.props.closeMobileSearch();
+      return;
     }
 
-    // if we're editing mobile filters
-    if (this.inMobileFilterMode(this.props) && this.inMobileFilterMode(nextProps)) {
-      // if we've changed something about the filters
-      if (this.props.filters.ordered !== nextProps.filters.ordered) {
-        // queue the change and move on
-        this.props.queueMobileFilters(nextProps.filters.ordered);
+    // if it's been reset
+    if (this.hasBeenReset(nextProps)) {
+      this.props.getAllObjects();
+      this.props.closeMobileFilters();
+      this.props.closeMobileSearch();
+      return;
+    }
+
+    if (mobileFiltersWasOpen) {
+      // if we're editing mobile filters
+      if (mobileFiltersWillBeOpen) {
+        // if we've changed something about the filters
+        if (this.props.filters.ordered !== nextProps.filters.ordered) {
+          // queue the change and move on
+          this.props.queueMobileFilters(nextProps.filters.ordered);
+        }
+
         return;
-      } else {
-        return;
       }
-    }
 
-    // if we are closing the mobile filters
-    if (this.inMobileFilterMode(this.props) && !this.inMobileFilterMode(nextProps)) {
+      // if we are closing the mobile filters
+      if (!mobileFiltersWillBeOpen) {
 
-      // by hitting the apply button
-      if (this.mobileFiltersApplied(nextProps)) {
 
-        // if no changes are pending, do nothing
+        // Note: We're showing filters on the main page now,
+        // and we're not setup to store both two states in order to revert to
+        // the last state... So for now, just apply the changes every time.
+        // if (!this.mobileFiltersApplied(nextProps)) {
+        // // if we've closed the filter panel without hitting the apply button, do nothing
+        //   return;
+        // }
+
+         // if no changes are pending, do nothing
         if (!this.props.mobileFilters.filtersPending) {
           return;
 
@@ -114,7 +132,7 @@ class CollectionFilters extends Component {
         } else {
 
           // if they're added filters, find the filtered objects
-          if (nextProps.filters.ordered && nextProps.filters.ordered.length) {
+          if (nextProps.filters.ordered.length) {
             this.props.findFilteredObjects(nextProps.filters);
             this.props.clearSearchTerm();
 
@@ -123,13 +141,21 @@ class CollectionFilters extends Component {
             this.props.getAllObjects();
           }
         }
-
-        // this.props.resetMobileFilters();
-
-      // if we've closed the filter panel without hitting the apply button, do nothing
-      } else {
-        return;
       }
+      // end
+      return;
+    }
+
+    // if we're just opening the mobile panel for the first time
+    if (mobileFiltersWillBeOpen) {
+      return;
+    }
+
+    // otherwise, we're not in mobile search land, handle the new filter
+    if (this.hasNewFilters(nextProps)) {
+      this.props.findFilteredObjects(nextProps.filters);
+      this.props.clearSearchTerm();
+      return;
     }
   }
 
@@ -143,6 +169,7 @@ class CollectionFilters extends Component {
     }
 
     const mobileFiltersVisible = this.props.mobileFilters.visible;
+    const mobileSearchVisible = this.props.mobileSearch.visible;
     const filterSet = this.getFilterSet();
 
     return (
@@ -151,11 +178,20 @@ class CollectionFilters extends Component {
           { mobileFiltersVisible &&
             <div>
               <MobileFiltersMenu />
-              <MobileFiltersCloser />
+              <MobilePanelCloser />
             </div>
           }
-          { !mobileFiltersVisible &&
-            <MobileFiltersOpener />
+          { mobileSearchVisible &&
+            <div>
+              <MobileSearchMenu />
+              <MobilePanelCloser />
+            </div>
+          }
+          { !(mobileFiltersVisible || mobileSearchVisible) &&
+            <div>
+              {filtersApplied}
+              <MobileFiltersOpener />
+            </div>
           }
         </MediaQuery>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
@@ -174,6 +210,7 @@ const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
+    mobileSearch: state.mobileSearch,
     filters: state.filters,
     search: state.search,
   }
@@ -185,6 +222,7 @@ const mapDispatchToProps = dispatch => {
     SearchActions,
     FilterSetsActions,
     MobileFiltersActions,
+    MobileSearchActions,
     ObjectsActions,
     HtmlClassManagerActions,
   ),

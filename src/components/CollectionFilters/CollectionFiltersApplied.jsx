@@ -31,12 +31,14 @@ class CollectionFiltersApplied extends Component {
 
     return ( hasFilters &&
       <div className="applied-filter-tags-container-wrap">
-        <div className="applied-filter-tags-container">
-          {this.getFilterTags(filters)}
+        <div className="flex-left">
+          <div className="applied-filter-tags-container">
+            {this.getFilterTags(filters)}
+          </div>
         </div>
-        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
+        <div className="flex-right">
           <ClearAllButton />
-        </MediaQuery>
+        </div>
       </div>
     );
   }

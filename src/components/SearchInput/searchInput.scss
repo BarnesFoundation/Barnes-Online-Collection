@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/_mixins.scss';
 
 .search-input {
   form {
@@ -40,6 +41,10 @@
   text-align: left;
   font-family: 'Calibre';
   font-size: 30px;
+
+  @include breakpoint('medium-') {
+    font-size: inherit;
+  }
 
   p {
     margin-top: 0;
