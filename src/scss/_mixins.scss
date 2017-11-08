@@ -14,3 +14,20 @@
     }
   }
 }
+
+@mixin set-top-header-height() {
+  top: $g-header-height-xsmall;
+
+  // match the header heights in the styleguide
+  @include breakpoint('medium+') {
+    top: $g-header-height-medium;
+  }
+
+  @include breakpoint('large+') {
+    top: $g-header-height-large;
+  }
+
+  @include breakpoint('xlarge+') {
+    top: $g-header-height-xlarge;
+  }
+}

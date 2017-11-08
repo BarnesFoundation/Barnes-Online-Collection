@@ -43,14 +43,15 @@ $z-index-art-object-grid-view-more: 2;
 $z-index-loading-overlay: 2;
 $z-index-modal-x: 2;
 $z-index-mobile-panel-overlay: 3;
-$z-index-mobile-panel: 4;
-$z-index-mobile-filters-btn-open: 5;
+$z-index-g-header: 4;
+$z-index-mobile-panel: 5;
+$z-index-mobile-filters-btn-open: 6;
 // cover the filters-btn-open
-$z-index-modal: 6;
+$z-index-modal: 7;
 // bump this up as well to cover the filters-btn-open
-$z-index-g-nav: 6;
+$z-index-g-nav: 8;
 // stay on top of the modal
-$z-index-rc-slider-tooltip: 7;
+$z-index-rc-slider-tooltip: 9;
 
 
 // icon styles

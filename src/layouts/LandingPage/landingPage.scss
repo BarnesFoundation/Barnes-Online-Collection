@@ -27,6 +27,26 @@
 
   .collection-filters-wrap {
     text-align: center;
+
+    @include breakpoint('medium-') {
+      position: sticky;
+      top: $g-header-height-xsmall;
+      background: $color-white;
+
+      // stay under the header. Unless the mobile-panel is open
+      z-index: $z-index-mobile-panel-overlay;
+      .mobile-panel-open & {
+        z-index: $z-index-mobile-panel;
+      }
+
+      .applied-filter-tags-container {
+        float: none;
+      }
+
+      .search-results {
+        padding-top: 0;
+      }
+    }
   }
 }
 

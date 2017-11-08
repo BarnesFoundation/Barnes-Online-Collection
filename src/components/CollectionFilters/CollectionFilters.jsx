@@ -189,7 +189,10 @@ class CollectionFilters extends Component {
             </div>
           }
           { !(mobileFiltersVisible || mobileSearchVisible) &&
-            <MobileFiltersOpener />
+            <div>
+              {filtersApplied}
+              <MobileFiltersOpener />
+            </div>
           }
         </MediaQuery>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>

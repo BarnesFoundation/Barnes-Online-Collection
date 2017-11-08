@@ -6,6 +6,7 @@
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
   bottom: 40px;
+  // don't let it wrap on small screens. There's enough room.
   white-space: nowrap;
 
   .collection-search-icon {
@@ -39,6 +40,16 @@
   left: 0;
   // use this instead of 100vh, otherwise mobile safari doesn't work right
   bottom: 0;
+
+  &.mobile-search-panel {
+    bottom: auto;
+    width: 100%;
+
+    .mobile-filters-section {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
 }
 
 .mobile-panel-overlay {
@@ -53,7 +64,7 @@
   width: $mobile-panel-width;
   background: white;
   z-index: $z-index-mobile-panel;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   .applied-filter-tags-container {
     padding: $mobile-filters-section-padding;
@@ -161,6 +172,10 @@
       // undo a couple btn styles
       width: auto;
       min-width: 1.5rem;
+
+      .icon {
+        margin-right: 0;
+      }
     }
   }
 }

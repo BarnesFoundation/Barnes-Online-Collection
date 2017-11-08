@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 .collection-filters {
   .icon {
@@ -153,7 +154,6 @@
 }
 
 .applied-filter-tags-container-wrap {
-
   .applied-filter-tags-container {
     float: left;
   }
