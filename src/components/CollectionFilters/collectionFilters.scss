@@ -156,7 +156,6 @@
 .applied-filter-tags-container-wrap {
   @include clearfix();
 
-  padding-bottom: $mobile-filters-section-padding;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -165,6 +164,15 @@
   .flex-right {
     // make them stay left and right
     margin-left: auto;
+  }
+
+  // let the tags and the 'clear all' button wrap
+  @include breakpoint('small-') {
+    display: block;
+
+    .flex-right {
+      text-align: left;
+    }
   }
 }
 

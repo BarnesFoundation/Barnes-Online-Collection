@@ -29,10 +29,13 @@
     text-align: center;
 
     @include breakpoint('medium-') {
+      // stay below the header
       @include set-top-header-height();
 
       position: sticky;
       background: $color-white;
+      // a little less than the styleguide padding
+      padding-bottom: 0;
 
       // stay under the header. Unless the mobile-panel is open
       z-index: $z-index-mobile-panel-overlay;
