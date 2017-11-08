@@ -154,13 +154,16 @@
 }
 
 .applied-filter-tags-container-wrap {
-  .applied-filter-tags-container {
-    float: left;
-  }
+  @include clearfix();
 
-  .clear-all {
-    float: right;
-    padding-top: 18px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .flex-right {
+    // make them stay left and right
+    margin-left: auto;
   }
 }
 

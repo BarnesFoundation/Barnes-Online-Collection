@@ -66,8 +66,12 @@
   z-index: $z-index-mobile-panel;
   overflow-y: auto;
 
-  .applied-filter-tags-container {
+  .applied-filter-tags-container-wrap {
     padding: $mobile-filters-section-padding;
+  }
+
+  .applied-filter-tags-container {
+    padding: 0;
   }
 
   .mobile-apply-button-placeholder {

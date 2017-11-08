@@ -22,11 +22,11 @@ class ClearAllButton extends Component {
 
   render() {
     return (
-      <button
+      <div
         onClick={this.handleClick}
         className="btn btn-no-style clear-all"
       >Clear all
-      </button>
+      </div>
     );
   }
 }
