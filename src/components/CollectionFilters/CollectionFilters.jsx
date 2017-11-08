@@ -42,16 +42,18 @@ class CollectionFilters extends Component {
   }
 
   hasNewFilters(props) {
-    return props.filters.ordered &&
-      props.filters.ordered.length > 0 &&
+    return props.filters.ordered.length > 0 &&
       props.filters.ordered !== this.props.filters.ordered;
   }
 
   hasBeenReset(props) {
-    return (props.search.length === 0 ||
-      !props.filters.ordered) &&
-      (props.search !== this.props.search ||
-      props.filters.ordered !== this.props.filters.ordered);
+    const hasNothingSet = props.search.length === 0 && props.filters.ordered.length === 0;
+    const searchHasChanged = props.search !== this.props.search;
+    const filtersHaveChanged = props.filters.ordered !== this.props.filters.ordered;
+
+    return hasNothingSet && (
+      searchHasChanged || filtersHaveChanged
+    );
   }
 
   inMobileFilterMode(props) {
@@ -63,73 +65,89 @@ class CollectionFilters extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const mobileFiltersWasOpen = this.inMobileFilterMode(this.props);
+    const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
 
-    const willBeOpen = this.inMobileFilterMode(nextProps);
-
-    if (willBeOpen) {
-      this.props.htmlClassesAdd(CLASSNAME_MOBILE_FILTERS_OPEN);
+    if (mobileFiltersWillBeOpen) {
+      // this.props.htmlClassesAdd(CLASSNAME_MOBILE_FILTERS_OPEN);
     } else {
-      this.props.htmlClassesRemove(CLASSNAME_MOBILE_FILTERS_OPEN);
+      // this.props.htmlClassesRemove(CLASSNAME_MOBILE_FILTERS_OPEN);
     }
 
-    // if we're not currently editing mobile filters, behave normally
-    if (!this.inMobileFilterMode(this.props)) {
-      if (this.hasNewSearch(nextProps)) {
-        this.props.searchObjects(nextProps.search);
-        this.props.clearAllFilters();
-        this.props.closeFilterSet();
-
-      } else if (this.hasNewFilters(nextProps)) {
-        this.props.findFilteredObjects(nextProps.filters);
-        this.props.clearSearchTerm();
-
-      } else if (this.hasBeenReset(nextProps)) {
-        this.props.getAllObjects();
-      }
+    // if a search was just submitted
+    if (this.hasNewSearch(nextProps)) {
+      this.props.searchObjects(nextProps.search);
+      this.props.clearAllFilters();
+      this.props.closeFilterSet();
+      this.props.closeMobileFilters();
+      return;
     }
 
-    // if we're editing mobile filters
-    if (this.inMobileFilterMode(this.props) && this.inMobileFilterMode(nextProps)) {
-      // if we've changed something about the filters
-      if (this.props.filters.ordered !== nextProps.filters.ordered) {
-        // queue the change and move on
-        this.props.queueMobileFilters(nextProps.filters.ordered);
-        return;
-      } else {
-        return;
-      }
+    // debugger;
+    // if it's been reset
+    if (this.hasBeenReset(nextProps)) {
+      this.props.getAllObjects();
+      this.props.closeMobileFilters();
+      return;
     }
 
-    // if we are closing the mobile filters
-    if (this.inMobileFilterMode(this.props) && !this.inMobileFilterMode(nextProps)) {
-
-      // by hitting the apply button
-      if (this.mobileFiltersApplied(nextProps)) {
-
-        // if no changes are pending, do nothing
-        if (!this.props.mobileFilters.filtersPending) {
-          return;
-
-        // if there are changes pending
-        } else {
-
-          // if they're added filters, find the filtered objects
-          if (nextProps.filters.ordered && nextProps.filters.ordered.length) {
-            this.props.findFilteredObjects(nextProps.filters);
-            this.props.clearSearchTerm();
-
-          // if they're cleared filters, get everything
-          } else {
-            this.props.getAllObjects();
-          }
+    if (mobileFiltersWasOpen) {
+      // if we're editing mobile filters
+      if (mobileFiltersWillBeOpen) {
+        // if we've changed something about the filters
+        if (this.props.filters.ordered !== nextProps.filters.ordered) {
+          // queue the change and move on
+          this.props.queueMobileFilters(nextProps.filters.ordered);
         }
 
-        // this.props.resetMobileFilters();
-
-      // if we've closed the filter panel without hitting the apply button, do nothing
-      } else {
         return;
       }
+
+      // if we are closing the mobile filters
+      if (!mobileFiltersWillBeOpen) {
+
+        // by hitting the apply button
+        if (this.mobileFiltersApplied(nextProps)) {
+
+          // if no changes are pending, do nothing
+          if (!this.props.mobileFilters.filtersPending) {
+            return;
+
+          // if there are changes pending
+          } else {
+
+            // if they're added filters, find the filtered objects
+            if (nextProps.filters.ordered.length) {
+              this.props.findFilteredObjects(nextProps.filters);
+              this.props.clearSearchTerm();
+
+            // if they're cleared filters, get everything
+            } else {
+              this.props.getAllObjects();
+            }
+          }
+
+          // this.props.resetMobileFilters();
+
+        // if we've closed the filter panel without hitting the apply button, do nothing
+        } else {
+          return;
+        }
+      }
+      // end
+      return;
+    }
+
+    // if we're just opening the mobile panel for the first time
+    if (mobileFiltersWillBeOpen) {
+      return;
+    }
+
+    // otherwise, we're not in mobile search land, handle the new filter
+    if (this.hasNewFilters(nextProps)) {
+      this.props.findFilteredObjects(nextProps.filters);
+      this.props.clearSearchTerm();
+      return;
     }
   }
 

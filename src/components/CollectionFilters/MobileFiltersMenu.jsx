@@ -8,6 +8,7 @@ import * as FiltersActions from '../../actions/filters';
 
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchInput from '../SearchInput/SearchInput';
+import SearchApplied from '../SearchInput/SearchApplied';
 import ColorFilters from './ColorFilters';
 import LineFilters from './LineFilters';
 import LightFilters from './LightFilters';
@@ -26,10 +27,18 @@ class MobileFiltersMenu extends Component {
   }
 
   render() {
+    let searchPanel;
+
+    if (this.props.search.length > 0) {
+      searchPanel = <SearchApplied />;
+    } else {
+      searchPanel = <SearchInput />;
+    }
+
     return (
       <div className="mobile-filters-panel">
         <CollectionFiltersApplied />
-        <SearchInput />
+        {searchPanel}
         <ColorFilters />
         <LineFilters />
         <LightFilters />
@@ -47,7 +56,8 @@ const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
-    filters: state.filters
+    filters: state.filters,
+    search: state.search,
   }
 }
 
