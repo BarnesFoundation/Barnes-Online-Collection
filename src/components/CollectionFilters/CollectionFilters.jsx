@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { BREAKPOINTS, CLASSNAME_MOBILE_FILTERS_OPEN } from '../../constants';
+import { BREAKPOINTS, CLASSNAME_MOBILE_PANEL_OPEN } from '../../constants';
 
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
@@ -12,13 +12,15 @@ import CollectionFiltersApplied from './CollectionFiltersApplied';
 import SearchApplied from '../SearchInput/SearchApplied';
 
 import MobileFiltersMenu from './MobileFiltersMenu';
+import MobileSearchMenu from './MobileSearchMenu';
 import MobileFiltersOpener from './MobileFiltersOpener';
-import MobileFiltersCloser from './MobileFiltersCloser';
+import MobilePanelCloser from './MobilePanelCloser';
 
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as MobileFiltersActions from '../../actions/mobileFilters';
+import * as MobileSearchActions from '../../actions/mobileSearch';
 import * as ObjectsActions from '../../actions/objects';
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 
@@ -60,6 +62,10 @@ class CollectionFilters extends Component {
     return props.mobileFilters.visible;
   }
 
+  inMobileSearchMode(props) {
+    return props.mobileSearch.visible;
+  }
+
   mobileFiltersApplied(props) {
     return props.mobileFilters.filtersApplied;
   }
@@ -67,11 +73,13 @@ class CollectionFilters extends Component {
   componentWillReceiveProps(nextProps) {
     const mobileFiltersWasOpen = this.inMobileFilterMode(this.props);
     const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
+    const mobileSearchWillBeOpen = this.inMobileSearchMode(nextProps);
 
-    if (mobileFiltersWillBeOpen) {
-      // this.props.htmlClassesAdd(CLASSNAME_MOBILE_FILTERS_OPEN);
+    // this will keep these html class states correct.
+    if (mobileFiltersWillBeOpen || mobileSearchWillBeOpen) {
+      this.props.htmlClassesAdd(CLASSNAME_MOBILE_PANEL_OPEN);
     } else {
-      // this.props.htmlClassesRemove(CLASSNAME_MOBILE_FILTERS_OPEN);
+      this.props.htmlClassesRemove(CLASSNAME_MOBILE_PANEL_OPEN);
     }
 
     // if a search was just submitted
@@ -80,14 +88,15 @@ class CollectionFilters extends Component {
       this.props.clearAllFilters();
       this.props.closeFilterSet();
       this.props.closeMobileFilters();
+      this.props.closeMobileSearch();
       return;
     }
 
-    // debugger;
     // if it's been reset
     if (this.hasBeenReset(nextProps)) {
       this.props.getAllObjects();
       this.props.closeMobileFilters();
+      this.props.closeMobileSearch();
       return;
     }
 
@@ -161,6 +170,7 @@ class CollectionFilters extends Component {
     }
 
     const mobileFiltersVisible = this.props.mobileFilters.visible;
+    const mobileSearchVisible = this.props.mobileSearch.visible;
     const filterSet = this.getFilterSet();
 
     return (
@@ -169,10 +179,16 @@ class CollectionFilters extends Component {
           { mobileFiltersVisible &&
             <div>
               <MobileFiltersMenu />
-              <MobileFiltersCloser />
+              <MobilePanelCloser />
             </div>
           }
-          { !mobileFiltersVisible &&
+          { mobileSearchVisible &&
+            <div>
+              <MobileSearchMenu />
+              <MobilePanelCloser />
+            </div>
+          }
+          { !(mobileFiltersVisible || mobileSearchVisible) &&
             <MobileFiltersOpener />
           }
         </MediaQuery>
@@ -192,6 +208,7 @@ const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
+    mobileSearch: state.mobileSearch,
     filters: state.filters,
     search: state.search,
   }
@@ -203,6 +220,7 @@ const mapDispatchToProps = dispatch => {
     SearchActions,
     FilterSetsActions,
     MobileFiltersActions,
+    MobileSearchActions,
     ObjectsActions,
     HtmlClassManagerActions,
   ),

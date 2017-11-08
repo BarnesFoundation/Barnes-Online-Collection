@@ -8,6 +8,7 @@ import MediaQuery from 'react-responsive';
 import { BREAKPOINTS } from '../../constants';
 
 import * as SearchActions from '../../actions/search';
+import MobilePanelCloseButton from '../CollectionFilters/MobilePanelCloseButton';
 
 import './searchInput.css';
 
@@ -40,7 +41,7 @@ class SearchInput extends Component {
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section search-input">
             <h6 className="mobile-filters-header font-zeta">Search</h6>
-            <form onSubmit={this.handleSubmit}>
+            <form className="mobile-filters-form" onSubmit={this.handleSubmit}>
               <div className="form-field">
                 <input
                   className="input mobile"
@@ -49,6 +50,7 @@ class SearchInput extends Component {
                   placeholder="Search a keyword, artist…"
                   onChange={this.handleChange}
                 />
+                <MobilePanelCloseButton />
               </div>
             </form>
           </div>

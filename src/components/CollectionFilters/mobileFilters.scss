@@ -6,6 +6,7 @@
   transform: translateX(-50%);
   z-index: $z-index-mobile-filters-btn-open;
   bottom: 40px;
+  white-space: nowrap;
 
   .collection-search-icon {
     font-size: 1.1em;
@@ -21,14 +22,18 @@
   background: white;
   cursor: pointer;
   margin-left: 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
 }
 
 .btn-open-mobile-filters {
   padding: 0 $mobile-filters-section-padding;
 }
 
-.mobile-filters-overlay,
-.mobile-filters-panel {
+.mobile-panel-overlay,
+.mobile-panel {
   position: fixed;
   top: 0;
   left: 0;
@@ -36,18 +41,18 @@
   bottom: 0;
 }
 
-.mobile-filters-overlay {
+.mobile-panel-overlay {
   min-width: 100%;
   width: 100vw;
   background: rgba(0,0,0,0.7);
-  z-index: $z-index-mobile-filters-overlay;
+  z-index: $z-index-mobile-panel-overlay;
   cursor: pointer;
 }
 
-.mobile-filters-panel {
-  width: $mobile-filters-panel-width;
+.mobile-panel {
+  width: $mobile-panel-width;
   background: white;
-  z-index: $z-index-mobile-filters-panel;
+  z-index: $z-index-mobile-panel;
   overflow-y: scroll;
 
   .applied-filter-tags-container {
@@ -63,7 +68,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: $mobile-filters-panel-width;
+    width: $mobile-panel-width;
     padding: $mobile-filters-pill-padding;
     background: $color-white;
   }
@@ -145,6 +150,17 @@
           }
         }
       }
+    }
+  }
+
+  .mobile-filters-form {
+    .btn-panel-close {
+      font-size: .75rem;
+      padding: 0;
+      border: none;
+      // undo a couple btn styles
+      width: auto;
+      min-width: 1.5rem;
     }
   }
 }

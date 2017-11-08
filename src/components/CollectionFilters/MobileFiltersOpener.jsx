@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Icon from '../Icon';
 
 import * as MobileFiltersActions from '../../actions/mobileFilters';
+import * as MobileSearchActions from '../../actions/mobileSearch';
 
 class MobileFiltersOpener extends Component {
   constructor(props) {
@@ -20,8 +21,7 @@ class MobileFiltersOpener extends Component {
   }
 
   handleClickSearchBtn() {
-    // debugger;
-    // this.props.openMobileSearch();
+    this.props.openMobileSearch();
   }
 
   render() {
@@ -35,7 +35,7 @@ class MobileFiltersOpener extends Component {
             Filter{ filterCount > 0 && ` (${filterCount})` }
           </span>
         </button>
-        <button onClick={this.handleClickFilterBtn} className="btn-mobile btn-open-mobile-search font-zeta color-light">
+        <button onClick={this.handleClickSearchBtn} className="btn-mobile btn-open-mobile-search font-zeta color-light">
           <Icon svgId='search' classes='icon collection-search-icon' />
         </button>
       </div>
@@ -55,6 +55,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
     MobileFiltersActions,
+    MobileSearchActions,
   ), dispatch);
 }
 

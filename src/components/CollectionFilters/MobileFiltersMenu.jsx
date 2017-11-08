@@ -7,8 +7,6 @@ import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as FiltersActions from '../../actions/filters';
 
 import CollectionFiltersApplied from './CollectionFiltersApplied';
-import SearchInput from '../SearchInput/SearchInput';
-import SearchApplied from '../SearchInput/SearchApplied';
 import ColorFilters from './ColorFilters';
 import LineFilters from './LineFilters';
 import LightFilters from './LightFilters';
@@ -27,18 +25,9 @@ class MobileFiltersMenu extends Component {
   }
 
   render() {
-    let searchPanel;
-
-    if (this.props.search.length > 0) {
-      searchPanel = <SearchApplied />;
-    } else {
-      searchPanel = <SearchInput />;
-    }
-
     return (
-      <div className="mobile-filters-panel">
+      <div className="mobile-panel mobile-filters-panel">
         <CollectionFiltersApplied />
-        {searchPanel}
         <ColorFilters />
         <LineFilters />
         <LightFilters />

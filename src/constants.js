@@ -62,7 +62,7 @@ export const HTML_CLASSES_REMOVE = 'HTML_CLASSES_REMOVE';
 // this should match the class used by the styleguide
 export const CLASSNAME_NAV_ACTIVE = 'nav-active';
 export const CLASSNAME_MODAL_OPEN = 'modal-open';
-export const CLASSNAME_MOBILE_FILTERS_OPEN = 'mobile-filters-open';
+export const CLASSNAME_MOBILE_PANEL_OPEN = 'mobile-panel-open';
 
 // modal
 export const MODAL_SHOW = 'MODAL_SHOW';

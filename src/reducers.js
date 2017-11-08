@@ -5,6 +5,7 @@ import ensembleObjects from './reducers/ensembleObjects';
 import object from './reducers/object';
 import filterSets from './reducers/filterSets';
 import mobileFilters from './reducers/mobileFilters';
+import mobileSearch from './reducers/mobileSearch';
 import filters from './reducers/filters';
 import search from './reducers/search';
 import htmlClassManager from './reducers/htmlClassManager';
@@ -21,6 +22,7 @@ export default combineReducers({
   ensembleObjects,
   filterSets,
   mobileFilters,
+  mobileSearch,
   filters,
   search,
   htmlClassManager,

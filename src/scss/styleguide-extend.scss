@@ -6,7 +6,7 @@
 html {
   &.modal-open,
   &.nav-open,
-  &.mobile-filters-open {
+  &.mobile-panel-open {
     &,
     body {
       height: 100%;
@@ -15,7 +15,7 @@ html {
     }
   }
 
-  &.mobile-filters-open {
+  &.mobile-panel-open {
     &,
     body {
       overflow: hidden;

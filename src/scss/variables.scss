@@ -42,8 +42,8 @@ $z-index-art-object-grid-overlay: 2;
 $z-index-art-object-grid-view-more: 2;
 $z-index-loading-overlay: 2;
 $z-index-modal-x: 2;
-$z-index-mobile-filters-overlay: 3;
-$z-index-mobile-filters-panel: 4;
+$z-index-mobile-panel-overlay: 3;
+$z-index-mobile-panel: 4;
 $z-index-mobile-filters-btn-open: 5;
 // cover the filters-btn-open
 $z-index-modal: 6;
@@ -73,7 +73,7 @@ $collection-filter-padding-x: 16px;
 $collection-filter-border-size: 2px;
 
 // mobile-filters
-$mobile-filters-panel-width: calc(100vw - 50px);
+$mobile-panel-width: calc(100vw - 50px);
 $mobile-filters-section-padding: 25px;
 $mobile-filters-pill-padding: 10px;
 
