@@ -167,16 +167,22 @@
     margin-left: auto;
   }
 
-  @include breakpoint('medium-') {
-    padding-top: 0;
+  .btn-filter-shuffle {
+    display: none;
   }
 
-  // let the tags and the 'clear all' button wrap
-  @include breakpoint('small-') {
+  @include breakpoint('medium-') {
+    padding-top: 0;
+    // let the tags and the 'clear all' button wrap
     display: block;
 
     .flex-right {
       text-align: left;
+    }
+
+    .btn-filter-shuffle {
+      float: right;
+      display: inline-block;
     }
   }
 }
