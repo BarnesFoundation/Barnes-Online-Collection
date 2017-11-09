@@ -28,6 +28,11 @@
   .collection-filters-wrap {
     text-align: center;
 
+    .btn-no-style {
+      // the styleguide size for btn is too big
+      line-height: 2em;
+    }
+
     @include breakpoint('medium-') {
       // stay below the header
       @include set-top-header-height();
@@ -35,16 +40,12 @@
       position: sticky;
       background: $color-white;
       // a little less than the styleguide padding
-      padding-bottom: 0;
+      padding-bottom: 1rem;
 
       // stay under the header. Unless the mobile-panel is open
       z-index: $z-index-mobile-panel-overlay;
       .mobile-panel-open & {
         z-index: $z-index-mobile-panel;
-      }
-
-      .applied-filter-tags-container {
-        padding-top: 0;
       }
 
       .search-results {
