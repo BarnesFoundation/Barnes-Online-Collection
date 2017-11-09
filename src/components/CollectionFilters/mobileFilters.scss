@@ -73,6 +73,11 @@
     background: $color-white;
     box-shadow: $box-shadow-style;
     z-index: $z-sticky-filter-tags;
+
+    @include breakpoint('small-') {
+      // the double padding makes it too big
+      padding-bottom: .5rem;
+    }
   }
 
   .applied-filter-tags-container {
@@ -100,7 +105,7 @@
 
 .mobile-filters-section {
   padding: $mobile-filters-section-padding;
-  border-top: 1px solid $color-grey-light;
+  border-bottom: 1px solid $color-grey-light;
   text-align: left;
   clear: both;
 

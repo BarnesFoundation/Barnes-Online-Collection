@@ -156,15 +156,28 @@
 .applied-filter-tags-container-wrap {
   @include clearfix();
 
-  padding-bottom: $mobile-filters-section-padding;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: $mobile-filters-section-padding;
 
   .flex-right {
     // make them stay left and right
     margin-left: auto;
+  }
+
+  @include breakpoint('medium-') {
+    padding-top: 0;
+  }
+
+  // let the tags and the 'clear all' button wrap
+  @include breakpoint('small-') {
+    display: block;
+
+    .flex-right {
+      text-align: left;
+    }
   }
 }
 
@@ -172,9 +185,6 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-top: $mobile-filters-section-padding;
-  // account for pill bottom margin
-  margin-bottom: -12px;
 
   &.hidden {
     display: none;
@@ -192,7 +202,7 @@
   cursor: pointer;
   padding: $collection-filter-padding-y $collection-filter-padding-x;
   // margin bottom for if they wrap
-  margin: 0 12px 12px 0;
+  margin: 6px 12px 6px 0;
 
   .icon {
     align-self: center;
