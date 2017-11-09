@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import Icon from '../Icon';
 
 import * as FiltersActions from '../../actions/filters';
-import * as MobileFiltersActions from '../../actions/mobileFilters';
-import * as MobileSearchActions from '../../actions/mobileSearch';
 
 class MobilePanelCloser extends Component {
   constructor(props) {
@@ -18,8 +16,6 @@ class MobilePanelCloser extends Component {
 
   handleClick(e) {
     this.props.shuffleFilters();
-    this.props.closeMobileFilters();
-    this.props.closeMobileSearch();
   }
 
   render() {
@@ -40,8 +36,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
-    MobileFiltersActions,
-    MobileSearchActions,
   ), dispatch);
 }
 
