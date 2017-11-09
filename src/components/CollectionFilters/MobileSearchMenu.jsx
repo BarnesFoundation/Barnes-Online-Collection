@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import SearchInput from '../SearchInput/SearchInput';
-import SearchApplied from '../SearchInput/SearchApplied';
 
 class MobileFiltersMenu extends Component {
   constructor(props) {
@@ -12,17 +11,9 @@ class MobileFiltersMenu extends Component {
   }
 
   render() {
-    let searchPanel;
-
-    if (this.props.search.length > 0) {
-      searchPanel = <SearchApplied />;
-    } else {
-      searchPanel = <SearchInput />;
-    }
-
     return (
       <div className="mobile-panel mobile-search-panel">
-        {searchPanel}
+        <SearchInput />
       </div>
     );
   }

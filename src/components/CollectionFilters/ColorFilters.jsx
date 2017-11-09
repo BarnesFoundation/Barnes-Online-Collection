@@ -22,7 +22,6 @@ class ColorFilters extends Component {
   }
 
   render() {
-
     return (
       <div>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ClearAllButton from '../SearchInput/ClearAllButton'
+import MobilePanelShuffleButton from './MobilePanelShuffleButton'
 import FilterTag from './FilterTag';
 import MediaQuery from 'react-responsive';
 import { BREAKPOINTS } from '../../constants';
@@ -31,12 +32,15 @@ class CollectionFiltersApplied extends Component {
 
     return ( hasFilters &&
       <div className="applied-filter-tags-container-wrap">
-        <div className="applied-filter-tags-container">
-          {this.getFilterTags(filters)}
+        <div className="flex-left">
+          <div className="applied-filter-tags-container">
+            {this.getFilterTags(filters)}
+          </div>
         </div>
-        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
+        <div className="flex-right">
           <ClearAllButton />
-        </MediaQuery>
+          <MobilePanelShuffleButton />
+        </div>
       </div>
     );
   }

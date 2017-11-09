@@ -40,7 +40,6 @@ class SearchInput extends Component {
       <div>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section search-input">
-            <h6 className="mobile-filters-header font-zeta">Search</h6>
             <form className="mobile-filters-form" onSubmit={this.handleSubmit}>
               <div className="form-field">
                 <input

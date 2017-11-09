@@ -26,6 +26,7 @@ $font-family: 'Calibre', sans-serif;
 $font_path: '/fonts/';
 
 $border-style: 1px solid $color-border;
+$box-shadow-style: 0px 1px 4px $color-border;
 
 // block margins
 // from /src/components-barnes-toolkit/components/block/_block.scss
@@ -43,15 +44,17 @@ $z-index-art-object-grid-view-more: 2;
 $z-index-loading-overlay: 2;
 $z-index-modal-x: 2;
 $z-index-mobile-panel-overlay: 3;
-$z-index-mobile-panel: 4;
-$z-index-mobile-filters-btn-open: 5;
+$z-index-g-header: 4;
+$z-index-mobile-panel: 5;
+$z-index-mobile-filters-btn-open: 6;
 // cover the filters-btn-open
-$z-index-modal: 6;
+$z-index-modal: 7;
 // bump this up as well to cover the filters-btn-open
-$z-index-g-nav: 6;
+$z-index-g-nav: 8;
 // stay on top of the modal
-$z-index-rc-slider-tooltip: 7;
-
+$z-index-rc-slider-tooltip: 9;
+// also win out over the sliders
+$z-sticky-filter-tags: 10;
 
 // icon styles
 $collection-filter-item-margin: $block-margin-small;

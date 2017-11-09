@@ -114,3 +114,7 @@ li {
 .g-nav__important-links {
   border-top: none;
 }
+
+.clearfix {
+  @include clearfix();
+}

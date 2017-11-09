@@ -36,10 +36,10 @@ class LandingPage extends Component {
             <LandingPageHeader />
           </div>
 
-          <div className="collection-filters-wrap m-block m-block--flush m-block--shallow m-block--no-border">
+          <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
             <CollectionFilters />
           </div>
-          <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border">
+          <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
             <ArtObjectGrid
               gridStyle="full-size"
               pageType="landing"

@@ -1,4 +1,8 @@
+@import '../../scss/variables.scss';
+
 .g-header {
+  z-index: $z-index-g-header;
+
   .g-header__btn__search {
     // hide on the collections site
     display: none;

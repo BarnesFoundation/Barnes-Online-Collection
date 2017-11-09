@@ -115,32 +115,31 @@ class CollectionFilters extends Component {
       // if we are closing the mobile filters
       if (!mobileFiltersWillBeOpen) {
 
-        // by hitting the apply button
-        if (this.mobileFiltersApplied(nextProps)) {
 
-          // if no changes are pending, do nothing
-          if (!this.props.mobileFilters.filtersPending) {
-            return;
+        // Note: We're showing filters on the main page now,
+        // and we're not setup to store both two states in order to revert to
+        // the last state... So for now, just apply the changes every time.
+        // if (!this.mobileFiltersApplied(nextProps)) {
+        // // if we've closed the filter panel without hitting the apply button, do nothing
+        //   return;
+        // }
 
-          // if there are changes pending
-          } else {
-
-            // if they're added filters, find the filtered objects
-            if (nextProps.filters.ordered.length) {
-              this.props.findFilteredObjects(nextProps.filters);
-              this.props.clearSearchTerm();
-
-            // if they're cleared filters, get everything
-            } else {
-              this.props.getAllObjects();
-            }
-          }
-
-          // this.props.resetMobileFilters();
-
-        // if we've closed the filter panel without hitting the apply button, do nothing
-        } else {
+         // if no changes are pending, do nothing
+        if (!this.props.mobileFilters.filtersPending) {
           return;
+
+        // if there are changes pending
+        } else {
+
+          // if they're added filters, find the filtered objects
+          if (nextProps.filters.ordered.length) {
+            this.props.findFilteredObjects(nextProps.filters);
+            this.props.clearSearchTerm();
+
+          // if they're cleared filters, get everything
+          } else {
+            this.props.getAllObjects();
+          }
         }
       }
       // end
@@ -189,7 +188,10 @@ class CollectionFilters extends Component {
             </div>
           }
           { !(mobileFiltersVisible || mobileSearchVisible) &&
-            <MobileFiltersOpener />
+            <div>
+              {filtersApplied}
+              <MobileFiltersOpener />
+            </div>
           }
         </MediaQuery>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
