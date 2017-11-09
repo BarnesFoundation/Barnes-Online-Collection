@@ -25,6 +25,8 @@
     .btn-no-style {
       // the styleguide size for btn is too big
       line-height: 2em;
+      // this shows up on the small size
+      margin-top: 0;
     }
 
     @include breakpoint('medium-') {

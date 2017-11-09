@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as FiltersActions from '../../actions/filters';
-
+import MobilePanelShuffleButton from './MobilePanelShuffleButton';
 import CollectionFiltersApplied from './CollectionFiltersApplied';
 import ColorFilters from './ColorFilters';
 import LineFilters from './LineFilters';
@@ -25,9 +25,17 @@ class MobileFiltersMenu extends Component {
   }
 
   render() {
+    const filters = this.props.filters.ordered;
+    const hasFilters = filters && filters.length > 0;
+
     return (
       <div className="mobile-panel mobile-filters-panel">
         <CollectionFiltersApplied />
+        { !hasFilters &&
+          <div className="mobile-filters-section">
+            <MobilePanelShuffleButton />
+          </div>
+        }
         <ColorFilters />
         <LineFilters />
         <LightFilters />
