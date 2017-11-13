@@ -45,8 +45,26 @@
 
   .art-object__image-container {
     @include set-top-header-height();
-
     position: sticky;
+
+    .art-object__image {
+      max-height: 100vh;
+      margin-top: -$g-header-height-xsmall;
+      padding-top: $g-header-height-xsmall;
+      // match the header heights in the styleguide
+      @include breakpoint('medium+') {
+        margin-top: -$g-header-height-medium;
+        padding-top: $g-header-height-medium;
+      }
+      @include breakpoint('large+') {
+        margin-top: -$g-header-height-large;
+        padding-top: $g-header-height-large;
+      }
+      @include breakpoint('xlarge+') {
+        margin-top: -$g-header-height-xlarge;
+        padding-top: $g-header-height-xlarge;
+      }
+    }
 
     .filter-tag-set {
       display: flex;
