@@ -44,8 +44,11 @@
   }
 
   .art-object__image-container {
-    @include set-top-header-height();
-    position: sticky;
+    // don't use this on mobile
+    @include breakpoint('medium+') {
+      @include set-top-header-height();
+      position: sticky;
+    }
 
     .art-object__image {
       max-height: 100vh;
