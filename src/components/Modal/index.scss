@@ -11,6 +11,7 @@
   overflow-y: scroll;
   background: $color-white;
   padding-top: $block-margin-small;
+  -webkit-overflow-scrolling: touch;
 
   &[data-modal-is-open="false"] {
     display: none;

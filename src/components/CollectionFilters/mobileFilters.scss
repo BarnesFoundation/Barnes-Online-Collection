@@ -66,6 +66,7 @@
   background: white;
   z-index: $z-index-mobile-panel;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   .applied-filter-tags-container-wrap {
     padding: $mobile-filters-section-padding;
