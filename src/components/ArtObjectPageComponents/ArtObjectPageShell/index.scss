@@ -21,6 +21,12 @@
     // override - no need to clear the header
     .art-object__image-container {
       top: 0;
+
+      // override - no need to clear the header
+      .art-object__image {
+        margin-top: 0;
+        padding-top: 0;
+      }
     }
   }
 
