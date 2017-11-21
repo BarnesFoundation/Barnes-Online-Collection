@@ -39,7 +39,7 @@ export const ENSEMBLE = {
     wallTitle: 'West Wall'
   },
   9: {
-    roomTitle: 'Room 6',
+    roomTitle: 'Room 3',
     wallTitle: 'North Wall'
   },
   10: {

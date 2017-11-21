@@ -424,6 +424,17 @@ app.get('/objects/:id/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
+app.get('/track/image-download/:imageId', (req, res) => {
+  const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/';
+  const imageId = req.params.imageId;
+  const downloadUrl = `${imageBaseUrl}${imageId}`;
+
+  console.log('todo: track download for imageId: ' + imageId);
+  console.log('redirecting to: ' + downloadUrl);
+
+  return res.redirect(302, downloadUrl);
+})
+
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
 })
