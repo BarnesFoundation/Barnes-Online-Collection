@@ -118,3 +118,18 @@ li {
 .clearfix {
   @include clearfix();
 }
+
+@media print {
+  html:not([class=""]) {
+    padding-top: 0;
+  }
+
+  .flickity-slider {
+    transform: none !important;
+
+    .m-tabs__item {
+      position: relative !important;
+      left: 0 !important;
+    }
+  }
+}
