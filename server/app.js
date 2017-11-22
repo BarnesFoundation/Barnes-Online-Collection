@@ -361,7 +361,7 @@ const renderAppObjectPage = (req, res, next) => {
     const canonicalUrl = canonicalRoot + req.originalUrl
 
     if (!objectData.id) {
-      throw `bad object Id in url: ${objectId}`
+      throw new Error(`bad object Id in url: ${objectId}`)
     }
 
     objectData = generateObjectImageUrls(objectData)

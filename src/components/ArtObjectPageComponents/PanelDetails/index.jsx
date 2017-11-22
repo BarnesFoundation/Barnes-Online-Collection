@@ -57,7 +57,15 @@ class PanelDetails extends Component {
             objectCopyrightDetails.type === "large" &&
             isZoomEnabled
           ) ?
-            <Zoom invno={object.invno} />
+            <div>
+              <Zoom invno={object.invno} />
+              <img
+                aria-hidden="true"
+                className="art-object__image art-object__image-hidden"
+                src={object.imageUrlLarge}
+                alt={object.title}
+              />
+            </div>
           :
             <div className="container-inner-narrow">
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>

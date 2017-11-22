@@ -112,7 +112,7 @@ class PanelVisuallyRelated extends Component {
 
     return (
       <div className="m-block m-block--shallow">
-        <div className="m-block__columns">
+        <div className="m-block__columns m-block__columns--page-cols">
           <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>

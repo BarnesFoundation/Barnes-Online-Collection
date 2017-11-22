@@ -322,8 +322,7 @@ const buildQueriesFromFilters = (filters) => {
           case 'all types':
             break;
           default:
-            throw 'unexpected filterType';
-            break;
+            throw new Error('unexpected filterType');
         }
 
         break;

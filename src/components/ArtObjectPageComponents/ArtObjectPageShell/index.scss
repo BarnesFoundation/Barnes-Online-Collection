@@ -131,4 +131,27 @@
       pointer-events: none;
     }
   }
+
+  .art-object__image-hidden {
+    display: none;
+  }
+
+  @media print {
+    .m-block__columns--page-cols {
+      display: block;
+    }
+
+    .m-block__column--page-col {
+      width: auto;
+      margin-bottom: 2rem;
+    }
+
+    .art-object__image-hidden {
+      display: block;
+      margin: 0 auto;
+    }
+    .zoom {
+      display: none;
+    }
+  }
 }
