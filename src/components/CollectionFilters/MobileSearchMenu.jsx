@@ -6,10 +6,6 @@ import { connect } from 'react-redux';
 import SearchInput from '../SearchInput/SearchInput';
 
 class MobileFiltersMenu extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="mobile-panel mobile-search-panel">

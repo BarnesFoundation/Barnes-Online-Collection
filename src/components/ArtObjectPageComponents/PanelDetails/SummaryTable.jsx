@@ -8,7 +8,7 @@ class FlexboxTable extends Component {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
     const ensembleUrl = '/objects/' + this.props.id + '/ensemble';
-    const roomAndTitleText = this.props.onview && getRoomAndTitleText(this.props.ensembleIndex) || ''
+    const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '')
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">

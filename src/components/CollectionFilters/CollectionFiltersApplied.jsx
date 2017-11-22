@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import ClearAllButton from '../SearchInput/ClearAllButton'
 import MobilePanelShuffleButton from './MobilePanelShuffleButton'
 import FilterTag from './FilterTag';
-import MediaQuery from 'react-responsive';
-import { BREAKPOINTS } from '../../constants';
 
 import * as FiltersActions from '../../actions/filters';
 
