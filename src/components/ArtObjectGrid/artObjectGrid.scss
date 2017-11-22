@@ -64,6 +64,23 @@
     top: -$art-object-overlay-border-width;
     bottom: -$art-object-overlay-border-width;
     display: none;
+
+    @media print {
+      display: block;
+      &,
+      .art-object-caption {
+        position: relative;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: none;
+      }
+
+      .art-object-caption {
+        padding: .25em 0 1em 0;
+      }
+    }
   }
 
   .component-masonry-grid {
@@ -145,5 +162,23 @@
     width: 100%;
     top: 0;
     left: 0;
+  }
+
+  @media print {
+    .component-masonry-grid {
+      display: flex;
+      flex-wrap: wrap;
+      height: auto !important;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .masonry-grid-element {
+      position: relative !important;
+      top: 0 !important;
+      left: 0 !important;
+      min-width: 8rem;
+      max-width: 10rem;
+    }
   }
 }
