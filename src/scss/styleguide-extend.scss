@@ -25,6 +25,19 @@ html {
       position: fixed;
     }
   }
+
+  &.modal-open {
+    @media print {
+      &,
+      body {
+        overflow: visible;
+      }
+
+      .landing-page {
+        display: none;
+      }
+    }
+  }
 }
 
 body {
