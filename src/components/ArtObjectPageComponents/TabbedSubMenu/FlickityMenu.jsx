@@ -5,10 +5,6 @@ import React, { Component } from 'react'
 const Flickity = require('../../../../node_modules/flickity/dist/flickity.pkgd.js')
 
 class FlickityMenu extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     const selectedIndex = this.props.selectedIndex
     const options = {

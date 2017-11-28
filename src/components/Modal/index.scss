@@ -42,3 +42,14 @@
     }
   }
 }
+
+@media print {
+  .component-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    height: auto;
+    overflow-y: visible;
+  }
+}

@@ -55,6 +55,13 @@ $animationTime: .45s;
         padding-top $preAnimationFadeTime,
         margin-bottom $preAnimationFadeTime,
         padding-bottom $preAnimationFadeTime;
+
+      // undo the settings above for print media
+      @media print {
+        opacity: 1;
+        transition: none;
+        font-size: 1em;
+      }
     }
   }
 }
