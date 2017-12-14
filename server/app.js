@@ -10,7 +10,6 @@ const request = require('request')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
-const prerendercloud = require('prerendercloud')
 const axios = require('axios')
 
 // using this instead of ejs to template from the express routes after we fetch object data.
@@ -147,11 +146,6 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
     file: htpasswdFilePath
   })
   app.use(auth.connect(basic))
-}
-
-if (process.env.NODE_ENV === 'production' && process.env.PRERENDER_TOKEN) {
-  prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN)
-  app.use(prerendercloud)
 }
 
 // Serve static assets
