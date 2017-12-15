@@ -78,6 +78,7 @@ export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection
 export const META_IMAGE = process.env.REACT_APP_META_IMAGE || '';
 export const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || '';
 export const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || '';
+export const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object';
 
 // breakpoints
 export const BREAKPOINTS = {

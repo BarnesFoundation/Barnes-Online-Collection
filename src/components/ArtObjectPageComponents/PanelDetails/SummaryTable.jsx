@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getRoomAndTitleText } from '../../../ensembleIndex';
+import { getArtObjectUrlFromId } from '../../../helpers';
 
 import '../../../components/FlexboxTable/index.css';
 
@@ -7,8 +8,8 @@ class FlexboxTable extends Component {
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
-    const ensembleUrl = '/objects/' + this.props.id + '/ensemble';
-    const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '')
+    const ensembleUrl = getArtObjectUrlFromId(this.props.id, 'ensemble');
+    const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '');
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">

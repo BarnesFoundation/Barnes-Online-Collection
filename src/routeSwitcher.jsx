@@ -65,12 +65,12 @@ class RouteSwitcher extends Component {
     this.primaryRouteLocation = isModal ? modalPreviousLocation : nextLocation
     this.modalRouteComponents = isModal ?
       (<div>
-        <PropsRoute exact path='/objects/:id'
+        <PropsRoute exact path='/objects/:id/:title'
           component={ArtObjectPageModal}
           isModal={true}
           modalPreviousLocation={modalPreviousLocation.pathname || null}
         />
-        <PropsRoute exact path='/objects/:id/:panel'
+        <PropsRoute exact path='/objects/:id/:title/:panel'
           component={ArtObjectPageModal}
           isModal={true}
           modalPreviousLocation={modalPreviousLocation.pathname || null}
@@ -88,8 +88,8 @@ class RouteSwitcher extends Component {
       <div>
         <Switch location={primaryRouteLocation}>
           <Route exact path='/' component={LandingPage}/>
-          <Route exact path='/objects/:id' component={ArtObjectPage}/>
-          <Route exact path='/objects/:id/:panel' component={ArtObjectPage} />
+          <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
+          <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
         </Switch>
         {this.modalRouteComponents}
       </div>
