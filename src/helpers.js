@@ -1,10 +1,21 @@
 import bodybuilder from 'bodybuilder';
 import { BARNES_SETTINGS } from './barnesSettings';
-import { META_TITLE, META_DESCRIPTION } from './constants';
-export const getArtObjectUrlFromId = (objectId, slug) => {
-  slug = slug || '';
+import { META_TITLE, META_DESCRIPTION, DEFAULT_TITLE_URL } from './constants';
 
-  return `/objects/${objectId}/${slug}`;
+const artObjectTitles = require('./artObjectTitles.json');
+
+export const getArtObjectUrlFromId = (objectId, panelSlug) => {
+  // this can happen while the data is loading
+  if (!objectId) {
+    return null;
+  }
+
+  const objectTitleData = artObjectTitles[objectId] || {};
+  const titleSlug = objectTitleData.slug || DEFAULT_TITLE_URL;
+
+  panelSlug = panelSlug || '';
+
+  return `/objects/${objectId}/${titleSlug}/${panelSlug}`;
 }
 
 export const getMetaTagsFromObject = (object) => {

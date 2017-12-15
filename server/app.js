@@ -10,8 +10,8 @@ const request = require('request')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
-const prerendercloud = require('prerendercloud')
 const axios = require('axios')
+const artObjectTitles = require('../src/artObjectTitles.json')
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
@@ -23,6 +23,7 @@ const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online
 const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || ''
 const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || ''
 const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
+const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object';
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
@@ -147,11 +148,6 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
     file: htpasswdFilePath
   })
   app.use(auth.connect(basic))
-}
-
-if (process.env.NODE_ENV === 'production' && process.env.PRERENDER_TOKEN) {
-  prerendercloud.set('prerenderToken', process.env.PRERENDER_TOKEN)
-  app.use(prerendercloud)
 }
 
 // Serve static assets
@@ -408,11 +404,50 @@ const renderAppLandingPage = (req, res, next) => {
   }).catch(next)
 }
 
+const getSlug = (id) => {
+  const objectTitleData = artObjectTitles[id] || {}
+  const slug = objectTitleData.slug || DEFAULT_TITLE_URL
+
+  return slug
+}
+
 app.get('/', (req, res, next) => {
   renderAppLandingPage(req, res, next)
 })
 
+// let this redirect home
+app.get('/objects', (req, res, next) => {
+  return res.redirect(301, '/')
+})
+
 app.get('/objects/:id', (req, res, next) => {
+  const slug = getSlug(req.params.id)
+  // account for slash at end
+  const newUrl = req.url.replace(/[\/]*$/i, `/${slug}/`)
+
+  return res.redirect(301, newUrl)
+})
+
+// special case redirect to handle old url formats
+app.get('/objects/:id/ensemble', (req, res, next) => {
+  const slug = getSlug(req.params.id)
+
+  // target the end of the url with an optional slash (or slashes)
+  const newUrl = req.url.replace(/ensemble[\/]*$/i, `${slug}/ensemble`)
+
+  return res.redirect(301, newUrl)
+})
+
+// special case redirect to handle old url formats
+app.get('/objects/:id/details', (req, res, next) => {
+  const slug = getSlug(req.params.id)
+  // target the end of the url with an optional slash (or slashes)
+  const newUrl = req.url.replace(/details[\/]*$/i, `${slug}/details`)
+
+  return res.redirect(301, newUrl)
+})
+
+app.get('/objects/:id/:title', (req, res, next) => {
   if (!req.url.endsWith('/')) {
     return res.redirect(301, req.url + '/')
   }
@@ -420,7 +455,7 @@ app.get('/objects/:id', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
-app.get('/objects/:id/:panel', (req, res, next) => {
+app.get('/objects/:id/:title/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
