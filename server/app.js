@@ -385,6 +385,10 @@ const renderAppObjectPage = (req, res, next) => {
   })
 }
 
+const getCorrectTitleUrl = (id, titleSlug) => {
+  return `/objects/${id}/${titleSlug}/`;
+}
+
 const renderAppLandingPage = (req, res, next) => {
   const htmlFilePromise = getIndexHtmlPromise()
   const canonicalUrl = canonicalRoot + '/'
@@ -404,7 +408,7 @@ const renderAppLandingPage = (req, res, next) => {
   }).catch(next)
 }
 
-const getSlug = (id) => {
+const getTitleSlug = (id) => {
   const objectTitleData = artObjectTitles[id] || {}
   const slug = objectTitleData.slug || DEFAULT_TITLE_URL
 
@@ -421,28 +425,28 @@ app.get('/objects', (req, res, next) => {
 })
 
 app.get('/objects/:id', (req, res, next) => {
-  const slug = getSlug(req.params.id)
+  const titleSlug = getTitleSlug(req.params.id)
   // account for slash at end
-  const newUrl = req.url.replace(/[\/]*$/i, `/${slug}/`)
+  const newUrl = req.url.replace(/[\/]*$/i, `/${titleSlug}/`)
 
   return res.redirect(301, newUrl)
 })
 
 // special case redirect to handle old url formats
 app.get('/objects/:id/ensemble', (req, res, next) => {
-  const slug = getSlug(req.params.id)
+  const titleSlug = getTitleSlug(req.params.id)
 
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/ensemble[\/]*$/i, `${slug}/ensemble`)
+  const newUrl = req.url.replace(/ensemble[\/]*$/i, `${titleSlug}/ensemble`)
 
   return res.redirect(301, newUrl)
 })
 
 // special case redirect to handle old url formats
 app.get('/objects/:id/details', (req, res, next) => {
-  const slug = getSlug(req.params.id)
+  const titleSlug = getTitleSlug(req.params.id)
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/details[\/]*$/i, `${slug}/details`)
+  const newUrl = req.url.replace(/details[\/]*$/i, `${titleSlug}/details`)
 
   return res.redirect(301, newUrl)
 })
@@ -452,10 +456,26 @@ app.get('/objects/:id/:title', (req, res, next) => {
     return res.redirect(301, req.url + '/')
   }
 
+  const titleSlug = getTitleSlug(req.params.id)
+
+  if (titleSlug !== req.params.title) {
+    // redirect to the correct title
+    const redirectUrl = getCorrectTitleUrl(req.params.id, titleSlug)
+    return res.redirect(301, redirectUrl)
+  }
+
   renderAppObjectPage(req, res, next)
 })
 
 app.get('/objects/:id/:title/:panel', (req, res, next) => {
+  const titleSlug = getTitleSlug(req.params.id)
+
+  if (titleSlug !== req.params.title) {
+    // redirect to the correct title
+    const redirectUrl = getCorrectTitleUrl(req.params.id, titleSlug) + `${req.params.panel}`
+    return res.redirect(301, redirectUrl)
+  }
+
   renderAppObjectPage(req, res, next)
 })
 
