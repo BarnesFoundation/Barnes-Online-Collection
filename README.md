@@ -8,11 +8,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 3. You'll also want the following installed on your machine:
   - Elasticsearch:
     ```bash
-    brew install elasticsearch
+    brew install elasticsearch@5.6
+    brew services start elasticsearch@5.6
     ```
   - Kibana:
     ```bash
-    brew install kibana
+    brew install kibana@5.6
+    brew services start kibana@5.6
     ```
   - [`git-crypt`](https://www.agwa.name/projects/git-crypt/):
     ```bash
