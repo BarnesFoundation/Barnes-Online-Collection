@@ -8,6 +8,13 @@ import LandingPage from './layouts/LandingPage/LandingPage';
 import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
 import * as ModalActions from './actions/modal';
+// todo:
+import * as ObjectsActions from './actions/objects';
+import * as FilterSetsActions from './actions/filterSets';
+import * as SearchActions from './actions/search';
+import * as RouteSearchUrlHelper from './routeSearchUrlHelper';
+
+const queryString = require('query-string');
 
 const renderMergedProps = (component, ...rest) => {
   const finalProps = Object.assign({}, ...rest);
@@ -79,6 +86,39 @@ class RouteSwitcher extends Component {
       : null
   }
 
+  componentDidUpdate(nextProps) {
+    const parsedQuery = queryString.parse(this.props.location.search);
+    const queryType = parsedQuery.qtype;
+    const queryVal = parsedQuery.qval;
+    const searchTerm = this.props.search;
+    const filters = this.props.filters;
+    const filterSet = this.props.filterSets.visibleFilterSet;
+
+    const hasSearch = searchTerm.length > 0;
+    const hasFilters = filters.ordered && filters.ordered.length > 0;
+
+    debugger;
+    if (hasSearch) {
+      if (searchTerm !== queryVal) {
+        this.props.history.push(`?qtype=keyword&qval=${searchTerm}`);
+      }
+    } else if (hasFilters) {
+      let filtersVal = RouteSearchUrlHelper.parseFilters(filters.ordered);
+
+      if (filtersVal !== queryVal) {
+        this.props.history.push(`?qtype=filter&qval=${filtersVal}`);
+      }
+    } else if (queryType) {
+      // there's no searchTerm or Filters, so the query url needs to be cleared.
+      this.props.history.push(``);
+    }
+
+    // if (queryVal && queryVal !== searchTerm) {
+    //   this.props.addSearchTerm(queryVal);
+    //   this.props.selectFilterSet('search');
+    // }
+  }
+
   render() {
     // the first render will default to the live url
     // the modal logic above will sometimes set this.primaryRouteLocation to be something other than props.location
@@ -88,6 +128,7 @@ class RouteSwitcher extends Component {
       <div>
         <Switch location={primaryRouteLocation}>
           <Route exact path='/' component={LandingPage}/>
+          <Route exact path='/objects/' component={LandingPage}/>
           <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
         </Switch>
@@ -100,12 +141,21 @@ class RouteSwitcher extends Component {
 function mapStateToProps(state) {
   return {
     modalParentState: state.modal.modalParentState,
+    filterSets: state.filterSets,
+    // ? todo
+    // mobileFilters: state.mobileFilters,
+    // mobileSearch: state.mobileSearch,
+    filters: state.filters,
+    search: state.search,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
     ModalActions,
+    ObjectsActions,
+    FilterSetsActions,
+    SearchActions,
   ), dispatch);
 }
 

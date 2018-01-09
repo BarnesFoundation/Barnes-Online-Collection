@@ -3,8 +3,8 @@ import { selectRandomFilters } from '../reducers/filterSets';
 
 const initialState = {
   colors: null,
-  lineComposition: null,
-  lineLinearity: null,
+  line_composition: null,
+  line_linearity: null,
   light: null,
   space: null,
   ordered: [],
@@ -30,7 +30,7 @@ const filters = (state = initialState, action) => {
       supplementedState.ordered.push(action.filter);
 
       // the all types works differently -- it acts as a clear
-      if (filterType === 'lineLinearity' && action.filter.name === 'all types') {
+      if (filterType === 'line_linearity' && action.filter.name === 'all types') {
         supplementedState[filterType] = null;
       } else {
         supplementedState[filterType] = action.filter;

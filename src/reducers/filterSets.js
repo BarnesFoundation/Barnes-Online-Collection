@@ -73,7 +73,7 @@ const buildInitialState = () => {
 
   for (let i = 0; i < LINE_FILTERS.composition.length; i++) {
     let lineFilter = LINE_FILTERS.composition[i];
-    lineFilter.filterType = 'lineComposition';
+    lineFilter.filterType = 'line_composition';
     lineFilter.slug = 'line-'+lineFilter.name;
     lineFilter.svgId = lineFilter.svgId;
 
@@ -82,7 +82,7 @@ const buildInitialState = () => {
 
   for (let i = 0; i < LINE_FILTERS.linearity.length; i++) {
     let lineFilter = LINE_FILTERS.linearity[i];
-    lineFilter.filterType = 'lineLinearity';
+    lineFilter.filterType = 'line_linearity';
     lineFilter.slug = 'line-'+lineFilter.name;
     lineFilter.svgId = lineFilter.svgId;
 

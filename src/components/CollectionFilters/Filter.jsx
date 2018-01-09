@@ -79,8 +79,8 @@ class Filter extends Component {
           style={{background: this.props.filter.color}}
           classes={this.getClasses()}
           />;
-      case 'lineComposition':
-      case 'lineLinearity':
+      case 'line_composition':
+      case 'line_linearity':
         return <LineFilter
           handleClick={this.handleButtonFilter}
           classes={this.getClasses()}
