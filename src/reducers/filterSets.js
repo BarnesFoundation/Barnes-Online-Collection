@@ -61,7 +61,7 @@ const buildInitialState = () => {
 
   for (let i = 0; i < COLOR_FILTERS.length; i++) {
     let colorFilter = {
-      filterType: 'color',
+      filterType: 'colors',
       slug: 'color-'+COLOR_FILTERS[i].name,
       name: COLOR_FILTERS[i].name,
       color: COLOR_FILTERS[i].buttonColor,
@@ -73,7 +73,7 @@ const buildInitialState = () => {
 
   for (let i = 0; i < LINE_FILTERS.composition.length; i++) {
     let lineFilter = LINE_FILTERS.composition[i];
-    lineFilter.filterType = 'line_composition';
+    lineFilter.filterType = 'lines_composition';
     lineFilter.slug = 'line-'+lineFilter.name;
     lineFilter.svgId = lineFilter.svgId;
 
@@ -82,7 +82,7 @@ const buildInitialState = () => {
 
   for (let i = 0; i < LINE_FILTERS.linearity.length; i++) {
     let lineFilter = LINE_FILTERS.linearity[i];
-    lineFilter.filterType = 'line_linearity';
+    lineFilter.filterType = 'lines_linearity';
     lineFilter.slug = 'line-'+lineFilter.name;
     lineFilter.svgId = lineFilter.svgId;
 
@@ -94,22 +94,52 @@ const buildInitialState = () => {
 
 const initialState = buildInitialState();
 
-const getRandomFilterFromSet = (setType, group=null) => {
-  let set = initialState.sets[setType].options;
-  if (group) set = set[group];
+const getFilterSetData = (setType) => {
+  const sets = initialState.sets;
+  let set;
+
+  // get set
+  switch(setType) {
+    case 'colors':
+      set = sets.colors.options;
+      break;
+    case 'lines_composition':
+      set = sets.lines.options.composition;
+      break;
+    case 'lines_linearity':
+      set = sets.lines.options.linearity;
+      break;
+    default:
+      throw new Error('unexpected setType');
+  }
+
+  // go! Return set.
+  return set;
+}
+
+const getSliderData = (sliderType) => {
+  return initialState.sets[sliderType].filter;
+}
+
+const getRandomFilterFromSet = (setType) => {
+  let set = getFilterSetData(setType);
+
   return set[Math.floor(Math.random()*set.length)];
+}
+
+const getRandomSliderValue = (sliderType) => {
+  let slider = getSliderData(sliderType);
+  slider.value = Math.floor(Math.random() * 101);
+
+  return slider;
 }
 
 export const selectRandomFilters = () => {
   const randomColorFilter = getRandomFilterFromSet('colors');
-  const randomLineCompositionFilter = getRandomFilterFromSet('lines', 'composition');
-  const randomLineLinearityFilter = getRandomFilterFromSet('lines', 'linearity');
-
-  let randomLightFilter = initialState.sets.light.filter;
-  randomLightFilter.value = Math.floor(Math.random() * 101);
-
-  let randomSpaceFilter = initialState.sets.space.filter;
-  randomSpaceFilter.value = Math.floor(Math.random() * 101);
+  const randomLineCompositionFilter = getRandomFilterFromSet('lines_composition');
+  const randomLineLinearityFilter = getRandomFilterFromSet('lines_linearity');
+  const randomLightFilter = getRandomSliderValue('light');
+  const randomSpaceFilter = getRandomSliderValue('space');
 
   return [
     randomColorFilter,
@@ -118,6 +148,50 @@ export const selectRandomFilters = () => {
     randomLightFilter,
     randomSpaceFilter
   ];
+}
+
+const getFilterDataByValue = (filterType, val) => {
+  let filter;
+  let set;
+
+  // get set
+  switch(filterType) {
+    case 'colors':
+      set = getFilterSetData(filterType);
+      filter = set.find((filter) => {
+        return filter.name === val;
+      });
+      break;
+    case 'lines_composition':
+    case 'lines_linearity':
+      set = getFilterSetData(filterType);
+
+      filter = set.find((filter) => {
+        return filter.name === val;
+      });
+      break;
+    case 'light':
+    case 'space':
+      let slider = getSliderData(filterType);
+
+      slider.value = val;
+      filter = slider;
+      break;
+    default:
+      break;
+  }
+
+  // go! Return the filter
+  return filter;
+}
+
+export const selectChosenFilters = (filterSelection) => {
+  // parse each key:value pair in the filterSelection
+  const ret = Object.keys(filterSelection).map((filterType) => {
+    return getFilterDataByValue(filterType, filterSelection[filterType]);
+  });
+
+  return ret;
 }
 
 const filterSets = (state = initialState, action) => {

@@ -4,25 +4,67 @@ import { connect } from 'react-redux';
 // todo:
 import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
+import * as FiltersActions from './actions/filters';
 import * as SearchActions from './actions/search';
 import { withRouter } from 'react-router'
 
 const queryString = require('query-string');
 
 class RouterSearchQueryHelper extends Component {
+  componentWillMount() {
+    this.setInitialQueryOnLoad();
+  }
+
+  setInitialQueryOnLoad() {
+    const parsedQuery = queryString.parse(this.props.location.search);
+    const queryType = parsedQuery.qtype;
+    const queryVal = parsedQuery.qval;
+
+    if (!queryType || !queryVal) {
+      return;
+    }
+
+    if (queryType === 'filter') {
+      this.setInitialFilterSearch(queryVal);
+    } else if (queryType === 'keyword') {
+      this.setInitialKeywordSearch(queryVal);
+    } else {
+      console.warn('unknown query type');
+    }
+  }
+
+  setInitialFilterSearch(queryVal) {
+    let filterSelection = {};
+
+    try {
+      filterSelection = JSON.parse(queryVal);
+    } catch (e) {
+      console.warn('invalid search syntax in the url');
+    }
+
+    this.props.setFilters(filterSelection);
+  }
+
+  setInitialKeywordSearch(queryVal) {
+    this.props.addSearchTerm(queryVal);
+  }
+
   parseFilters(filters) {
-    const parsedFilters = filters.map((filter) => {
+    const filterSelection = {};
+
+    // build up filterSelection with the parsed data.
+    filters.forEach((filter) => {
       const hasValue = typeof filter.value !== 'undefined';
 
       // for lines and colors we just use the name
       // for space and light we use the value
       const value = hasValue ? filter.value : filter.name
-      let ret = {};
-      ret[filter.filterType] = value;
-      return ret;
+
+      filterSelection[filter.filterType] = value;
     });
 
-    return JSON.stringify(parsedFilters);
+    // return the stringify version of the filterSelection object
+    return JSON.stringify(filterSelection);
   }
 
   componentDidUpdate(nextProps) {
@@ -47,8 +89,6 @@ class RouterSearchQueryHelper extends Component {
     const hasSearch = searchTerm.length > 0;
     const hasFilters = filters.ordered && filters.ordered.length > 0;
 
-
-    debugger;
 
     if (hasSearch) {
       if (searchTerm !== queryVal) {
@@ -94,6 +134,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
     ObjectsActions,
     FilterSetsActions,
+    FiltersActions,
     SearchActions,
   ), dispatch);
 }

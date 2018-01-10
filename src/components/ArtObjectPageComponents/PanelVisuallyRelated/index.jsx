@@ -55,7 +55,7 @@ const getArtObjectFilters = (object) => {
     // there's only one
     return [{
       color: object.color['average-closest'],
-      filterType: "color",
+      filterType: 'colors',
     }];
   };
 

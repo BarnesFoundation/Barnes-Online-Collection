@@ -1,10 +1,10 @@
 import * as ActionTypes from '../constants';
-import { selectRandomFilters } from '../reducers/filterSets';
+import { selectRandomFilters, selectChosenFilters } from '../reducers/filterSets';
 
 const initialState = {
   colors: null,
-  line_composition: null,
-  line_linearity: null,
+  lines_composition: null,
+  lines_linearity: null,
   light: null,
   space: null,
   ordered: [],
@@ -13,6 +13,15 @@ const initialState = {
 const removeFromOrderedSet = (orderedSet, filterType) => {
   return orderedSet.filter((filterEl) => {
     return filterEl.filterType !== filterType;
+  });
+}
+
+const buildFilterStateObject = (orderedSet) => {
+  // Refactored existing code into this function.
+  // It's a little weird to have these initial null values,
+  // but this is the form it wants to be in with the data passed to the 'ordered' property.
+  return Object.assign({}, initialState, {
+    ordered: orderedSet
   });
 }
 
@@ -30,7 +39,7 @@ const filters = (state = initialState, action) => {
       supplementedState.ordered.push(action.filter);
 
       // the all types works differently -- it acts as a clear
-      if (filterType === 'line_linearity' && action.filter.name === 'all types') {
+      if (filterType === 'lines_linearity' && action.filter.name === 'all types') {
         supplementedState[filterType] = null;
       } else {
         supplementedState[filterType] = action.filter;
@@ -48,12 +57,14 @@ const filters = (state = initialState, action) => {
     case ActionTypes.CLEAR_ALL_FILTERS:
       return initialState;
     case ActionTypes.SHUFFLE_FILTERS:
-      const filters = selectRandomFilters();
-      let shuffledState = Object.assign({}, initialState, {
-        ordered: filters
-      });
+      const randomFilters = selectRandomFilters();
 
-      return shuffledState;
+      return buildFilterStateObject(randomFilters);
+    case ActionTypes.SET_FILTERS:
+      const filterSelection = action.filters || {};
+      const selectedFilters = selectChosenFilters(filterSelection);
+
+      return buildFilterStateObject(selectedFilters);
     default:
       return state;
   }

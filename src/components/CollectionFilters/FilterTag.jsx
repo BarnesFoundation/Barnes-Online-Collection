@@ -14,7 +14,7 @@ class FilterTag extends Component {
   }
 
   getFilterIcon() {
-    if (this.props.filter.filterType === 'color') {
+    if (this.props.filter.filterType === 'colors') {
       return <span className="color-filter-icon" style={{background: this.props.filter.color}}></span>;
     } else {
       return <Icon svgId={this.props.filter.svgId} classes='collection-filter-icon' />;

@@ -49,7 +49,7 @@ class Filter extends Component {
     classes += filter.filterType + '-filter';
 
     switch(filter.filterType) {
-      case 'color':
+      case 'colors':
         classes += ' color-filter__' + filter.name;
         break;
       case 'line':
@@ -73,14 +73,14 @@ class Filter extends Component {
 
   buildFilter() {
     switch (this.props.filter.filterType) {
-      case 'color':
+      case 'colors':
         return <ColorFilter
           handleClick={this.handleButtonFilter}
           style={{background: this.props.filter.color}}
           classes={this.getClasses()}
           />;
-      case 'line_composition':
-      case 'line_linearity':
+      case 'lines_composition':
+      case 'lines_linearity':
         return <LineFilter
           handleClick={this.handleButtonFilter}
           classes={this.getClasses()}
