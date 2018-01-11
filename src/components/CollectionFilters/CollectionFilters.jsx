@@ -27,21 +27,6 @@ import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 import './collectionFilters.css';
 
 class CollectionFilters extends Component {
-  // todo - remove
-  // componentDidMount() {
-  //   // check if there is a search query on load
-  //   const hasSearch = this.props.search.length > 0;
-  //   const hasFilters = this.props.filters.ordered.length > 0;
-
-  //   if (hasSearch) {
-  //     this.props.searchObjects(this.props.search);
-  //   }
-
-  //   if (hasFilters) {
-  //     this.props.findFilteredObjects(this.props.filters);
-  //   }
-  // }
-
   getFilterSet() {
     const slug = this.props.filterSets.visibleFilterSet;
     if (slug === 'search') {
