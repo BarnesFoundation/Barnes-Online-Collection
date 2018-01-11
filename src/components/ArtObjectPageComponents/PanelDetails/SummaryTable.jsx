@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { getRoomAndTitleText } from '../../../ensembleIndex';
 import { getArtObjectUrlFromId } from '../../../helpers';
-
 import '../../../components/FlexboxTable/index.css';
 
 class FlexboxTable extends Component {
@@ -27,13 +26,21 @@ class FlexboxTable extends Component {
         {this.props.people &&
           <div className="table-row">
             <div className="text">Artist</div>
-            <div className="text color-light">{this.props.people}</div>
+            <div className="text color-light">
+              <a href={`/objects/?qtype=keyword&qval=${this.props.people}`}>
+                {this.props.people}
+              </a>
+            </div>
           </div>
         }
         {this.props.culture &&
           <div className="table-row">
             <div className="text">Culture</div>
-            <div className="text color-light">{this.props.culture}</div>
+            <div className="text color-light">
+              <a href={`/objects/?qtype=keyword&qval=${this.props.culture}`}>
+                {this.props.culture}
+              </a>
+            </div>
           </div>
         }
         <div className="table-row">

@@ -88,13 +88,13 @@ class RouterSearchQueryHelper extends Component {
 
     if (hasSearch) {
       if (searchTerm !== queryVal) {
-        this.props.history.push(`?qtype=keyword&qval=${searchTerm}`);
+        this.props.history.push(`/objects/?qtype=keyword&qval=${searchTerm}`);
       }
     } else if (hasFilters) {
       let filtersVal = this.parseFilters(filters.ordered);
 
       if (filtersVal !== queryVal) {
-        this.props.history.push(`?qtype=filter&qval=${filtersVal}`);
+        this.props.history.push(`/objects/?qtype=filter&qval=${filtersVal}`);
       }
     } else if (queryType) {
       // there's no searchTerm or Filters, so the query url needs to be cleared.
