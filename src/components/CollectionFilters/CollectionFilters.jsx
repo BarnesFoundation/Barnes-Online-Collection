@@ -39,13 +39,17 @@ class CollectionFilters extends Component {
   }
 
   hasNewSearch(props) {
-    return props.search.length > 0 &&
-      props.search !== this.props.search;
+    const hasSearch = props.search.length > 0;
+    const searchIsNew = props.search !== this.props.search;
+
+    return hasSearch && searchIsNew;
   }
 
   hasNewFilters(props) {
-    return props.filters.ordered.length > 0 &&
-      props.filters.ordered !== this.props.filters.ordered;
+    const hasFilters = props.filters.ordered.length > 0;
+    const filtersAreNew = props.filters.ordered !== this.props.filters.ordered;
+
+    return hasFilters && filtersAreNew;
   }
 
   hasBeenReset(props) {
@@ -155,6 +159,7 @@ class CollectionFilters extends Component {
     if (this.hasNewFilters(nextProps)) {
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
+
       return;
     }
   }

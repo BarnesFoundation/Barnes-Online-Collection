@@ -472,9 +472,17 @@ app.get('/', (req, res, next) => {
   renderAppLandingPage(req, res, next)
 })
 
-// let this redirect home
 app.get('/objects', (req, res, next) => {
-  return res.redirect(301, '/')
+  // let /objects/? render the home page with a search query.
+  // but if the query is empty, redirect home.
+  const query = req.query
+  const hasQueryKeys = Object.keys(query).length > 0
+
+  if (!hasQueryKeys) {
+    return res.redirect(301, '/')
+  }
+
+  return renderAppLandingPage(req, res, next)
 })
 
 app.get('/objects/:id', (req, res, next) => {

@@ -303,15 +303,15 @@ const buildQueriesFromFilters = (filters) => {
 
   filters.forEach((filter) => {
     switch (filter.filterType) {
-      case 'color':
+      case 'colors':
         filter.queries.forEach((query) => {
           queries.push(buildColorQuery(query));
         })
         break;
-      case 'lineComposition':
+      case 'lines_composition':
         queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
         break;
-      case 'lineLinearity':
+      case 'lines_linearity':
         switch (filter.name) {
           case 'unbroken':
             queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
