@@ -6,6 +6,7 @@ import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
 import * as FiltersActions from './actions/filters';
 import * as SearchActions from './actions/search';
+import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
 
 const queryString = require('query-string');
@@ -88,13 +89,13 @@ class RouterSearchQueryHelper extends Component {
 
     if (hasSearch) {
       if (searchTerm !== queryVal) {
-        this.props.history.push(`/objects/?qtype=keyword&qval=${searchTerm}`);
+        this.props.history.push(getQueryKeywordUrl(searchTerm));
       }
     } else if (hasFilters) {
       let filtersVal = this.parseFilters(filters.ordered);
 
       if (filtersVal !== queryVal) {
-        this.props.history.push(`/objects/?qtype=filter&qval=${filtersVal}`);
+        this.props.history.push(getQueryFilterUrl(filtersVal));
       }
     } else if (queryType) {
       // there's no searchTerm or Filters, so the query url needs to be cleared.
