@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "async": "^2.6.0",
     "aws-sdk": "^2.74.0",
     "axios": "^0.16.1",
     "babel-polyfill": "^6.26.0",

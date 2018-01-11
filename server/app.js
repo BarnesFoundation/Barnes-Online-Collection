@@ -1,29 +1,31 @@
-const express = require('express')
-const bodybuilder = require('bodybuilder')
-const morgan = require('morgan')
-const path = require('path')
-const elasticsearch = require('elasticsearch')
+const artObjectTitles = require('../src/artObjectTitles.json')
+const async = require('async')
 const auth = require('http-auth')
 const AWS = require('aws-sdk')
-const s3 = new AWS.S3()
-const request = require('request')
-const bodyParser = require('body-parser')
-const fs = require('fs')
-const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 const axios = require('axios')
-const artObjectTitles = require('../src/artObjectTitles.json')
+const bodybuilder = require('bodybuilder')
+const bodyParser = require('body-parser')
+const elasticsearch = require('elasticsearch')
+const express = require('express')
+const fs = require('fs')
+const morgan = require('morgan')
+const path = require('path')
+const request = require('request')
+const s3 = new AWS.S3()
+
+const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
 const Handlebars = require('handlebars')
-const canonicalRoot = process.env.REACT_APP_CANONICAL_ROOT || '/'
+const canonicalRoot = (process.env.AXIOS_BASEURL || '') + (process.env.REACT_APP_CANONICAL_ROOT || '/')
 
 // todo #switchImportToRequire - consolidate with constants (can't use import yet.)
 const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online'
 const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || ''
 const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || ''
 const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
-const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object';
+const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object'
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
@@ -109,6 +111,8 @@ AWS.config.update({
 
 const signedUrlExpireSeconds = 60 * 5
 
+let esIndex = process.env.ELASTICSEARCH_INDEX
+
 const app = express()
 const esClient = new elasticsearch.Client({
   host: [
@@ -154,32 +158,76 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
 // let index fall through to the wild card route
 app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false }))
 
-app.get('/api/objects/:object_id', (req, res) => {
-  const options = {
-    index: process.env.ELASTICSEARCH_INDEX,
-    type: 'object',
-    id: req.params.object_id
+const getIndex = function(callback) {
+  if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
+
+  async function hasTags (client, index) {
+    return await client
+      .search({index, body: { query: { exists: { field : "tags.*.*" }  } }, size: 0 })
+      .then(result => {
+        return result.hits.total > 0
+      })
   }
-  esClient.get(options, function (error, esRes) {
-    if (error) {
-      console.error(`[error] esClient: ${error.message}`)
-      res.json(error)
-    } else {
-      res.json(esRes._source)
+
+  async function find (client, indices, predicate) {
+    let check = false, result = null;
+      for (let index of indices) {
+        check = await predicate(client, index)
+        if (check) {
+          result = index
+          break
+        }
+      }
+      return result
+  }
+
+  async function getFirstIndexWithTags(indices) {
+    const latest_index_with_tags = await find(esClient, indices.split('\n'), hasTags)
+    return latest_index_with_tags
+  }
+
+  return esClient.cat
+    .indices({index: 'collection_*', s: 'creation.date:desc', h: ['i']})
+    .then(getFirstIndexWithTags)
+    .then(idx => { esIndex = idx; return callback(null, idx) })
+}
+
+app.get('/api/latestIndex', (req, res) => {
+  async.series([getIndex], function(err, results) {
+    res.json(results)
+  })
+})
+
+app.get('/api/objects/:object_id', (req, res) => {
+  getIndex((err, index) => {
+    const options = {
+      index: index,
+      type: 'object',
+      id: req.params.object_id
     }
+    esClient.get(options, function (error, esRes) {
+      if (error) {
+        console.error(`[error] esClient: ${error.message}`)
+        res.json(error)
+      } else {
+        res.json(esRes._source)
+      }
+    })
   })
 })
 
 app.get('/api/search', (req, res) => {
-  esClient.search({
-    index: process.env.ELASTICSEARCH_INDEX,
-    body: req.query.body
-  }, function (error, esRes) {
-    if (error) {
-      res.json(error)
-    } else {
-      res.json(esRes)
-    }
+  async.series([getIndex], (err, index) => {
+    esClient.search({
+      index: index,
+      body: req.query.body
+    }, function (error, esRes) {
+      if (error) {
+        res.json(error)
+      } else {
+        res.json(esRes)
+      }
+    })
   })
 })
 
@@ -192,7 +240,7 @@ function getObjectDescriptors (objectID) {
     .build()
 
   return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
+    .get(`${canonicalRoot}/api/search`, {params: { body }})
     .then(response => {
       const hits = response.data.hits.hits
       const hitSource = hits.length ? hits[0]._source : {}
@@ -201,31 +249,34 @@ function getObjectDescriptors (objectID) {
     })
     .catch((error) => {
       console.error(`[error] getObjectDescriptors:`, error.message)
+      console.error(error)
     })
 }
 
 function getRelatedObjects (objectID) {
-  let body = bodybuilder()
-    .filter('exists', 'imageSecret')
-    .from(0).size(1000)
-    .query('more_like_this', {
-      'like': [
-        {
-          '_index': process.env.ELASTICSEARCH_INDEX,
-          '_type': 'object',
-          '_id': objectID
-        }
-      ],
-      'fields': ALL_MORE_LIKE_THIS_FIELDS,
-      'min_term_freq': 1,
-      'minimum_should_match': '10%'
-    })
-    .build()
+  return getIndex((err, index) => {
+    let body = bodybuilder()
+      .filter('exists', 'imageSecret')
+      .from(0).size(1000)
+      .query('more_like_this', {
+        'like': [
+          {
+            '_index': index,
+            '_type': 'object',
+            '_id': objectID
+          }
+        ],
+        'fields': ALL_MORE_LIKE_THIS_FIELDS,
+        'min_term_freq': 1,
+        'minimum_should_match': '10%'
+      })
+      .build()
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then(response => response.data.hits.hits)
-    .catch((error) => console.error(error.message))
+    return axios
+      .get(`${canonicalRoot}/api/search`, { params: { body } })
+      .then(response => response.data.hits.hits)
+      .catch((error) => console.error(error.message))
+  })
 }
 
 const getDistance = (from, to) => {
@@ -257,40 +308,42 @@ const getDistance = (from, to) => {
 }
 
 app.get('/api/related', (req, res) => {
-  const {objectID, dissimilarPercent} = req.query
-  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
-  const similarRatio = similarPercent / 100.0
+  getIndex((err, index) => {
+    const {objectID, dissimilarPercent} = req.query
+    const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
+    const similarRatio = similarPercent / 100.0
 
-  axios
-    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
-    .then(axios.spread((objectDescriptors, relatedObjects) => {
-      const sources = relatedObjects.map(object => object._source)
+    axios
+      .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
+      .then(axios.spread((objectDescriptors, relatedObjects) => {
+        const sources = relatedObjects.map(object => object._source)
 
-      const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
+        const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
 
-      const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
+        const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
 
-      const similarItemCount = Math.floor(maxSize * similarRatio)
+        const similarItemCount = Math.floor(maxSize * similarRatio)
 
-      const similarItems = sorted.slice(0, similarItemCount)
+        const similarItems = sorted.slice(0, similarItemCount)
 
-      const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
+        const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
 
-      const objects = similarItems.concat(dissimilarItems).map(object => ({
-        _index: process.env.ELASTICSEARCH_INDEX,
-        _type: 'object',
-        _id: object.id,
-        _source: object})
-      )
+        const objects = similarItems.concat(dissimilarItems).map(object => ({
+          _index: index,
+          _type: 'object',
+          _id: object.id,
+          _source: object})
+        )
 
-      res.json({hits: {
-        total: objects.length,
-        hits: objects
-      }})
-    }))
-    .catch((error) => {
-      console.error(`[error] axios.all: ${error.message}`)
-      res.json(error.message)
+        res.json({hits: {
+          total: objects.length,
+          hits: objects
+        }})
+      }))
+      .catch((error) => {
+        console.error(`[error] axios.all: ${error.message}`)
+        res.json(error.message)
+      })
     })
 })
 
