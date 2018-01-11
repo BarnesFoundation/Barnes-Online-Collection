@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// todo:
+
 import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
 import * as FiltersActions from './actions/filters';
@@ -11,7 +11,7 @@ import { withRouter } from 'react-router'
 const queryString = require('query-string');
 
 class RouterSearchQueryHelper extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.setInitialQueryOnLoad();
   }
 
@@ -68,10 +68,7 @@ class RouterSearchQueryHelper extends Component {
   }
 
   componentDidUpdate(nextProps) {
-    // this didn't work...
-    // const modalIsOpen = this.state.isModal;
-
-    // detect if just opened a modal. If so, just return;
+    // detect if we just opened a modal. If so, just return;
     const newState = this.props.history.location.state;
     const modalIsOpen = newState && newState.isModal;
 
@@ -89,7 +86,6 @@ class RouterSearchQueryHelper extends Component {
     const hasSearch = searchTerm.length > 0;
     const hasFilters = filters.ordered && filters.ordered.length > 0;
 
-
     if (hasSearch) {
       if (searchTerm !== queryVal) {
         this.props.history.push(`?qtype=keyword&qval=${searchTerm}`);
@@ -104,11 +100,6 @@ class RouterSearchQueryHelper extends Component {
       // there's no searchTerm or Filters, so the query url needs to be cleared.
       this.props.history.push(``);
     }
-
-    // if (queryVal && queryVal !== searchTerm) {
-    //   this.props.addSearchTerm(queryVal);
-    //   this.props.selectFilterSet('search');
-    // }
   }
 
 
@@ -120,9 +111,6 @@ class RouterSearchQueryHelper extends Component {
 function mapStateToProps(state) {
   return {
     filterSets: state.filterSets,
-    // ? todo
-    // mobileFilters: state.mobileFilters,
-    // mobileSearch: state.mobileSearch,
     modalIsOpen: state.modal.modalIsOpen,
     modal: state.modal,
     filters: state.filters,
