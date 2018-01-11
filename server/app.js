@@ -1,5 +1,7 @@
 const artObjectTitles = require('../src/artObjectTitles.json')
-const async = require('async')
+// use polyfill versions becuase native versions are not supported by the stable version of node (currently at 6.x)
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 const auth = require('http-auth')
 const AWS = require('aws-sdk')
 const axios = require('axios')
@@ -161,30 +163,30 @@ app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false })
 const getIndex = function(callback) {
   if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
 
-  async function hasTags (client, index) {
-    return await client
+  async (function hasTags (client, index) {
+    return await (client
       .search({index, body: { query: { exists: { field : "tags.*.*" }  } }, size: 0 })
       .then(result => {
         return result.hits.total > 0
-      })
-  }
+      }))
+  })
 
-  async function find (client, indices, predicate) {
+  async (function find (client, indices, predicate) {
     let check = false, result = null;
       for (let index of indices) {
-        check = await predicate(client, index)
+        check = await (predicate(client, index))
         if (check) {
           result = index
           break
         }
       }
       return result
-  }
+  })
 
-  async function getFirstIndexWithTags(indices) {
-    const latest_index_with_tags = await find(esClient, indices.split('\n'), hasTags)
+  async (function getFirstIndexWithTags(indices) {
+    const latest_index_with_tags = await (find(esClient, indices.split('\n'), hasTags))
     return latest_index_with_tags
-  }
+  })
 
   return esClient.cat
     .indices({index: 'collection_*', s: 'creation.date:desc', h: ['i']})
