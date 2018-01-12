@@ -1,5 +1,6 @@
 import * as ActionTypes from '../constants';
 import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings';
+import { DEV_WARN } from '../devLogging';
 
 const buildInitialState = () => {
   var initialState = {
@@ -191,7 +192,7 @@ export const selectChosenFilters = (filterSelection) => {
     const filterVal = filterSelection[filterType];
     const filterDataByValue = getFilterDataByValue(filterType, filterVal);
     if (!filterDataByValue) {
-      console.warn(`invalid filter value: ${filterType}:${filterVal}`);
+      DEV_WARN(`invalid filter value: ${filterType}:${filterVal}`);
     }
 
     return getFilterDataByValue(filterType, filterSelection[filterType]);
