@@ -35,7 +35,11 @@ class MobileFiltersOpener extends Component {
             Filter{ filterCount > 0 && ` (${filterCount})` }
           </span>
         </button>
-        <button onClick={this.handleClickSearchBtn} className="btn-mobile btn-open-mobile-search font-zeta color-light">
+        <button
+          onClick={this.handleClickSearchBtn}
+          className="btn-mobile btn-open-mobile-search font-zeta color-light"
+          aria-label="Search"
+        >
           <Icon svgId='search' classes='icon collection-search-icon' />
         </button>
       </div>
