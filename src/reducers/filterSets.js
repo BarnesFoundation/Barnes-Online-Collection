@@ -188,10 +188,19 @@ const getFilterDataByValue = (filterType, val) => {
 export const selectChosenFilters = (filterSelection) => {
   // parse each key:value pair in the filterSelection
   const ret = Object.keys(filterSelection).map((filterType) => {
+    const filterVal = filterSelection[filterType];
+    const filterDataByValue = getFilterDataByValue(filterType, filterVal);
+    if (!filterDataByValue) {
+      console.warn(`invalid filter value: ${filterType}:${filterVal}`);
+    }
+
     return getFilterDataByValue(filterType, filterSelection[filterType]);
   });
 
-  return ret;
+  // filter out undefined invalid filters
+  return ret.filter((validFilter) => {
+    return validFilter;
+  });
 }
 
 const filterSets = (state = initialState, action) => {
