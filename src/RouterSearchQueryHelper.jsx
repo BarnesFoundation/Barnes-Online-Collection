@@ -108,7 +108,6 @@ class RouterSearchQueryHelper extends Component {
     const queryVal = parsedQuery.qval;
     const searchTerm = this.props.search;
     const filters = this.props.filters;
-    const filterSet = this.props.filterSets.visibleFilterSet;
 
     const hasSearch = searchTerm.length > 0;
     const hasFilters = filters.ordered && filters.ordered.length > 0;
@@ -137,7 +136,6 @@ class RouterSearchQueryHelper extends Component {
 
 function mapStateToProps(state) {
   return {
-    filterSets: state.filterSets,
     modalIsOpen: state.modal.modalIsOpen,
     modal: state.modal,
     filters: state.filters,
