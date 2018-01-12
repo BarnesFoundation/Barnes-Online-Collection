@@ -146,3 +146,25 @@ li {
     }
   }
 }
+
+// tweaks for accessibility
+.a-brand-link-on-grey {
+  // for accessibility
+  color: darken($color__red--barnes, 5%);
+
+  &:visited {
+    color: darken($color__red--barnes, 10%);
+  }
+}
+
+// use body just to give it css weight
+body .g-footer__details  {
+  .h2 {
+    // todo
+    color: darken($color-grey-light, 25%);
+  }
+}
+
+body .color-light {
+  color: darken($color__copy--light, 10%);
+}
