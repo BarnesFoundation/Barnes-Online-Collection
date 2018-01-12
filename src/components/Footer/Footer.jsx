@@ -28,7 +28,6 @@ class Footer extends Component {
               <div className="m-block__column">
                 <div className="m-block__columns">
                   <div className="m-block__column">
-                    {/* todo: add link urls */}
                     <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/collection/credits">Project Credits</a>
                     <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/collection/open-access-and-copyright">Open Access</a>
                     <a className="a-brand-link a-brand-link--block" href="https://www.barnesfoundation.org/copyright-and-image-licensing">Image Licensing</a>

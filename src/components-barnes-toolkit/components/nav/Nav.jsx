@@ -38,6 +38,8 @@ class SiteHeader extends Component {
                 <use xlinkHref="#icon--icon_close" />
               </svg>
             </button>
+            {/*Hidden on collections site*/}
+            {/*
             <form className="g-nav__search" action="/static/pages/search" method="get" noValidate data-behavior="FormValidate">
               <div className="form-field__error form-field__error--summary hidden" tabIndex={-1} aria-hidden="true">
                 <h3 className="font-bold-heading visuallyhidden">Please correct your errors</h3>
@@ -54,6 +56,7 @@ class SiteHeader extends Component {
                 <div aria-hidden="true" className="form-field__error hidden" tabIndex={-1} id="searcherror1">Please enter a search term</div>
               </div>
             </form>
+            */}
             <h2 className="visuallyhidden" id="g-nav__title">Main menu</h2>
             <nav className="g-nav__links" aria-labelledby="g-nav__title">
               <div className="g-nav__important-links">
