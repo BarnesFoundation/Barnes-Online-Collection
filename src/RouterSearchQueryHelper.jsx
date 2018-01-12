@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
 import * as FiltersActions from './actions/filters';
+import * as RouterSearchQuery from './actions/routerSearchQuery';
 import * as SearchActions from './actions/search';
 import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
@@ -12,25 +13,50 @@ import { withRouter } from 'react-router'
 const queryString = require('query-string');
 
 class RouterSearchQueryHelper extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      queryType: '',
+      queryVal: '',
+    };
+  }
+
+  componentWillMount() {
+    // this needs to happen before the didMount
+    // so that the routerSearchInit's state is set before the fetchObject calls in the didMount Phases
+    this.getInitialQuery();
+  }
+
   componentDidMount() {
     this.setInitialQueryOnLoad();
   }
 
-  setInitialQueryOnLoad() {
+  getInitialQuery() {
     const parsedQuery = queryString.parse(this.props.location.search);
     const queryType = parsedQuery.qtype;
     const queryVal = parsedQuery.qval;
+    const querySearchIsValid = (queryType === 'filter' || queryType === 'keyword') &&
+      queryVal.length > 0;
 
-    if (!queryType || !queryVal) {
-      return;
+    if (querySearchIsValid) {
+      this.setState({
+        queryType: queryType,
+        queryVal: queryVal,
+      });
+
+      this.props.routerSearchInit();
     }
+  }
+
+  setInitialQueryOnLoad() {
+    const queryType = this.state.queryType;
+    const queryVal = this.state.queryVal;
 
     if (queryType === 'filter') {
       this.setInitialFilterSearch(queryVal);
     } else if (queryType === 'keyword') {
       this.setInitialKeywordSearch(queryVal);
-    } else {
-      console.warn('unknown query type');
     }
   }
 
@@ -82,7 +108,6 @@ class RouterSearchQueryHelper extends Component {
     const queryVal = parsedQuery.qval;
     const searchTerm = this.props.search;
     const filters = this.props.filters;
-    const filterSet = this.props.filterSets.visibleFilterSet;
 
     const hasSearch = searchTerm.length > 0;
     const hasFilters = filters.ordered && filters.ordered.length > 0;
@@ -111,7 +136,6 @@ class RouterSearchQueryHelper extends Component {
 
 function mapStateToProps(state) {
   return {
-    filterSets: state.filterSets,
     modalIsOpen: state.modal.modalIsOpen,
     modal: state.modal,
     filters: state.filters,
@@ -121,6 +145,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
+    RouterSearchQuery,
     ObjectsActions,
     FilterSetsActions,
     FiltersActions,
