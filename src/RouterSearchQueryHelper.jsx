@@ -9,6 +9,7 @@ import * as RouterSearchQuery from './actions/routerSearchQuery';
 import * as SearchActions from './actions/search';
 import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
+import { DEV_WARN } from './devLogging';
 
 const queryString = require('query-string');
 
@@ -34,8 +35,8 @@ class RouterSearchQueryHelper extends Component {
 
   getInitialQuery() {
     const parsedQuery = queryString.parse(this.props.location.search);
-    const queryType = parsedQuery.qtype;
-    const queryVal = parsedQuery.qval;
+    const queryType = parsedQuery.qtype || '';
+    const queryVal = parsedQuery.qval || '';
     const querySearchIsValid = (queryType === 'filter' || queryType === 'keyword') &&
       queryVal.length > 0;
 
@@ -66,7 +67,7 @@ class RouterSearchQueryHelper extends Component {
     try {
       filterSelection = JSON.parse(queryVal);
     } catch (e) {
-      console.warn('invalid search syntax in the url');
+      DEV_WARN('invalid search syntax in the url');
     }
 
     this.props.setFilters(filterSelection);
