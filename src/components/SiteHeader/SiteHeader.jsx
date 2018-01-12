@@ -67,6 +67,8 @@ class SiteHeader extends Component {
               </button>
             </nav>
           </div>
+          {/*Hidden on collections site*/}
+          {/*
           <div className="m-search-bar" data-behavior="SearchBar" aria-hidden="true">
             <div className="container">
               <form className="m-search-bar__form" action="/static/pages/search.php" method="get" noValidate data-behavior="FormValidate">
@@ -90,6 +92,7 @@ class SiteHeader extends Component {
               </button>
             </div>
           </div>
+          */}
         </header>
         <SiteNavSidebar />
       </div>

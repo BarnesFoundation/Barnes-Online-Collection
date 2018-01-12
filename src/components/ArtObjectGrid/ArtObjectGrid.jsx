@@ -59,7 +59,11 @@ class ArtObjectGrid extends Component {
   fetchObjects () {}
 
   componentDidMount() {
-    this.fetchObjects();
+    const hasRouterSearchQuery = this.props.routerSearchQuery.hasInitialized;
+    // if there was a router search query, it will have kicked off the objects fetch already
+    if (!hasRouterSearchQuery) {
+      this.fetchObjects();
+    }
   }
 
   getGridListElement(object) {
@@ -162,6 +166,7 @@ function mapStateToProps(state) {
     objectsQuery: state.objectsQuery,
     relatedObjectsQuery: state.relatedObjectsQuery,
     ensembleObjectsQuery: state.ensembleObjectsQuery,
+    routerSearchQuery: state.routerSearchQuery,
   };
 }
 

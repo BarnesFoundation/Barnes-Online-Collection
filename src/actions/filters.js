@@ -13,6 +13,13 @@ export function shuffleFilters() {
   }
 }
 
+export function setFilters(filters) {
+  return {
+    type: ActionTypes.SET_FILTERS,
+    filters: filters
+  }
+}
+
 export function removeFilter(filter) {
   return {
     type: ActionTypes.REMOVE_FILTER,

@@ -8,6 +8,7 @@ import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
+import RouterSearchQueryHelper from '../../RouterSearchQueryHelper';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import Footer from '../../components/Footer/Footer';
@@ -29,6 +30,7 @@ class LandingPage extends Component {
       <div className="app app-landing-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
+        <RouterSearchQueryHelper />
         <SiteHeader />
 
         <div className="landing-page container">

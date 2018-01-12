@@ -88,6 +88,7 @@ class RouteSwitcher extends Component {
       <div>
         <Switch location={primaryRouteLocation}>
           <Route exact path='/' component={LandingPage}/>
+          <Route exact path='/objects/' component={LandingPage}/>
           <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
         </Switch>

@@ -50,3 +50,15 @@ export const getObjectsRequestBody = (fromIndex=0) => {
     .from(fromIndex).size(BARNES_SETTINGS.size);
   return body;
 }
+
+export const getQueryUrl = (qtype, qval) => {
+  return `/objects/?qtype=${qtype}&qval=${qval}`;
+}
+
+export const getQueryKeywordUrl = (qval) => {
+  return getQueryUrl('keyword', qval);
+}
+
+export const getQueryFilterUrl = (qval) => {
+  return getQueryUrl('filter', qval);
+}
