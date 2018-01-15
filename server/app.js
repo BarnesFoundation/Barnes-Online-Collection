@@ -5,6 +5,7 @@ const AWS = require('aws-sdk')
 const axios = require('axios')
 const bodybuilder = require('bodybuilder')
 const bodyParser = require('body-parser')
+const memoryCache = require('memory-cache')
 const elasticsearch = require('elasticsearch')
 const express = require('express')
 const fs = require('fs')
@@ -28,6 +29,26 @@ const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
 const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object'
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
+
+const oneDay = 60 * 60 * 24
+
+const cache = (duration = oneDay) => {
+  return (req, res, next) => {
+    const key = `__cache__${req.originalUrl || req.url}`
+    const shouldCache = req.query.cache !== 'false'
+    const cachedBody = memoryCache.get(key)
+    if (shouldCache && cachedBody) {
+      return res.send(cachedBody)
+    } else {
+      res.sendResponse = res.send
+      res.send = (body) => {
+        memoryCache.put(key, body, duration * 1000)
+        res.sendResponse(body)
+      }
+      next()
+    }
+  }
+}
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
@@ -158,30 +179,30 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
 // let index fall through to the wild card route
 app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false }))
 
-const getIndex = function(callback) {
+const getIndex = function (callback) {
   if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
 
   async function hasTags (client, index) {
     return await client
-      .search({index, body: { query: { exists: { field : "tags.*.*" }  } }, size: 0 })
+      .search({index, body: { query: { exists: { field: 'tags.*.*' } } }, size: 0 })
       .then(result => {
         return result.hits.total > 0
       })
   }
 
   async function find (client, indices, predicate) {
-    let check = false, result = null;
-      for (let index of indices) {
-        check = await predicate(client, index)
-        if (check) {
-          result = index
-          break
-        }
+    let check = false, result = null
+    for (let index of indices) {
+      check = await predicate(client, index)
+      if (check) {
+        result = index
+        break
       }
-      return result
+    }
+    return result
   }
 
-  async function getFirstIndexWithTags(indices) {
+  async function getFirstIndexWithTags (indices) {
     const latest_index_with_tags = await find(esClient, indices.split('\n'), hasTags)
     return latest_index_with_tags
   }
@@ -193,7 +214,7 @@ const getIndex = function(callback) {
 }
 
 app.get('/api/latestIndex', (req, res) => {
-  async.series([getIndex], function(err, results) {
+  async.series([getIndex], function (err, results) {
     res.json(results)
   })
 })
@@ -297,9 +318,9 @@ const getDistance = (from, to) => {
 
   const distance = distanceKeys.reduce((sum, key) => {
     let absoluteDistance = 0
-    switch(key) {
-      case 'people': absoluteDistance = from[key] === to[key] ? 0 : 100; break;
-      default: absoluteDistance = parseFloat(to[key]) - parseFloat(from[key]); break;
+    switch (key) {
+      case 'people': absoluteDistance = from[key] === to[key] ? 0 : 100; break
+      default: absoluteDistance = parseFloat(to[key]) - parseFloat(from[key]); break
     }
     return sum + Math.pow(absoluteDistance, 2)
   }, 0)
@@ -307,7 +328,7 @@ const getDistance = (from, to) => {
   return distanceKeys.length > 0 ? distance / distanceKeys.length : Infinity
 }
 
-app.get('/api/related', (req, res) => {
+app.get('/api/related', cache(), (req, res) => {
   getIndex((err, index) => {
     const {objectID, dissimilarPercent} = req.query
     const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
@@ -344,7 +365,7 @@ app.get('/api/related', (req, res) => {
         console.error(`[error] axios.all: ${error.message}`)
         res.json(error.message)
       })
-    })
+  })
 })
 
 const getSignedUrl = (invno) => {
@@ -418,17 +439,17 @@ const renderAppObjectPage = (req, res, next) => {
     htmlFilePromise.then(htmlFileContent => {
       const template = Handlebars.compile(htmlFileContent)
 
-      const artistOrCulture = objectData.culture || objectData.people;
-      const metaTitle = `${META_TITLE} — ${artistOrCulture}: ${objectData.title}`;
-      const metaImage = objectData.imageUrlSmall;
-      const metaDescription = `Barnes Foundation Collection: ${artistOrCulture}. ${objectData.title} -- ${META_DESCRIPTION}`;
+      const artistOrCulture = objectData.culture || objectData.people
+      const metaTitle = `${META_TITLE} — ${artistOrCulture}: ${objectData.title}`
+      const metaImage = objectData.imageUrlSmall
+      const metaDescription = `Barnes Foundation Collection: ${artistOrCulture}. ${objectData.title} -- ${META_DESCRIPTION}`
 
       const html = template({
         metaCanonical: canonicalUrl,
         metaDescription: metaDescription,
         metaPlacename: META_PLACENAME,
         metaImage: metaImage,
-        metaTitle: metaTitle,
+        metaTitle: metaTitle
       })
 
       res.send(html)
@@ -439,7 +460,7 @@ const renderAppObjectPage = (req, res, next) => {
 }
 
 const getCorrectTitleUrl = (id, titleSlug) => {
-  return `/objects/${id}/${titleSlug}/`;
+  return `/objects/${id}/${titleSlug}/`
 }
 
 const renderAppLandingPage = (req, res, next) => {
@@ -541,14 +562,14 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
 })
 
 app.get('/track/image-download/:imageId', (req, res) => {
-  const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/';
-  const imageId = req.params.imageId;
-  const downloadUrl = `${imageBaseUrl}${imageId}`;
+  const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/'
+  const imageId = req.params.imageId
+  const downloadUrl = `${imageBaseUrl}${imageId}`
 
-  console.log('todo: track download for imageId: ' + imageId);
-  console.log('redirecting to: ' + downloadUrl);
+  console.log('todo: track download for imageId: ' + imageId)
+  console.log('redirecting to: ' + downloadUrl)
 
-  return res.redirect(302, downloadUrl);
+  return res.redirect(302, downloadUrl)
 })
 
 app.use(function (req, res) {
