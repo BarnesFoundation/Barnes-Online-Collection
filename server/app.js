@@ -30,24 +30,50 @@ const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-ob
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
-const oneDay = 60 * 60 * 24
+const oneSecond = 1000
+const oneDay = 60 * 60 * 24 * oneSecond
 
-const cache = (duration = oneDay) => {
-  return (req, res, next) => {
-    const key = `__cache__${req.originalUrl || req.url}`
-    const shouldCache = req.query.cache !== 'false'
-    const cachedBody = memoryCache.get(key)
-    if (shouldCache && cachedBody) {
-      return res.send(cachedBody)
+const relatedCache = (req, res, next) => {
+  if (req.query.cache === 'false') {
+    console.log(`skipping cache`)
+    next()
+  } else {
+    const objectID = req.query.objectID
+    if (objectID === undefined) { throw new Error(`objectID undefined`) }
+    const key = `__cache__${req.originalUrl}`
+    req.x_cache_key = key
+    const body = memoryCache.get(key)
+    if (body) {
+      res.append('x-cached', true)
+      res.send(body)
     } else {
-      res.sendResponse = res.send
-      res.send = (body) => {
-        memoryCache.put(key, body, duration * 1000)
-        res.sendResponse(body)
-      }
       next()
     }
+
+    // warm cache
+    async.each([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], dissimilarPercent => {
+      const newUrl = `${req.originalUrl || req.url}`.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${dissimilarPercent}`)
+      const key = `__cache__${newUrl}`
+      if (!memoryCache.get(key)) {
+        getRelated(req.query.objectID, dissimilarPercent)
+          .then(relatedObject => {
+            memoryCache.put(key, relatedObject, oneDay)
+          })
+      }
+    })
   }
+}
+
+const normalizeDissimilarPercent = (req, res, next) => {
+  const divisions = 10
+  const normalizedPercent = parseInt(divisions * Math.round(parseInt(req.query.dissimilarPercent / divisions)))
+
+  if (parseInt(req.query.dissimilarPercent) !== normalizedPercent) {
+    if (req.query.dissimilarPercent) req.query.dissimilarPercent = normalizedPercent
+    if (req.originalUrl) req.originalUrl.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${normalizedPercent}`)
+    if (req.url) req.url.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${normalizedPercent}`)
+  }
+  next()
 }
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
@@ -276,6 +302,7 @@ function getObjectDescriptors (objectID) {
 
 function getRelatedObjects (objectID) {
   return getIndex((err, index) => {
+    if (err) { throw err }
     let body = bodybuilder()
       .filter('exists', 'imageSecret')
       .from(0).size(1000)
@@ -296,7 +323,7 @@ function getRelatedObjects (objectID) {
     return axios
       .get(`${canonicalRoot}/api/search`, { params: { body } })
       .then(response => response.data.hits.hits)
-      .catch((error) => console.error(error.message))
+      .catch(error => console.error(error.message))
   })
 }
 
@@ -328,13 +355,29 @@ const getDistance = (from, to) => {
   return distanceKeys.length > 0 ? distance / distanceKeys.length : Infinity
 }
 
-app.get('/api/related', cache(), (req, res) => {
-  getIndex((err, index) => {
-    const {objectID, dissimilarPercent} = req.query
+const getApiRelated = async (req, res) => {
+  const {objectID, dissimilarPercent} = req.query
+  getRelated(objectID, dissimilarPercent)
+    .then(related => {
+      if (req.x_cache_key) {
+        memoryCache.put(req.x_cache_key, related, oneDay)
+      }
+      res.json(related)
+    })
+    .catch(error => {
+      console.error(`[error] problem with getRelated`)
+      console.error(error)
+    })
+}
+
+const getRelated = (objectID, dissimilarPercent) => {
+  if (objectID === undefined) { throw new Error(`[error] in getRelated: objectID undefined`) }
+  return getIndex((err, index) => {
+    if (err) { throw new Error(`[error] after / in getIndex: ${err}`) }
     const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
     const similarRatio = similarPercent / 100.0
 
-    axios
+    return axios
       .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
       .then(axios.spread((objectDescriptors, relatedObjects) => {
         const sources = relatedObjects.map(object => object._source)
@@ -356,17 +399,15 @@ app.get('/api/related', cache(), (req, res) => {
           _source: object})
         )
 
-        res.json({hits: {
+        return { hits: {
           total: objects.length,
           hits: objects
-        }})
+        }}
       }))
-      .catch((error) => {
-        console.error(`[error] axios.all: ${error.message}`)
-        res.json(error.message)
-      })
   })
-})
+}
+
+app.get('/api/related', normalizeDissimilarPercent, relatedCache, getApiRelated)
 
 const getSignedUrl = (invno) => {
   const url = s3.getSignedUrl('getObject', {
@@ -424,14 +465,14 @@ const getObject = (id) => {
 }
 
 const renderAppObjectPage = (req, res, next) => {
-  const objectId = req.params.id
+  const objectID = req.params.id
   const htmlFilePromise = getIndexHtmlPromise()
 
-  return getObject(objectId).then((objectData) => {
+  return getObject(objectID).then((objectData) => {
     const canonicalUrl = canonicalRoot + req.originalUrl
 
     if (!objectData.id) {
-      throw new Error(`bad object Id in url: ${objectId}`)
+      throw new Error(`bad object ID in url: ${objectID}`)
     }
 
     objectData = generateObjectImageUrls(objectData)
@@ -454,7 +495,7 @@ const renderAppObjectPage = (req, res, next) => {
 
       res.send(html)
     }).catch(next)
-  }).catch((error) => {
+  }).catch(error => {
     res.status(404).send('Page does not exist!')
   })
 }
