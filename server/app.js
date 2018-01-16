@@ -33,15 +33,26 @@ const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 const oneSecond = 1000
 const oneDay = 60 * 60 * 24 * oneSecond
 
+const normalizeDissimilarPercent = (req, res, next) => {
+  if (req.query.dissimilarPercent !== undefined) {
+    req.query.dissimilarPercent = Math.round(req.query.dissimilarPercent / 10) * 10
+  }
+  next()
+}
+
 const relatedCache = (req, res, next) => {
   if (req.query.cache === 'false') {
     console.log(`skipping cache`)
     next()
   } else {
-    const objectID = req.query.objectID
-    if (objectID === undefined) { throw new Error(`objectID undefined`) }
-    const key = `__cache__${req.originalUrl}`
-    req.x_cache_key = key
+    const { objectID, dissimilarPercent } = req.query
+
+    const cacheKey = (objectID, dissimilarPercent) => {
+      if (objectID === undefined) { throw new Error(`objectID undefined`) }
+      return `__cache__api_related_${objectID}_${dissimilarPercent}`
+    }
+
+    const key = cacheKey(objectID, dissimilarPercent)
     const body = memoryCache.get(key)
     if (body) {
       res.append('x-cached', true)
@@ -51,29 +62,16 @@ const relatedCache = (req, res, next) => {
     }
 
     // warm cache
-    async.each([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], dissimilarPercent => {
-      const newUrl = `${req.originalUrl || req.url}`.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${dissimilarPercent}`)
-      const key = `__cache__${newUrl}`
+    async.each(Array(11).fill().map((_, index) => index * 10), dissimilarity => {
+      const key = cacheKey(objectID, dissimilarity)
       if (!memoryCache.get(key)) {
-        getRelated(req.query.objectID, dissimilarPercent)
+        getRelated(objectID, dissimilarity)
           .then(relatedObject => {
             memoryCache.put(key, relatedObject, oneDay)
           })
       }
     })
   }
-}
-
-const normalizeDissimilarPercent = (req, res, next) => {
-  const divisions = 10
-  const normalizedPercent = parseInt(divisions * Math.round(parseInt(req.query.dissimilarPercent / divisions)))
-
-  if (parseInt(req.query.dissimilarPercent) !== normalizedPercent) {
-    if (req.query.dissimilarPercent) req.query.dissimilarPercent = normalizedPercent
-    if (req.originalUrl) req.originalUrl.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${normalizedPercent}`)
-    if (req.url) req.url.replace(/dissimilarPercent=\d+/, `dissimilarPercent=${normalizedPercent}`)
-  }
-  next()
 }
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
@@ -361,11 +359,8 @@ const getDistance = (from, to) => {
 
 const getApiRelated = async (req, res) => {
   const {objectID, dissimilarPercent} = req.query
-  getRelated(objectID, dissimilarPercent)
+  getRelated(objectID, req.x_dissimilar_percent || dissimilarPercent)
     .then(related => {
-      if (req.x_cache_key) {
-        memoryCache.put(req.x_cache_key, related, oneDay)
-      }
       res.json(related)
     })
     .catch(error => {
