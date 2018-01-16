@@ -97,3 +97,5 @@ $g-header-height-xsmall: #{map-get($headerHeights, 'xsmall')}; /* 1 */
 $g-header-height-medium: #{map-get($headerHeights, 'medium')}; /* 1 */
 $g-header-height-large: #{map-get($headerHeights, 'large')}; /* 1 */
 $g-header-height-xlarge: #{map-get($headerHeights, 'xlarge')}; /* 1 */
+
+$color-grey-light-accessibility: darken($color__copy--light, 10%);
