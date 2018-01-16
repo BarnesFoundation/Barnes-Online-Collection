@@ -209,15 +209,16 @@ const getIndex = function (callback) {
   if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
 
   async function hasTags (client, index) {
-    return await client
-      .search({index, body: { query: { exists: { field: 'tags.*.*' } } }, size: 0 })
+    return client
+      .search({index, body: {query: {exists: {field: 'tags.*.*'}}}, size: 0})
       .then(result => {
         return result.hits.total > 0
       })
   }
 
   async function find (client, indices, predicate) {
-    let check = false, result = null
+    let check = false
+    let result = null
     for (let index of indices) {
       check = await predicate(client, index)
       if (check) {
@@ -229,8 +230,8 @@ const getIndex = function (callback) {
   }
 
   async function getFirstIndexWithTags (indices) {
-    const latest_index_with_tags = await find(esClient, indices.split('\n'), hasTags)
-    return latest_index_with_tags
+    const latestIndexWithTags = await find(esClient, indices.split('\n'), hasTags)
+    return latestIndexWithTags
   }
 
   return esClient.cat
@@ -241,12 +242,14 @@ const getIndex = function (callback) {
 
 app.get('/api/latestIndex', (req, res) => {
   async.series([getIndex], function (err, results) {
+    if (err) throw err
     res.json(results)
   })
 })
 
 app.get('/api/objects/:object_id', (req, res) => {
   getIndex((err, index) => {
+    if (err) throw err
     const options = {
       index: index,
       type: 'object',
@@ -265,6 +268,7 @@ app.get('/api/objects/:object_id', (req, res) => {
 
 app.get('/api/search', (req, res) => {
   async.series([getIndex], (err, index) => {
+    if (err) throw err
     esClient.search({
       index: index,
       body: req.query.body
@@ -335,7 +339,7 @@ const getDistance = (from, to) => {
   const descriptorKeys = MORE_LIKE_THIS_FIELDS.map((field) => {
     if (field.match(/(.*)[_-]\*$/)) {
       return field.slice(0, field.length - 1)
-    } else if (field.match(/(.*)[\.]\*$/)) {
+    } else if (field.match(/(.*)[.]\*$/)) {
       return field.slice(0, field.length - 2)
     }
     return field
@@ -433,6 +437,7 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
       'Field3': req.params.object_invno
     }
   }, (err, response, body) => {
+    if (err) res.status(500).json({success: false})
     const parsedBody = JSON.parse(body)
     if (parsedBody.Success === 1) {
       res.json({url: getSignedUrl(req.params.object_invno)})
@@ -496,6 +501,7 @@ const renderAppObjectPage = (req, res, next) => {
       res.send(html)
     }).catch(next)
   }).catch(error => {
+    console.error(`[error] ${error.message}`)
     res.status(404).send('Page does not exist!')
   })
 }
@@ -550,7 +556,7 @@ app.get('/objects', (req, res, next) => {
 app.get('/objects/:id', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
   // account for slash at end
-  const newUrl = req.url.replace(/[\/]*$/i, `/${titleSlug}/`)
+  const newUrl = req.url.replace(/[/]*$/i, `/${titleSlug}/`)
 
   return res.redirect(301, newUrl)
 })
@@ -560,7 +566,7 @@ app.get('/objects/:id/ensemble', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
 
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/ensemble[\/]*$/i, `${titleSlug}/ensemble`)
+  const newUrl = req.url.replace(/ensemble[/]*$/i, `${titleSlug}/ensemble`)
 
   return res.redirect(301, newUrl)
 })
@@ -569,7 +575,7 @@ app.get('/objects/:id/ensemble', (req, res, next) => {
 app.get('/objects/:id/details', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/details[\/]*$/i, `${titleSlug}/details`)
+  const newUrl = req.url.replace(/details[/]*$/i, `${titleSlug}/details`)
 
   return res.redirect(301, newUrl)
 })
@@ -618,6 +624,7 @@ app.use(function (req, res) {
 })
 
 app.use(function (error, req, res, next) {
+  if (error) console.error(error)
   res.status(500).send('Error 500: Sorry, something went wrong.')
 })
 
