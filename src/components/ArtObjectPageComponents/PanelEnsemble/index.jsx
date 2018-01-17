@@ -1,12 +1,43 @@
 import React, { Component } from 'react';
-import './index.css';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {getRoomAndTitleText, ENSEMBLE_IMAGE_URL} from '../../../ensembleIndex';
 import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
+import * as EnsembleObjectsActions from '../../../actions/ensembleObjects';
+import './index.css';
 
 
 class PanelEnsemble extends Component {
+  componentDidMount() {
+    const ensembleIndex = this.props.object.ensembleIndex;
+
+    if (typeof ensembleIndex !== 'undefined') {
+      this.fetchObjects(ensembleIndex);
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    const currEnsembleIndex = this.props.object.ensembleIndex;
+    const nextEnsembleIndex = nextProps.object.ensembleIndex;
+
+    if (nextEnsembleIndex && currEnsembleIndex !== nextEnsembleIndex) {
+      this.fetchObjects(nextEnsembleIndex);
+    }
+  }
+
+  fetchObjects(ensembleIndex) {
+    this.props.getEnsembleObjects(ensembleIndex);
+  }
+
   render() {
     const ensembleIndex = this.props.ensembleIndex;
+    const queryState = this.props.ensembleObjectsQuery || {};
+    const isSearchPending = queryState.isPending;
+    // const hasMoreResults = queryState.hasMoreResults;
+    // don't allow for the view more button on the ensemble page
+    const hasMoreResults = false;
+    const liveObjects=this.props.ensembleObjects;
+    const pageType = 'ensemble';
 
     // don't render anything if there is no ensembleIndex.
     if (!ensembleIndex) {
@@ -29,11 +60,31 @@ class PanelEnsemble extends Component {
           </div>
         </div>
         <div className="m-block m-block--shallow m-block--flush-top m-block--no-border">
-          <ArtObjectGrid gridStyle="full-size" pageType="ensemble"/>
+          <ArtObjectGrid
+            gridStyle="full-size"
+            isSearchPending={isSearchPending}
+            liveObjects={liveObjects}
+            pageType={pageType}
+            hasMoreResults={hasMoreResults}
+          />
         </div>
       </div>
     );
   }
 }
 
-export default PanelEnsemble;
+function mapStateToProps(state) {
+  return {
+    object: state.object,
+    ensembleObjects: state.ensembleObjects,
+    ensembleObjectsQuery: state.ensembleObjectsQuery,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Object.assign({},
+    EnsembleObjectsActions,
+  ), dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelEnsemble);

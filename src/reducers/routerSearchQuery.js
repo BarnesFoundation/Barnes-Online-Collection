@@ -1,6 +1,8 @@
 import * as ActionTypes from '../constants';
 
-const initialState = {};
+const initialState = {
+  hasInitialized: false,
+};
 
 const routerSearchQuery = (state=initialState, action) => {
   switch(action.type) {

@@ -106,9 +106,35 @@ class PanelVisuallyRelated extends Component {
     return getArtObjectFilters(object);
   }
 
+  fetchObjects(objectId) {
+    this.props.getRelatedObjects(objectId);
+  }
+
+  componentDidMount() {
+    const objectId = this.props.object.id;
+
+    if (typeof objectId !== 'undefined') {
+      this.fetchObjects(objectId);
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    if (this.props.object.id !== nextProps.object.id) {
+      this.fetchObjects(nextProps.object.id);
+    }
+  }
+
   render() {
     const object = this.props.object;
     const filterTags = this.getFilterTags();
+    const queryState = this.props.relatedObjectsQuery || {};
+    const isSearchPending = queryState.isPending;
+
+    // const hasMoreResults = queryState.hasMoreResults;
+    // don't allow for the view more button on visually related
+    const hasMoreResults = false;
+    const liveObjects=this.props.relatedObjects;
+    const pageType = 'visually-related';
 
     return (
       <div className="m-block m-block--shallow">
@@ -133,7 +159,13 @@ class PanelVisuallyRelated extends Component {
               handleChange={this.getRelatedObjects}
               defaultValue={50}
             />
-            <ArtObjectGrid pageType="visually-related" modalPreviousLocation={this.props.modalPreviousLocation}/>
+            <ArtObjectGrid
+              modalPreviousLocation={this.props.modalPreviousLocation}
+              isSearchPending={isSearchPending}
+              liveObjects={liveObjects}
+              pageType={pageType}
+              hasMoreResults={hasMoreResults}
+            />
           </div>
         </div>
       </div>
@@ -144,6 +176,8 @@ class PanelVisuallyRelated extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
+    relatedObjects: state.relatedObjects,
+    relatedObjectsQuery: state.relatedObjectsQuery,
   };
 }
 

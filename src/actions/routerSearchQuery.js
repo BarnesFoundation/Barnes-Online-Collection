@@ -1,8 +1,7 @@
 import * as ActionTypes from '../constants';
 
-export function routerSearchInit(bool) {
+export function routerSearchInit() {
   return {
     type: ActionTypes.ROUTER_SEARCH_INIT,
-    bool: bool
   }
 }
