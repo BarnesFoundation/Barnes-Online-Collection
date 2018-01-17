@@ -149,22 +149,26 @@ li {
 
 // tweaks for accessibility
 .a-brand-link-on-grey {
-  // for accessibility
+  // for accessibility. For original colors, see src/components-barnes-toolkit/scss/atoms/_brand-link.scss
   color: darken($color__red--barnes, 5%);
 
   &:visited {
-    color: darken($color__red--barnes, 10%);
+    color: darken($color__red--barnes, 12%);
+  }
+
+  &:hover,
+  &:active {
+    color: darken($color__red--barnes, 18%);
   }
 }
 
 // use body just to give it css weight
 body .g-footer__details  {
   .h2 {
-    // todo
-    color: darken($color-grey-light, 25%);
+    color: $color-grey-light-accessibility;
   }
 }
 
 body .color-light {
-  color: darken($color__copy--light, 10%);
+  color: $color-grey-light-accessibility;
 }

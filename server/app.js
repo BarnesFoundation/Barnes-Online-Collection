@@ -30,23 +30,47 @@ const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-ob
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
-const oneDay = 60 * 60 * 24
+const oneSecond = 1000
+const oneDay = 60 * 60 * 24 * oneSecond
 
-const cache = (duration = oneDay) => {
-  return (req, res, next) => {
-    const key = `__cache__${req.originalUrl || req.url}`
-    const shouldCache = req.query.cache !== 'false'
-    const cachedBody = memoryCache.get(key)
-    if (shouldCache && cachedBody) {
-      return res.send(cachedBody)
+const normalizeDissimilarPercent = (req, res, next) => {
+  if (req.query.dissimilarPercent !== undefined) {
+    req.query.dissimilarPercent = Math.round(req.query.dissimilarPercent / 10) * 10
+  }
+  next()
+}
+
+const relatedCache = (req, res, next) => {
+  if (req.query.cache === 'false') {
+    console.log(`skipping cache`)
+    next()
+  } else {
+    const { objectID, dissimilarPercent } = req.query
+
+    const cacheKey = (objectID, dissimilarPercent) => {
+      if (objectID === undefined) { throw new Error(`objectID undefined`) }
+      return `__cache__api_related_${objectID}_${dissimilarPercent}`
+    }
+
+    const key = cacheKey(objectID, dissimilarPercent)
+    const body = memoryCache.get(key)
+    if (body) {
+      res.append('x-cached', true)
+      res.send(body)
     } else {
-      res.sendResponse = res.send
-      res.send = (body) => {
-        memoryCache.put(key, body, duration * 1000)
-        res.sendResponse(body)
-      }
       next()
     }
+
+    // warm cache
+    async.each(Array(11).fill().map((_, index) => index * 10), dissimilarity => {
+      const key = cacheKey(objectID, dissimilarity)
+      if (!memoryCache.get(key)) {
+        getRelated(objectID, dissimilarity)
+          .then(relatedObject => {
+            memoryCache.put(key, relatedObject, oneDay)
+          })
+      }
+    })
   }
 }
 
@@ -183,15 +207,16 @@ const getIndex = function (callback) {
   if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
 
   async function hasTags (client, index) {
-    return await client
-      .search({index, body: { query: { exists: { field: 'tags.*.*' } } }, size: 0 })
+    return client
+      .search({index, body: {query: {exists: {field: 'tags.*.*'}}}, size: 0})
       .then(result => {
         return result.hits.total > 0
       })
   }
 
   async function find (client, indices, predicate) {
-    let check = false, result = null
+    let check = false
+    let result = null
     for (let index of indices) {
       check = await predicate(client, index)
       if (check) {
@@ -203,8 +228,8 @@ const getIndex = function (callback) {
   }
 
   async function getFirstIndexWithTags (indices) {
-    const latest_index_with_tags = await find(esClient, indices.split('\n'), hasTags)
-    return latest_index_with_tags
+    const latestIndexWithTags = await find(esClient, indices.split('\n'), hasTags)
+    return latestIndexWithTags
   }
 
   return esClient.cat
@@ -215,12 +240,14 @@ const getIndex = function (callback) {
 
 app.get('/api/latestIndex', (req, res) => {
   async.series([getIndex], function (err, results) {
+    if (err) throw err
     res.json(results)
   })
 })
 
 app.get('/api/objects/:object_id', (req, res) => {
   getIndex((err, index) => {
+    if (err) throw err
     const options = {
       index: index,
       type: 'object',
@@ -239,6 +266,7 @@ app.get('/api/objects/:object_id', (req, res) => {
 
 app.get('/api/search', (req, res) => {
   async.series([getIndex], (err, index) => {
+    if (err) throw err
     esClient.search({
       index: index,
       body: req.query.body
@@ -276,6 +304,7 @@ function getObjectDescriptors (objectID) {
 
 function getRelatedObjects (objectID) {
   return getIndex((err, index) => {
+    if (err) { throw err }
     let body = bodybuilder()
       .filter('exists', 'imageSecret')
       .from(0).size(1000)
@@ -296,7 +325,7 @@ function getRelatedObjects (objectID) {
     return axios
       .get(`${canonicalRoot}/api/search`, { params: { body } })
       .then(response => response.data.hits.hits)
-      .catch((error) => console.error(error.message))
+      .catch(error => console.error(error.message))
   })
 }
 
@@ -308,7 +337,7 @@ const getDistance = (from, to) => {
   const descriptorKeys = MORE_LIKE_THIS_FIELDS.map((field) => {
     if (field.match(/(.*)[_-]\*$/)) {
       return field.slice(0, field.length - 1)
-    } else if (field.match(/(.*)[\.]\*$/)) {
+    } else if (field.match(/(.*)[.]\*$/)) {
       return field.slice(0, field.length - 2)
     }
     return field
@@ -328,13 +357,26 @@ const getDistance = (from, to) => {
   return distanceKeys.length > 0 ? distance / distanceKeys.length : Infinity
 }
 
-app.get('/api/related', cache(), (req, res) => {
-  getIndex((err, index) => {
-    const {objectID, dissimilarPercent} = req.query
+const getApiRelated = async (req, res) => {
+  const {objectID, dissimilarPercent} = req.query
+  getRelated(objectID, req.x_dissimilar_percent || dissimilarPercent)
+    .then(related => {
+      res.json(related)
+    })
+    .catch(error => {
+      console.error(`[error] problem with getRelated`)
+      console.error(error)
+    })
+}
+
+const getRelated = (objectID, dissimilarPercent) => {
+  if (objectID === undefined) { throw new Error(`[error] in getRelated: objectID undefined`) }
+  return getIndex((err, index) => {
+    if (err) { throw new Error(`[error] after / in getIndex: ${err}`) }
     const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
     const similarRatio = similarPercent / 100.0
 
-    axios
+    return axios
       .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
       .then(axios.spread((objectDescriptors, relatedObjects) => {
         const sources = relatedObjects.map(object => object._source)
@@ -356,17 +398,15 @@ app.get('/api/related', cache(), (req, res) => {
           _source: object})
         )
 
-        res.json({hits: {
+        return { hits: {
           total: objects.length,
           hits: objects
-        }})
+        }}
       }))
-      .catch((error) => {
-        console.error(`[error] axios.all: ${error.message}`)
-        res.json(error.message)
-      })
   })
-})
+}
+
+app.get('/api/related', normalizeDissimilarPercent, relatedCache, getApiRelated)
 
 const getSignedUrl = (invno) => {
   const url = s3.getSignedUrl('getObject', {
@@ -392,6 +432,7 @@ app.post('/api/objects/:object_invno/download', (req, res) => {
       'Field3': req.params.object_invno
     }
   }, (err, response, body) => {
+    if (err) res.status(500).json({success: false})
     const parsedBody = JSON.parse(body)
     if (parsedBody.Success === 1) {
       res.json({url: getSignedUrl(req.params.object_invno)})
@@ -424,14 +465,14 @@ const getObject = (id) => {
 }
 
 const renderAppObjectPage = (req, res, next) => {
-  const objectId = req.params.id
+  const objectID = req.params.id
   const htmlFilePromise = getIndexHtmlPromise()
 
-  return getObject(objectId).then((objectData) => {
+  return getObject(objectID).then((objectData) => {
     const canonicalUrl = canonicalRoot + req.originalUrl
 
     if (!objectData.id) {
-      throw new Error(`bad object Id in url: ${objectId}`)
+      throw new Error(`bad object ID in url: ${objectID}`)
     }
 
     objectData = generateObjectImageUrls(objectData)
@@ -454,7 +495,8 @@ const renderAppObjectPage = (req, res, next) => {
 
       res.send(html)
     }).catch(next)
-  }).catch((error) => {
+  }).catch(error => {
+    console.error(`[error] ${error.message}`)
     res.status(404).send('Page does not exist!')
   })
 }
@@ -509,7 +551,7 @@ app.get('/objects', (req, res, next) => {
 app.get('/objects/:id', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
   // account for slash at end
-  const newUrl = req.url.replace(/[\/]*$/i, `/${titleSlug}/`)
+  const newUrl = req.url.replace(/[/]*$/i, `/${titleSlug}/`)
 
   return res.redirect(301, newUrl)
 })
@@ -519,7 +561,7 @@ app.get('/objects/:id/ensemble', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
 
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/ensemble[\/]*$/i, `${titleSlug}/ensemble`)
+  const newUrl = req.url.replace(/ensemble[/]*$/i, `${titleSlug}/ensemble`)
 
   return res.redirect(301, newUrl)
 })
@@ -528,7 +570,7 @@ app.get('/objects/:id/ensemble', (req, res, next) => {
 app.get('/objects/:id/details', (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id)
   // target the end of the url with an optional slash (or slashes)
-  const newUrl = req.url.replace(/details[\/]*$/i, `${titleSlug}/details`)
+  const newUrl = req.url.replace(/details[/]*$/i, `${titleSlug}/details`)
 
   return res.redirect(301, newUrl)
 })
@@ -577,6 +619,7 @@ app.use(function (req, res) {
 })
 
 app.use(function (error, req, res, next) {
+  if (error) console.error(error)
   res.status(500).send('Error 500: Sorry, something went wrong.')
 })
 
