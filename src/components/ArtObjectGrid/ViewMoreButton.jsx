@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import * as ObjectsActions from '../../actions/objects';
 import SpinnerLoader from './SpinnerLoader';
 
+// NOTE: This view more is only for the landing page objects grid,
+// not relatedObjects or ensembleObjects. Those don't use a view more button.
+// If they need to use a view more button, this will need to be extended a little.
 class ViewMoreButton extends Component {
   constructor(props) {
     super(props);
@@ -32,11 +35,6 @@ class ViewMoreButton extends Component {
 
   render() {
     const searchIsPending = this.props.objectsQuery.isPending;
-    const hasMoreResults = this.props.objectsQuery.hasMoreResults;
-
-    if (!hasMoreResults) {
-      return <div></div>;
-    }
 
     if (searchIsPending) {
       return <SpinnerLoader />;

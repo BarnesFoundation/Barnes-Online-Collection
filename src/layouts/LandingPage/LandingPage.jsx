@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as ObjectActions from '../../actions/object';
-import * as ModalActions from '../../actions/modal'
+import * as ObjectsActions from '../../actions/objects';
 import {getMetaTagsFromObject} from '../../helpers';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
@@ -22,9 +21,27 @@ class LandingPage extends Component {
     this.state = {};
   }
 
+  fetchObjects() {
+    return this.props.getAllObjects();
+  }
+
+  componentDidMount() {
+    debugger;
+    const hasRouterSearchQuery = this.props.routerSearchQuery.hasInitialized;
+    // if there was a router search query, it will have kicked off the objects fetch already
+    if (!hasRouterSearchQuery) {
+      this.fetchObjects();
+    }
+  }
+
   render() {
     const object = this.props.object;
     const metaTags = getMetaTagsFromObject(object);
+    const queryState = this.props.objectsQuery || {};
+    const isSearchPending = queryState.isPending;
+    const hasMoreResults = queryState.hasMoreResults;
+    const liveObjects=this.props.objects;
+    const pageType = 'landing';
 
     return (
       <div className="app app-landing-page">
@@ -44,9 +61,12 @@ class LandingPage extends Component {
           <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
             <ArtObjectGrid
               gridStyle="full-size"
-              pageType="landing"
               shouldLinksUseModal={true}
               modalPreviousLocation="/"
+              isSearchPending={isSearchPending}
+              liveObjects={liveObjects}
+              pageType={pageType}
+              hasMoreResults={hasMoreResults}
             />
           </div>
         </div>
@@ -59,14 +79,16 @@ class LandingPage extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
+    objects: state.objects,
+    objectsQuery: state.objectsQuery,
+    routerSearchQuery: state.routerSearchQuery,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
-    ModalActions,
-    ObjectActions,
+    ObjectsActions,
   ), dispatch);
 }
 
