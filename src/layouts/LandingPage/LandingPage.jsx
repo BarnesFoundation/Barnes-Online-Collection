@@ -26,12 +26,15 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
-    debugger;
-    const hasRouterSearchQuery = this.props.routerSearchQuery.hasInitialized;
-    // if there was a router search query, it will have kicked off the objects fetch already
-    if (!hasRouterSearchQuery) {
-      this.fetchObjects();
-    }
+    // todo: This setTimeout is a temp fix after the refactor to avoid a react loop race condition.
+    // I need to move the logic in RouterSearchQueryHelper.
+    setTimeout(function(){
+      const hasRouterSearchQuery = this.props.routerSearchQuery.hasInitialized;
+      // if there was a router search query, it will have kicked off the objects fetch already
+      if (!hasRouterSearchQuery) {
+        this.fetchObjects();
+      }
+    }.bind(this), 1)
   }
 
   render() {
