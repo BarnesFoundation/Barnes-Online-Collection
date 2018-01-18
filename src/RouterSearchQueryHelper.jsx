@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
 import * as FiltersActions from './actions/filters';
-import * as RouterSearchQuery from './actions/routerSearchQuery';
 import * as SearchActions from './actions/search';
 import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
@@ -14,23 +13,12 @@ import { DEV_WARN } from './devLogging';
 const queryString = require('query-string');
 
 class RouterSearchQueryHelper extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      queryType: '',
-      queryVal: '',
-    };
-  }
-
   componentWillMount() {
-    // this needs to happen before the didMount
-    // so that the routerSearchInit's state is set before the fetchObject calls in the didMount Phases
-    this.getInitialQuery();
+    this.props.onRef(this);
   }
 
-  componentDidMount() {
-    this.setInitialQueryOnLoad();
+  componentWillUnmount() {
+    this.props.onRef(null);
   }
 
   getInitialQuery() {
@@ -40,19 +28,15 @@ class RouterSearchQueryHelper extends Component {
     const querySearchIsValid = (queryType === 'filter' || queryType === 'keyword') &&
       queryVal.length > 0;
 
-    if (querySearchIsValid) {
-      this.setState({
-        queryType: queryType,
-        queryVal: queryVal,
-      });
-
-      this.props.routerSearchInit();
-    }
+    return querySearchIsValid ? {
+      queryType: queryType,
+      queryVal: queryVal,
+    } : null;
   }
 
-  setInitialQueryOnLoad() {
-    const queryType = this.state.queryType;
-    const queryVal = this.state.queryVal;
+  setInitialQueryOnLoad(initialQuery) {
+    const queryType = initialQuery.queryType;
+    const queryVal = initialQuery.queryVal;
 
     if (queryType === 'filter') {
       this.setInitialFilterSearch(queryVal);
@@ -129,6 +113,14 @@ class RouterSearchQueryHelper extends Component {
     }
   }
 
+  runSearchQueryOrDeferredFetch(deferredFetch) {
+    const initialQuery = this.getInitialQuery();
+    if (initialQuery) {
+      this.setInitialQueryOnLoad(initialQuery);
+    } else if (deferredFetch) {
+      deferredFetch();
+    }
+  }
 
   render() {
     return <div className="" />
@@ -146,7 +138,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
-    RouterSearchQuery,
     ObjectsActions,
     FilterSetsActions,
     FiltersActions,

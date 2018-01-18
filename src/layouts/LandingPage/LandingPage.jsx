@@ -21,20 +21,8 @@ class LandingPage extends Component {
     this.state = {};
   }
 
-  fetchObjects() {
-    return this.props.getAllObjects();
-  }
-
   componentDidMount() {
-    // todo: This setTimeout is a temp fix after the refactor to avoid a react loop race condition.
-    // I need to move the logic in RouterSearchQueryHelper.
-    setTimeout(function(){
-      const hasRouterSearchQuery = this.props.routerSearchQuery.hasInitialized;
-      // if there was a router search query, it will have kicked off the objects fetch already
-      if (!hasRouterSearchQuery) {
-        this.fetchObjects();
-      }
-    }.bind(this), 1)
+    this.routerSearchQueryHelper.runSearchQueryOrDeferredFetch(this.props.getAllObjects);
   }
 
   render() {
@@ -50,7 +38,7 @@ class LandingPage extends Component {
       <div className="app app-landing-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
-        <RouterSearchQueryHelper />
+        <RouterSearchQueryHelper onRef={ref => (this.routerSearchQueryHelper = ref)} />
         <SiteHeader />
 
         <div className="landing-page container">
@@ -84,7 +72,6 @@ function mapStateToProps(state) {
     object: state.object,
     objects: state.objects,
     objectsQuery: state.objectsQuery,
-    routerSearchQuery: state.routerSearchQuery,
   };
 }
 

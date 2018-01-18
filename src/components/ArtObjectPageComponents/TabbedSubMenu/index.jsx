@@ -51,6 +51,8 @@ class TabbedSubMenu extends Component {
 
     const tabsList = this.state.tabs.map(tabData => {
       const isSelected = tabData.slug === props.slug
+      const isDisabled = ensembleIsDisabled && tabData.slug === 'ensemble';
+
       return (
         <div key={tabData.slug} className="m-tabs__item">
           <Link
@@ -63,8 +65,8 @@ class TabbedSubMenu extends Component {
                 modalPreviousLocation: props.modalPreviousLocation
               },
             }}
-            onClick={this.handleContentTabClick(tabData.slug, ensembleIsDisabled)}
-            data-is-disabled={ensembleIsDisabled}
+            onClick={this.handleContentTabClick(tabData.slug, isDisabled)}
+            data-is-disabled={isDisabled}
           >
             {tabData.title}
           </Link>
