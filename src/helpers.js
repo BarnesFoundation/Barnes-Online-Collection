@@ -45,7 +45,8 @@ export const getObjectRequestBody = (object) => {
 
 export const getObjectsRequestBody = (fromIndex=0) => {
   let body = bodybuilder()
-    .sort('_score', 'desc')
+    // .sort('_score', 'desc')
+    .query('function_score', { 'random_score': {} })
     .filter('exists', 'imageSecret')
     .from(fromIndex).size(BARNES_SETTINGS.size);
   return body;
