@@ -7,7 +7,42 @@ import { DEV_LOG } from '../devLogging';
 const uniqBy = require('lodash/uniqBy');
 
 const addHighlightsFilter = (body) => {
-  return body.filter('match', 'highlight', 'true');
+  const highlightFilter = {
+    "bool": {
+      "must": [{
+        "exists": {
+          "field": "imageSecret"
+        }
+      }, {
+        "match": {
+          "highlight": "true"
+        }
+      }]
+    }
+  };
+
+  return body
+    // note: These random_score values were mostly copy-pasted from this example:
+    // https://www.elastic.co/guide/en/elasticsearch/reference/5.3/query-dsl-function-score-query.html#function-random
+    // These values seem to work better than other adjustments, so I just left them.
+    .query("function_score", {
+      "query": {
+        "match_all": {}
+      },
+      // value from 5.3 example
+      "boost": "5",
+      "functions": [{
+        "filter": highlightFilter,
+        // This should default to the current timestamp and add randomness.
+        "random_score": {},
+        // value from 5.3 example
+        "weight": 23
+      }],
+      // value and modes from 5.3 example
+      "max_boost": 42,
+      "score_mode": "max",
+      "boost_mode": "multiply"
+    });
 }
 
 // todo: refactor to consolidate these helper functions
