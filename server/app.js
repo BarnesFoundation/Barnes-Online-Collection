@@ -167,7 +167,8 @@ const esClient = new elasticsearch.Client({
       protocol: process.env.ELASTICSEARCH_PROTOCOL,
       port: process.env.ELASTICSEARCH_PORT
     }
-  ]
+  ],
+  apiVersion: "5.3"
 })
 
 // Setup logger
