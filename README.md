@@ -49,3 +49,7 @@ This project wraps all calls to Elasticsearch in its own API. It uses the `elast
 
 `POST /api/objects/:object_invno/download` returns a signed object url upon submitting the Wufoo form with the necessary fields.
 
+## Sitemap generation
+
+The `npm run build-sitemap` helper script re-generates the sitemap.xml file. The script hits the api endpoint and uses the data to template the file. Because the barnes collection never or rarely changes, this should not need to be run regularly.
+
