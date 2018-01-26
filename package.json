@@ -43,6 +43,7 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "request": "^2.81.0",
+    "slugify": "^1.2.9",
     "symbol-observable": "^1.0.4",
     "xml2js": "^0.4.17",
     "xmlbuilder": "^9.0.1"
@@ -56,6 +57,7 @@
   "scripts": {
     "start": "npm-run-all --parallel watch-css server client",
     "build": "npm run build-css && react-scripts build",
+    "build-sitemap": "node scripts/build-sitemap.js",
     "server": "node server/index.js",
     "client": "react-scripts start",
     "eject": "react-scripts eject",
