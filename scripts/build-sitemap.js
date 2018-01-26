@@ -59,8 +59,8 @@ const getSitemapTemplatePerObject = (object) => {
 
   const urlObjectRoot = `https://collection.barnesfoundation.org/objects/${object.id}/${slug}`
   const urlObjectPage = `${urlObjectRoot}/`
-  const urlObjectPageEnsemble = `${urlObjectRoot}/ensemble/`
-  const urlObjectPageDetails = `${urlObjectRoot}/details/`
+  const urlObjectPageEnsemble = `${urlObjectRoot}/ensemble`
+  const urlObjectPageDetails = `${urlObjectRoot}/details`
 
   return `` +
     `${getSitemapTemplatePerUrl(urlObjectPage)}` +
