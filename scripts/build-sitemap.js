@@ -40,35 +40,48 @@ const apiRequestBody = {
 }
 
 const isoTimestamp = new Date().toISOString()
-const sitemapTemplateHeader = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+const sitemapTemplateHeader = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
 const sitemapTemplateLine = 'line_'
 const sitemapTemplateFooter = '</urlset>'
 
-const makeSitemapTemplateItem = (object) => {
+const getSitemapTemplatePerUrl = (url) => {
+  return `` +
+    `<url>\n` +
+    `<loc>${url}</loc>\n` +
+    `<lastmod>${isoTimestamp}</lastmod>\n` +
+    `<changefreq>weekly</changefreq>\n` +
+    `<priority>0.5</priority>\n` +
+    `</url>\n` +
+    ``
+}
+
+const getSitemapTemplatePerObject = (object) => {
   const slug = slugify(object.title)
 
-  return `
-    <url>
-    <loc>https://collection.barnesfoundation.org/objects/${object.id}/${slug}/</loc>
-    <lastmod>${isoTimestamp}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-    </url>
-  `
+  const urlObjectRoot = `https://collection.barnesfoundation.org/objects/${object.id}/${slug}`
+  const urlObjectPage = `${urlObjectRoot}/`
+  const urlObjectPageEnsemble = `${urlObjectRoot}/ensemble/`
+  const urlObjectPageDetails = `${urlObjectRoot}/details/`
+
+  return `` +
+    `${getSitemapTemplatePerUrl(urlObjectPage)}` +
+    `${getSitemapTemplatePerUrl(urlObjectPageEnsemble)}` +
+    `${getSitemapTemplatePerUrl(urlObjectPageDetails)}` +
+    ``
 }
 
 const templateSitemapXml = (objects) => {
   const body = objects.map((obj) => {
-    return makeSitemapTemplateItem(obj)
+    return getSitemapTemplatePerObject(obj)
   }).join('')
 
   console.log(`Templating ${objects.length} objects into the sitemap...`)
 
-  return `
-    ${sitemapTemplateHeader}
-    ${body}
-    ${sitemapTemplateFooter}
-  `
+  return `` +
+    `${sitemapTemplateHeader}` +
+    `${body}` +
+    `${sitemapTemplateFooter}` +
+    ``
 }
 
 const writeSitemapFile = (xmlText, onSuccess) => {
@@ -78,7 +91,7 @@ const writeSitemapFile = (xmlText, onSuccess) => {
     }
 
     onSuccess()
-  });
+  })
 }
 
 const logError = (errorMsg) => {
@@ -108,6 +121,6 @@ fetchArtObjectData().then(response => {
 
   writeSitemapFile(sitemapXml, () => {
     // log success
-    console.log('Sitemap updated in public/sitemap.xml 👍');
+    console.log('Sitemap updated in public/sitemap.xml 👍')
   })
 })
