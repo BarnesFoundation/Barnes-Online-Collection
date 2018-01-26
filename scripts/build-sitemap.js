@@ -41,7 +41,6 @@ const apiRequestBody = {
 
 const isoTimestamp = new Date().toISOString()
 const sitemapTemplateHeader = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
-const sitemapTemplateLine = 'line_'
 const sitemapTemplateFooter = '</urlset>'
 
 const getSitemapTemplatePerUrl = (url) => {
