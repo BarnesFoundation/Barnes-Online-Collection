@@ -45,6 +45,7 @@
     "request": "^2.81.0",
     "slugify": "^1.2.9",
     "symbol-observable": "^1.0.4",
+    "universal-analytics": "^0.4.16",
     "xml2js": "^0.4.17",
     "xmlbuilder": "^9.0.1"
   },
