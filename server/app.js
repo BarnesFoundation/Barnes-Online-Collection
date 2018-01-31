@@ -13,6 +13,7 @@ const morgan = require('morgan')
 const path = require('path')
 const request = require('request')
 const s3 = new AWS.S3()
+const googleUA = require('universal-analytics')
 
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 
@@ -604,15 +605,22 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
+// e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
 app.get('/track/image-download/:imageId', (req, res) => {
   const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/'
   const imageId = req.params.imageId
   const downloadUrl = `${imageBaseUrl}${imageId}`
+  const visitor = googleUA(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
-  console.log('todo: track download for imageId: ' + imageId)
-  console.log('redirecting to: ' + downloadUrl)
+  // console.log('todo: track download for imageId: ' + imageId)
+  visitor.pageview(req.url, function (err) {
+    if (err) {
+      throw new Error(`Error while tracking page view ${err}`)
+    }
 
-  return res.redirect(302, downloadUrl)
+    // console.log('redirecting to: ' + downloadUrl)
+    return res.redirect(302, downloadUrl)
+  }).send()
 })
 
 app.use(function (req, res) {
