@@ -78,17 +78,17 @@ class PanelDetails extends Component {
 
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
               {objectCopyrightDetails.type === "large" ?
-                <a className="btn btn--primary" href={downloadRequestUrl} target="_blank" rel="noopener noreferrer" >
+                <a className="btn btn--primary" href={downloadRequestUrl} target="_blank" rel="noopener noreferrer nofollow" >
                   Download Image
                 </a>
               :
-                <a className="btn btn--primary" href={requestImageUrl} target="_blank" rel="noopener noreferrer" >
+                <a className="btn btn--primary" href={requestImageUrl} target="_blank" rel="noopener noreferrer nofollow" >
                   Request Image
                 </a>
               }
 
               {printAvailable &&
-                <a className="btn" href={printAvailable.url} target="_blank" rel="noopener noreferrer" >
+                <a className="btn" href={printAvailable.url} target="_blank" rel="noopener noreferrer nofollow" >
                 Purchase Print
                 </a>
               }
