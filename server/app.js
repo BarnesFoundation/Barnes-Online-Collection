@@ -20,7 +20,8 @@ const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
 const Handlebars = require('handlebars')
-const canonicalRoot = (process.env.AXIOS_BASEURL || '') + (process.env.REACT_APP_CANONICAL_ROOT || '/')
+const canonicalRoot = (process.env.REACT_APP_CANONICAL_ROOT || '')
+const imageTrackBaseUrl = `/track/image-download/`
 
 // todo #switchImportToRequire - consolidate with constants (can't use import yet.)
 const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online'
@@ -88,14 +89,17 @@ const generateObjectImageUrls = (object) => {
     return object
   }
 
-  const awsUrlWithoutProt = `s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`
-  const awsUrl = `https://${awsUrlWithoutProt}`
+  const awsUrl = `https://s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`
+  const imageIdReg = `${object.id}_${object.imageSecret}`
+  const imageIdOrig = `${object.id}_${object.imageOriginalSecret}`
   const newObject = Object.assign({}, object)
+  const canonicalRootNoProt = canonicalRoot.replace(/^https?\:\/\//i, '')
 
-  newObject.imageUrlSmall = `${awsUrl}/${object.id}_${object.imageSecret}_n.jpg`
-  newObject.imageUrlOriginal = `${awsUrl}/${object.id}_${object.imageOriginalSecret}_o.jpg`
-  newObject.imageUrlForWufoo = `${awsUrlWithoutProt}/${object.id}_${object.imageOriginalSecret}`
-  newObject.imageUrlLarge = `${awsUrl}/${object.id}_${object.imageSecret}_b.jpg`
+  // Have it send through this tracking url which will then redirect to the image url
+  newObject.imageUrlForWufoo = `${canonicalRootNoProt}${imageTrackBaseUrl}${imageIdOrig}`
+  newObject.imageUrlSmall = `${awsUrl}/${imageIdReg}_n.jpg`
+  newObject.imageUrlOriginal = `${awsUrl}/${imageIdOrig}_o.jpg`
+  newObject.imageUrlLarge = `${awsUrl}/${imageIdReg}_b.jpg`
 
   return newObject
 }
@@ -606,7 +610,7 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
 })
 
 // e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
-app.get('/track/image-download/:imageId', (req, res) => {
+app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
   const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/'
   const imageId = req.params.imageId
   const downloadUrl = `${imageBaseUrl}${imageId}`

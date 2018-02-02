@@ -12,14 +12,18 @@ const generateObjectImageUrls = (object) => {
     return object;
   }
 
-  const wufooImageKeyPrefix = `s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`;
-  const imageUrlBase = `${IMAGE_BASE_URL}/${IMAGES_PREFIX}`;
-  const newObject = Object.assign({}, object);
+  const canonicalRoot = (process.env.REACT_APP_CANONICAL_ROOT || '')
+  const canonicalRootNoProt = canonicalRoot.replace(/^https?\:\/\//i, '')
+  const imageUrlBase = `${IMAGE_BASE_URL}/${IMAGES_PREFIX}`
+  const newObject = Object.assign({}, object)
+  const imageTrackBaseUrl = `/track/image-download/`
+  const imageIdReg = `${object.id}_${object.imageSecret}`
+  const imageIdOrig = `${object.id}_${object.imageOriginalSecret}`
 
-  newObject.imageUrlSmall = `${imageUrlBase}/${object.id}_${object.imageSecret}_n.jpg`;
-  newObject.imageUrlOriginal = `${imageUrlBase}/${object.id}_${object.imageOriginalSecret}_o.jpg`;
-  newObject.imageUrlLarge = `${imageUrlBase}/${object.id}_${object.imageSecret}_b.jpg`;
-  newObject.imageUrlForWufoo = `${wufooImageKeyPrefix}/${object.id}_${object.imageOriginalSecret}`;
+  newObject.imageUrlSmall = `${imageUrlBase}/${imageIdReg}_n.jpg`;
+  newObject.imageUrlOriginal = `${imageUrlBase}/${imageIdOrig}_o.jpg`;
+  newObject.imageUrlLarge = `${imageUrlBase}/${imageIdReg}_b.jpg`;
+  newObject.imageUrlForWufoo = `${canonicalRootNoProt}${imageTrackBaseUrl}${imageIdOrig}`
 
   return newObject;
 }
