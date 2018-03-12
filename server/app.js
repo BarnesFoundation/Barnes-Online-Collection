@@ -214,7 +214,10 @@ const getIndex = function (callback) {
 
   async function hasTags (client, index) {
     return client
-      .search({index, body: {query: {exists: {field: 'tags.*.*'}}}, size: 0})
+      .search({index, body: {query: {bool: {must: [
+        {exists: {field: 'tags.*.*'}},
+        {exists: {field: 'space'}}
+      ]}}}, size: 0})
       .then(result => {
         return result.hits.total > 0
       })
