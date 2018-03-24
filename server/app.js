@@ -388,7 +388,11 @@ const getRelated = (objectID, dissimilarPercent) => {
     return axios
       .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
       .then(axios.spread((objectDescriptors, relatedObjects) => {
-        const sources = relatedObjects.map(object => object._source)
+        const sources = relatedObjects.map(object => {
+          const _source = object._source
+          Object.assign(_source, {id: parseInt(object._id)})
+          return _source
+        })
 
         const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
 
