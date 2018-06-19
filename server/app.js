@@ -78,8 +78,11 @@ const relatedCache = (req, res, next) => {
 
 // todo #switchImportToRequire - consolidate with src/objectDataUtils.js
 const generateObjectImageUrls = (object) => {
+  // todo: deduplicate #imgUrlLogic
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET
   const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX
+  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `https://s3.amazonaws.com/${AWS_BUCKET}`;
+  const imageUrlBase = IMAGES_PREFIX ? `${IMAGE_BASE_URL}/${IMAGES_PREFIX}` : IMAGE_BASE_URL;
 
   if (!object) {
     return {}
@@ -89,7 +92,6 @@ const generateObjectImageUrls = (object) => {
     return object
   }
 
-  const awsUrl = `https://s3.amazonaws.com/${AWS_BUCKET}/${IMAGES_PREFIX}`
   const imageIdReg = `${object.id}_${object.imageSecret}`
   const imageIdOrig = `${object.id}_${object.imageOriginalSecret}`
   const newObject = Object.assign({}, object)
@@ -97,9 +99,9 @@ const generateObjectImageUrls = (object) => {
 
   // Have it send through this tracking url which will then redirect to the image url
   newObject.imageUrlForWufoo = `${canonicalRootNoProt}${imageTrackBaseUrl}${imageIdOrig}`
-  newObject.imageUrlSmall = `${awsUrl}/${imageIdReg}_n.jpg`
-  newObject.imageUrlOriginal = `${awsUrl}/${imageIdOrig}_o.jpg`
-  newObject.imageUrlLarge = `${awsUrl}/${imageIdReg}_b.jpg`
+  newObject.imageUrlSmall = `${imageUrlBase}/${imageIdReg}_n.jpg`
+  newObject.imageUrlOriginal = `${imageUrlBase}/${imageIdOrig}_o.jpg`
+  newObject.imageUrlLarge = `${imageUrlBase}/${imageIdReg}_b.jpg`
 
   return newObject
 }
