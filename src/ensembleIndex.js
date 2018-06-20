@@ -1,11 +1,8 @@
-// todo: deduplicate #imgUrlLogic
-const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
 const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
-const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `//s3.amazonaws.com/${AWS_BUCKET}`;
-const imageUrlBase = IMAGES_PREFIX ? `${IMAGE_BASE_URL}/${IMAGES_PREFIX}` : IMAGE_BASE_URL;
 
 export const ENSEMBLE_IMAGE_URL = (index) => {
-  return `${imageUrlBase}/ensembles/${index}.jpg`;
+  return `${IMAGE_BASE_URL}/${IMAGES_PREFIX}/ensembles/${index}.jpg`;
 }
 
 export const ENSEMBLE = {
