@@ -81,7 +81,7 @@ const generateObjectImageUrls = (object) => {
   // todo: deduplicate #imgUrlLogic
   const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET
   const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX
-  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `https://s3.amazonaws.com/${AWS_BUCKET}`;
+  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `//s3.amazonaws.com/${AWS_BUCKET}`;
   const imageUrlBase = IMAGES_PREFIX ? `${IMAGE_BASE_URL}/${IMAGES_PREFIX}` : IMAGE_BASE_URL;
 
   if (!object) {
@@ -620,7 +620,7 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
 
 // e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
 app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
-  const imageBaseUrl = 'http://s3.amazonaws.com/barnes-image-repository/images/'
+  const imageBaseUrl = '//s3.amazonaws.com/barnes-image-repository/images/'
   const imageId = req.params.imageId
   const downloadUrl = `${imageBaseUrl}${imageId}`
   const visitor = googleUA(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
