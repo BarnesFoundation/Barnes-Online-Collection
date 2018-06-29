@@ -18,7 +18,7 @@ class Zoom extends Component {
       minZoom: 2,
     })
 
-    const info = `${IMAGE_BASE_URL}/tiles/${this.props.object.id}/info.json`
+    const info = `${IMAGE_BASE_URL}/tiles/${this.props.id}/info.json`
     const opts = {
       'quality': 'color',
       'tileFormat': 'jpg',

@@ -58,7 +58,7 @@ class PanelDetails extends Component {
             isZoomEnabled
           ) ?
             <div>
-              <Zoom invno={object.invno} />
+              <Zoom id={object.id} />
               <img
                 aria-hidden="true"
                 className="art-object__image art-object__image-hidden"
