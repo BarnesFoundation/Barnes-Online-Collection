@@ -619,10 +619,13 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
 })
 
 // e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
+// bucket and prefix needs to be dealt with...
 app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
-  const imageBaseUrl = '//s3.amazonaws.com/barnes-image-repository/images/'
+  const imageBaseUrl = process.env.REACT_APP_IMAGE_BASE_URL
+  const imageBucket = process.env.REACT_APP_AWS_BUCKET
+  const imageBucketPrefix = process.env.REACT_APP_IMAGES_PREFIX
   const imageId = req.params.imageId
-  const downloadUrl = `${imageBaseUrl}${imageId}`
+  const downloadUrl = `${imageBaseUrl}/${imageId}`
   const visitor = googleUA(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
 
   // console.log('todo: track download for imageId: ' + imageId)
