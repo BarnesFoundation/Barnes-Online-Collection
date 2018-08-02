@@ -1,11 +1,14 @@
 #!/bin/sh
 
-export HOME=/home/ubuntu
+cd /usr/local/barnes/projects
 
-cd /usr/local/barnes/projects/barnes-collection-www
+# the deploy installs as root, so just chown all the things
+sudo chown -R ubuntu:ubuntu ./barnes-collection-www
 
-sudo npm i -g npm
-sudo npm install
-sudo npm run build
+cd ./barnes-collection-www
 
-sudo pm2 restart "Barnes Collection Website" --env production --update-env
+yarn install
+
+yarn build
+
+pm2 restart "Barnes Collection Website" --env production --update-env
