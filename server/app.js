@@ -318,7 +318,7 @@ function getRelatedObjects (objectID) {
     if (err) { throw err }
     let body = bodybuilder()
       .filter('exists', 'imageSecret')
-      .from(0).size(1000)
+      .from(0).size(25)
       .query('more_like_this', {
         'like': [
           {
