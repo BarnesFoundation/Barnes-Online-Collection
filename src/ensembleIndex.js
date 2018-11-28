@@ -382,31 +382,63 @@ export const ENSEMBLE = {
     wallTitle: null
   },
   94: {
-    roomTitle: 'Second Floor Balcony North (Room 24)',
-    wallTitle: 'North Wall'
+    roomTitle: 'Second Floor Balcony East (Room 24)',
+    wallTitle: 'East Wall'
   },
   95: {
+    roomTitle: 'Second Floor Balcony South (Room 24)',
+    wallTitle: 'South Wall'
+  },
+  96: {
+    roomTitle: 'Second Floor Balcony West (Room 24)',
+    wallTitle: 'West'
+  },
+  97: {
     roomTitle: 'Mezzanine',
     wallTitle: null
   },
-  96: {
-    roomTitle: 'Lower Level Lobby',
+  98: {
+    roomTitle: 'Mezzanine',
     wallTitle: null
   },
-  97: {
-    roomTitle: 'Balcony East',
-    wallTitle: 'East Wall'
-  },
-  98: {
-    roomTitle: 'Balcony South',
-    wallTitle: 'South Wall'
-  },
   99: {
-    roomTitle: 'Balcony West',
-    wallTitle: 'West Wall'
+    roomTitle: 'Mezzanine',
+    wallTitle: null
   },
   100: {
+    roomTitle: 'Mezzanine',
+    wallTitle: null
+  },
+  101: {
     roomTitle: 'Gallery Foyer',
+    wallTitle: null
+  },
+  102: {
+    roomTitle: 'Gallery Foyer',
+    wallTitle: null
+  },
+  103: {
+    roomTitle: 'Gallery Foyer',
+    wallTitle: null
+  },
+  104: {
+    roomTitle: 'Gallery Foyer',
+    wallTitle: null
+  },
+  105: {
+    roomTitle: 'Lower Lobby',
+    wallTitle: null
+  },
+  106: {
+    roomTitle: 'Lower Lobby',
+    wallTitle: null
+  },
+  107: {
+    roomTitle: 'Lower Lobby',
+    wallTitle: null
+  },
+  108: {
+    roomTitle: 'Lower Lobby',
     wallTitle: null
   }
 };
