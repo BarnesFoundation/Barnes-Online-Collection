@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { getRoomAndTitleText } from '../../../ensembleIndex';
 import { getArtObjectUrlFromId, getQueryKeywordUrl } from '../../../helpers';
-import '../../../components/FlexboxTable/index.css';
+import '../../../components/SummaryTable/index.css';
 
-class FlexboxTable extends Component {
+class SummaryTable extends Component {
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
     const ensembleUrl = getArtObjectUrlFromId(this.props.id, 'ensemble');
     const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '');
+    const curatorialApproval = (this.props.curatorialApproval === 'true') ? true : false;
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
@@ -77,19 +78,27 @@ class FlexboxTable extends Component {
             }
           </div>
         </div>
+        {this.props.creditLine &&
         <div className="table-row">
           <div className="text"></div>
           <div className="text color-light">{this.props.creditLine}</div>
         </div>
+        }
         {this.props.provenance &&
         <div className="table-row">
           <div className="text">Provenance</div>
           <div className="text color-light">{this.props.provenance}</div>
         </div>
         }
+        {!curatorialApproval &&
+          <div className="table-row">
+            <div className="text">Disclaimer</div>
+            <div className="text color-light">Please note that not all records are complete as research on the collection is ongoing.</div>
+          </div>
+        }
       </div>
     );
   }
 }
 
-export default FlexboxTable;
+export default SummaryTable;
