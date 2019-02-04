@@ -4,14 +4,15 @@ import { META_TITLE, META_DESCRIPTION, DEFAULT_TITLE_URL } from './constants';
 
 const artObjectTitles = require('./artObjectTitles.json');
 
-export const getArtObjectUrlFromId = (objectId, panelSlug) => {
+const slugify = require('slugify');
+
+export const getArtObjectUrlFromId = (objectId, objectTitle, panelSlug) => {
   // this can happen while the data is loading
   if (!objectId) {
     return null;
   }
 
-  const objectTitleData = artObjectTitles[objectId] || {};
-  const titleSlug = objectTitleData.slug || DEFAULT_TITLE_URL;
+  let titleSlug = slugify(objectTitle);
 
   panelSlug = panelSlug || '';
 

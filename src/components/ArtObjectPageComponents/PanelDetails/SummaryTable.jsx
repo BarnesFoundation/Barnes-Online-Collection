@@ -7,7 +7,7 @@ class SummaryTable extends Component {
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
-    const ensembleUrl = getArtObjectUrlFromId(this.props.id, 'ensemble');
+    const ensembleUrl = getArtObjectUrlFromId(this.props.id, this.props.title, 'ensemble');
     const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '');
     const curatorialApproval = (this.props.curatorialApproval === 'true') ? true : false;
 

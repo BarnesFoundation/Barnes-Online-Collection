@@ -30,7 +30,7 @@ class ArtObjectGrid extends Component {
     return (
       <Link
         to={{
-          pathname: getArtObjectUrlFromId(object.id),
+          pathname: getArtObjectUrlFromId(object.id, object.title),
           state: {
             isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
             modalPreviousLocation: this.props.modalPreviousLocation
