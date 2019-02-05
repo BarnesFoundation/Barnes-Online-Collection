@@ -12,7 +12,7 @@ export const getArtObjectUrlFromId = (objectId, objectTitle, panelSlug) => {
     return null;
   }
 
-  let titleSlug = slugify(objectTitle);
+  const titleSlug = slugify(objectTitle);
 
   panelSlug = panelSlug || '';
 
