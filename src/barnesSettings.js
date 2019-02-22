@@ -1,4 +1,4 @@
-const OBJECT_SET_SIZE = 50;
+const OBJECT_SET_SIZE = 110;
 
 export const BARNES_SETTINGS = {
   min2D: Math.floor(OBJECT_SET_SIZE*0.4),
