@@ -37,4 +37,8 @@
   }
 
   @include stacking-btn-margin-fix();
+
+  .no-margin-top {
+    margin-top: 0;
+  }
 }
