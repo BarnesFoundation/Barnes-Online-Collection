@@ -45,6 +45,7 @@
     "redux-thunk": "^2.2.0",
     "request": "^2.81.0",
     "slugify": "^1.2.9",
+    "stringstream": "^0.0.6",
     "symbol-observable": "^1.0.4",
     "universal-analytics": "^0.4.16",
     "xml2js": "^0.4.17",
@@ -68,6 +69,8 @@
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
   },
   "engine-strict": true,
-  "engines" : { "node" : ">=9.0.0" },
+  "engines": {
+    "node": ">=9.0.0"
+  },
   "proxy": "http://localhost:4000"
 }
