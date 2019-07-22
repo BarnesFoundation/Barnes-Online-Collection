@@ -82,7 +82,8 @@
   },
   "scripts": {
     "start": "npm-run-all --parallel watch-css server client",
-    "build": "npm run build-css && react-scripts build",
+	"build": "npm run build-css && react-scripts build",
+	"postbuild": "cp -r build dist/ && cp package.json '.npmrc' && cd dist; zip -r ../dist.zip * .[^.]*",
     "build-sitemap": "node scripts/build-sitemap.js",
     "server": "node server/index.js",
     "client": "react-scripts start",
