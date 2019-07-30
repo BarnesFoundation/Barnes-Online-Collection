@@ -21,7 +21,7 @@ class FlickityMenu extends Component {
     this.flickityInstance = new Flickity(this.componentEl, options)
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     // note: #flickityWorkaround - because we can't use react-flickity without changing webpack configs
     if (!this.flickityInstance) {
       return

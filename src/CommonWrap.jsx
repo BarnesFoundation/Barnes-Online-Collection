@@ -17,7 +17,7 @@ class CommonWrap extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
