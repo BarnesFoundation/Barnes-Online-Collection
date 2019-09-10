@@ -29,7 +29,10 @@ class SummaryTable extends Component {
             <div className="text">Artist</div>
             <div className="text color-light">
               <a href={getQueryKeywordUrl(this.props.people)}>
-                {this.props.people}
+                {this.props.people} 
+                {!this.props.people.toLowerCase().includes('unidentified')  && this.props.nationality &&
+                  <span className="text"> ({this.props.nationality}, {this.props.birthDate} - {this.props.deathDate})</span>
+                }
               </a>
             </div>
           </div>
