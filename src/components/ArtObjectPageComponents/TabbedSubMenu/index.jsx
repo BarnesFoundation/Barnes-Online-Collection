@@ -22,8 +22,8 @@ class TabbedSubMenu extends Component {
         slug: 'ensemble',
       },
       {
-        title: 'Details',
-        slug: 'details',
+        title: 'Information',
+        slug: 'information',
       },
     ]
 
@@ -34,7 +34,7 @@ class TabbedSubMenu extends Component {
     switch(this.props.slug) {
       case 'ensemble':
         return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />
-      case 'details':
+      case 'information':
         return <PanelDetails />
       default:
         return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>
