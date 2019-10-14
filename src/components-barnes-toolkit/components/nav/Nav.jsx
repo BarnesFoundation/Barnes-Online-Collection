@@ -40,7 +40,7 @@ class SiteHeader extends Component {
             </button>
             {/*Hidden on collections site*/}
             {/*
-            <form className="g-nav__search" action="/static/pages/search" method="get" noValidate data-behavior="FormValidate">
+            <form className="g-nav__search" action="/search" method="get" noValidate data-behavior="FormValidate">
               <div className="form-field__error form-field__error--summary hidden" tabIndex={-1} aria-hidden="true">
                 <h3 className="font-bold-heading visuallyhidden">Please correct your errors</h3>
               </div>
@@ -62,13 +62,13 @@ class SiteHeader extends Component {
               <div className="g-nav__important-links">
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/whats-on'}
+                  href={MAIN_WEBSITE_DOMAIN + '/whats-on'}
                 >
                   <span>What’s On</span>
                 </a>
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/plan-your-visit'}
+                  href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}
                 >
                   <span>Plan your Visit</span>
                 </a>
@@ -80,56 +80,56 @@ class SiteHeader extends Component {
                 </a>
                 <a
                   className="g-nav__link g-nav__link--important"
-                  href={MAIN_WEBSITE_DOMAIN + '/static/pages/class'}
+                  href={MAIN_WEBSITE_DOMAIN + '/classes'}
                 >
                   <span>Take a Class</span>
                 </a>
               </div>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/about'}
+                href={MAIN_WEBSITE_DOMAIN + '/about'}
               >
                 <span>About</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/support-individual'}
+                href={MAIN_WEBSITE_DOMAIN + '/support'}
               >
                 <span>Join</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/'}
+                href={MAIN_WEBSITE_DOMAIN + '/support/individual-giving'}
               >
                 <span>Give</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/teachers-landing'}
+                href={MAIN_WEBSITE_DOMAIN + '/teachers'}
               >
                 <span>Teachers</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/press-landing'}
+                href={MAIN_WEBSITE_DOMAIN + '/press'}
               >
                 <span>Press</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/'}
+                href={'https://shop.barnesfoundation.org/' + '/'}
               >
                 <span>Shop</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/static/pages/host-an-event'}
+                href={MAIN_WEBSITE_DOMAIN + '/host-an-event'}
               >
                 <span>Facility Rental</span>
               </a>
               <a
                 className="g-nav__link"
-                href={MAIN_WEBSITE_DOMAIN + '/'}
+                href={MAIN_WEBSITE_DOMAIN + `/whats-on/arboretum`}
               >
                 <span>Arboretum</span>
               </a>
