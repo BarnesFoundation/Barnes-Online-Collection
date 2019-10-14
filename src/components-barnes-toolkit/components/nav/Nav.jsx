@@ -117,7 +117,7 @@ class SiteHeader extends Component {
               </a>
               <a
                 className="g-nav__link"
-                href={'https://shop.barnesfoundation.org/' + '/'}
+                href={'https://shop.barnesfoundation.org' + '/'}
               >
                 <span>Shop</span>
               </a>
