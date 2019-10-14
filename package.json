@@ -97,7 +97,7 @@
   },
   "engine-strict": true,
   "engines": {
-    "node": ">=9.0.0"
+    "node": ">=10.9.0"
   },
   "proxy": "http://localhost:4000",
   "browserslist": {
