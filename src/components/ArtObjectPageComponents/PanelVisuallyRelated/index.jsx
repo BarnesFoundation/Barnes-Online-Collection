@@ -17,9 +17,8 @@ const getObjectMetaDataHtml = (object) => {
     return null;
   }
 
-  // Get people as lowercase and check if the artist/maker is unidentified. Generate culture line based on that
-  const people = object.people.toLowerCase();
-  const unidentified = (people === 'unidentified artist' || people === 'unidentified maker');
+  // Check if the artist/maker is unidentified. Generate culture line based on that
+  const unidentified = object.people.toLowerCase().includes('unidentified');
   const culture = (unidentified && object.culture) ? `, ${object.culture}` : '';
 
   const metaData = (
