@@ -12,12 +12,23 @@ import { getObjectCopyright } from '../../../copyrightMap';
 
 const getObjectMetaDataHtml = (object) => {
   const objectCopyright = getObjectCopyright(object);
+
+  if (!object.id) {
+    return null;
+  }
+
+  // Get people as lowercase and check if the artist/maker is unidentified. Generate culture line based on that
+  const people = object.people.toLowerCase();
+  const unidentified = (people === 'unidentified artist' || people === 'unidentified maker');
+  const culture = (unidentified && object.culture) ? `, ${object.culture}` : '';
+
   const metaData = (
     <p>
-      <span>{`${object.people}. `}</span>
+	  <span>{`Barnes Foundation ${object.invno}. `}</span>
+      <span>{`${object.people}${culture}. `}</span>
       <span>{`${object.title}, ${object.displayDate}. `}</span>
       <span>{`${object.medium}, ${object.dimensions}. `}</span>
-      <span>{`${object.invno}. `}</span>
+      {/* <span>{`${object.invno}. `}</span> */}
       <span>{`${objectCopyright.copy}. `}</span>
       {
         object.creditLine &&
@@ -25,10 +36,6 @@ const getObjectMetaDataHtml = (object) => {
       }
     </p>
   );
-
-  if (!object.id) {
-    return null;
-  }
 
   return metaData;
 };
