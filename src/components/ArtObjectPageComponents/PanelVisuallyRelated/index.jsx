@@ -26,7 +26,7 @@ const getObjectMetaDataHtml = (object) => {
       <span>{`${object.people}${culture}. `}</span>
       <span>{`${object.title}, ${object.displayDate}. `}</span>
       <span>{`${object.medium}, ${object.dimensions}. `}</span>
-	  <span>{`The Barnes Foundation, ${object.invno}. `}</span>
+	  <span>{`Barnes Foundation ${object.invno}. `}</span>
       <span>{`${objectCopyright.copy}. `}</span>
       {
         object.creditLine &&
