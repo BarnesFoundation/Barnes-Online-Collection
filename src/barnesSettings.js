@@ -29,7 +29,6 @@ export const SEARCH_FIELDS = [
   "invno",
   "medium.*",
   "period",
-  "shortDescription.*",
   "longDescription.*",
   "visualDescription.*",
   "exhHistory.*"
