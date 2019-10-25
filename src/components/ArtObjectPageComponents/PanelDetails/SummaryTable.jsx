@@ -14,7 +14,7 @@ class SummaryTable extends Component {
 
 	// Add prefix and suffix to artist string
 	if (artistPrefix) { artistString = `${artistPrefix} ${artistString}`; }
-	if (artistSuffix) { artistString = `${artistString} ${artistSuffix}`; }
+	if (artistSuffix) { artistString += (artistSuffix[0] === ',') ? artistSuffix : ` ${artistSuffix}`; }
 
 	// If not unidentified, progressively add nationality, birth date, death date
 	if (!unidentified && (nationality || birthDate)) {
