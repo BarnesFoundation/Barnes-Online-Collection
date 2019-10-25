@@ -4,6 +4,32 @@ import { getArtObjectUrlFromId, getQueryKeywordUrl } from '../../../helpers';
 import '../../../components/SummaryTable/index.css';
 
 class SummaryTable extends Component {
+
+  /** Generates the text for the artist line */	
+  generateArtist = () => {
+	const { people, nationality, birthDate, deathDate, artistPrefix, artistSuffix } = this.props;
+	const unidentified = people.toLowerCase().includes('unidentified');
+
+	let artistString = `${people}`;
+
+	// Add prefix and suffix to artist string
+	if (artistPrefix) { artistString = `${artistPrefix} ${artistString}`; }
+	if (artistSuffix) { artistString = `${artistString} ${artistSuffix}`; }
+
+	// If not unidentified, progressively add nationality, birth date, death date
+	if (!unidentified && (nationality || birthDate)) {
+		let aString = '';
+
+		if (nationality) { aString += nationality; }
+		if (nationality && birthDate) { aString += ', '; }
+		if (birthDate) { aString += `${birthDate}`; }
+		if (deathDate) { aString += ` - ${deathDate}`; }
+
+		artistString = `${artistString} (${aString})`;
+	}
+	return `${artistString}`
+  }
+
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
@@ -28,12 +54,7 @@ class SummaryTable extends Component {
           <div className="table-row">
             <div className="text">Artist</div>
             <div className="text color-light">
-              <a href={getQueryKeywordUrl(this.props.people)}>
-                {this.props.people} 
-                {!this.props.people.toLowerCase().includes('unidentified')  && this.props.nationality &&
-                  <span className="text"> ({this.props.nationality}, {this.props.birthDate} - {this.props.deathDate})</span>
-                }
-              </a>
+              <a href={getQueryKeywordUrl(this.props.people)}>{this.generateArtist()}</a>
             </div>
           </div>
         }
