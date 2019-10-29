@@ -108,10 +108,10 @@ class SummaryTable extends Component {
           <div className="text color-light">{this.props.creditLine}</div>
         </div>
         }
-        {this.props.provenance &&
+        {this.props.publishedProvenance &&
         <div className="table-row">
           <div className="text">Provenance</div>
-          <div className="text color-light">{this.props.provenance}</div>
+          <div className="text color-light" dangerouslySetInnerHTML={{__html: this.props.publishedProvenance}}/>
         </div>
         }
         {!curatorialApproval &&
