@@ -30,7 +30,11 @@ const getTabList = (artObjectProps) => {
     {
       title: 'Exhibition History',
       tabContent: artObjectProps.exhHistory,
-    },
+	},
+	{
+		title: 'Provenance',
+		tabContent: artObjectProps.publishedProvenance
+	}
   ].filter((obj) => {
     // filter out ones with no content
     return !!obj.tabContent;
@@ -97,9 +101,8 @@ class PanelDetails extends Component {
             {
               object.shortDescription &&
               <div className="art-object__more-info m-block m-block--shallow">
-                <div className="art-object__short-description"
-                  dangerouslySetInnerHTML={{__html: object.shortDescription}}
-                ></div>
+                <div className="art-object__short-description" dangerouslySetInnerHTML={{__html: object.shortDescription}}>
+				</div>
               </div>
             }
 
