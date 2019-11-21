@@ -20,10 +20,6 @@ const getTabList = (artObjectProps) => {
       tabContent: artObjectProps.longDescription,
     },
     {
-      title: 'Visual Description',
-      tabContent: artObjectProps.visualDescription,
-    },
-    {
       title: 'Bibliography',
       tabContent: artObjectProps.bibliography,
     },
