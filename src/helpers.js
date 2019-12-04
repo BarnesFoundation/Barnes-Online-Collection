@@ -1,8 +1,6 @@
 import bodybuilder from 'bodybuilder';
 import { BARNES_SETTINGS } from './barnesSettings';
-import { META_TITLE, META_DESCRIPTION, DEFAULT_TITLE_URL } from './constants';
-
-const artObjectTitles = require('./artObjectTitles.json');
+import { META_TITLE, META_DESCRIPTION } from './constants';
 
 const slugify = require('slugify');
 
