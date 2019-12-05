@@ -16,7 +16,7 @@
     "deep-extend": "^0.5.1",
     "diff": "^3.5.0",
     "dotenv": "^4.0.0",
-    "elasticsearch": "^13.0.1",
+    "elasticsearch": "16.5.0",
     "eslint-utils": "^1.4.2",
     "express": "^4.15.3",
     "extend": "^3.0.2",
