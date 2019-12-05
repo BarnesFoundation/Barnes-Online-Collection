@@ -396,7 +396,7 @@ const buildRangeQuery = (field, query) => {
 const assembleDisMaxQuery = (body, queries) => {
   return body.query('dis_max', {
     'queries': queries,
-    'tie_breaker': 5
+    'tie_breaker': '0.5'
   });
 }
 
