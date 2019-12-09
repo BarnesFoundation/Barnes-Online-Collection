@@ -4,7 +4,7 @@ const { src, dest, series } = require('gulp');
 const zip = require('gulp-zip');
 
 function build() {
-    return src(['package.json', '.npmrc', 'build/**', 'src/**', 'server/**'], {base: './'})
+    return src(['package.json', '.npmrc', 'build/**', 'server/**', 'src/artObjectTitles.json'], {base: './'})
     .pipe(dest('dist'));
 }
 
