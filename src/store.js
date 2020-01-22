@@ -7,7 +7,19 @@ export function configureStore(initialState = {}) {
     applyMiddleware(thunk)
   ];
 
-  let store = createStore(rootReducer, initialState, compose(...enhancers));
+  // For redux devtools, via: https://github.com/zalmoxisus/redux-devtools-extension
+  const composeEnhancers =
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+        // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+      }) : compose;
+      
+  let store = createStore(
+    rootReducer,
+    initialState,
+    composeEnhancers(...enhancers)
+  );
 
   // if (module.hot) {
   //   module.hot.accept('./reducers', () => {
