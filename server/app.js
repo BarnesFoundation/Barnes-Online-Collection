@@ -211,66 +211,17 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
 // let index fall through to the wild card route
 app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false }))
 
-/*
-REMOVED => Our Elastic Search index is now provided via an environment variable,
-so we don't need logic to identify the pertinent index.
-
-const getIndex = function (callback) {
-  if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
-
-  async function hasTags (client, index) {
-    return client
-      .search({index, body: {query: {bool: {must: [
-        {exists: {field: 'tags.*.*'}},
-        {exists: {field: 'space'}}
-      ]}}}, size: 0})
-      .then(result => {
-        return result.hits.total > 0
-      })
-  }
-
-  async function find (client, indices, predicate) {
-    let check = false
-    let result = null
-    for (let index of indices) {
-      check = await predicate(client, index)
-      if (check) {
-        result = index
-        break
-      }
-    }
-    return result
-  }
-
-  async function getFirstIndexWithTags (indices) {
-    const latestIndexWithTags = await find(esClient, indices.split('\n'), hasTags)
-    return latestIndexWithTags
-  }
-
-  return esClient.cat
-    .indices({index: 'collection_*', s: 'creation.date:desc', h: ['i']})
-    .then(getFirstIndexWithTags)
-    .then(idx => {
-      esIndex = idx;
-      return callback(null, idx)
-    })
-}
-*/
 app.get('/api/latestIndex', (req, res) => {
-  // async.series([getIndex], function (err, results) {
-    // if (err) throw err
-    res.json(esIndex)
-  // })
-})
+  res.json(esIndex);
+});
 
 app.get('/api/objects/:object_id', (req, res) => {
-  //getIndex((err, index) => {
-    // if (err) throw err
     const options = {
       index: esIndex,
       type: 'object',
       id: req.params.object_id
-    }
+    };
+
     esClient.get(options, function (error, esRes) {
       if (error) {
         console.error(`[error] esClient: ${error.message}`)
@@ -278,25 +229,23 @@ app.get('/api/objects/:object_id', (req, res) => {
       } else {
         res.json(esRes._source)
       }
-    })
-  //})
-})
+    });
+});
 
 app.get('/api/search', (req, res) => {
-  //async.series([getIndex], (err, index) => {
-    // if (err) throw err
-    esClient.search({
-      index: esIndex,
-      body: req.query.body
-    }, function (error, esRes) {
-      if (error) {
-        res.json(error)
-      } else {
-        res.json(esRes)
-      }
-    })
-  // })
-})
+    esClient.search(
+      {
+        index: esIndex,
+        body: req.query.body
+      },
+      (error, esRes) => {
+        if (error) {
+          res.json(error)
+        } else {
+          res.json(esRes)
+        }
+    });
+});
 
 function getObjectDescriptors (objectID) {
   let body = bodybuilder()
@@ -321,8 +270,6 @@ function getObjectDescriptors (objectID) {
 }
 
 function getRelatedObjects (objectID) {
-  // return getIndex((err, index) => {
-    // if (err) { throw err }
     let body = bodybuilder()
       .filter('exists', 'imageSecret')
       .from(0).size(25)
@@ -344,8 +291,7 @@ function getRelatedObjects (objectID) {
       .get(`${canonicalRoot}/api/search`, { params: { body } })
       .then(response => response.data.hits.hits)
       .catch(error => console.error(error.message))
-  // })
-}
+};
 
 const getDistance = (from, to) => {
   const fromKeys = Object.keys(from)
@@ -391,45 +337,39 @@ const getRelated = (objectID, dissimilarPercent) => {
   if (objectID === undefined) {
     throw new Error(`[error] in getRelated: objectID undefined`);
   }
-
-  // TODO => Find out what side effects callback has.
-  //return getIndex((err, index) => {
-    // if (err) { throw new Error(`[error] after / in getIndex: ${err}`) }
     const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
     const similarRatio = similarPercent / 100.0
 
-    return axios
-      .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
-      .then(axios.spread((objectDescriptors, relatedObjects) => {
-        const sources = relatedObjects.map(object => {
-          const _source = object._source
-          Object.assign(_source, {id: parseInt(object._id)})
-          return _source
-        })
+  return (
+    axios
+    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
+    .then(axios.spread((objectDescriptors, relatedObjects) => {
+      const sources = relatedObjects.map(object => {
+        const _source = object._source
+        Object.assign(_source, {id: parseInt(object._id)})
+        return _source
+      })
 
-        const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
+      const sorted = sources.sort((a, b) => getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors))
+      const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
+      const similarItemCount = Math.floor(maxSize * similarRatio)
+      const similarItems = sorted.slice(0, similarItemCount)
+      const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
+      const objects = similarItems.concat(dissimilarItems).map(object => ({
+        _index: esIndex,
+        _type: 'object',
+        _id: object.id,
+        _source: object})
+      )
 
-        const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length)
-
-        const similarItemCount = Math.floor(maxSize * similarRatio)
-
-        const similarItems = sorted.slice(0, similarItemCount)
-
-        const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
-
-        const objects = similarItems.concat(dissimilarItems).map(object => ({
-          _index: esIndex,
-          _type: 'object',
-          _id: object.id,
-          _source: object})
-        )
-
-        return { hits: {
+      return {
+        hits: {
           total: objects.length,
           hits: objects
-        }}
-      }))
-  // })
+        }
+      };
+    }))
+  );
 }
 
 app.get('/api/related', normalizeDissimilarPercent, relatedCache, getApiRelated)
