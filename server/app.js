@@ -211,6 +211,10 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(htpasswdFilePath)) {
 // let index fall through to the wild card route
 app.use(express.static(path.resolve(__dirname, '..', 'build'), { index: false }))
 
+/*
+REMOVED => Our Elastic Search index is now provided via an environment variable,
+so we don't need logic to identify the pertinent index.
+
 const getIndex = function (callback) {
   if (esIndex !== null && typeof esIndex === 'string' && esIndex.length > 0) { return callback(null, esIndex) }
 
@@ -251,7 +255,7 @@ const getIndex = function (callback) {
       return callback(null, idx)
     })
 }
-
+*/
 app.get('/api/latestIndex', (req, res) => {
   // async.series([getIndex], function (err, results) {
     // if (err) throw err
