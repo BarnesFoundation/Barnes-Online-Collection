@@ -246,21 +246,24 @@ const getIndex = function (callback) {
   return esClient.cat
     .indices({index: 'collection_*', s: 'creation.date:desc', h: ['i']})
     .then(getFirstIndexWithTags)
-    .then(idx => { esIndex = idx; return callback(null, idx) })
+    .then(idx => {
+      esIndex = idx;
+      return callback(null, idx)
+    })
 }
 
 app.get('/api/latestIndex', (req, res) => {
-  async.series([getIndex], function (err, results) {
-    if (err) throw err
-    res.json(results)
-  })
+  // async.series([getIndex], function (err, results) {
+    // if (err) throw err
+    res.json(esIndex)
+  // })
 })
 
 app.get('/api/objects/:object_id', (req, res) => {
-  getIndex((err, index) => {
-    if (err) throw err
+  //getIndex((err, index) => {
+    // if (err) throw err
     const options = {
-      index: index,
+      index: esIndex,
       type: 'object',
       id: req.params.object_id
     }
@@ -272,14 +275,14 @@ app.get('/api/objects/:object_id', (req, res) => {
         res.json(esRes._source)
       }
     })
-  })
+  //})
 })
 
 app.get('/api/search', (req, res) => {
-  async.series([getIndex], (err, index) => {
-    if (err) throw err
+  //async.series([getIndex], (err, index) => {
+    // if (err) throw err
     esClient.search({
-      index: index,
+      index: esIndex,
       body: req.query.body
     }, function (error, esRes) {
       if (error) {
@@ -288,7 +291,7 @@ app.get('/api/search', (req, res) => {
         res.json(esRes)
       }
     })
-  })
+  // })
 })
 
 function getObjectDescriptors (objectID) {
@@ -314,15 +317,15 @@ function getObjectDescriptors (objectID) {
 }
 
 function getRelatedObjects (objectID) {
-  return getIndex((err, index) => {
-    if (err) { throw err }
+  // return getIndex((err, index) => {
+    // if (err) { throw err }
     let body = bodybuilder()
       .filter('exists', 'imageSecret')
       .from(0).size(25)
       .query('more_like_this', {
         'like': [
           {
-            '_index': index,
+            '_index': esIndex,
             '_type': 'object',
             '_id': objectID
           }
@@ -337,7 +340,7 @@ function getRelatedObjects (objectID) {
       .get(`${canonicalRoot}/api/search`, { params: { body } })
       .then(response => response.data.hits.hits)
       .catch(error => console.error(error.message))
-  })
+  // })
 }
 
 const getDistance = (from, to) => {
@@ -381,9 +384,13 @@ const getApiRelated = async (req, res) => {
 }
 
 const getRelated = (objectID, dissimilarPercent) => {
-  if (objectID === undefined) { throw new Error(`[error] in getRelated: objectID undefined`) }
-  return getIndex((err, index) => {
-    if (err) { throw new Error(`[error] after / in getIndex: ${err}`) }
+  if (objectID === undefined) {
+    throw new Error(`[error] in getRelated: objectID undefined`);
+  }
+
+  // TODO => Find out what side effects callback has.
+  //return getIndex((err, index) => {
+    // if (err) { throw new Error(`[error] after / in getIndex: ${err}`) }
     const similarPercent = 100 - clamp(dissimilarPercent, 0, 100)
     const similarRatio = similarPercent / 100.0
 
@@ -407,7 +414,7 @@ const getRelated = (objectID, dissimilarPercent) => {
         const dissimilarItems = sorted.slice(-(maxSize - similarItemCount))
 
         const objects = similarItems.concat(dissimilarItems).map(object => ({
-          _index: index,
+          _index: esIndex,
           _type: 'object',
           _id: object.id,
           _source: object})
@@ -418,7 +425,7 @@ const getRelated = (objectID, dissimilarPercent) => {
           hits: objects
         }}
       }))
-  })
+  // })
 }
 
 app.get('/api/related', normalizeDissimilarPercent, relatedCache, getApiRelated)
