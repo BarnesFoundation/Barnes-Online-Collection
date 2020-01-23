@@ -236,12 +236,42 @@ app.get('/api/search', (req, res) => {
     esClient.search(
       {
         index: esIndex,
-        body: req.query.body
+        body: req.query.body,
+        _source: [
+          "id",
+          "title",
+          "people",
+          "medium",
+          "imageOriginalSecret",
+          "imageSecret", 
+          "ensembleIndex",
+          "objRightsTypeId",
+          "onview",
+          "invno",
+          "image",
+          "curatorialApproval",
+          "shortDescription",
+          "nationality",
+          "birthDate",
+          "deathDate",
+          "artistPrefix",
+          "artistSuffix",
+          "culture",
+          "displayDate",
+          "medium",
+          "dimensions",
+          "creditLine",
+          "longDescription",
+          "bibliography",
+          "exhHistory",
+          "publishedProvenance"
+        ]
       },
       (error, esRes) => {
         if (error) {
           res.json(error)
         } else {
+          console.log(esRes);
           res.json(esRes)
         }
     });
