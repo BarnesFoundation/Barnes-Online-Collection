@@ -55,8 +55,17 @@ const setEnsembleObjects = (objects) => {
 
 export const getEnsembleObjects = (ensembleIndex) => {
   let body = getObjectsRequestBody();
-  body = body.query('match', 'ensembleIndex', ensembleIndex);
-  body = body.build();
+  body = body
+    .query('match', 'ensembleIndex', ensembleIndex)
+    .rawOption('_source', [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret",
+    ])
+    .build();
 
   return (dispatch) => {
     fetchResults(body, dispatch);
