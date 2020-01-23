@@ -76,19 +76,20 @@ class PanelDetails extends Component {
           <div className="container-inner-narrow">
             <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails}/>
 
+            {/* Removed rel="noopener noreferrer nofollow" from the following links. */}
             <div className="m-block m-block--no-border m-block--shallow m-block--flush-top">
               {objectCopyrightDetails.type === "large" ?
-                <a className="btn btn--primary" href={downloadRequestUrl} target="_blank" rel="noopener noreferrer nofollow" >
+                <a className="btn btn--primary" href={downloadRequestUrl} target="_blank" >
                   Download Image
                 </a>
               :
-                <a className="btn btn--primary" href={requestImageUrl} target="_blank" rel="noopener noreferrer nofollow" >
+                <a className="btn btn--primary" href={requestImageUrl} target="_blank" >
                   Request Image
                 </a>
               }
 
               {printAvailable &&
-                <a className="btn" href={printAvailable.url} target="_blank" rel="noopener noreferrer nofollow" >
+                <a className="btn" href={printAvailable.url} target="_blank" >
                 Purchase Print
                 </a>
               }
