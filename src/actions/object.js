@@ -22,7 +22,6 @@ export const clearObject = () => {
 export const getObject = (id) => {
   let body = getObjectRequestBody();
 
-  console.log(body);
   body = body
     .query('match', '_id', id)
     .rawOption('_source', [

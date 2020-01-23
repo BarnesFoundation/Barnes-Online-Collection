@@ -154,7 +154,16 @@ const MORE_LIKE_THIS_FIELDS = [
   'horizontal',
   'light',
   'line'
-]
+];
+
+const BASIC_FIELDS = [
+  "id",
+  "title",
+  "people",
+  "medium",
+  "imageOriginalSecret",
+  "imageSecret",
+];
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -254,7 +263,7 @@ function getObjectDescriptors (objectID) {
     .filter('exists', 'imageSecret')
     .from(0).size(1)
     .query('match', '_id', objectID)
-    .rawOption('_source', MORE_LIKE_THIS_FIELDS)
+    .rawOption('_source', BASIC_FIELDS)
     .build()
 
   return axios
@@ -287,6 +296,7 @@ function getRelatedObjects (objectID) {
         'min_term_freq': 1,
         'minimum_should_match': '10%'
       })
+      .rawOption('_source', BASIC_FIELDS)
       .build()
 
     return axios
@@ -324,7 +334,7 @@ const getDistance = (from, to) => {
 }
 
 const getApiRelated = async (req, res) => {
-  const {objectID, dissimilarPercent} = req.query
+  const {objectID, dissimilarPercent} = req.query;
   getRelated(objectID, req.x_dissimilar_percent || dissimilarPercent)
     .then(related => {
       res.json(related)
