@@ -55,8 +55,6 @@ export const getObject = (id) => {
     ])
     .build();
 
-  console.log(body);
-
   return (dispatch) => {
     axios.get('/api/search', {
       params: {

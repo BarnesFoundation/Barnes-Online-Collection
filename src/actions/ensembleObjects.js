@@ -64,6 +64,7 @@ export const getEnsembleObjects = (ensembleIndex) => {
       "medium",
       "imageOriginalSecret",
       "imageSecret",
+      "ensembleIndex",
     ])
     .build();
 
