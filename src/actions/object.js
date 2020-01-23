@@ -21,7 +21,42 @@ export const clearObject = () => {
 
 export const getObject = (id) => {
   let body = getObjectRequestBody();
-  body = body.query('match', '_id', id).build();
+
+  console.log(body);
+  body = body
+    .query('match', '_id', id)
+    .rawOption('_source', [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret", 
+      "ensembleIndex",
+      "objRightsTypeId",
+      "onview",
+      "invno",
+      "image",
+      "curatorialApproval",
+      "shortDescription",
+      "nationality",
+      "birthDate",
+      "deathDate",
+      "artistPrefix",
+      "artistSuffix",
+      "culture",
+      "displayDate",
+      "medium",
+      "dimensions",
+      "creditLine",
+      "longDescription",
+      "bibliography",
+      "exhHistory",
+      "publishedProvenance"
+    ])
+    .build();
+
+  console.log(body);
 
   return (dispatch) => {
     axios.get('/api/search', {

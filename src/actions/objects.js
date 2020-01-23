@@ -299,7 +299,16 @@ export const getAllObjects = (fromIndex=0) => {
     options.barnesify = false;
   }
 
-  body = body.build();
+  body = body
+    .rawOption('_source', [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret",
+    ])
+    .build();
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);
