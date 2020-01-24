@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const Masonry = require('react-masonry-component');
+import * as Masonry from 'react-masonry-component';
 
 const masonryOptions = {
   transitionDuration: 0,
