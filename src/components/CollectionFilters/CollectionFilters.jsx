@@ -178,34 +178,38 @@ class CollectionFilters extends Component {
     const filterSet = this.getFilterSet();
 
     return (
-      <div className="collection-filters">
-        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-          { mobileFiltersVisible &&
-            <div>
-              <MobileFiltersMenu />
-              <MobilePanelCloser />
-            </div>
-          }
-          { mobileSearchVisible &&
-            <div>
-              <MobileSearchMenu />
-              <MobilePanelCloser />
-            </div>
-          }
-          { !(mobileFiltersVisible || mobileSearchVisible) &&
-            <div>
-              {filtersApplied}
-              <MobileFiltersOpener />
-            </div>
-          }
-        </MediaQuery>
-        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
-            <CollectionFiltersMenu />
-            <div className="m-block m-block--flush">
-              {filterSet}
-              {filtersApplied}
-            </div>
-        </MediaQuery>
+      <div className='container'>
+        <div className='collection-filters-wrapper'>
+          {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
+            { mobileFiltersVisible &&
+              <div>
+                <MobileFiltersMenu />
+                <MobilePanelCloser />
+              </div>
+            }
+            { mobileSearchVisible &&
+              <div>
+                <MobileSearchMenu />
+                <MobilePanelCloser />
+              </div>
+            }
+            { !(mobileFiltersVisible || mobileSearchVisible) &&
+              <div>
+                {filtersApplied}
+                <MobileFiltersOpener />
+              </div>
+            }
+          </MediaQuery> */}
+          {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}> */}
+          {/* <MediaQuery> */}
+              <CollectionFiltersMenu />
+              
+          {/* </MediaQuery> */}
+        </div>
+        <div className="m-block m-block--flush applied-filters">
+          {filterSet}
+          {filtersApplied}
+        </div>
       </div>
     );
   }

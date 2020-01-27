@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import MediaQuery from 'react-responsive';
 import Icon from '../Icon';
-
 import * as FilterSetsActions from '../../actions/filterSets';
 import * as FiltersActions from '../../actions/filters';
 import * as ObjectsActions from '../../actions/objects';
+import { BREAKPOINTS } from '../../constants';
 
 class CollectionFiltersMenuItem extends Component {
   constructor(props) {
@@ -48,9 +47,11 @@ class CollectionFiltersMenuItem extends Component {
       >
         <div className="button-inner">
           <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
-          <span>
-            {this.props.title}
-          </span>
+          <MediaQuery minWidth={BREAKPOINTS.mobile_max}>
+            <span>
+              {this.props.title}
+            </span>
+          </MediaQuery>
         </div>
       </button>
     );

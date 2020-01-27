@@ -27,6 +27,17 @@
 
   .collection-filters-wrap {
     text-align: center;
+    padding-bottom: 0;
+
+    // Uncomment if this will be fixed to bottom.
+    // position: fixed;
+    // bottom: 0;
+    // z-index: 5;
+
+    width: 100%;
+    background-color: $color-white;
+
+    border-top: 1px $color-grey-super-light solid;
 
     .btn-no-style {
       // the styleguide size for btn is too big
@@ -35,11 +46,11 @@
       margin-top: 0;
     }
 
-    @include breakpoint('medium-') {
+    @include breakpoint('large+') {
       // stay below the header
-      @include set-top-header-height();
+      // @include set-top-header-height();
 
-      position: sticky;
+      position: relative;
       background: transparent;
       // a little less than the styleguide padding
       padding-bottom: 1rem;

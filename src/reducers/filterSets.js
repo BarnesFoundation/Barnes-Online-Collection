@@ -43,13 +43,14 @@ const buildInitialState = () => {
           name: 'space'
         }
       },
-      shuffle: {
-        title: '',
-        slug: 'shuffle',
-        svgId: 'shuffle',
-        tooltip: 'Shuffle',
-        type: 'shuffle'
-      },
+      // Removing shuffle per website redesign.
+      // shuffle: {
+      //   title: '',
+      //   slug: 'shuffle',
+      //   svgId: 'shuffle',
+      //   tooltip: 'Shuffle',
+      //   type: 'shuffle'
+      // },
       search: {
         title: 'Keyword',
         slug: 'search',

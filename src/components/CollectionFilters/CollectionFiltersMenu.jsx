@@ -10,7 +10,7 @@ class CollectionFiltersMenu extends Component {
   render() {
     const filterSets = this.props.filterSets.sets;
     return (
-      <div>
+      <div className='collection-filters'>
         <ReactTooltip id="collectionFilterMenuItem" effect="solid"/>
         {
           Object
