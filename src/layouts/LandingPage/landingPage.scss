@@ -40,7 +40,7 @@
       @include set-top-header-height();
 
       position: sticky;
-      background: $color-white;
+      background: transparent;
       // a little less than the styleguide padding
       padding-bottom: 1rem;
 
@@ -79,11 +79,6 @@
       height: 50vh;
     }
   }
-
-  // &__container {
-  //   display: block;
-  //   position: relative;
-  // }
 
   &__copy {
     bottom: $spaceSmall;
