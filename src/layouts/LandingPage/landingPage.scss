@@ -62,3 +62,55 @@
     }
   }
 }
+
+.o-hero {
+  $spaceSmall: 19px;
+  $spaceMedium: 40px;
+  $spaceLarge: 60px;
+
+  &--landing-page {
+    height: 75vh;
+
+    @include breakpoint('medium+') {
+      height: 40vh;
+    }
+
+    @include breakpoint('large+') {
+      height: 50vh;
+    }
+  }
+
+  // &__container {
+  //   display: block;
+  //   position: relative;
+  // }
+
+  &__copy {
+    bottom: $spaceSmall;
+    pointer-events: auto;
+    position: absolute;
+    z-index: #{map-get($zIndexes, 'heroCopy')};
+    
+
+    @include breakpoint('medium+') {
+      bottom: $spaceMedium;
+    }
+
+    @include breakpoint('large+') {
+      bottom: $spaceLarge;
+    }
+
+    @media print {
+      bottom: auto;
+      position: relative;
+    }
+  }
+
+  &__supporting {
+    font-size: 28px;
+
+    @include breakpoint('medium+') {
+      font-size: 32px;
+    }
+  }
+}
