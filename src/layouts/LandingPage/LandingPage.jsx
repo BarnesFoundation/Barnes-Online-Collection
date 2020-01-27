@@ -41,15 +41,15 @@ class LandingPage extends Component {
         <RouterSearchQueryHelper onRef={ref => (this.routerSearchQueryHelper = ref)} />
         <SiteHeader />
 
-        <div className="landing-page container">
-          <div className="landing-page-header-wrap m-block m-block--no-border m-block--shallow">
+        <div className="landing-page">
+          <div className="landing-page-header-wrap">
             <LandingPageHeader />
           </div>
 
           <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
             <CollectionFilters />
           </div>
-          <div className="art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
+          <div className="container art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
             <ArtObjectGrid
               gridStyle="full-size"
               shouldLinksUseModal={true}

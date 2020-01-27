@@ -5,11 +5,9 @@
 // Though, maybe that means this style shouldn't be in the components folder?
 @import '../../components/CollectionFilters/mobileFilters.scss';
 
-
 .app-landing-page {
   .landing-page-header {
     // the mock shows a font size outside the styleguide
-    text-align: center;
     // make it look good on medium screen sizes
     max-width: 600px;
     margin-left: auto;
@@ -17,6 +15,14 @@
     font-size: 30px;
     line-height: 40px;
     font-weight: normal;
+    margin-top: 0px;
+    color: white;
+    height: 100%;
+  }
+
+  .landing-page-image {
+    width: 100%;
+    background-color: black;
   }
 
   .collection-filters-wrap {
