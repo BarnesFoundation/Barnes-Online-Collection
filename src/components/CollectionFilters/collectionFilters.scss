@@ -15,16 +15,17 @@
 }
 
 .collection-filters {
-  padding-left: 8%;
+  padding-left: 0%;
   width: 100%;
   display: grid;
-  grid-template-columns: 2fr 2fr 2fr 2fr 4fr;
+  grid-template-columns: 2fr 2fr 2fr 2fr 3fr;
   align-items: center;
 
   @include breakpoint('medium+') {
     padding-left: 3%;
     width: 97%;
     max-width: 810px;
+    grid-template-columns: 2fr 2fr 2fr 2fr 4fr;
   }
 
   .icon {
@@ -66,12 +67,18 @@
     }
 
     .button-inner {
-      margin-right: 20px;
+      margin-left: 10px;
+      margin-right: 0px;
+
+      @include breakpoint('medium+') {
+        margin-left: 0px;
+        margin-right: 20px;
+      }
       display: inline;
     }
 
     &:last-of-type {
-      margin-right: 0;
+      margin-left: 0;
     }
 
     // &--shuffle,
@@ -81,6 +88,7 @@
       .button-inner {
         position: relative;
         padding: 0 $collection-filter-item-margin;
+        margin-left: 0;
 
         // make a vert centered border with a height to match the larger icons
         &:before {

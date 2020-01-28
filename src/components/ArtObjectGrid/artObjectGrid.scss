@@ -138,10 +138,17 @@
     width: 100%;
     text-align: center;
     z-index: $z-index-art-object-grid-view-more;
+    margin-top: 80px;
+    
+    @include breakpoint('medium+') {
+      margin-top: 140px;
+    }
 
     // give it a background for now. Later solve the text overlap problem
     .btn {
       background: $color-white;
+      opacity: 1;
+      transition: opacity 0.5s ease 0.5s;
     }
   }
 

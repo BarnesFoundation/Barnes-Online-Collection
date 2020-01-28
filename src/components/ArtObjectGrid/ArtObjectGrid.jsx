@@ -91,6 +91,7 @@ class ArtObjectGrid extends Component {
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
 
+    // If this is a "View More" Grid, truncate results.
     const uncutMasonryElements = this.getMasonryElements(this.props.liveObjects);
     const masonryElements = hasMoreResults ? uncutMasonryElements.slice(0, this.state.truncateThreshold) : uncutMasonryElements;
     
@@ -99,7 +100,7 @@ class ArtObjectGrid extends Component {
       ? (<div>
         <div className="component-art-object-grid-results">
           <MasonryGrid masonryElements={masonryElements} />
-          {hasMoreResults && <ViewMoreButton onClick={this.incrementTruncateThreshold}/>}
+          {(hasMoreResults && uncutMasonryElements.length !== masonryElements.length) && <ViewMoreButton onClick={this.incrementTruncateThreshold}/>}
         </div>
       </div>)
       : (<div className="m-block no-results">
