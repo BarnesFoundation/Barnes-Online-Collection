@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectsActions from '../../actions/objects';
@@ -10,6 +10,7 @@ import HtmlClassManager from '../../components/HtmlClassManager';
 import RouterSearchQueryHelper from '../../RouterSearchQueryHelper';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
+import { MoreFromCollection } from '../../components/MoreFromCollection/MoreFromCollection'
 import Footer from '../../components/Footer/Footer';
 
 import './landingPage.css';
@@ -17,7 +18,6 @@ import './landingPage.css';
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-
     this.state = {};
   }
 
@@ -41,25 +41,29 @@ class LandingPage extends Component {
         <SiteHeader />
 
         <div className="landing-page">
-          <div className="landing-page-header-wrap">
-            <LandingPageHeader />
-          </div>
+          {/* Prevent FOUC on mount. */}
+          <div style={{ minHeight: '100vh' }}>
+            <div className="landing-page-header-wrap">
+              <LandingPageHeader />
+            </div>
 
-          <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
-            <CollectionFilters />
-          </div>
-          <div className="container art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
-            <ArtObjectGrid
-              gridStyle="full-size"
-              shouldLinksUseModal={true}
-              modalPreviousLocation="/"
-              isSearchPending={isSearchPending}
-              liveObjects={liveObjects}
-              pageType={pageType}
-              hasMoreResults
-            />
+            <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
+              <CollectionFilters />
+            </div>
+            <div className="container art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
+              <ArtObjectGrid
+                gridStyle="full-size"
+                shouldLinksUseModal={true}
+                modalPreviousLocation="/"
+                isSearchPending={isSearchPending}
+                liveObjects={liveObjects}
+                pageType={pageType}
+                hasMoreResults
+              />
+            </div>
           </div>
         </div>
+        <MoreFromCollection />
         <Footer />
       </div>
     );

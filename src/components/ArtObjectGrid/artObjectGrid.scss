@@ -141,7 +141,7 @@
     margin-top: 80px;
     
     @include breakpoint('medium+') {
-      margin-top: 140px;
+      margin-top: 100px;
     }
 
     // give it a background for now. Later solve the text overlap problem
