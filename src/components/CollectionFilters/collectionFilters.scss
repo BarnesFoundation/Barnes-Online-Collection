@@ -67,18 +67,23 @@
     }
 
     .button-inner {
+      display: inline;
       margin-left: 10px;
       margin-right: 0px;
 
       @include breakpoint('medium+') {
         margin-left: 0px;
-        margin-right: 20px;
+        margin-right: 10px;
       }
-      display: inline;
     }
 
     &:last-of-type {
-      margin-left: 10px;
+      margin-left: 0;
+      margin-right: 0;
+
+      @include breakpoint('medium+') {
+        margin-right: 25px;
+      }
     }
 
     // &--shuffle,
