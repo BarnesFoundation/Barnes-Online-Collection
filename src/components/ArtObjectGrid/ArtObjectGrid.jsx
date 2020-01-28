@@ -12,11 +12,19 @@ import MasonryGrid from '../MasonryGrid';
 
 import './artObjectGrid.css';
 
+/**
+ * Class to manage converting raw object[] data into a masonry grid.
+ */
 class ArtObjectGrid extends Component {
   constructor(props) {
     super(props);
   }
 
+  /**
+   * Utility method to get single item for masonry grid.
+   * @param {object} - raw object to be converted to JSX.
+   * @returns {JSX.Element} - Single ArtObject link to be placed into masonry grid.
+   */
   getGridListElement = (object) => {
     const clickHandler = () => {
       // Clear the object right away to avoid a FOUC while the new object loads.
@@ -46,6 +54,11 @@ class ArtObjectGrid extends Component {
     );
   }
 
+  /**
+   * Convert object[] to an array of ArtObjects wrapped in Links.
+   * @param {object[]} objects - raw objects data from redux store.
+   * @returns {JSX.Element[]} - Array of react elements to put inside of Masonry component.
+   */
   getMasonryElements(objects) {
     return objects.map((object) => (
       (<li key={object.id} className="masonry-grid-element">
@@ -55,34 +68,33 @@ class ArtObjectGrid extends Component {
   };
 
   render() {
-    const liveObjects = this.props.liveObjects;
-    const masonryElements = this.getMasonryElements(liveObjects);
+    const masonryElements = this.getMasonryElements(this.props.liveObjects);
+    
+    // Searching is rendered on default, on false body will render.
     const searching = this.props.isSearchPending && <SpinnerLoader />;
-
+    
+    // Body is only rendered if searching is falsy.
     const body = (masonryElements && masonryElements.length)
-        ? (<div>
-          <div className="component-art-object-grid-results">
-            <MasonryGrid masonryElements={masonryElements} />
-            {this.props.hasMoreResults && <ViewMoreButton />}
-          </div>
-        </div>)
-        : (<div className="m-block no-results">
-          <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
-          <div className="no-results-message">
-            No results for this search.
-          </div>
-        </div>);
+      ? (<div>
+        <div className="component-art-object-grid-results">
+          <MasonryGrid masonryElements={masonryElements} />
+          {/* {this.props.hasMoreResults && <ViewMoreButton />} */}
+        </div>
+      </div>)
+      : (<div className="m-block no-results">
+        <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
+        <div className="no-results-message">
+          No results for this search.
+        </div>
+      </div>);
 
     return (
       <div
         className={`
           component-art-object-grid
-          ${masonryElements.length
-            ? 'has-elements' : ''}
-          ${this.props.isSearchPending
-            ? 'is-pending' :
-            ''}`
-        }
+          ${masonryElements.length ? 'has-elements' : ''}
+          ${this.props.isSearchPending ? 'is-pending' : ''}
+        `}
         data-grid-style={this.props.gridStyle}
       >
         {searching || body}
