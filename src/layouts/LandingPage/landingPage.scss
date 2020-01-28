@@ -80,9 +80,11 @@
   $spaceLarge: 60px;
 
   &--landing-page {
-    height: 75vh;
+    overflow: hidden;
+    padding-top: 70px;
 
     @include breakpoint('medium+') {
+      padding-top: 0;
       height: 55vh;
     }
 

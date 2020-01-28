@@ -55,7 +55,7 @@ export const MoreFromCollection = ({ moreFromDetails }) => {
             <div className='m-block'>
                 <h2 className='font-beta m-block__title'>More from the collection</h2>
                 <div className='m-card-event-list'>
-                    {(moreFromDetails || MOCK_OBJECTS).map(moreFromDetail => <MoreFromCollectionCard moreFromDetail={moreFromDetail}/>)}
+                    {(moreFromDetails || MOCK_OBJECTS).map((moreFromDetail, i) => <MoreFromCollectionCard key={i} moreFromDetail={moreFromDetail}/>)}
                 </div>
             </div>
         </div>
