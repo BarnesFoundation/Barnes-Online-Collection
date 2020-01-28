@@ -83,11 +83,11 @@
     height: 75vh;
 
     @include breakpoint('medium+') {
-      height: 40vh;
+      height: 55vh;
     }
 
     @include breakpoint('large+') {
-      height: 50vh;
+      height: 70vh;
     }
   }
 

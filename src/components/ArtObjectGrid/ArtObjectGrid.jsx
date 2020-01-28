@@ -15,17 +15,13 @@ import './artObjectGrid.css';
 class ArtObjectGrid extends Component {
   constructor(props) {
     super(props);
-
-    this.getGridListElement = this.getGridListElement.bind(this);
   }
 
-  getGridListElement(object) {
-    const clickHandler = function(e) {
-      if (this.props.shouldLinksUseModal) {
-        // clear the object right away to avoid a FOUC while the new object loads
-        this.props.clearObject();
-      }
-    }.bind(this);
+  getGridListElement = (object) => {
+    const clickHandler = () => {
+      // Clear the object right away to avoid a FOUC while the new object loads.
+      if (this.props.shouldLinksUseModal) this.props.clearObject();
+    };
 
     return (
       <Link
@@ -51,61 +47,45 @@ class ArtObjectGrid extends Component {
   }
 
   getMasonryElements(objects) {
-    return objects.map(function(object) {
-      return (
-        <li key={object.id} className="masonry-grid-element">
+    return objects.map((object) => (
+      (<li key={object.id} className="masonry-grid-element">
           {this.getGridListElement(object)}
-        </li>
-      );
-    }.bind(this));
+      </li>)
+    ));
   };
-
-  renderEmptySet_() {
-    return (
-      this.props.isSearchPending ?
-        <SpinnerLoader />
-      :
-        <div className="m-block no-results">
-          <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
-          <div className="no-results-message">
-            No results for this search.
-          </div>
-        </div>
-    )
-  }
-
-  renderFullSet_(masonryElements) {
-    return (
-      <div>
-        <div className="component-art-object-grid-results">
-          <MasonryGrid masonryElements={masonryElements} />
-          { this.props.hasMoreResults &&
-            <ViewMoreButton />
-          }
-        </div>
-        <div className="loading-overlay">
-          <SpinnerLoader />
-        </div>
-      </div>
-    )
-  }
 
   render() {
     const liveObjects = this.props.liveObjects;
     const masonryElements = this.getMasonryElements(liveObjects);
-    const hasElements = masonryElements.length > 0;
+    const searching = this.props.isSearchPending && <SpinnerLoader />;
 
-    const hasElementsClass = hasElements ? 'has-elements' : '';
-    const isPendingClass = this.props.isSearchPending ? 'is-pending' : '';
+    const body = (masonryElements && masonryElements.length)
+        ? (<div>
+          <div className="component-art-object-grid-results">
+            <MasonryGrid masonryElements={masonryElements} />
+            {this.props.hasMoreResults && <ViewMoreButton />}
+          </div>
+        </div>)
+        : (<div className="m-block no-results">
+          <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
+          <div className="no-results-message">
+            No results for this search.
+          </div>
+        </div>);
 
     return (
       <div
-        className={`component-art-object-grid ${hasElementsClass} ${isPendingClass}`}
+        className={`
+          component-art-object-grid
+          ${masonryElements.length
+            ? 'has-elements' : ''}
+          ${this.props.isSearchPending
+            ? 'is-pending' :
+            ''}`
+        }
         data-grid-style={this.props.gridStyle}
       >
-        {
-          hasElements ? this.renderFullSet_(masonryElements) : this.renderEmptySet_()
-        }
+        {searching || body}
       </div>
     );
   }

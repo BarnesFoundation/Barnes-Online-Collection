@@ -15,7 +15,7 @@ class MasonryGrid extends Component {
         disableImagesLoaded={false}
         updateOnEachImageLoad={false}
       >
-        {this.props.masonryElements}
+        {this.props.masonryElements.slice(0, 20)}
       </Masonry>
     );
   }
