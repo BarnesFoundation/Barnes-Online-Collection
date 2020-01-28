@@ -135,9 +135,6 @@ class PanelVisuallyRelated extends Component {
     const queryState = this.props.relatedObjectsQuery || {};
     const isSearchPending = queryState.isPending;
 
-    // const hasMoreResults = queryState.hasMoreResults;
-    // don't allow for the view more button on visually related
-    const hasMoreResults = false;
     const liveObjects=this.props.relatedObjects;
     const pageType = 'visually-related';
 
@@ -164,12 +161,12 @@ class PanelVisuallyRelated extends Component {
               handleChange={this.getRelatedObjects}
               defaultValue={50}
             />
+            {/* Don't allow for the view more button on visually related tab. */ }
             <ArtObjectGrid
               modalPreviousLocation={this.props.modalPreviousLocation}
               isSearchPending={isSearchPending}
               liveObjects={liveObjects}
               pageType={pageType}
-              hasMoreResults={hasMoreResults}
             />
           </div>
         </div>

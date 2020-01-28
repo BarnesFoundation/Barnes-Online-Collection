@@ -33,9 +33,6 @@ class PanelEnsemble extends Component {
     const ensembleIndex = this.props.ensembleIndex;
     const queryState = this.props.ensembleObjectsQuery || {};
     const isSearchPending = queryState.isPending;
-    // const hasMoreResults = queryState.hasMoreResults;
-    // don't allow for the view more button on the ensemble page
-    const hasMoreResults = false;
     const liveObjects=this.props.ensembleObjects;
     const pageType = 'ensemble';
 
@@ -60,12 +57,12 @@ class PanelEnsemble extends Component {
           </div>
         </div>
         <div className="m-block m-block--shallow m-block--flush-top m-block--no-border">
+          {/* Don't allow for the view more button on ensemble tab. */ }
           <ArtObjectGrid
             gridStyle="full-size"
             isSearchPending={isSearchPending}
             liveObjects={liveObjects}
             pageType={pageType}
-            hasMoreResults={hasMoreResults}
           />
         </div>
       </div>

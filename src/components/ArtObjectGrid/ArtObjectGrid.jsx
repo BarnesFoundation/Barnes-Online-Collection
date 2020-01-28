@@ -6,11 +6,22 @@ import * as ObjectActions from '../../actions/object';
 import * as ModalActions from '../../actions/modal';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
-import ViewMoreButton from './ViewMoreButton';
+// import ViewMoreButton from './ViewMoreButton';
 import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
 
 import './artObjectGrid.css';
+
+const ViewMoreButton = ({ onClick }) => (
+  <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
+    <button
+      className="btn"
+      onClick={onClick}
+    >
+      View More
+    </button>
+  </div>
+);
 
 /**
  * Class to manage converting raw object[] data into a masonry grid.
@@ -18,41 +29,47 @@ import './artObjectGrid.css';
 class ArtObjectGrid extends Component {
   constructor(props) {
     super(props);
-  }
+
+    // For "View More" results.
+    this.state = {
+      truncateThreshold: 20,
+    };
+  };
+
+  incrementTruncateThreshold = () => {
+    const { truncateThreshold } = this.state;
+    this.setState({ ...this.state, truncateThreshold: truncateThreshold + 20 });
+  };
 
   /**
    * Utility method to get single item for masonry grid.
    * @param {object} - raw object to be converted to JSX.
    * @returns {JSX.Element} - Single ArtObject link to be placed into masonry grid.
    */
-  getGridListElement = (object) => {
-    const clickHandler = () => {
-      // Clear the object right away to avoid a FOUC while the new object loads.
-      if (this.props.shouldLinksUseModal) this.props.clearObject();
-    };
-
-    return (
-      <Link
-        to={{
-          pathname: getArtObjectUrlFromId(object.id, object.title),
-          state: {
-            isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
-            modalPreviousLocation: this.props.modalPreviousLocation
-          },
-        }}
-        onClick={clickHandler}
-        className="grid-list-el"
-      >
-        <ArtObject
-          key={object.id}
-          title={object.title}
-          people={object.people}
-          medium={object.medium}
-          imageUrlSmall={object.imageUrlSmall}
-        />
-      </Link>
-    );
-  }
+  getGridListElement = (object) => (
+    <Link
+      to={{
+        pathname: getArtObjectUrlFromId(object.id, object.title),
+        state: {
+          isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
+          modalPreviousLocation: this.props.modalPreviousLocation
+        },
+      }}
+      onClick={() => {
+        // Clear the object right away to avoid a FOUC while the new object loads.
+        if (this.props.shouldLinksUseModal) this.props.clearObject();
+      }}
+      className="grid-list-el"
+    >
+      <ArtObject
+        key={object.id}
+        title={object.title}
+        people={object.people}
+        medium={object.medium}
+        imageUrlSmall={object.imageUrlSmall}
+      />
+    </Link>
+  );
 
   /**
    * Convert object[] to an array of ArtObjects wrapped in Links.
@@ -68,17 +85,21 @@ class ArtObjectGrid extends Component {
   };
 
   render() {
-    const masonryElements = this.getMasonryElements(this.props.liveObjects);
-    
+    // Destructure props.
+    const { isSearchPending, hasMoreResults, gridStyle } = this.props;
+
     // Searching is rendered on default, on false body will render.
-    const searching = this.props.isSearchPending && <SpinnerLoader />;
+    const searching = isSearchPending && <SpinnerLoader />;
+
+    const uncutMasonryElements = this.getMasonryElements(this.props.liveObjects);
+    const masonryElements = hasMoreResults ? uncutMasonryElements.slice(0, this.state.truncateThreshold) : uncutMasonryElements;
     
     // Body is only rendered if searching is falsy.
     const body = (masonryElements && masonryElements.length)
       ? (<div>
         <div className="component-art-object-grid-results">
           <MasonryGrid masonryElements={masonryElements} />
-          {/* {this.props.hasMoreResults && <ViewMoreButton />} */}
+          {hasMoreResults && <ViewMoreButton onClick={this.incrementTruncateThreshold}/>}
         </div>
       </div>)
       : (<div className="m-block no-results">
@@ -93,9 +114,9 @@ class ArtObjectGrid extends Component {
         className={`
           component-art-object-grid
           ${masonryElements.length ? 'has-elements' : ''}
-          ${this.props.isSearchPending ? 'is-pending' : ''}
+          ${isSearchPending ? 'is-pending' : ''}
         `}
-        data-grid-style={this.props.gridStyle}
+        data-grid-style={gridStyle}
       >
         {searching || body}
       </div>

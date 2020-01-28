@@ -30,8 +30,7 @@ class LandingPage extends Component {
     const metaTags = getMetaTagsFromObject(object);
     const queryState = this.props.objectsQuery || {};
     const isSearchPending = queryState.isPending;
-    const hasMoreResults = queryState.hasMoreResults;
-    const liveObjects=this.props.objects;
+    const liveObjects = this.props.objects;
     const pageType = 'landing';
 
     return (
@@ -57,7 +56,7 @@ class LandingPage extends Component {
               isSearchPending={isSearchPending}
               liveObjects={liveObjects}
               pageType={pageType}
-              hasMoreResults={hasMoreResults}
+              hasMoreResults
             />
           </div>
         </div>

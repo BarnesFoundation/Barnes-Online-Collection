@@ -24,6 +24,7 @@
   @include breakpoint('medium+') {
     padding-left: 3%;
     width: 97%;
+    max-width: 810px;
   }
 
   .icon {
@@ -57,12 +58,6 @@
       min-width: 120px;
     }
 
-    @include breakpoint('large+') {
-      // border-top: none;
-      // border-bottom: 5px solid transparent;
-      min-width: 160px;
-    }
-
     &.is-selected,
     &:hover,
     &:active {
@@ -72,6 +67,7 @@
 
     .button-inner {
       margin-right: 20px;
+      display: inline;
     }
 
     &:last-of-type {
