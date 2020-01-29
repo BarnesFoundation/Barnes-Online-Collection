@@ -1,11 +1,6 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
-.collection-filters-wrapper {
-  display: grid;
-  justify-content: center;
-}
-
 .applied-filters {
   width: 100%;
 
@@ -15,24 +10,34 @@
 }
 
 .collection-filters {
-  padding-left: 0%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 2fr 2fr 2fr 2fr 3fr;
-  align-items: center;
+  // display: grid;
+  // grid-template-columns: 2fr 2fr 2fr 2fr 2fr;
+  padding-left: 2%;
+  padding-right: 2%;
 
+  width: 99.7%;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom: -2px; // So border is flush with images.
+
+  
   @include breakpoint('medium+') {
-    padding-left: 3%;
-    width: 97%;
-    max-width: 810px;
-    grid-template-columns: 2fr 2fr 2fr 2fr 4fr;
+    padding-right: 0;
+  }
+
+  @include breakpoint('large+') {
+    margin-bottom: 0;
   }
 
   .icon {
     vertical-align: middle;
+
     // make it appear slightly more centered with the font
     margin-top: -0.08em;
-    margin-right: .5em;
+    
+    @include breakpoint ('medium+') {
+      margin-right: 0.5em;
+    }
   }
 
   .label {
@@ -40,24 +45,20 @@
   }
 
   .btn-collection-filter {
-    display: block;
-
-    // Changed for redesign
-    background: white;
-    border: none;
-    border-bottom: 5px solid transparent;
-  
-    
-    margin-left: 0;
-    line-height: normal;
-    cursor: pointer;
-    padding: 20px 0px 15px 0px;
-    
+    float: left;
+    white-space: nowrap;
+    padding: 0;
+    margin-right: 13%;
 
     @include breakpoint('medium+') {
-      // border-top: 5px solid transparent;
-      min-width: 120px;
+      float: none;
+      margin-right: 2%;
     }
+    
+    background: white;
+    border: none;
+  
+    border-bottom: 5px solid transparent;
 
     &.is-selected,
     &:hover,
@@ -65,35 +66,49 @@
       color: $color-red-barnes;
       border-color: $color-red-barnes;
     }
+    
+    margin-left: 0;
+    line-height: normal;
+    cursor: pointer;
+
+    @include breakpoint('medium+') {
+      // border-top: 5px solid transparent;
+      min-width: 100px;
+    }
 
     .button-inner {
-      display: inline;
-      margin-left: 10px;
-      margin-right: 0px;
+      padding: 20px 0px 15px 0px;
+      text-align: left;
 
       @include breakpoint('medium+') {
-        margin-left: 0px;
+        text-align: center;
         margin-right: 10px;
       }
     }
 
-    &:last-of-type {
-      margin-left: 0;
-      margin-right: 0;
+    &--search {
+      white-space: nowrap;
+      float: right;
 
       @include breakpoint('medium+') {
-        margin-right: 25px;
+        float: none;
       }
-    }
-
-    // &--shuffle,
-    &--search {
-      // margin-right: 0;
+      margin-right: 0;
 
       .button-inner {
         position: relative;
-        padding: 0 $collection-filter-item-margin;
-        margin-left: 0;
+        // padding-right: 15px;
+        padding-left: $collection-filter-item-margin;
+        padding-top: 20px;
+        padding-bottom: 15px;
+
+        text-align: right;
+
+        @include breakpoint('medium+') {
+          text-align: center;
+          padding-left: $collection-filter-item-margin;
+          padding-right: $collection-filter-item-margin;
+        }
 
         // make a vert centered border with a height to match the larger icons
         &:before {
@@ -114,12 +129,6 @@
         }
       }
     }
-
-    // &--shuffle {
-    //   .collection-filter-icon {
-    //     margin-right: 0;
-    //   }
-    // }
 
     .collection-filter-icon {
       font-size: $collection-filter-icon-font-size;

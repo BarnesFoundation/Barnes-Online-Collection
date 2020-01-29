@@ -15,13 +15,7 @@ class Footer extends Component {
         <div className="container-wrap-fullscreen">
           <div className="container g-footer__container-top">
             <div className="m-block m-block--no-border m-block__columns">
-              <div className="m-block__column">
-                <p className="color-medium">
-                  The Barnes Foundation collection online is made possible<br className="large-only" /> by generous support from The John S. and James L. Knight Foundation. 
-                </p>
-                <p className="color-medium no-margin-top">
-                Ongoing work continues through the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
-                </p>
+              <div className="m-block__column knight-logo">
                 <p>
                   <a href="https://knightfoundation.org/">
                     <img width={285} src="/images/knight-foundation-logo.svg" alt="knight foundation logo" />
@@ -29,18 +23,19 @@ class Footer extends Component {
                 </p>
               </div>
               <div className="m-block__column">
-                <div className="m-block__columns">
-                  <div className="m-block__column">
+                <p className="color-medium">
+                  The Barnes Foundation collection online is made possible<br className="large-only" /> by generous support from The John S. and James L. Knight Foundation. 
+                </p>
+                <p className="color-medium no-margin-top">
+                  Ongoing work continues through the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
+                </p>
+                {/* <div className="m-block__columns"> */}
+                  <div className="brand-links">
                     <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/collection/credits">Project Credits</a>
                     <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/collection/open-access-and-copyright">Open Access</a>
                     <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/copyright-and-image-licensing">Image Licensing</a>
                   </div>
-                  <div className="m-block__column">
-                    <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/collection">Collection History</a>
-                    <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/collection/library-archives">Archives and Special Collections</a>
-                    <a className="a-brand-link a-brand-link-on-grey a-brand-link--block" href="https://www.barnesfoundation.org/whats-on/arboretum">Plant Collections</a>
-                  </div>
-                </div>
+                {/* </div> */}
               </div>
             </div>
           </div>
@@ -74,7 +69,7 @@ class Footer extends Component {
             <nav className="g-footer__nav" aria-labelledby="footernav-heading">
               <h2 id="footernav-heading" className="visuallyhidden">Useful links</h2>
               <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/'}>
-                © 2017 Barnes Foundation
+                © 2020 Barnes Foundation
               </a>
               <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/terms'}>
                 Terms &amp; Conditions
@@ -92,11 +87,11 @@ class Footer extends Component {
             <div className="g-footer__social-container">
               <nav className="g-footer__social" aria-labelledby="socialnav-heading">
                 <h2 id="socialnav-heading" className="visuallyhidden">Find us on social media</h2>
-                <a className="g-footer__social__link" href="https://twitter.com/the_barnes">
-                  <svg width={20} height={20}><title>twitter</title><use xlinkHref="#icon--icon_twitter" /></svg>
-                </a>
                 <a className="g-footer__social__link" href="http://www.facebook.com/barnesfoundation">
                   <svg width={20} height={20}><title>facebook</title><use xlinkHref="#icon--icon_facebook" /></svg>
+                </a>
+                <a className="g-footer__social__link" href="https://twitter.com/the_barnes">
+                  <svg width={20} height={20}><title>twitter</title><use xlinkHref="#icon--icon_twitter" /></svg>
                 </a>
                 <a className="g-footer__social__link" href="http://www.youtube.com/barnesfoundation">
                   <svg width={20} height={20}><title>youtube</title><use xlinkHref="#icon--icon_youtube" /></svg>

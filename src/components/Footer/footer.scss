@@ -42,3 +42,19 @@
     margin-top: 0;
   }
 }
+
+// Override default spacing to make distance from p tags the same distance as from links.
+.knight-logo {
+  padding-bottom: 15px !important;
+}
+
+.brand-links {
+  display: grid;
+  grid-template: 1fr 1fr 1fr/ 1fr;
+  margin-top: 20px;
+
+  @include breakpoint('large+') {
+    margin-top: 0;
+    grid-template: 1fr/ 20% 20% 20%;
+  }
+}
