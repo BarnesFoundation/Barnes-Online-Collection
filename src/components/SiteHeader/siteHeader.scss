@@ -1,8 +1,17 @@
 @import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
 
 // Adding this to remove 70px paddingfor mobile header.
 html:not([class=""]) {
   padding-top: 0px;
+}
+
+.o-hero {
+  &__copy {
+    @include breakpoint('medium+') {
+      width: 91%;
+    }
+  }
 }
 
 .g-header {
