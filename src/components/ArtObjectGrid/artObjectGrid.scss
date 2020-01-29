@@ -149,6 +149,7 @@
       background: $color-white;
       opacity: 1;
       transition: opacity 0.5s ease 0.5s;
+      
       min-width: 100%;
       
       @include breakpoint('medium+') {

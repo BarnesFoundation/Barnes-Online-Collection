@@ -64,7 +64,9 @@
 }
 
 .btn {
-  @include breakpoint('small-') {
-    min-width: 100%;
+  &--100 {
+    @include breakpoint('small-') {
+      min-width: 100%;
+    }
   }
 }

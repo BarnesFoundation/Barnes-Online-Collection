@@ -1,5 +1,7 @@
 import React from 'react';
-import { MAIN_WEBSITE_DOMAIN } from '../../constants';
+import MediaQuery from 'react-responsive';
+import Icon from '../Icon'; 
+import { MAIN_WEBSITE_DOMAIN, BREAKPOINTS } from '../../constants';
 import './footer.css';
 
 export const Footer = () => (
@@ -38,8 +40,8 @@ export const Footer = () => (
           <div className="g-footer__cta">
             <div className="font-delta g-footer__cta-title"><p><strong>Your support helps</strong><strong> research and conservation at the Barnes, so we can present exhibitions and events.</strong></p></div>
             <div className="m-btn-group">
-                <a className="btn" href="https://tickets.barnesfoundation.org/orders/316/tickets">Donate</a>
-                <a className="btn" href="/support/membership">Become a Member</a>
+                <a className="btn btn--100" href="https://tickets.barnesfoundation.org/orders/316/tickets">Donate</a>
+                <a className="btn btn--100" href="/support/membership">Become a Member</a>
             </div>
           </div>
         </div>
@@ -68,10 +70,13 @@ export const Footer = () => (
                   <label className="visuallyhidden" for="subscribe">Enter your email address</label>
                   <input className="m-newsletter__input" type="email" name="Email" id="subscribe" placeholder="email address" required aria-required="true" aria-describedby="emailerror1" />
                   <button className="m-newsletter__btn btn" type="submit">
-                    <span className="m-newsletter__wording">Subscribe</span>
-                    <span className="m-newsletter__icon">
-                      <svg width="13" height="20" aria-label="Subscribe"><use xlinkHref="#icon--icon_arrow-right"></use></svg>
-                    </span>
+                    <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
+                      <Icon svgId='tool_space' />
+                    </MediaQuery>
+                    <Icon />
+                    <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
+                      {/* <span className="m-newsletter__wording">Subscribe</span> */}
+                    </MediaQuery>
                   </button>
                   <div aria-hidden="true" className="form-field__error hidden" role="alert" tabindex="-1" id="emailerror1">
                     Enter a valid email address

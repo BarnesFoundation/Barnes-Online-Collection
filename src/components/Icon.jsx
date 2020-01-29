@@ -1,14 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Icon extends Component {
-
-  render() {
-    return (
-      <svg className={`icon icon-${this.props.svgId} ${this.props.classes}`}>
-        <use xlinkHref={`#icon-${this.props.svgId}`}></use>
-      </svg>
-    );
-  }
-}
-
-export default Icon;
+export default ({ svgId, classes }) => (
+  <svg className={`icon icon-${svgId} ${classes}`}>
+    <use xlinkHref={`#icon-${svgId}`}></use>
+  </svg>
+);
