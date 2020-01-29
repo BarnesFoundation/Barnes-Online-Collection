@@ -22,7 +22,7 @@
 
   
   @include breakpoint('medium+') {
-    overflow: hidden;
+    // overflow: hidden;
     padding-left: 0.3%; // Magic number to line up with masonry.
     padding-right: 0;
   }
@@ -50,7 +50,7 @@
     float: left;
     white-space: nowrap;
     padding: 0;
-    margin-right: 13%;
+    margin-right: 12%;
 
     @include breakpoint('medium+') {
       float: none;

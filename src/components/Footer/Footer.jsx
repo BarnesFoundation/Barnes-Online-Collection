@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {MAIN_WEBSITE_DOMAIN} from '../../constants';
+import React from 'react';
+import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './footer.css';
 
 export const Footer = () => (
@@ -93,20 +93,24 @@ export const Footer = () => (
       <div className="g-footer__auxiliary">
         <nav className="g-footer__nav" aria-labelledby="footernav-heading">
           <h2 id="footernav-heading" className="visuallyhidden">Useful links</h2>
-          <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/'}>
-            © 2020 Barnes Foundation
+          <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/accessibility'}>
+            Accessibility
           </a>
+          
           <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/terms'}>
             Terms &amp; Conditions
           </a>
           <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/privacy-policy'}>
-            Privacy Statement
+            Privacy Policy
           </a>
-          <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/accessibility'}>
-            Accessibility
-          </a>
+          
+          {/* TODO => Add updated link. */}
           <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/about'}>
-            Contact
+            Non-descrimination
+          </a>
+
+          <a className="g-footer__nav__link" href={MAIN_WEBSITE_DOMAIN + '/'}>
+            Copywrite &amp; Image Licensing
           </a>
         </nav>
         <div className="g-footer__social-container">
