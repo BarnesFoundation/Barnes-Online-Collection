@@ -6,6 +6,7 @@ html:not([class=""]) {
   padding-top: 0px;
 }
 
+// This is to adjust hero width.
 .o-hero {
   &__copy {
     @include breakpoint('medium+') {

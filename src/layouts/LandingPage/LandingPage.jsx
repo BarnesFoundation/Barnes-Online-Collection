@@ -11,7 +11,7 @@ import RouterSearchQueryHelper from '../../RouterSearchQueryHelper';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import { MoreFromCollection } from '../../components/MoreFromCollection/MoreFromCollection'
-import Footer from '../../components/Footer/Footer';
+import { Footer } from '../../components/Footer/Footer';
 
 import './landingPage.css';
 
