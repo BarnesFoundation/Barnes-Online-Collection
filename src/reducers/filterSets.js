@@ -54,7 +54,7 @@ const buildInitialState = () => {
       search: {
         title: 'Search Collection',
         slug: 'search',
-        svgId: 'search',
+        svgId: 'filters',
         tooltip: 'Search a keyword, artist…',
         type: 'search',
       }
