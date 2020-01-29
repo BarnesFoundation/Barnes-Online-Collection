@@ -29,7 +29,7 @@ class CollectionFiltersSet extends Component {
   getClasses() {
     let classes = 'collection-filters-set';
     if (this.props.filterSets.visibleFilterSet) {
-      classes += ' is-open';
+      classes += ' collection-filters-set--is-open';
     }
     return classes;
   }

@@ -10,18 +10,20 @@
 }
 
 .collection-filters {
-  // display: grid;
-  // grid-template-columns: 2fr 2fr 2fr 2fr 2fr;
+  display: flex;
+  justify-content: center;
+
   padding-left: 2%;
   padding-right: 2%;
 
-  width: 99.7%;
+  width: 99.7%; // Magic number to line up with masonry.
   white-space: nowrap;
-  overflow: hidden;
   margin-bottom: -2px; // So border is flush with images.
 
   
   @include breakpoint('medium+') {
+    overflow: hidden;
+    padding-left: 0.3%; // Magic number to line up with masonry.
     padding-right: 0;
   }
 
@@ -58,13 +60,17 @@
     background: white;
     border: none;
   
-    border-bottom: 5px solid transparent;
+    // border-bottom: 5px solid transparent;
 
     &.is-selected,
     &:hover,
     &:active {
-      color: $color-red-barnes;
-      border-color: $color-red-barnes;
+      .button-inner {
+        &__content {
+          color: $color-red-barnes;
+          border-color: $color-red-barnes;
+        }
+      }
     }
     
     margin-left: 0;
@@ -77,12 +83,22 @@
     }
 
     .button-inner {
-      padding: 20px 0px 15px 0px;
+      &__content {
+        border-bottom: 5px solid transparent;
+        padding: 20px 0px 15px 0px;
+      }
       text-align: left;
+
 
       @include breakpoint('medium+') {
         text-align: center;
         margin-right: 10px;
+      }
+    }
+
+    &:nth-child(5) {
+      @include breakpoint ('small') {
+        margin-right: calc(#{$collection-filter-item-margin} + 5px);
       }
     }
 
@@ -97,11 +113,8 @@
 
       .button-inner {
         position: relative;
-        // padding-right: 15px;
-        padding-left: $collection-filter-item-margin;
-        padding-top: 20px;
-        padding-bottom: 15px;
-
+        padding-left: calc(#{$collection-filter-item-margin} + 5px);
+        
         text-align: right;
 
         @include breakpoint('medium+') {
@@ -134,15 +147,20 @@
       font-size: $collection-filter-icon-font-size;
     }
   }
+}
 
-  .collection-filters-set {
+// This ensures same spacing for large screen devices.
+.collection-filters-set {
+  @include breakpoint ('large+') {
     height: 0;
     padding: 0;
 
-    &.is-open {
+    &--is-open {
       min-height: 90px;
-      height: auto;
-      padding-top: 40px;
+
+        height: auto;
+        padding-top: 40px;
+        padding-bottom: 20px;
     }
   }
 }

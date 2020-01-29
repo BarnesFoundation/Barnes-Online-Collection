@@ -46,12 +46,14 @@ class CollectionFiltersMenuItem extends Component {
         data-for="collectionFilterMenuItem"
       >
         <div className="button-inner">
-          <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
-          <MediaQuery minWidth={BREAKPOINTS.mobile_max}>
-            <span>
-              {this.props.title}
-            </span>
-          </MediaQuery>
+          <div className='button-inner__content'>
+            <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
+            <MediaQuery minWidth={BREAKPOINTS.mobile_max}>
+              <span>
+                {this.props.title}
+              </span>
+            </MediaQuery>
+          </div>
         </div>
       </button>
     );
