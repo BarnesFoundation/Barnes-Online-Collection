@@ -62,3 +62,9 @@
 .footer-detail {
   margin-top: 0;
 }
+
+.btn {
+  @include breakpoint('small-') {
+    min-width: 100%;
+  }
+}
