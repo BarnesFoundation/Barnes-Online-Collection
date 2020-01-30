@@ -81,15 +81,16 @@
 
   &--landing-page {
     overflow: hidden;
+    height: 100%;
     padding-top: 70px;
 
     @include breakpoint('medium+') {
       padding-top: 0;
-      height: 55vh;
+      max-height: 55vh;
     }
 
     @include breakpoint('large+') {
-      height: 70vh;
+      max-height: 70vh;
     }
   }
 

@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
 
 export default () => (
-  <div
-    className='o-hero o-hero--landing-page'
-    style={{
-      overflow: 'hidden',
-    }}
-  >
+  <div className='o-hero o-hero--landing-page'>
     <div className='o-hero__inner'>
-      {/* <img
-        style={{ zIndex: 0, position: 'absolute' }}
-        className='o-hero__image'
-        src='https://barnesfoundation-collection.imgix.net/ensembles/77.jpg'
-      /> */}
-      
       <div
         className='container o-hero__container'
       >
