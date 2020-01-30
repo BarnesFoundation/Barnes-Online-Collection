@@ -68,8 +68,8 @@ export const Footer = () => (
                 </div>
                 <div className="form-field m-newsletter__field">
                   <label className="visuallyhidden" htmlFor="subscribe">Enter your email address</label>
-                  <input className="m-newsletter__input" type="email" name="Email" id="subscribe" placeholder="email address" required aria-required="true" aria-describedby="emailerror1" />
-                  <button className="m-newsletter__btn btn" type="submit">
+                  <input className="m-newsletter__input input-width" type="email" name="Email" id="subscribe" placeholder="email address" required aria-required="true" aria-describedby="emailerror1" />
+                  <button className="m-newsletter__btn btn btn--icon" type="submit">
                     <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
                       <Icon svgId='-icon_arrow-right'/>
                     </MediaQuery>

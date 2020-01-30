@@ -63,7 +63,23 @@
   margin-top: 0;
 }
 
+
+// This class is to keep input width at 100% for mobile.
+.input-width {
+  @include breakpoint('small-') {
+    width: calc(100% - 60px);
+  }
+}
+
+// This class is to keep input button width at 60px
+// and button width for 100% if need be for mobile.
 .btn {
+  &--icon {
+    @include breakpoint('small-') {
+      max-width: 60px;
+    }
+  }
+
   &--100 {
     @include breakpoint('small-') {
       min-width: 100%;
