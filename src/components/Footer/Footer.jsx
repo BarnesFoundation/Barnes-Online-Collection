@@ -61,24 +61,23 @@ export const Footer = () => (
           </div>
           <div className='g-footer__subscribe'>
             <h2 className="font-zeta">Newsletter</h2>
-            <form className="m-newsletter" action="//www.pages03.net/thebarnesfoundation/EmailPreferences/Opt-In?vs=YTg4NTA4MTAtNjcwZS00MjRmLTg2M2QtNDhlZjQ0OGUxN2ExOzsS1" method="post" novalidate data-behavior="Newsletter FormValidate">
+            <form className="m-newsletter" action="//www.pages03.net/thebarnesfoundation/EmailPreferences/Opt-In?vs=YTg4NTA4MTAtNjcwZS00MjRmLTg2M2QtNDhlZjQ0OGUxN2ExOzsS1" method="post" noValidate data-behavior="Newsletter FormValidate">
               <div className="m-newsletter__signup" aria-hidden="false">
-                <div className="form-field__error form-field__error--summary hidden" tabindex="-1" aria-hidden="true">
+                <div className="form-field__error form-field__error--summary hidden" tabIndex="-1" aria-hidden="true">
                   <h3 className="font-bold-heading visuallyhidden">Please correct your errors</h3>
                 </div>
                 <div className="form-field m-newsletter__field">
-                  <label className="visuallyhidden" for="subscribe">Enter your email address</label>
+                  <label className="visuallyhidden" htmlFor="subscribe">Enter your email address</label>
                   <input className="m-newsletter__input" type="email" name="Email" id="subscribe" placeholder="email address" required aria-required="true" aria-describedby="emailerror1" />
                   <button className="m-newsletter__btn btn" type="submit">
                     <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
-                      <Icon svgId='tool_space' />
+                      <Icon svgId='-icon_arrow-right'/>
                     </MediaQuery>
-                    <Icon />
-                    <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
-                      {/* <span className="m-newsletter__wording">Subscribe</span> */}
+                    <MediaQuery minWidth={BREAKPOINTS.mobile_max}>
+                      <span className="m-newsletter__wording">Subscribe</span>
                     </MediaQuery>
                   </button>
-                  <div aria-hidden="true" className="form-field__error hidden" role="alert" tabindex="-1" id="emailerror1">
+                  <div aria-hidden="true" className="form-field__error hidden" role="alert" tabIndex="-1" id="emailerror1">
                     Enter a valid email address
                   </div>
                   <input name="formSourceName" value="StandardForm" type="hidden" />

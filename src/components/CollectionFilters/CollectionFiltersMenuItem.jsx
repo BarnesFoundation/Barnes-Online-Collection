@@ -38,6 +38,7 @@ class CollectionFiltersMenuItem extends Component {
   }
 
   render() {
+    console.log(this.props.svgId);
     return (
       <button
         className={this.getClassNames()}
