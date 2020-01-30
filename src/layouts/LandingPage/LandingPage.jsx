@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectsActions from '../../actions/objects';
@@ -10,7 +10,6 @@ import HtmlClassManager from '../../components/HtmlClassManager';
 import RouterSearchQueryHelper from '../../RouterSearchQueryHelper';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
-import { MoreFromCollection } from '../../components/MoreFromCollection/MoreFromCollection'
 import { Footer } from '../../components/Footer/Footer';
 
 import './landingPage.css';
@@ -63,8 +62,7 @@ class LandingPage extends Component {
             </div>
           </div>
         </div>
-        <MoreFromCollection />
-        <Footer />
+        <Footer hasHours/>
       </div>
     );
   }

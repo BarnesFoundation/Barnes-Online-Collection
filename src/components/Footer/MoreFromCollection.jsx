@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // TODO => Delete this, this is for testing layout.
 const MOCK_OBJECT = {

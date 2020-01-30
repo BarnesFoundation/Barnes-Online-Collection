@@ -3,7 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ModalActions from '../../actions/modal'
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
-import Icon from '../../components/Icon.jsx';
+import Icon from '../Icon.jsx';
+import { Footer } from '../Footer/Footer';
 import { CLASSNAME_MODAL_OPEN } from '../../constants';
 import { withRouter } from 'react-router'
 
@@ -56,9 +57,8 @@ class Modal extends Component {
             </button>
           </div>
         </div>
-        {
-          this.props.children
-        }
+        {this.props.children}
+        <Footer />
       </div>
     );
   }
