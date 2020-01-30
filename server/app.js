@@ -6,7 +6,6 @@ const axios = require('axios')
 const bodybuilder = require('bodybuilder')
 const bodyParser = require('body-parser')
 const memoryCache = require('memory-cache')
-const elasticsearch = require('elasticsearch')
 const express = require('express')
 const fs = require('fs')
 const morgan = require('morgan')
@@ -14,6 +13,7 @@ const path = require('path')
 const request = require('request')
 const s3 = new AWS.S3()
 const googleUA = require('universal-analytics')
+const esClient = require('./utils/esClient');
 
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 
@@ -34,6 +34,8 @@ const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
 const oneSecond = 1000
 const oneDay = 60 * 60 * 24 * oneSecond
+
+const buildSearchAssets = require('../scripts/build-search-assets');
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -175,17 +177,6 @@ const signedUrlExpireSeconds = 60 * 5
 let esIndex = process.env.ELASTICSEARCH_INDEX
 
 const app = express()
-const esClient = new elasticsearch.Client({
-  host: [
-    {
-      host: process.env.ELASTICSEARCH_HOST,
-      auth: `${process.env.ELASTICSEARCH_USERNAME}:${process.env.ELASTICSEARCH_PASSWORD}`,
-      protocol: process.env.ELASTICSEARCH_PROTOCOL,
-      port: process.env.ELASTICSEARCH_PORT
-    }
-  ],
-  apiVersion: "7.5"
-})
 
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
@@ -252,7 +243,6 @@ app.get('/api/search', (req, res) => {
       if (error) {
         res.json(error)
       } else {
-        console.log(esRes);
         res.json(esRes)
       }
   });
@@ -581,6 +571,7 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
+
 // e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
 // bucket and prefix needs to be dealt with...
 app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
@@ -601,6 +592,11 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
     return res.redirect(302, downloadUrl)
   }).send()
 })
+
+app.get('/api/build-search-assets', (req, res) => {
+	console.log('hello');
+	buildSearchAssets.getArtists();
+});
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
