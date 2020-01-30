@@ -9,12 +9,9 @@ import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
 import * as ModalActions from './actions/modal';
 
-const renderMergedProps = (component, ...rest) => {
-  const finalProps = Object.assign({}, ...rest);
-  return (
-    React.createElement(component, finalProps)
-  );
-}
+const renderMergedProps = (component, ...rest) => (
+  React.createElement(component, Object.assign({}, ...rest))
+);
 
 const PropsRoute = ({ component, ...rest }) => {
   return (
@@ -22,7 +19,7 @@ const PropsRoute = ({ component, ...rest }) => {
       return renderMergedProps(component, routeProps, rest);
     }}/>
   );
-}
+};
 
 // Note: with tips from  https://reacttraining.com/react-router/web/example/modal-gallery
 class RouteSwitcher extends Component {

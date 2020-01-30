@@ -16,8 +16,11 @@ class SiteHeader extends Component {
   }
 
   render() {
+    // Define class to change color of header and padding.
+    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null;
+
     return (
-      <div>
+      <div className={isArtObjectClassNames}>
         <header className="g-header" data-behavior="header">
           <div className="container">
             <a className="a-logo g-header__logo" href={MAIN_WEBSITE_DOMAIN}>

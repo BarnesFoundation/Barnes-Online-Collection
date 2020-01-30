@@ -14,16 +14,16 @@ class TabbedSubMenu extends Component {
 
     const tabList = [
       {
-        title: 'Visually Related',
-        slug: '',
+        title: 'Information',
+        slug: 'information',
       },
       {
         title: 'Ensemble',
         slug: 'ensemble',
       },
       {
-        title: 'Information',
-        slug: 'information',
+        title: 'Visually Related',
+        slug: '',
       },
     ]
 

@@ -24,3 +24,33 @@ html:not([class=""]) {
     display: none;
   }
 }
+
+.art-object-header {
+  .g-header {
+    position: relative;
+    color: $color-red-barnes-logo;
+
+
+    &__nav {
+      &__btn {
+        color: $color-black;
+
+        &:hover {
+          color: $color__red--barnes;
+        }
+      }
+
+      &__link {
+        color: $color-black;
+
+        &[aria-current] {
+          color: $color__red--barnes;
+        }
+
+        &:hover {
+          color: $color__red--barnes;
+        }
+      }
+    }
+  }
+}

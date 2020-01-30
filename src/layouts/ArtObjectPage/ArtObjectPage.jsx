@@ -42,7 +42,7 @@ class ArtObjectPage extends Component {
       <div className="app app-art-object-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
-        <SiteHeader />
+        <SiteHeader isArtObject/>
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           requestObjectId={this.state.requestObjectId}
