@@ -15,15 +15,15 @@ class TabbedSubMenu extends Component {
     const tabList = [
       {
         title: 'Information',
-        slug: 'information',
+        slug: '',
       },
       {
         title: 'Ensemble',
         slug: 'ensemble',
       },
       {
-        title: 'Visually Related',
-        slug: '',
+        title: 'Visually Similar',
+        slug: 'visually-similar',
       },
     ]
 
@@ -34,10 +34,10 @@ class TabbedSubMenu extends Component {
     switch(this.props.slug) {
       case 'ensemble':
         return <PanelEnsemble ensembleIndex={this.props.object.ensembleIndex} />
-      case 'information':
-        return <PanelDetails />
-      default:
+      case 'visually-similar':
         return <PanelVisuallyRelated modalPreviousLocation={this.props.modalPreviousLocation}/>
+      default:
+        return <PanelDetails />
     }
   }
 
@@ -84,7 +84,7 @@ class TabbedSubMenu extends Component {
                 selectedIndex={selectedIndex}
               />
             </MediaQuery>
-            <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
+            <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
               <div className="m-tabs__list tabs-list-desktop">
                 {tabsList}
               </div>

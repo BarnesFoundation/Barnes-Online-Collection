@@ -27,7 +27,7 @@
 
   .collection-filters-wrap {
     text-align: center;
-    padding-bottom: 0;
+    // padding-bottom: 0;
 
     // Uncomment if this will be fixed to bottom.
     // position: fixed;
@@ -53,16 +53,12 @@
       position: relative;
       background: transparent;
       // a little less than the styleguide padding
-      padding-bottom: 1rem;
+      // padding-bottom: 1rem;
 
       // stay under the header. Unless the mobile-panel is open
       z-index: $z-index-mobile-panel-overlay;
       .mobile-panel-open & {
         z-index: $z-index-mobile-panel;
-      }
-
-      .search-results {
-        // padding-top: 0;
       }
     }
   }

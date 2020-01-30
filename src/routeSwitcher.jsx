@@ -88,6 +88,32 @@ class RouteSwitcher extends Component {
           <Route exact path='/objects/' component={LandingPage}/>
           <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
+          <Route path='/fonts'>
+            <div>
+              <h1 className="font-alpha">Heading 1</h1>
+              <h1 className="font-alpha color-brand">Heading 1 (red)</h1>
+              <h1 className="font-alpha color-light">Heading 1 (grey)</h1>
+              <h1 className="font-beta">Heading 2</h1>
+              <h1 className="font-gamma">Heading 3</h1>
+              <h1 className="font-delta">Heading 4</h1>
+              <h1 className="font-epsilon">Heading 5</h1>
+              <h1 className="font-zeta">Heading 6 / Label</h1>
+              <h1 className="font-smallprint">Smallprint</h1>
+              <h1 className="font-chapo">Châpo</h1>
+              <h1 className="page-title">Page title</h1>
+              <h1 className="font-bold-heading">Bold heading</h1>
+              <h1 className="font-simple-heading">Bold heading (same font-family as type as its parent)</h1>
+              <div className="rte">
+                <p>Sometimes we can't use our font classNamees :( e.g. if the user is using a Rich Text Editor in a CMS.</p>
+                <h1>h1</h1>
+                <h2>h2</h2>
+                <h3>h3</h3>
+                <h4>h4</h4>
+                <h5>h5</h5>
+                <h6>h6</h6>
+              </div>
+            </div>
+          </Route>
         </Switch>
         {this.modalRouteComponents}
       </div>

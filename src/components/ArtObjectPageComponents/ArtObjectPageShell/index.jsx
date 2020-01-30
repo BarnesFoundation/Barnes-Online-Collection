@@ -41,7 +41,9 @@ class ArtObjectPageShell extends Component {
     return (
       <div className="component-art-object-page-shell">
         <div className="container">
-          <h1 className="art-object__title font-alpha">{this.props.object.title}</h1>
+          <h1 className="art-object__title font-gamma" style={{ marginBottom: 0 }}>{this.props.object.people}</h1>
+          <h1 className="art-object__title font-gamma color-light" style={{ marginBottom: 0 }}>{this.props.object.title}</h1>
+          <h1 className="art-object__title font-epsilon">{this.props.object.displayDate}. {this.props.object.medium}</h1>
         </div>
         <TabbedSubMenu
           slug={this.props.slug}

@@ -33,10 +33,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 45px;
+  padding-top: 25px;
   text-align: left;
   font-family: 'Calibre';
   font-size: 30px;
+
+  @include breakpoint('large+') {
+    padding-top: 50px;
+  }
 
   @include breakpoint('medium-') {
     font-size: inherit;
