@@ -65,18 +65,18 @@ const Image = ({
           onLoad={onLoad}
           ref={setRef}
         />}
-        <button
+        {isLoaded && <button
           className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
           onClick={() => setActiveImageIndex(activeImageIndex - 1)}
         >
           <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
-        </button>
-        <button
+        </button>}
+        {isLoaded && <button
           className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
           onClick={() => setActiveImageIndex(activeImageIndex + 1)}
         >
           <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
-        </button>
+        </button>}
       </div>
       {Boolean((isLoaded && width) || isZoomed) &&
         <div className='image-caption'>
@@ -125,7 +125,7 @@ class PanelDetails extends Component {
 
   /** Update state infomration. */
   onLoad = () => this.setState({ imageLoaded: true });
-  setActiveImageIndex = index => this.setState({ activeImageIndex: index % STATIC_IMAGE_COUNT }); 
+  setActiveImageIndex = index => this.setState({ activeImageIndex: index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT }); 
 
   /** Ref to determine width of caption and images. */
   setRef = ref => this.ref = ref;
