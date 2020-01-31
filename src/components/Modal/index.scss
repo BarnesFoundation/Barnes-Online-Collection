@@ -30,6 +30,11 @@
     right: 0;
     top: 0;
     cursor: pointer;
+
+    &__icon {
+      width: 0.6em;
+      height: 0.6em;
+    }
   }
 
   @include breakpoint('small-') {
