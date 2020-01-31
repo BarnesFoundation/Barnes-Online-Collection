@@ -34,6 +34,9 @@ const getTabList = (artObjectProps) => (
   ].filter(Boolean) // Filter out tabs with no content.
 );
 
+// For modulo
+const STATIC_IMAGE_COUNT = 7;
+
 // TODO => Convert this to class if smaller images end up being available on object level.
 const Image = ({
   isZoomed,
@@ -62,10 +65,16 @@ const Image = ({
           onLoad={onLoad}
           ref={setRef}
         />}
-        <button className='btn image-art-object__arrow-button image-art-object__arrow-button--left'>
+        <button
+          className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
+          onClick={() => setActiveImageIndex(activeImageIndex - 1)}
+        >
           <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
         </button>
-        <button className='btn image-art-object__arrow-button image-art-object__arrow-button--right'>
+        <button
+          className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
+          onClick={() => setActiveImageIndex(activeImageIndex + 1)}
+        >
           <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
         </button>
       </div>
@@ -82,7 +91,7 @@ const Image = ({
             style={{ width: actualWidth }}
           >
             {/* TODO => Replace this with real images. */}
-            {[...Array(8)].map((x, i) => {
+            {[...Array(STATIC_IMAGE_COUNT)].map((x, i) => {
               let className = 'image-caption__grid-image';
               if (activeImageIndex === i) className = `${className} image-caption__grid-image--active`;
 
@@ -116,7 +125,7 @@ class PanelDetails extends Component {
 
   /** Update state infomration. */
   onLoad = () => this.setState({ imageLoaded: true });
-  setActiveImageIndex = activeImageIndex => this.setState({ activeImageIndex }); 
+  setActiveImageIndex = index => this.setState({ activeImageIndex: index % STATIC_IMAGE_COUNT }); 
 
   /** Ref to determine width of caption and images. */
   setRef = ref => this.ref = ref;
