@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import SummaryTable from './SummaryTable';
 import AccordionMenu from '../../AccordionMenu';
 import Zoom from '../../Zoom/Zoom';
-import Icon from '../../Icon'
+import Icon from '../../Icon';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import { getObjectCopyright } from '../../../copyrightMap';
@@ -52,15 +52,23 @@ const Image = ({
 
   return (
     <div className='art-object__header m-block'>
-      {isZoomed && <Zoom id={object.id} />}
-      {!isZoomed && <img
-        aria-hidden="true"
-        className=""
-        src={object.imageUrlLarge}
-        alt={object.title}
-        onLoad={onLoad}
-        ref={setRef}
-      />}
+      <div className='image-art-object'>
+        {isZoomed && <Zoom id={object.id} />}
+        {!isZoomed && <img
+          aria-hidden="true"
+          className=""
+          src={object.imageUrlLarge}
+          alt={object.title}
+          onLoad={onLoad}
+          ref={setRef}
+        />}
+        <button className='btn image-art-object__arrow-button image-art-object__arrow-button--left'>
+          <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
+        </button>
+        <button className='btn image-art-object__arrow-button image-art-object__arrow-button--right'>
+          <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
+        </button>
+      </div>
       {Boolean((isLoaded && width) || isZoomed) &&
         <div className='image-caption'>
           <div
@@ -76,7 +84,6 @@ const Image = ({
             {/* TODO => Replace this with real images. */}
             {[...Array(8)].map((x, i) => {
               let className = 'image-caption__grid-image';
-              console.log(activeImageIndex);
               if (activeImageIndex === i) className = `${className} image-caption__grid-image--active`;
 
               return (
