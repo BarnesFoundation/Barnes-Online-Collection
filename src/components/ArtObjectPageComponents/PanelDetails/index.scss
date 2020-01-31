@@ -113,6 +113,8 @@
 
   &__arrow-button {
     position: absolute;
+    z-index: 2;
+    background-color: white;
     padding-left: 0;
     padding-right: 0;
     margin: 0 -1px;
@@ -126,11 +128,11 @@
     border-width: 1px;
 
     &--left {
-      left: 5%;
+      left: 0;
     }
 
     &--right {
-      right: 5%;
+      right: 0;
     }
   }
 }

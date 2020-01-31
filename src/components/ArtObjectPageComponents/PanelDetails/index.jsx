@@ -30,8 +30,8 @@ const getTabList = (artObjectProps) => (
     {
       title: 'Provenance',
       tabContent: artObjectProps.publishedProvenance
-    }
-  ].filter(Boolean) // Filter out tabs with no content.
+    },
+  ].filter(({ tabContent }) => tabContent) // Filter out tabs with no content.
 );
 
 // For modulo
@@ -49,23 +49,29 @@ const Image = ({
   setActiveImageIndex
 }) => {
   let className = 'art-object__image';
-  if (isZoomed) className = `${className} art-object__image-hidden`;
+  let additionalStyle = {};
+  if (isZoomed) {
+    className = `${className} art-object__image-hidden`;
+    additionalStyle = { ...additionalStyle, display: 'none' };
+  };
 
   const actualWidth = width || '100%';
+  console.log(width);
 
   return (
     <div className='art-object__header m-block'>
       <div className='image-art-object'>
         {isZoomed && <Zoom id={object.id} />}
-        {!isZoomed && <img
+        <img
           aria-hidden="true"
           className=""
           src={object.imageUrlLarge}
           alt={object.title}
           onLoad={onLoad}
           ref={setRef}
-        />}
-        {isLoaded && <button
+          style={{ ...additionalStyle }}
+        />
+        {(isLoaded) && <button
           className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
           onClick={() => setActiveImageIndex(activeImageIndex - 1)}
         >
