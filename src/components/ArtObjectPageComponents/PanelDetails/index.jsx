@@ -56,7 +56,6 @@ const Image = ({
   };
 
   const actualWidth = width || '100%';
-  console.log(width);
 
   return (
     <div className='art-object__header m-block'>
