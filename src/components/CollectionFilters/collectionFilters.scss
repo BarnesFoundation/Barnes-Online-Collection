@@ -1,8 +1,9 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
+// Magic string so applied filters border matches box.
 .applied-filters {
-  width: 100%;
+  width: 99.7%;
   border: none;
 }
 

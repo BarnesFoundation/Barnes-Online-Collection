@@ -1,31 +1,48 @@
 @import '../../scss/variables.scss';
 @import '../../scss/_mixins.scss';
 
-.search-input {
-  .form-field {
-    display: flex;
-    margin-bottom: 0;
+$button-width: 60px;
+$button-margin: 15px;
+
+.search {
+  background-color: $color-grey-ultra-light-2;
+  padding: 30px;
+  border-left: 1px solid #dcdcdc;
+  border-right: 1px solid #dcdcdc;
+  border-bottom: 1px solid #dcdcdc;
+  
+  // .form-field {
+  //   display: flex;
+  //   margin-bottom: 0;
+  // }
+
+  &__content {
+    
   }
 
-  .input {
-    border: none;
-    padding-left: 0;
-    outline: none;
-    font-size: 30px;
-    ::-webkit-input-placeholder,
-    ::-moz-placeholder,
-    :-ms-input-placeholder,
-    :-moz-placeholder {
-      color: $color-grey-light;
-    }
-
-    &.mobile {
-      font-size: 17px;
-    }
+  &__searchbar {
+    display: grid;
+    grid-template-columns: calc(100% - 115px) 60px;
   }
 
-  .btn.btn-submit {
-    color: $color-red-barnes;
+  &__input {
+    padding-right: 25px;
+    border: 2px solid $color-border;
+    width: calc(100% - 25px);
+
+    color: #8c8c8c;
+    display: block;
+    font-size: 18px;
+    line-height: 60px;
+    padding: 0 22px;
+
+    // &.mobile {
+    //   font-size: 17px;
+    // }
+  }
+
+  &__button {
+    width: $button-width;
   }
 }
 

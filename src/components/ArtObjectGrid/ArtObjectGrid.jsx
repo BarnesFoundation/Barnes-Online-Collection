@@ -6,7 +6,6 @@ import * as ObjectActions from '../../actions/object';
 import * as ModalActions from '../../actions/modal';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
-// import ViewMoreButton from './ViewMoreButton';
 import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
 
@@ -86,7 +85,7 @@ class ArtObjectGrid extends Component {
 
   render() {
     // Destructure props.
-    const { isSearchPending, hasMoreResults, gridStyle } = this.props;
+    const { isSearchPending, hasMoreResults, gridStyle, isFilterActive } = this.props;
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
@@ -110,16 +109,25 @@ class ArtObjectGrid extends Component {
         </div>
       </div>);
 
+    // If filters are active, apply 50% opacity on search results.
+    let isBackgroundActiveClasses = 'component-art-object-grid__shaded-background';
+    if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} component-art-object-grid__shaded-background--active`
+
     return (
-      <div
-        className={`
-          component-art-object-grid
-          ${masonryElements.length ? 'has-elements' : ''}
-          ${isSearchPending ? 'is-pending' : ''}
-        `}
-        data-grid-style={gridStyle}
-      >
-        {searching || body}
+      <div className='component-art-object-grid__wrapper'>
+        <div className={isBackgroundActiveClasses}></div>
+        <div className="container m-block m-block--shallow m-block--no-border m-block--flush-top">
+          <div
+            className={`
+              component-art-object-grid
+              ${masonryElements.length ? 'has-elements' : ''}
+              ${isSearchPending ? 'is-pending' : ''}
+            `}
+            data-grid-style={gridStyle}
+          >
+              {searching || body}
+          </div>
+        </div>
       </div>
     );
   }
@@ -128,6 +136,7 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
+    isFilterActive: Boolean(state.filterSets.visibleFilterSet),
   };
 }
 

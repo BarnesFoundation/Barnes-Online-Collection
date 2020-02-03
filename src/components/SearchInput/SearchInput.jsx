@@ -19,35 +19,32 @@ class SearchInput extends Component {
     this.state = {
       value: ''
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
+  onChange = ({ target: { value }}) => {
+    this.setState({ value });
+  };
 
-  handleSubmit(event) {
-    event.preventDefault();
+  submit = (e) => {
+    e.preventDefault();
 
     this.props.addSearchTerm(this.state.value);
-    this.setState({value: ''});
-  }
+    this.setState({ value: '' });
+  };
 
   render() {
     return (
       <div>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-          <div className="mobile-filters-section search-input">
-            <form className="mobile-filters-form" onSubmit={this.handleSubmit}>
-              <div className="form-field">
+          <div className='mobile-filters-section search-input'>
+            <form className='mobile-filters-form' onSubmit={this.handleSubmit}>
+              <div className='form-field'>
                 <input
-                  className="input mobile"
-                  type="text"
+                  className='input mobile'
+                  type='text'
                   value={this.state.value}
-                  placeholder="Search a keyword, artist…"
-                  onChange={this.handleChange}
+                  placeholder='Search a keyword, artist…'
+                  onChange={this.onChange}
                 />
                 <MobilePanelCloseButton />
               </div>
@@ -55,24 +52,27 @@ class SearchInput extends Component {
           </div>
         </MediaQuery>
 
-        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
-          <div className="search-input">
-            <form onSubmit={this.handleSubmit}>
-              <div className="form-field">
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
+          <div className='search'>
+            <div className='search__content'>
+              <div className='search__searchbar'>
                 <input
-                  className="input"
-                  type="text"
-                  autoFocus="true"
+                  className='search__input'
+                  type='text'
+                  autoFocus='true'
                   value={this.state.value}
-                  placeholder="Search a keyword, artist…"
-                  onChange={this.handleChange}
+                  placeholder='Search a keyword, artist…'
+                  onChange={this.onChange}
                 />
-                <input
-                  className="btn btn-no-style btn-submit"
-                  type="submit"
-                />
+                <button
+                  className='btn btn--primary search__button'
+                  type='submit'
+                  onClick={this.submit}
+                >
+                  Search
+                </button>
               </div>
-            </form>
+            </div>
           </div>
         </MediaQuery>
       </div>

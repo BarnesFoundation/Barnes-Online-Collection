@@ -49,7 +49,6 @@ class LandingPage extends Component {
             <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
               <CollectionFilters />
             </div>
-            <div className="container art-object-grid-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
               <ArtObjectGrid
                 gridStyle="full-size"
                 shouldLinksUseModal={true}
@@ -59,7 +58,6 @@ class LandingPage extends Component {
                 pageType={pageType}
                 hasMoreResults
               />
-            </div>
           </div>
         </div>
         <Footer hasHours/>
