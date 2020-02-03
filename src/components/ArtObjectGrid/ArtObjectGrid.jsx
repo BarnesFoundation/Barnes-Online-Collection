@@ -121,6 +121,7 @@ class ArtObjectGrid extends Component {
         <div
           className={isBackgroundActiveClasses}
           onClick={() => {
+            // TODO => Change this to include mobile filters.
             this.props.closeFilterSet()
           }}>  
         </div>
