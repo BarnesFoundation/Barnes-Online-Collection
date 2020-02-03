@@ -49,15 +49,15 @@ class LandingPage extends Component {
             <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
               <CollectionFilters />
             </div>
-              <ArtObjectGrid
-                gridStyle="full-size"
-                shouldLinksUseModal={true}
-                modalPreviousLocation="/"
-                isSearchPending={isSearchPending}
-                liveObjects={liveObjects}
-                pageType={pageType}
-                hasMoreResults
-              />
+            <ArtObjectGrid
+              gridStyle="full-size"
+              shouldLinksUseModal={true}
+              modalPreviousLocation="/"
+              isSearchPending={isSearchPending}
+              liveObjects={liveObjects}
+              pageType={pageType}
+              hasMoreResults
+            />
           </div>
         </div>
         <Footer hasHours/>
