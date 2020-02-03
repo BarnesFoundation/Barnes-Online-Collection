@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as ObjectActions from '../../actions/object';
 import * as ModalActions from '../../actions/modal';
+import * as FilterSetsActions from '../../actions/filterSets';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import SpinnerLoader from './SpinnerLoader';
@@ -114,8 +115,15 @@ class ArtObjectGrid extends Component {
     if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} component-art-object-grid__shaded-background--active`
 
     return (
-      <div className='component-art-object-grid__wrapper'>
-        <div className={isBackgroundActiveClasses}></div>
+      <div
+        className='component-art-object-grid__wrapper'
+      >
+        <div
+          className={isBackgroundActiveClasses}
+          onClick={() => {
+            this.props.closeFilterSet()
+          }}>  
+        </div>
         <div className="container m-block m-block--shallow m-block--no-border m-block--flush-top">
           <div
             className={`
@@ -144,6 +152,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
     ObjectActions,
     ModalActions,
+    FilterSetsActions
   ), dispatch);
 }
 
