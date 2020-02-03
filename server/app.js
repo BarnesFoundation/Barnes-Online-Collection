@@ -593,9 +593,9 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
   }).send()
 })
 
-app.get('/api/build-search-assets', (req, res) => {
-	console.log('hello');
-	buildSearchAssets.getArtists();
+app.get('/api/build-search-assets', async (req, res) => {
+	const result = await buildSearchAssets.generateAssets();
+	res.json(result);
 });
 
 app.use(function (req, res) {
