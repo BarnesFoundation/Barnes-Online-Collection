@@ -8,7 +8,7 @@ export const ENSEMBLE_IMAGE_URL = (index) => {
   return `${imageUrlBase}/ensembles/${index}.jpg`;
 }
 
-export const ENSEMBLE = {
+const ENSEMBLE = {
   1: {
     roomTitle: 'Main Room',
     wallTitle: 'North Wall'
@@ -448,4 +448,10 @@ export const getRoomAndTitleText = (ensembleIndex) => {
   const wallTitleStr = wallTitle ? `, ${wallTitle}` : '';
 
   return `${ENSEMBLE[ensembleIndex].roomTitle}${wallTitleStr}`;
+}
+
+module.exports = {
+	ENSEMBLE_IMAGE_URL,
+	ENSEMBLE,
+	getRoomAndTitleText
 }
