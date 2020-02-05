@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as ObjectActions from '../../actions/object';
 import * as ModalActions from '../../actions/modal';
+import * as FilterSetsActions from '../../actions/filterSets';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
-// import ViewMoreButton from './ViewMoreButton';
 import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
 
@@ -86,7 +86,7 @@ class ArtObjectGrid extends Component {
 
   render() {
     // Destructure props.
-    const { isSearchPending, hasMoreResults, gridStyle } = this.props;
+    const { isSearchPending, hasMoreResults, gridStyle, isFilterActive } = this.props;
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
@@ -111,15 +111,19 @@ class ArtObjectGrid extends Component {
       </div>);
 
     return (
-      <div
-        className={`
-          component-art-object-grid
-          ${masonryElements.length ? 'has-elements' : ''}
-          ${isSearchPending ? 'is-pending' : ''}
-        `}
-        data-grid-style={gridStyle}
-      >
-        {searching || body}
+      <div className='component-art-object-grid__wrapper'>
+        <div className="container m-block m-block--shallow m-block--no-border m-block--flush-top">
+          <div
+            className={`
+              component-art-object-grid
+              ${masonryElements.length ? 'has-elements' : ''}
+              ${isSearchPending ? 'is-pending' : ''}
+            `}
+            data-grid-style={gridStyle}
+          >
+              {searching || body}
+          </div>
+        </div>
       </div>
     );
   }
@@ -135,6 +139,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({},
     ObjectActions,
     ModalActions,
+    FilterSetsActions
   ), dispatch);
 }
 

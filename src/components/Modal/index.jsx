@@ -53,7 +53,7 @@ class Modal extends Component {
               className="btn-close"
               onClick={this.handleClickBtnClose}
             >
-              <Icon svgId='cross_page' classes='icon-cross-page'/>
+              <Icon svgId='cross_page' classes='icon-cross-page btn-close__icon'/>
             </button>
           </div>
         </div>

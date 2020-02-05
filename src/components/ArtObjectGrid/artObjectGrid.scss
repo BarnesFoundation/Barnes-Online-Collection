@@ -2,6 +2,12 @@
 @import '../../scss/_mixins.scss';
 
 .component-art-object-grid {
+  &__wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
   .component-art-object-grid-results {
     opacity: 0;
     transition: opacity 0.75s ease;

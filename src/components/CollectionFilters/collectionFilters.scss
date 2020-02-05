@@ -1,11 +1,15 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
+// Magic string so applied filters border matches box.
 .applied-filters {
-  width: 100%;
+  width: 99.7%;
+  border: none;
+}
 
+.collection-filters-wrap {
   @include breakpoint('medium-') {
-    border: none;
+    padding-bottom: 0;
   }
 }
 
@@ -19,7 +23,6 @@
   width: 99.7%; // Magic number to line up with masonry.
   white-space: nowrap;
   margin-bottom: -2px; // So border is flush with images.
-
   
   @include breakpoint('medium+') {
     // overflow: hidden;
@@ -28,6 +31,7 @@
   }
 
   @include breakpoint('large+') {
+    border-bottom: 1px solid #dcdcdc;
     margin-bottom: 0;
   }
 
@@ -252,6 +256,7 @@
 
   @include breakpoint('medium-') {
     padding-top: 0;
+    
     // let the tags and the 'clear all' button wrap
     display: block;
 

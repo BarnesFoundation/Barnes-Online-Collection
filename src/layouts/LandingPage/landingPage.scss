@@ -5,6 +5,26 @@
 // Though, maybe that means this style shouldn't be in the components folder?
 @import '../../components/CollectionFilters/mobileFilters.scss';
 
+.shaded-background {
+  position: relative;
+  overflow-x: hidden;
+
+  &__tint {
+    position: absolute;
+    background-color: black;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0%;
+    transition: opacity 0.5s ease;
+
+    &--active {
+      z-index: 5;
+      opacity: 50%;
+    }
+  }
+}
+
 .app-landing-page {
   .landing-page-header {
     // the mock shows a font size outside the styleguide
@@ -27,7 +47,7 @@
 
   .collection-filters-wrap {
     text-align: center;
-    padding-bottom: 0;
+    // padding-bottom: 0;
 
     // Uncomment if this will be fixed to bottom.
     // position: fixed;
@@ -53,16 +73,12 @@
       position: relative;
       background: transparent;
       // a little less than the styleguide padding
-      padding-bottom: 1rem;
+      // padding-bottom: 1rem;
 
       // stay under the header. Unless the mobile-panel is open
       z-index: $z-index-mobile-panel-overlay;
       .mobile-panel-open & {
         z-index: $z-index-mobile-panel;
-      }
-
-      .search-results {
-        // padding-top: 0;
       }
     }
   }
