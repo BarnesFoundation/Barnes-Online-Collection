@@ -1,0 +1,66 @@
+@import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+
+.dropdowns-menu {
+    text-align: left;
+
+    // For Mobile
+    // display: grid;
+    // grid-template-rows: repeat(6, 1fr);
+    
+    &__button {
+        // Font
+        color: $color-grey-dark;
+        font-weight: bold;
+        font-size: 17px;
+
+        // Spacing
+        position: relative;
+        padding-top: 30px;
+        text-align: left;
+        margin-right: 40px;
+
+        // Button styling
+        border: none;
+        background: transparent;
+        cursor: pointer;
+
+        // For dividing line before last item.
+        &--last {
+            padding-left: 30px;
+            &:before {
+                display: block;
+                left: 0;
+                content: ' ';
+                position: absolute;
+                height: $collection-filter-icon-font-size;
+                border-left: 1px solid $color-grey-light;
+                transform: translateY(-50%);
+                top: 80%;
+            }
+        }
+
+        @include breakpoint('medium+') {
+            // min-width: 120px;
+        }
+    }
+
+    &__button-content {
+        margin-right: 5px;
+    }
+
+    &__icon {
+        position: absolute;
+        top: 29px; // TODO => Fix this magic string.
+        font-size: 21px;
+        transition: transform 150ms ease;
+
+        &--active {
+            transform: rotate(-180deg);
+        }
+    }
+}
+
+.dropdown {
+
+}
