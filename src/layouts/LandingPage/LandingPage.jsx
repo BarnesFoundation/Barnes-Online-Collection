@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ObjectsActions from '../../actions/objects';
+import { closeFilterSet } from '../../actions/filterSets';
 import {getMetaTagsFromObject} from '../../helpers';
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
@@ -25,12 +26,14 @@ class LandingPage extends Component {
   }
 
   render() {
-    const object = this.props.object;
+    const { object, objectsQuery, objects: liveObjects, isFilterActive, closeFilterSet } = this.props;
     const metaTags = getMetaTagsFromObject(object);
-    const queryState = this.props.objectsQuery || {};
-    const isSearchPending = queryState.isPending;
-    const liveObjects = this.props.objects;
+    const isSearchPending = Boolean(objectsQuery && objectsQuery.isPending);
     const pageType = 'landing';
+
+    // If filters are active, apply 50% opacity on search results.
+    let isBackgroundActiveClasses = 'shaded-background__tint';
+    if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
 
     return (
       <div className="app app-landing-page">
@@ -49,18 +52,28 @@ class LandingPage extends Component {
             <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
               <CollectionFilters />
             </div>
-            <ArtObjectGrid
-              gridStyle="full-size"
-              shouldLinksUseModal={true}
-              modalPreviousLocation="/"
-              isSearchPending={isSearchPending}
-              liveObjects={liveObjects}
-              pageType={pageType}
-              hasMoreResults
-            />
+            <div className='shaded-background'>
+              {/** Shaded background. */}
+              <div
+                className={isBackgroundActiveClasses}
+                onClick={() => {
+                  // TODO => Change this to include mobile filters.
+                  closeFilterSet()
+                }}>  
+              </div>
+              <ArtObjectGrid
+                gridStyle="full-size"
+                shouldLinksUseModal={true}
+                modalPreviousLocation="/"
+                isSearchPending={isSearchPending}
+                liveObjects={liveObjects}
+                pageType={pageType}
+                hasMoreResults
+              />
+              <Footer hasHours/>
+            </div>
           </div>
         </div>
-        <Footer hasHours/>
       </div>
     );
   }
@@ -71,6 +84,7 @@ function mapStateToProps(state) {
     object: state.object,
     objects: state.objects,
     objectsQuery: state.objectsQuery,
+    isFilterActive: Boolean(state.filterSets.visibleFilterSet),
   };
 }
 
@@ -78,6 +92,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
     ObjectsActions,
+    { closeFilterSet },
   ), dispatch);
 }
 

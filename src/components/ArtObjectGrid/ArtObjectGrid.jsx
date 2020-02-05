@@ -110,21 +110,8 @@ class ArtObjectGrid extends Component {
         </div>
       </div>);
 
-    // If filters are active, apply 50% opacity on search results.
-    let isBackgroundActiveClasses = 'component-art-object-grid__shaded-background';
-    if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} component-art-object-grid__shaded-background--active`
-
     return (
-      <div
-        className='component-art-object-grid__wrapper'
-      >
-        <div
-          className={isBackgroundActiveClasses}
-          onClick={() => {
-            // TODO => Change this to include mobile filters.
-            this.props.closeFilterSet()
-          }}>  
-        </div>
+      <div className='component-art-object-grid__wrapper'>
         <div className="container m-block m-block--shallow m-block--no-border m-block--flush-top">
           <div
             className={`
@@ -145,7 +132,6 @@ class ArtObjectGrid extends Component {
 function mapStateToProps(state) {
   return {
     object: state.object,
-    isFilterActive: Boolean(state.filterSets.visibleFilterSet),
   };
 }
 

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import MediaQuery from 'react-responsive';
 import { BREAKPOINTS } from '../../constants';
-
 import * as SearchActions from '../../actions/search';
 import MobilePanelCloseButton from '../CollectionFilters/MobilePanelCloseButton';
 
@@ -71,6 +68,9 @@ class SearchInput extends Component {
                 >
                   Search
                 </button>
+              </div>
+              <div className='search__dropdowns'>
+                Dropdowns Will Go Here.
               </div>
             </div>
           </div>
