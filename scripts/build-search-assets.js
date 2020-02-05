@@ -3,6 +3,7 @@ const path = require('path');
 const bodybuilder = require('bodybuilder');
 const esClient = require('../server/utils/esClient');
 
+const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
 const publicDirectory = path.resolve(__dirname, '../public/');
 
@@ -57,12 +58,36 @@ const writeAssetsFile = async (fileName, fileContents) => {
 /** Executes the work to generate the search assets */
 const generateAssets = async () => {
 
-	const searchAssetsObject = {};
+	const ensembles = Object.entries(ensemblesList).reduce((acc, pair) => {
 
-	searchAssetsObject['artists'] = await getUniqueSearchValues('uniq_people', 'people.text');
-	searchAssetsObject['cultures'] = await getUniqueSearchValues('uniq_culture', 'culture.keyword');
-	searchAssetsObject['locations'] = await getUniqueSearchValues('uniq_locations', 'locations');
-	searchAssetsObject['copyrights'] = await getUniqueSearchValues('uniq_copyright', 'copyright.keyword');
+		const [roomNumber, ensemble] = pair;
+		let { roomTitle } = ensemble;
+
+		// Consolidate Second Floor Balcony virtual rooms to single room
+		if (roomTitle.includes('Second Floor Balcony')) {
+			roomTitle = 'Second Floor Balcony (Room 24)';
+		}
+
+		// If our accumulator doesn't yet have the room, add it
+		if (acc.hasOwnProperty(roomTitle) == false) {
+			Object.assign(acc, { [roomTitle]: [] });
+		}
+
+		// Push the room number
+		acc[roomTitle].push(roomNumber);
+
+		return acc;
+	}, {});
+
+	console.log(ensembles);
+
+	const searchAssetsObject = {
+		artists: await getUniqueSearchValues('uniq_people', 'people.text'),
+		cultures: await getUniqueSearchValues('uniq_culture', 'culture.keyword'),
+		ensembles,
+		locations: await getUniqueSearchValues('uniq_locations', 'locations'),
+		copyrights: await await getUniqueSearchValues('uniq_copyright', 'copyright.keyword')
+	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
 	const result = await writeAssetsFile('searchAssets.json', searchAssetsDocument);
