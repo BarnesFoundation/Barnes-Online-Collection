@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Icon from '../Icon';
 import './dropdownsMenu.css';
 
-const DROPDOWN_TERMS = ['Culture', 'Year', 'Medium', 'Colors', 'Copyright', 'Artist'];
+const DROPDOWN_TERMS = ['Culture', 'Year', 'Medium', 'Colors', 'Copyright', 'Artist']; 
 
 const getDropdownContent = (term) => {
     switch(term) {
@@ -10,6 +10,14 @@ const getDropdownContent = (term) => {
             return 
         }
     }
+};
+
+const Dropdown = ({ children }) => {
+    return (
+        <div className='dropdown'>
+            {children}
+        </div>
+    );
 };
 
 /** Dropdown menu for filtering artwork. */
@@ -42,7 +50,8 @@ export class Dropdowns extends Component {
         return (
             <div className='dropdowns-menu'>
                 {DROPDOWN_TERMS.map((term, i) => {
-                    const isLastDropdown = Boolean(i === DROPDOWN_TERMS.length - 1);
+                    const isLastDropdown = i === DROPDOWN_TERMS.length - 1;
+                    const isActiveItem = activeItem === i;
 
                     // If this is the last item, we want to remove the chevron and add a | before the item.
                     let buttonClassName = 'dropdowns-menu__button';
@@ -50,7 +59,7 @@ export class Dropdowns extends Component {
 
                     // If this is the active item, we want to flip the chevron.
                     let iconClassName = 'dropdowns-menu__icon';
-                    if (activeItem === i) iconClassName = `${iconClassName} dropdowns-menu__icon--active`;
+                    if (isActiveItem) iconClassName = `${iconClassName} dropdowns-menu__icon--active`;
                     
                     return (
                         <button
@@ -60,6 +69,11 @@ export class Dropdowns extends Component {
                         >
                             <span className='dropdowns-menu__button-content'>{term}</span>
                             {!isLastDropdown && <Icon svgId='-icon_arrow_down' classes={iconClassName} />}
+                            {isActiveItem &&
+                                <Dropdown>
+                                    <div>Dropdown content</div>
+                                </Dropdown>
+                            }
                         </button>
                     );
                 })}

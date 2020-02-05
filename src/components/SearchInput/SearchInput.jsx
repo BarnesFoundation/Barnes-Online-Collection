@@ -41,7 +41,7 @@ class SearchInput extends Component {
                   className='input mobile'
                   type='text'
                   value={this.state.value}
-                  placeholder='Search a keyword, artist…'
+                  placeholder='Search a keyword, artist, room number, and more'
                   onChange={this.onChange}
                 />
                 <MobilePanelCloseButton />
@@ -59,7 +59,7 @@ class SearchInput extends Component {
                   type='text'
                   autoFocus='true'
                   value={this.state.value}
-                  placeholder='Search a keyword, artist…'
+                  placeholder='Search a keyword, artist, room number, and more'
                   onChange={this.onChange}
                 />
                 <button
