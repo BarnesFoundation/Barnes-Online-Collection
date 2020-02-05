@@ -78,6 +78,7 @@
     "xmlbuilder": "^9.0.1"
   },
   "devDependencies": {
+    "nodemon": "^2.0.2",
     "npm-run-all": "^4.0.2",
     "redux-devtools": "^3.4.0",
     "sass-lint": "^1.10.2"
@@ -88,9 +89,8 @@
     "postbuild": "gulp",
     "build-sitemap": "node scripts/build-sitemap.js",
     "server": "node server/index.js",
-    "server-dev": "PORT=4002 node server/index.js",
+    "server-dev": "PORT=4002 nodemon server/index.js",
     "client": "PORT=3002 react-scripts start",
-    "eject": "react-scripts eject",
     "test": "react-scripts test --env=jsdom",
     "build-css": "node-sass-chokidar src/ -o src/",
     "sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
