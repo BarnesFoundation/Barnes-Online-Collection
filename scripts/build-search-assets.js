@@ -7,6 +7,18 @@ const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
 const publicDirectory = path.resolve(__dirname, '../public/');
 
+const copyrights = {
+	0: 'N/A',
+	1: 'Copyright',
+	2: 'World Rights - Copyright Undetermined',
+	3: 'ARS',
+	4: 'Public Domain - Public Domain',
+	5: 'VAGA',
+	6: 'No known claimant',
+	8: 'No known rights - Public Domain',
+	10: 'World Rights - Public Domain'
+}
+
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
  * @param {string} aggregationField - The name of the field to conduct an aggregation for
@@ -86,7 +98,7 @@ const generateAssets = async () => {
 		artists: await getUniqueSearchValues('uniq_people', 'people.text'),
 		cultures: await getUniqueSearchValues('uniq_culture', 'culture.keyword'),
 		locations: generateLocations(),
-		copyrights: await await getUniqueSearchValues('uniq_copyright', 'copyright.keyword')
+		copyrights
 	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
