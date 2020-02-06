@@ -85,6 +85,7 @@ export class Dropdowns extends Component {
 
     /**
      * Get inner content for dropdown.
+     * TODO => This generates a new element on every re-render, fix this.
      * @param {string} term - name of clicked item.
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */

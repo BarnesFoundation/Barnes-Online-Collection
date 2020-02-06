@@ -6,7 +6,7 @@ import MobilePanelShuffleButton from './MobilePanelShuffleButton'
 import FilterTag from './FilterTag';
 import * as FiltersActions from '../../actions/filters';
 
-const CollectionFiltersApplied = ({ filters: { ordered }}) => (
+const CollectionFiltersApplied = ({ ordered }) => (
   Boolean(ordered.length) && 
     <div className="applied-filter-tags-container-wrap">
       <div className="flex-left">
@@ -27,16 +27,6 @@ const CollectionFiltersApplied = ({ filters: { ordered }}) => (
     </div>
 );
 
-const mapStateToProps = state => {
-  return {
-    filters: state.filters
-  }
-};
+const mapStateToProps = state => ({ ordered: state.filters.ordered });
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    FiltersActions,
-  ), dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersApplied);
+export default connect(mapStateToProps)(CollectionFiltersApplied);
