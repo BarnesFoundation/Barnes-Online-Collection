@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
+import React from 'react';
 import { connect } from 'react-redux';
 import ClearAllButton from '../SearchInput/ClearAllButton'
 import MobilePanelShuffleButton from './MobilePanelShuffleButton'
 import FilterTag from './FilterTag';
-import * as FiltersActions from '../../actions/filters';
 
 const CollectionFiltersApplied = ({ ordered }) => (
   Boolean(ordered.length) && 
