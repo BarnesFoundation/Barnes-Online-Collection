@@ -55,10 +55,9 @@ const writeAssetsFile = async (fileName, fileContents) => {
 	});
 }
 
-/** Executes the work to generate the search assets */
-const generateAssets = async () => {
-
-	const ensembles = Object.entries(ensemblesList).reduce((acc, pair) => {
+/** Generates the payload for the list of locations for artworks using the ensemble indices */
+const generateLocations = () => {
+	return Object.entries(ensemblesList).reduce((acc, pair) => {
 
 		const [roomNumber, ensemble] = pair;
 		let { roomTitle } = ensemble;
@@ -78,12 +77,15 @@ const generateAssets = async () => {
 
 		return acc;
 	}, {});
+}
+
+/** Executes the work to generate the search assets */
+const generateAssets = async () => {
 
 	const searchAssetsObject = {
 		artists: await getUniqueSearchValues('uniq_people', 'people.text'),
 		cultures: await getUniqueSearchValues('uniq_culture', 'culture.keyword'),
-		ensembles,
-		locations: await getUniqueSearchValues('uniq_locations', 'locations'),
+		locations: generateLocations(),
 		copyrights: await await getUniqueSearchValues('uniq_copyright', 'copyright.keyword')
 	};
 
