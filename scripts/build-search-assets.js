@@ -7,6 +7,7 @@ const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
 const publicDirectory = path.resolve(__dirname, '../public/');
 
+// Static copyrights list
 const copyrights = {
 	0: 'N/A',
 	1: 'Copyright',
@@ -95,8 +96,9 @@ const generateLocations = () => {
 const generateAssets = async () => {
 
 	const searchAssetsObject = {
-		artists: await getUniqueSearchValues('uniq_people', 'people.text'),
-		cultures: await getUniqueSearchValues('uniq_culture', 'culture.keyword'),
+		artists: await getUniqueSearchValues('uniq_peoples', 'people.text'),
+		cultures: await getUniqueSearchValues('uniq_cultures', 'culture.keyword'),
+		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
 		locations: generateLocations(),
 		copyrights
 	};
