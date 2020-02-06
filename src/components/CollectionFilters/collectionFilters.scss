@@ -8,6 +8,7 @@
 }
 
 .collection-filters-wrap {
+  z-index: 2;
   @include breakpoint('medium-') {
     padding-bottom: 0;
   }

@@ -49,7 +49,7 @@ class LandingPage extends Component {
               <LandingPageHeader />
             </div>
 
-            <div className="collection-filters-wrap m-block m-block--shallow m-block--no-border m-block--flush-top">
+            <div className="m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap">
               <CollectionFilters />
             </div>
             <div className='shaded-background'>
