@@ -79,8 +79,6 @@ const generateAssets = async () => {
 		return acc;
 	}, {});
 
-	console.log(ensembles);
-
 	const searchAssetsObject = {
 		artists: await getUniqueSearchValues('uniq_people', 'people.text'),
 		cultures: await getUniqueSearchValues('uniq_culture', 'culture.keyword'),
