@@ -5,7 +5,7 @@ const esClient = require('../server/utils/esClient');
 
 const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
-const publicDirectory = path.resolve(__dirname, '../public/');
+const constantsDirectory = path.resolve(__dirname, '../src/');
 
 // Static copyrights list
 const copyrights = {
@@ -58,7 +58,7 @@ const getUniqueSearchValues = async (aggregationName, aggregationField) => {
  */
 const writeAssetsFile = async (fileName, fileContents) => {
 	return await new Promise((resolve) => {
-		fs.writeFile(path.join(publicDirectory, fileName), fileContents, (error) => {
+		fs.writeFile(path.join(constantsDirectory, fileName), fileContents, (error) => {
 			if (error) {
 				console.log(error);
 				resolve('Could not write searchAssets.json');

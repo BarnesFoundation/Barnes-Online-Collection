@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
 import { addFilter, removeFilter } from '../../actions/filters';
-import assets from '../../constants/searchAssets.json';
+import assets from '../../searchAssets.json';
 import './dropdowns.css';
 
 const DROPDOWN_TERMS = ['Culture', 'Year', 'Medium', 'Location', 'Copyright', 'Artist'];
