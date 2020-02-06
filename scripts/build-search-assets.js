@@ -3,8 +3,22 @@ const path = require('path');
 const bodybuilder = require('bodybuilder');
 const esClient = require('../server/utils/esClient');
 
+const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
-const publicDirectory = path.resolve(__dirname, '../public/');
+const constantsDirectory = path.resolve(__dirname, '../src/');
+
+// Static copyrights list
+const copyrights = {
+	0: 'N/A',
+	1: 'Copyright',
+	2: 'World Rights - Copyright Undetermined',
+	3: 'ARS',
+	4: 'Public Domain - Public Domain',
+	5: 'VAGA',
+	6: 'No known claimant',
+	8: 'No known rights - Public Domain',
+	10: 'World Rights - Public Domain'
+}
 
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
@@ -44,7 +58,7 @@ const getUniqueSearchValues = async (aggregationName, aggregationField) => {
  */
 const writeAssetsFile = async (fileName, fileContents) => {
 	return await new Promise((resolve) => {
-		fs.writeFile(path.join(publicDirectory, fileName), fileContents, (error) => {
+		fs.writeFile(path.join(constantsDirectory, fileName), fileContents, (error) => {
 			if (error) {
 				console.log(error);
 				resolve('Could not write searchAssets.json');
@@ -54,15 +68,40 @@ const writeAssetsFile = async (fileName, fileContents) => {
 	});
 }
 
+/** Generates the payload for the list of locations for artworks using the ensemble indices */
+const generateLocations = () => {
+	return Object.entries(ensemblesList).reduce((acc, pair) => {
+
+		const [roomNumber, ensemble] = pair;
+		let { roomTitle } = ensemble;
+
+		// Consolidate Second Floor Balcony virtual rooms to single room
+		if (roomTitle.includes('Second Floor Balcony')) {
+			roomTitle = 'Second Floor Balcony (Room 24)';
+		}
+
+		// If our accumulator doesn't yet have the room, add it
+		if (acc.hasOwnProperty(roomTitle) == false) {
+			Object.assign(acc, { [roomTitle]: [] });
+		}
+
+		// Push the room number
+		acc[roomTitle].push(roomNumber);
+
+		return acc;
+	}, {});
+}
+
 /** Executes the work to generate the search assets */
 const generateAssets = async () => {
 
-	const searchAssetsObject = {};
-
-	searchAssetsObject['artists'] = await getUniqueSearchValues('uniq_people', 'people.text');
-	searchAssetsObject['cultures'] = await getUniqueSearchValues('uniq_culture', 'culture.keyword');
-	searchAssetsObject['locations'] = await getUniqueSearchValues('uniq_locations', 'locations');
-	searchAssetsObject['copyrights'] = await getUniqueSearchValues('uniq_copyright', 'copyright.keyword');
+	const searchAssetsObject = {
+		artists: await getUniqueSearchValues('uniq_peoples', 'people.text'),
+		cultures: await getUniqueSearchValues('uniq_cultures', 'culture.keyword'),
+		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
+		locations: generateLocations(),
+		copyrights
+	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
 	const result = await writeAssetsFile('searchAssets.json', searchAssetsDocument);
