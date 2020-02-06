@@ -5,7 +5,7 @@ import { DEV_WARN } from '../devLogging';
 const buildInitialState = () => {
   var initialState = {
     // TODO => Revert this to null.
-    visibleFilterSet: 'search',
+    visibleFilterSet: null,
     sets: {
       colors: {
         title: 'Colors',
