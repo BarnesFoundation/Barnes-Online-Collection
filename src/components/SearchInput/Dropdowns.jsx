@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
-import { addFilter, removeFilter } from '../../actions/filters';
+import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
 import assets from '../../searchAssets.json';
 import './dropdowns.css';
 
@@ -11,8 +11,8 @@ const DROPDOWN_TERMS_MAP = {
     'Culture': assets.cultures,
     'Year': 'Lorem Ipsum', // TODO => populate this.
     'Medium': [], // TODO => populate this.
-    'Location': assets.locations, 
-    'Copyright': assets.copyrights,
+    'Location': Object.keys(assets.locations).map(key => ({ key })), 
+    'Copyright': Object.values(assets.copyrights).map(key => ({ key })),
     'Artist': assets.artists,
 };
 
@@ -51,8 +51,10 @@ class DropdownMenus extends Component {
         super(props);
         this.state = {
             activeItem: null,
-            activeTerms: [],
+            activeTerms: this.props.existingSelections || [],
         };
+
+        console.log(this.props.existingSelections);
     };
 
     /**
@@ -76,17 +78,17 @@ class DropdownMenus extends Component {
      */
     setActiveTerm = (term) => {
         const { activeItem, activeTerms } = this.state;
-        const { addFilter, removeFilter } = this.props;
+        const { addAdvancedFilter, removeAdvancedFilter } = this.props;
 
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
-        const filter = { filterType: activeItem, value: `${activeItem}: ${term}` };
+        const filter = { filterType: activeItem, value: `${activeItem}: "${term}"`, term };
 
         // If we are removing an item, filter it out of the array, otherwise append it to the array.
         if (activeTerms.includes(term)) {
-            removeFilter(filter);
+            removeAdvancedFilter(filter);
             this.setState({ activeTerms: activeTerms.filter(activeTerm => activeTerm !== term) });
         } else {
-            addFilter(filter);
+            addAdvancedFilter(filter);
             this.setState({ activeTerms: [...activeTerms, term] });
         }
     };
@@ -180,9 +182,13 @@ class DropdownMenus extends Component {
         )
     }
 };
-  
-const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addFilter, removeFilter }), dispatch);
-const Dropdowns = connect(null, mapDispatchToProps)(DropdownMenus);
+
+const mapStateToProps = state => ({
+    existingSelections: Object.values(state.filters.advancedFilters) // Go over every key in advanced filter.
+        .flatMap((value) => (Object.values(value)).map(({ term }) => term)) // Go through every object value and get the term, flatMap into single array.
+});  
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter }), dispatch);
+const Dropdowns = connect(mapStateToProps, mapDispatchToProps)(DropdownMenus);
 
 /** Component to keep track of clicking outside of menu. */
 class ClickTracker extends Component {

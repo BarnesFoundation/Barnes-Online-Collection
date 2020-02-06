@@ -7,64 +7,89 @@ const initialState = {
   lines_linearity: null,
   light: null,
   space: null,
+  /** 
+   * This is a copy of DROPDOWNS_TERM_MAP.
+   * @see Dropdown.jsx. */
   advancedFilters: {
-    cultures: {
-      
-    },
+    Artist: {},
+    Copyright: {},
+    Location: {},
+    Medium: {},
+    Year: {},
+    Culture: {},
   },
   ordered: [],
 };
 
-const removeFromOrderedSet = (orderedSet, filterType) => {
-  return orderedSet.filter((filterEl) => {
-    return filterEl.filterType !== filterType;
-  });
-}
+const removeFromOrderedSet = (orderedSet, filterType) => (
+  orderedSet.filter(filterEl => filterEl.filterType !== filterType)
+)
 
-const buildFilterStateObject = (orderedSet) => {
-  // Refactored existing code into this function.
-  // It's a little weird to have these initial null values,
-  // but this is the form it wants to be in with the data passed to the 'ordered' property.
-  return Object.assign({}, initialState, {
-    ordered: orderedSet
-  });
-}
+// Refactored existing code into this function.
+// It's a little weird to have these initial null values,
+// but this is the form it wants to be in with the data passed to the 'ordered' property.
+const buildFilterStateObject = ordered => ({ ...initialState, ordered });
 
-const filters = (state = initialState, action) => {
-  const filterType = action.filter ? action.filter.filterType : null;
+const filters = (state = initialState, { type, filter }) => {
+  const filterType = filter ? filter.filterType : null;
 
-  switch(action.type) {
-    case ActionTypes.ADD_FILTER:{
-      const supplementedState = Object.assign({}, state); // Deep copy state.
+  switch (type) {
+    case ActionTypes.ADD_FILTER: {
+      return ({
+        ...state, // Deep copy state.
 
-      // For unique, higher-level filters, remove any existing filter of same type and replace it with the new filter.
-      supplementedState.ordered = [...removeFromOrderedSet(supplementedState.ordered, filterType), action.filter];
+        // For unique, higher-level filters, remove any existing filter of same type and replace it with the new filter.
+        ordered: [...removeFromOrderedSet(state.ordered, filterType), filter],
 
-      // the all types works differently -- it acts as a clear
-      supplementedState[filterType] = !(filterType === 'lines_linearity' && action.filter.name === 'all types')
-        ? action.filter
-        : null;
-      
-      return supplementedState;
+        // The 'all types' works differently -- it acts as a clear
+        [filterType]: !(filterType === 'lines_linearity' && filter.name === 'all types') ? filter : null,
+      });
+    };
+    case ActionTypes.REMOVE_FILTER: {
+      return ({
+        ...state, // Deep copy state.
+        ordered: removeFromOrderedSet(state.ordered, filterType), // Remove designated item.
+        [filterType]: null, // Reset filter types.
+      });
     }
-    case ActionTypes.REMOVE_FILTER:
-      // const reducedState = Object.assign({}, state); // Deep copy state.
-
-      // // and clean up the state
-      // reducedState.ordered = ;
-      // reducedState[filterType] = null;
-
-      return { ...state, ordered: removeFromOrderedSet(state.ordered, filterType), [filterType]: null };
     case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
     case ActionTypes.SHUFFLE_FILTERS: return buildFilterStateObject(selectRandomFilters());
-    case ActionTypes.SET_FILTERS:
-      const selectedFilters = selectChosenFilters(action.filters || {});
+    case ActionTypes.SET_FILTERS: {
+      const selectedFilters = selectChosenFilters(filters || {});
       return buildFilterStateObject(selectedFilters);
+    };
     case ActionTypes.ADD_ADVANCED_FILTER: {
+      const { advancedFilters } = state;
 
+      return {
+        // Take a deep breath.
+        ...state, // Deep copy existing state via spread.
+        advancedFilters: { // Append new advanced filters.
+          ...advancedFilters, // Deep copy existing advanced filter via spread.
+          [filterType]: { // Append attribute of filter type.
+            ...advancedFilters[filterType], // Spread existing advanced filter type.
+            [filter.term]: { filterType, value: filter.value, term: filter.term }, // Add filter into advanced filter type.
+          }
+        }
+      };
+    };
+    case ActionTypes.REMOVE_ADVANCED_FILTER: {
+      const { advancedFilters } = state;
+
+      // For immediate properties of advancedFilters, e.g. artist, culture, etc.
+      const { [filterType]: { 
+        [filter.term]: filterTerm, ...rest // Drop the current term, we will use ...rest to fill in filter type w/o removed key.
+      }} = advancedFilters;
+
+      return {
+        ...state, // Deep copy existing state via spread.
+        advancedFilters: { // Append new advanced filters.
+          ...advancedFilters, // Deep copy existing advanced filter via spread.
+          [filterType]: { ...rest } // Spread subfilter with filter.term removed.
+        }
+      };
     }
-    default:
-      return state;
+    default: return state;
   }
 }
 

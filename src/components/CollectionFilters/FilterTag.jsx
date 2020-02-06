@@ -25,7 +25,7 @@ class FilterTag extends Component {
     if (filterType === 'light' || filterType === 'space') {
       return <span className="filter-tag-text">{value}%</span>;
     } else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
-      return <span className="filter-tag-text">"{value}"</span>;
+      return <span className="filter-tag-text">{value}</span>;
     }
   }
 
