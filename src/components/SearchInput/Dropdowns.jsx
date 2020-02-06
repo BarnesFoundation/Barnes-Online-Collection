@@ -9,9 +9,9 @@ import './dropdowns.css';
 const DROPDOWN_TERMS = ['Culture', 'Year', 'Medium', 'Location', 'Copyright', 'Artist'];
 const DROPDOWN_TERMS_MAP = {
     'Culture': assets.cultures,
-    'Year': [],
+    'Year': 'Lorem Ipsum', // TODO => populate this.
     'Medium': [], // TODO => populate this.
-    'Location': assets.locations, // 
+    'Location': assets.locations, 
     'Copyright': assets.copyrights,
     'Artist': assets.artists,
 };
@@ -37,7 +37,7 @@ const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
                         onClick={() => setActiveTerm(key)}
                     >
                         <span>{key}</span>
-                        {isActiveItem && <Icon svgId='-icon_close' classes='dropdown__icon' />}
+                        {isActiveItem && <Icon svgId='icon-checkmark' classes='dropdown__icon' />}
                     </li>
                 );
             }

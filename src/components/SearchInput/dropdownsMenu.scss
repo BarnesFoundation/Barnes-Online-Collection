@@ -109,10 +109,10 @@
     &__icon {
         // Positioning
         position: absolute;
-        right: -10px;
+        right: -11px;
         top: 3px;
 
-        font-size: 11px;
+        font-size: 12px;
 
         &:hover {
             cursor: pointer;
@@ -120,7 +120,10 @@
 
         // Pad down x mark.
         &--x {
+            right: -10px;
             top: 10px;
+
+            font-size: 11px;
         }
     }
 
