@@ -63,7 +63,7 @@ class DropdownMenus extends Component {
         const { activeItem } = this.state;
 
         // If this is the current active item, reset to null.
-        if (activeItem === term) {
+        if (activeItem === term || term === null) {
             this.setState({ activeItem: null });
         } else {
             this.setState({ activeItem: term });
@@ -120,6 +120,12 @@ class DropdownMenus extends Component {
         }
     };
 
+    // On mount, set up reset function for HOC that keeps track of clicking out of dropdown.
+    componentWillMount() {
+        const { setResetFunction } = this.props;
+        setResetFunction(() => this.setActiveItem(null))
+    }
+
     render() {
         const { activeItem } = this.state;
 
@@ -159,7 +165,7 @@ class DropdownMenus extends Component {
                                         <Icon
                                             svgId='-icon_close'
                                             classes='dropdown__icon dropdown__icon--x'
-                                            onClick={() => this.setActiveItem(activeItem)}
+                                            onClick={() => this.setActiveItem(null)}
                                         />
                                     </div>
                                     <div className='dropdown__content'>
@@ -176,4 +182,43 @@ class DropdownMenus extends Component {
 };
   
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addFilter, removeFilter }), dispatch);
-export const Dropdowns = connect(null, mapDispatchToProps)(DropdownMenus);
+const Dropdowns = connect(null, mapDispatchToProps)(DropdownMenus);
+
+/** Component to keep track of clicking outside of menu. */
+class ClickTracker extends Component {
+    constructor(props) {
+        super(props);
+
+        this.ref = null; // Ref for wrapper div.
+
+        // This will essentially be () => reset() for Dropdowns on cDM.
+        this.state = { resetFunction: null };
+    }
+
+    // Listen to clicks outside of div and cleanup on unmount.
+    componentDidMount() { document.addEventListener('mousedown', this.handleClick) }
+    componentWillUnmount() { document.removeEventListener('mousedown', this.handleClick) }
+
+    // On click outside of dropdown.
+    handleClick = (event) => {
+        const { resetFunction } = this.state;
+
+        // If the ref is set up, the event is outside of the ref, and resetFunction was set in cDM.
+        if (this.ref && !this.ref.contains(event.target) && resetFunction) {
+            resetFunction(); // Reset on click out
+        }
+    };
+
+    // Set reset function.
+    setResetFunction = resetFunction => this.setState({ resetFunction });
+    
+    render() {
+        return (
+            <div ref={ref => this.ref = ref}>
+                <Dropdowns setResetFunction={this.setResetFunction}/>
+            </div>
+        );
+    }
+}
+
+export { ClickTracker as Dropdowns };
