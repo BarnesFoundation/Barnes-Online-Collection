@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Icon from '../Icon';
+import { addFilter, removeFilter } from '../../actions/filters';
 import assets from '../../constants/searchAssets.json';
 import './dropdowns.css';
 
@@ -43,12 +46,11 @@ const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
 );
 
 /** Dropdown menu for filtering artwork. */
-export class Dropdowns extends Component {
+class DropdownMenus extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeItem: null,
-            dropdownContent: null,
             activeTerms: [],
         };
     };
@@ -73,19 +75,25 @@ export class Dropdowns extends Component {
      * @param {string} term - filter search term.
      */
     setActiveTerm = (term) => {
-        const { activeTerms } = this.state;
+        const { activeItem, activeTerms } = this.state;
+        const { addFilter, removeFilter } = this.props;
+
+        // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
+        const filter = { filterType: activeItem, value: `${activeItem}: ${term}` };
 
         // If we are removing an item, filter it out of the array, otherwise append it to the array.
         if (activeTerms.includes(term)) {
+            removeFilter(filter);
             this.setState({ activeTerms: activeTerms.filter(activeTerm => activeTerm !== term) });
         } else {
+            addFilter(filter);
             this.setState({ activeTerms: [...activeTerms, term] });
         }
     };
 
     /**
      * Get inner content for dropdown.
-     * TODO => This generates a new element on every re-render, fix this.
+     * TODO => This generates a new element on every re-render, this should be a separate FC.
      * @param {string} term - name of clicked item.
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */
@@ -141,14 +149,18 @@ export class Dropdowns extends Component {
                                 // Prevent propogation of event to deselecting button with onClick.
                                 <div
                                     className='dropdown'
-                                    onClick={e => {
+                                    onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
                                     }}
                                 >
                                     <div className='dropdown__header'>
                                         <span className='font-delta dropdown__header--text'>{term}</span>
-                                        <Icon svgId='-icon_close' classes='dropdown__icon dropdown__icon--x'/>
+                                        <Icon
+                                            svgId='-icon_close'
+                                            classes='dropdown__icon dropdown__icon--x'
+                                            onClick={() => this.setActiveItem(activeItem)}
+                                        />
                                     </div>
                                     <div className='dropdown__content'>
                                         {this.getDropdownContent()}
@@ -162,3 +174,6 @@ export class Dropdowns extends Component {
         )
     }
 };
+  
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addFilter, removeFilter }), dispatch);
+export const Dropdowns = connect(null, mapDispatchToProps)(DropdownMenus);

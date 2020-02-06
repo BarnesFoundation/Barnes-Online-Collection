@@ -114,6 +114,10 @@
 
         font-size: 11px;
 
+        &:hover {
+            cursor: pointer;
+        }
+
         // Pad down x mark.
         &--x {
             top: 10px;

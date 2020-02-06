@@ -20,10 +20,12 @@ class FilterTag extends Component {
   }
 
   getFilterContent() {
-    if (this.props.filter.filterType === 'light' || this.props.filter.filterType === 'space') {
-      return <span className="filter-tag-text">{this.props.filter.value}%</span>;
-    } else if (this.props.filterType === 'search') {
-      return <span className="filter-tag-text">"{this.props.filter.value}"</span>;
+    const { filter: { filterType, value }} = this.props;
+
+    if (filterType === 'light' || filterType === 'space') {
+      return <span className="filter-tag-text">{value}%</span>;
+    } else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
+      return <span className="filter-tag-text">"{value}"</span>;
     }
   }
 
