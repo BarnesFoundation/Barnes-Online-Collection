@@ -7,6 +7,11 @@ const initialState = {
   lines_linearity: null,
   light: null,
   space: null,
+  advancedFilters: {
+    cultures: {
+      
+    },
+  },
   ordered: [],
 };
 
@@ -29,42 +34,35 @@ const filters = (state = initialState, action) => {
   const filterType = action.filter ? action.filter.filterType : null;
 
   switch(action.type) {
-    case ActionTypes.ADD_FILTER:
-      // Clone it
-      let supplementedState = Object.assign({}, state);
+    case ActionTypes.ADD_FILTER:{
+      const supplementedState = Object.assign({}, state); // Deep copy state.
 
-      // first clean it up since there can be only one filter of each type now
-      supplementedState.ordered = removeFromOrderedSet(state.ordered, filterType);
-      // and add the new one to the ordered set
-      supplementedState.ordered.push(action.filter);
+      // For unique, higher-level filters, remove any existing filter of same type and replace it with the new filter.
+      supplementedState.ordered = [...removeFromOrderedSet(supplementedState.ordered, filterType), action.filter];
 
       // the all types works differently -- it acts as a clear
-      if (filterType === 'lines_linearity' && action.filter.name === 'all types') {
-        supplementedState[filterType] = null;
-      } else {
-        supplementedState[filterType] = action.filter;
-      }
+      supplementedState[filterType] = !(filterType === 'lines_linearity' && action.filter.name === 'all types')
+        ? action.filter
+        : null;
+      
       return supplementedState;
+    }
     case ActionTypes.REMOVE_FILTER:
-      // clone it
-      let reducedState = Object.assign({}, state);
+      // const reducedState = Object.assign({}, state); // Deep copy state.
 
-      // and clean up the state
-      reducedState.ordered = removeFromOrderedSet(state.ordered, filterType);
-      reducedState[filterType] = null;
+      // // and clean up the state
+      // reducedState.ordered = ;
+      // reducedState[filterType] = null;
 
-      return reducedState;
-    case ActionTypes.CLEAR_ALL_FILTERS:
-      return initialState;
-    case ActionTypes.SHUFFLE_FILTERS:
-      const randomFilters = selectRandomFilters();
-
-      return buildFilterStateObject(randomFilters);
+      return { ...state, ordered: removeFromOrderedSet(state.ordered, filterType), [filterType]: null };
+    case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
+    case ActionTypes.SHUFFLE_FILTERS: return buildFilterStateObject(selectRandomFilters());
     case ActionTypes.SET_FILTERS:
-      const filterSelection = action.filters || {};
-      const selectedFilters = selectChosenFilters(filterSelection);
-
+      const selectedFilters = selectChosenFilters(action.filters || {});
       return buildFilterStateObject(selectedFilters);
+    case ActionTypes.ADD_ADVANCED_FILTER: {
+
+    }
     default:
       return state;
   }
