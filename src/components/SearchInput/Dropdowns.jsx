@@ -51,10 +51,7 @@ class DropdownMenus extends Component {
         super(props);
         this.state = {
             activeItem: null,
-            activeTerms: this.props.existingSelections || [],
         };
-
-        console.log(this.props.existingSelections);
     };
 
     /**
@@ -77,8 +74,8 @@ class DropdownMenus extends Component {
      * @param {string} term - filter search term.
      */
     setActiveTerm = (term) => {
-        const { activeItem, activeTerms } = this.state;
-        const { addAdvancedFilter, removeAdvancedFilter } = this.props;
+        const { activeItem } = this.state;
+        const { activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
         const filter = { filterType: activeItem, value: `${activeItem}: "${term}"`, term };
@@ -86,10 +83,8 @@ class DropdownMenus extends Component {
         // If we are removing an item, filter it out of the array, otherwise append it to the array.
         if (activeTerms.includes(term)) {
             removeAdvancedFilter(filter);
-            this.setState({ activeTerms: activeTerms.filter(activeTerm => activeTerm !== term) });
         } else {
             addAdvancedFilter(filter);
-            this.setState({ activeTerms: [...activeTerms, term] });
         }
     };
 
@@ -100,7 +95,8 @@ class DropdownMenus extends Component {
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */
     getDropdownContent = () => {
-        const { activeItem, activeTerms } = this.state;
+        const { activeItem } = this.state;
+        const { activeTerms } = this.props;
         const data = DROPDOWN_TERMS_MAP[activeItem];
 
         switch (activeItem) {
@@ -184,7 +180,7 @@ class DropdownMenus extends Component {
 };
 
 const mapStateToProps = state => ({
-    existingSelections: Object.values(state.filters.advancedFilters) // Go over every key in advanced filter.
+    activeTerms: Object.values(state.filters.advancedFilters) // Go over every key in advanced filter.
         .flatMap((value) => (Object.values(value)).map(({ term }) => term)) // Go through every object value and get the term, flatMap into single array.
 });  
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter }), dispatch);

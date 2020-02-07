@@ -31,7 +31,11 @@ class FilterTag extends Component {
 
   handleClick = (e) => {
     e.preventDefault();
-    this.props.removeFilter(this.props.filter);
+    if (this.props.advancedFilter) {
+      this.props.removeAdvancedFilter(this.props.filter);
+    } else {
+      this.props.removeFilter(this.props.filter);
+    }
   }
 
   render() {

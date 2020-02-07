@@ -334,6 +334,12 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
 
   let body = getObjectsRequestBody(fromIndex);
   body = assembleDisMaxQuery(body, queries);
+
+  // This is where we left off 2/6.
+  if (true) {
+    // body.query('terms', { 'people.text': ['picasso'] });
+  }
+
   body = body.build();
 
 
@@ -381,6 +387,8 @@ const buildQueriesFromFilters = (filters) => {
     }
   });
 
+
+
   return queries;
 }
 
@@ -403,10 +411,11 @@ const buildRangeQuery = (field, query) => {
 }
 
 const assembleDisMaxQuery = (body, queries) => {
-  return body.query('dis_max', {
-    'queries': queries,
-    'tie_breaker': '0.5'
-  });
+  return body
+    .query('dis_max', {
+      'queries': queries,
+      'tie_breaker': '0.5'
+    });
 }
 
 export const searchObjects = (term, fromIndex=0) => {
