@@ -66,8 +66,6 @@ class CollectionFilters extends Component {
     const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
     const mobileSearchWillBeOpen = this.inMobileSearchMode(nextProps);
 
-    console.log('this is triggered');
-
     // this will keep these html class states correct.
     if (mobileFiltersWillBeOpen || mobileSearchWillBeOpen) {
       this.props.htmlClassesAdd(CLASSNAME_MOBILE_PANEL_OPEN);

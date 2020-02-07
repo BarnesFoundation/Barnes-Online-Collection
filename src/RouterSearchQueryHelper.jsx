@@ -41,7 +41,7 @@ class RouterSearchQueryHelper extends Component {
     if (queryType === 'filter') {
       this.setInitialFilterSearch(queryVal);
     } else if (queryType === 'keyword') {
-      this.setInitialKeywordSearch(queryVal);
+      this.props.addSearchTerm(queryVal);
     }
   }
 
@@ -57,33 +57,7 @@ class RouterSearchQueryHelper extends Component {
     this.props.setFilters(filterSelection);
   }
 
-  setInitialKeywordSearch(queryVal) {
-    this.props.addSearchTerm(queryVal);
-  }
-
-  parseFilters(filters) {
-    const filterSelection = {};
-
-    // build up filterSelection with the parsed data.
-    filters.forEach((filter) => {
-      const hasValue = typeof filter.value !== 'undefined';
-
-      
-      const value = hasValue ? filter.value : filter.name
-      console.log(value);
-      filterSelection[filter.filterType] = value;
-    });
-
-    const x = filters.reduce((acc, filter) => ({
-      // For lines and colors we just use the name and for space and light we use the value.
-      ...acc, [filter.filterType]: filter.value || filter.name,
-    }), {});
-
-    // return the stringify version of the filterSelection object
-    return JSON.stringify(filterSelection);
-  }
-
-  componentDidUpdate(nextProps) {
+  componentDidUpdate() {
     const {
       search,
       filters,
@@ -101,7 +75,11 @@ class RouterSearchQueryHelper extends Component {
       }
     } else if (Boolean(filters.ordered && filters.ordered.length)) {
 
-      const filtersVal = this.parseFilters(filters.ordered);
+      // Reduce and stringify filter state to compare with queryVal.
+      const filtersVal = JSON.stringify(filters.ordered.reduce((acc, filter) => ({
+        // For lines and colors we just use the name and for space and light we use the value.
+        ...acc, [filter.filterType]: filter.value || filter.name,
+      }), {}));
 
       if (filtersVal !== queryVal) this.props.history.push(getQueryFilterUrl(filtersVal));
 
