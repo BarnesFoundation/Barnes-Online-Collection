@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ClearAllButton from '../SearchInput/ClearAllButton'
-import MobilePanelShuffleButton from './MobilePanelShuffleButton'
+import ClearAllButton from '../SearchInput/ClearAllButton';
+import MobilePanelShuffleButton from './MobilePanelShuffleButton';
 import FilterTag from './FilterTag';
 
 const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => (

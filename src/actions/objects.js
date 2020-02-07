@@ -337,7 +337,7 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
 
   // This is where we left off 2/6.
   if (true) {
-    // body.query('terms', { 'people.text': ['picasso'] });
+    body.query('terms', { 'people.text': ['Pablo Picasso'] });
   }
 
   body = body.build();

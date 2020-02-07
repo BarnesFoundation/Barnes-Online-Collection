@@ -157,7 +157,6 @@ class CollectionFilters extends Component {
 
     // otherwise, we're not in mobile search land, handle the new filter
     if (this.hasNewFilters(nextProps)) {
-      console.log('nice');
       this.props.findFilteredObjects(nextProps.filters);
       this.props.clearSearchTerm();
 

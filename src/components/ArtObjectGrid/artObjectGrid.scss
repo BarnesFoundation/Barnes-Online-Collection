@@ -143,7 +143,7 @@
   .view-more-button {
     width: 100%;
     text-align: center;
-    z-index: $z-index-art-object-grid-view-more;
+    z-index: 1;
     margin-top: 80px;
     
     @include breakpoint('medium+') {
