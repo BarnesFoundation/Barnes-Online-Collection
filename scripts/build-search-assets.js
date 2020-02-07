@@ -9,15 +9,9 @@ const constantsDirectory = path.resolve(__dirname, '../src/');
 
 // Static copyrights list
 const copyrights = {
-	0: 'N/A',
-	1: 'Copyright',
-	2: 'World Rights - Copyright Undetermined',
-	3: 'ARS',
-	4: 'Public Domain - Public Domain',
-	5: 'VAGA',
-	6: 'No known claimant',
-	8: 'No known rights - Public Domain',
-	10: 'World Rights - Public Domain'
+	'In Copyright': [1, 3],
+	'Copyright Undetermined': [2, 6],
+	'Public Domain': [4, 7, 8, 10],
 }
 
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
@@ -72,7 +66,7 @@ const writeAssetsFile = async (fileName, fileContents) => {
 const generateLocations = () => {
 	return Object.entries(ensemblesList).reduce((acc, pair) => {
 
-		const [roomNumber, ensemble] = pair;
+		const [ensembleIndex, ensemble] = pair;
 		let { roomTitle } = ensemble;
 
 		// Consolidate Second Floor Balcony virtual rooms to single room
@@ -86,7 +80,7 @@ const generateLocations = () => {
 		}
 
 		// Push the room number
-		acc[roomTitle].push(roomNumber);
+		acc[roomTitle].push(parseInt(ensembleIndex));
 
 		return acc;
 	}, {});
