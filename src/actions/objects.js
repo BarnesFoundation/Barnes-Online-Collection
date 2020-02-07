@@ -3,6 +3,8 @@ import { getObjectsRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
+import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns';
+import searchAssets from '../searchAssets.json';
 
 const uniqBy = require('lodash/uniqBy');
 
@@ -57,7 +59,7 @@ const mapObjects = (objects) => {
   return mappedObjects.map(object => Object.assign({}, object._source, { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, options={}) => {
+const fetchResults = (body, dispatch, options = {}) => {
   DEV_LOG('Fetching results...');
 
   dispatch(setIsPending(true));
@@ -315,11 +317,14 @@ export const getAllObjects = (fromIndex=0) => {
   }
 };
 
-export const findFilteredObjects = (filters, fromIndex=0) => {
+export const findFilteredObjects = (filters, fromIndex = 0) => {
   if (
-    !filters.ordered ||
-    filters.ordered.length === 0 ||
-    (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
+      (
+        !filters.ordered ||
+        filters.ordered.length === 0 || // Higher-level filters
+        (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
+      ) && 
+      !Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // If there is any advanced filter
     ) {
     return (dispatch) => { getAllObjects()(dispatch); }
   }
@@ -333,15 +338,63 @@ export const findFilteredObjects = (filters, fromIndex=0) => {
   };
 
   let body = getObjectsRequestBody(fromIndex);
-  body = assembleDisMaxQuery(body, queries);
 
-  // This is where we left off 2/6.
-  if (true) {
-    body.query('terms', { 'people.text': ['Pablo Picasso'] });
+  if (filters.ordered.length) {
+    body = assembleDisMaxQuery(body, queries);
   }
 
-  body = body.build();
+  /**
+   * Map over all advanced filters and mutate body.
+   * TODO => See if we will use a param other than 'terms', otherwise add to body past the switch to keep it DRY.
+   * @see Dropdowns.jsx for DROPDOWN_TERMS.
+   */
+  Object.entries(filters.advancedFilters)
+    .filter(([, appliedFilters]) => appliedFilters && Object.keys(appliedFilters).length) // Filter out {}.
+    .forEach(([filterType, appliedFilters]) => {
+      switch(filterType) {
+        case DROPDOWN_TERMS.CULTURE: {
+          // Map over terms, place into single array like ["American", "French"].
+          console.error(`${filterType} not set up.`);
+          body.query('terms', { 'culture': Object.values(appliedFilters).map(({ term }) => term) });
+          break;
+        }
+        case DROPDOWN_TERMS.YEAR: {
+          console.error(`${filterType} not set up.`);
+        }
+        case DROPDOWN_TERMS.MEDIUM: {
+          // Map over terms, place into single array like ["Charcoal on brown wove paper", "Pen and brown ink on brown wove paper"].
+          body.query('terms', { 'medium.keyword': Object.values(appliedFilters).map(({ term }) => term) });
+          break;
+        }
+        case DROPDOWN_TERMS.LOCATION: {
+          // Flatmap over all locations then parseInt flattened Array, placing all ensembleIndexes into single array like [77, 78, 79, 80, 81...].
+          body.query(
+            'terms',
+            { ensembleIndex : Object.values(appliedFilters)
+                .flatMap(({ term }) => searchAssets.locations[term])
+                .map(number => parseInt(number))
+            }
+          );
+          break;
+        }
+        case DROPDOWN_TERMS.COPYRIGHT: {
+          // Map over terms, place into single array like ["copyrightA", "copyRightB"].
+          console.error(`${filterType} not set up.`);
+          body.query('terms', { 'culture': Object.values(appliedFilters).map(({ term }) => term) });
+          break;
+        }
+        case DROPDOWN_TERMS.ARTIST: {
+          // Map over terms, place into single array like ["Pablo Picasso", "Amedeo Modigliani"].
+          body.query('terms', { 'people.text': Object.values(appliedFilters).map(({ term }) => term) });
+          break;
+        }
+        default: {
+          console.error(`Missing filter type: ${filterType}.`);
+        }
+      }
+  })
 
+  body = body.build();
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);

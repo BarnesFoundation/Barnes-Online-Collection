@@ -28,28 +28,15 @@ import './collectionFilters.css';
 
 class CollectionFilters extends Component {
   getFilterSet() {
-    const slug = this.props.filterSets.visibleFilterSet;
-    if (slug === 'search') {
+    const { visibleFilterSet } = this.props.filterSets;
+
+    if (visibleFilterSet === 'search') {
       return <SearchInput />;
-    } else if (slug === 'shuffle' || slug === null) {
+    } else if (visibleFilterSet === 'shuffle' || visibleFilterSet === null) {
       return null;
     } else {
       return <CollectionFiltersSet />
     }
-  }
-
-  hasNewSearch(props) {
-    const hasSearch = props.search.length > 0;
-    const searchIsNew = props.search !== this.props.search;
-
-    return hasSearch && searchIsNew;
-  }
-
-  hasNewFilters(props) {
-    const hasFilters = props.filters.ordered.length > 0;
-    const filtersAreNew = props.filters.ordered !== this.props.filters.ordered;
-
-    return hasFilters && filtersAreNew;
   }
 
   hasBeenReset(props) {
@@ -79,6 +66,8 @@ class CollectionFilters extends Component {
     const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
     const mobileSearchWillBeOpen = this.inMobileSearchMode(nextProps);
 
+    console.log('this is triggered');
+
     // this will keep these html class states correct.
     if (mobileFiltersWillBeOpen || mobileSearchWillBeOpen) {
       this.props.htmlClassesAdd(CLASSNAME_MOBILE_PANEL_OPEN);
@@ -87,7 +76,7 @@ class CollectionFilters extends Component {
     }
 
     // if a search was just submitted
-    if (this.hasNewSearch(nextProps)) {
+    if (nextProps.search.length && nextProps.search !== this.props.search) {
       this.props.searchObjects(nextProps.search);
       this.props.clearAllFilters();
       this.props.closeFilterSet();
@@ -155,9 +144,13 @@ class CollectionFilters extends Component {
       return;
     }
 
+    
     // otherwise, we're not in mobile search land, handle the new filter
-    if (this.hasNewFilters(nextProps)) {
-      this.props.findFilteredObjects(nextProps.filters);
+    if (
+      (nextProps.filters.ordered.length && nextProps.filters.ordered !== this.props.filters.ordered) || // High-level filters
+      (JSON.stringify(nextProps.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)) // Advanced Filters
+    ) {
+      this.props.findFilteredObjects(nextProps.filters, 0);
       this.props.clearSearchTerm();
 
       return;
@@ -170,7 +163,7 @@ class CollectionFilters extends Component {
     if (this.props.search.length > 0) {
       filtersApplied = <SearchApplied />;
     } else {
-      filtersApplied = <CollectionFiltersApplied visible={!!this.props.filterSets.visibleFilterSet} />;
+      filtersApplied = <CollectionFiltersApplied visible={Boolean(this.props.filterSets.visibleFilterSet)} />;
     }
 
     const mobileFiltersVisible = this.props.mobileFilters.visible;

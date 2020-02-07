@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import queryString from 'query-string';
 import * as ObjectsActions from './actions/objects';
 import * as FilterSetsActions from './actions/filterSets';
 import * as FiltersActions from './actions/filters';
@@ -10,7 +10,7 @@ import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
 import { DEV_WARN } from './devLogging';
 
-const queryString = require('query-string');
+// const queryString = require('query-string');
 
 class RouterSearchQueryHelper extends Component {
   componentWillMount() {
@@ -68,53 +68,52 @@ class RouterSearchQueryHelper extends Component {
     filters.forEach((filter) => {
       const hasValue = typeof filter.value !== 'undefined';
 
-      // for lines and colors we just use the name
-      // for space and light we use the value
+      
       const value = hasValue ? filter.value : filter.name
-
+      console.log(value);
       filterSelection[filter.filterType] = value;
     });
+
+    const x = filters.reduce((acc, filter) => ({
+      // For lines and colors we just use the name and for space and light we use the value.
+      ...acc, [filter.filterType]: filter.value || filter.name,
+    }), {});
 
     // return the stringify version of the filterSelection object
     return JSON.stringify(filterSelection);
   }
 
   componentDidUpdate(nextProps) {
-    // detect if we just opened a modal. If so, just return;
-    const newState = this.props.history.location.state;
-    const modalIsOpen = newState && newState.isModal;
+    const {
+      search,
+      filters,
+      location: { state: newState } // For detecting if a modal is open.
+    } = this.props;
 
-    if (modalIsOpen) {
-      return;
-    }
+    // If a modal is open, just return;
+    if (newState && newState.isModal) return;
 
-    const parsedQuery = queryString.parse(this.props.location.search);
-    const queryType = parsedQuery.qtype;
-    const queryVal = parsedQuery.qval;
-    const searchTerm = this.props.search;
-    const filters = this.props.filters;
+    const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
 
-    const hasSearch = searchTerm.length > 0;
-    const hasFilters = filters.ordered && filters.ordered.length > 0;
-
-    if (hasSearch) {
-      if (searchTerm !== queryVal) {
-        this.props.history.push(getQueryKeywordUrl(searchTerm));
+    if (Boolean(search.length)) {
+      if (search !== queryVal) {
+        this.props.history.push(getQueryKeywordUrl(search));
       }
-    } else if (hasFilters) {
-      let filtersVal = this.parseFilters(filters.ordered);
+    } else if (Boolean(filters.ordered && filters.ordered.length)) {
 
-      if (filtersVal !== queryVal) {
-        this.props.history.push(getQueryFilterUrl(filtersVal));
-      }
+      const filtersVal = this.parseFilters(filters.ordered);
+
+      if (filtersVal !== queryVal) this.props.history.push(getQueryFilterUrl(filtersVal));
+
     } else if (queryType) {
-      // there's no searchTerm or Filters, so the query url needs to be cleared.
+      // there's no search or Filters, so the query url needs to be cleared.
       this.props.history.push(``);
     }
   }
 
   runSearchQueryOrDeferredFetch(deferredFetch) {
     const initialQuery = this.getInitialQuery();
+    
     if (initialQuery) {
       this.setInitialQueryOnLoad(initialQuery);
     } else if (deferredFetch) {

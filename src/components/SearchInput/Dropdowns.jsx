@@ -3,17 +3,33 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
 import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
-import assets from '../../searchAssets.json';
+import searchAssets from '../../searchAssets.json';
 import './dropdowns.css';
 
-const DROPDOWN_TERMS = ['Culture', 'Year', 'Medium', 'Location', 'Copyright', 'Artist'];
+// Setting up advanced filter names and dropdown menu items.
+export const DROPDOWN_TERMS = {
+    CULTURE: 'Culture',
+    YEAR: 'Year',
+    MEDIUM: 'Medium',
+    LOCATION: 'Location',
+    COPYRIGHT: 'Copyright',
+    ARTIST: 'Artist',
+};
+const DROPDOWN_TERMS_ARRAY = [
+    DROPDOWN_TERMS.CULTURE,
+    DROPDOWN_TERMS.YEAR,
+    DROPDOWN_TERMS.MEDIUM,
+    DROPDOWN_TERMS.LOCATION,
+    DROPDOWN_TERMS.COPYRIGHT,
+    DROPDOWN_TERMS.ARTIST,
+];
 const DROPDOWN_TERMS_MAP = {
-    'Culture': assets.cultures,
-    'Year': 'Lorem Ipsum', // TODO => populate this.
-    'Medium': [], // TODO => populate this.
-    'Location': Object.keys(assets.locations).map(key => ({ key })), 
-    'Copyright': Object.values(assets.copyrights).map(key => ({ key })),
-    'Artist': assets.artists,
+    [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
+    [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
+    [DROPDOWN_TERMS.MEDIUM]: [], // TODO => populate this.
+    [DROPDOWN_TERMS.LOCATION]: Object.keys(searchAssets.locations).map(key => ({ key })), 
+    [DROPDOWN_TERMS.COPYRIGHT]: Object.values(searchAssets.copyrights).map(key => ({ key })),
+    [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
 };
 
 /**
@@ -100,10 +116,7 @@ class DropdownMenus extends Component {
         const data = DROPDOWN_TERMS_MAP[activeItem];
 
         switch (activeItem) {
-            case('Year'): {
-                return <span>Lorem Ipsum</span>;
-            };
-            case('Colors'): {
+            case(DROPDOWN_TERMS.YEAR): {
                 return <span>Lorem Ipsum</span>;
             };
             default: {
@@ -129,8 +142,8 @@ class DropdownMenus extends Component {
 
         return (
             <div className='dropdowns-menu'>
-                {DROPDOWN_TERMS.map((term, i) => {
-                    const isLastDropdown = i === DROPDOWN_TERMS.length - 1;
+                {DROPDOWN_TERMS_ARRAY.map((term, i) => {
+                    const isLastDropdown = i === DROPDOWN_TERMS_ARRAY.length - 1;
                     const isActiveItem = activeItem === term;
 
                     // If this is the last item, we want to remove the chevron and add a | before the item.
