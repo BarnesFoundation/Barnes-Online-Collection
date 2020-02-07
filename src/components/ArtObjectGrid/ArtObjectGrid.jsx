@@ -12,6 +12,7 @@ import MasonryGrid from '../MasonryGrid';
 
 import './artObjectGrid.css';
 
+/** View more button component. */
 const ViewMoreButton = ({ onClick }) => (
   <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
     <button
@@ -21,6 +22,39 @@ const ViewMoreButton = ({ onClick }) => (
       View More
     </button>
   </div>
+);
+
+/** Masonry grid element. */
+const GridListElement = ({
+  object,
+  shouldLinksUseModal,
+  modalPreviousLocation,
+  clearObject
+}) => (
+  <li className="masonry-grid-element">
+    <Link
+      to={{
+        pathname: getArtObjectUrlFromId(object.id, object.title),
+        state: {
+          isModal: shouldLinksUseModal || Boolean(modalPreviousLocation),
+          modalPreviousLocation: modalPreviousLocation
+        },
+      }}
+      onClick={() => {
+        // Clear the object right away to avoid a FOUC while the new object loads.
+        if (shouldLinksUseModal) clearObject();
+      }}
+      className="grid-list-el"
+    >
+      <ArtObject
+        key={object.id}
+        title={object.title}
+        people={object.people}
+        medium={object.medium}
+        imageUrlSmall={object.imageUrlSmall}
+      />
+    </Link>
+  </li>
 );
 
 /**
@@ -41,58 +75,36 @@ class ArtObjectGrid extends Component {
     this.setState({ ...this.state, truncateThreshold: truncateThreshold + 20 });
   };
 
-  /**
-   * Utility method to get single item for masonry grid.
-   * @param {object} - raw object to be converted to JSX.
-   * @returns {JSX.Element} - Single ArtObject link to be placed into masonry grid.
-   */
-  getGridListElement = (object) => (
-    <Link
-      to={{
-        pathname: getArtObjectUrlFromId(object.id, object.title),
-        state: {
-          isModal: this.props.shouldLinksUseModal || !!this.props.modalPreviousLocation,
-          modalPreviousLocation: this.props.modalPreviousLocation
-        },
-      }}
-      onClick={() => {
-        // Clear the object right away to avoid a FOUC while the new object loads.
-        if (this.props.shouldLinksUseModal) this.props.clearObject();
-      }}
-      className="grid-list-el"
-    >
-      <ArtObject
-        key={object.id}
-        title={object.title}
-        people={object.people}
-        medium={object.medium}
-        imageUrlSmall={object.imageUrlSmall}
-      />
-    </Link>
-  );
-
-  /**
-   * Convert object[] to an array of ArtObjects wrapped in Links.
-   * @param {object[]} objects - raw objects data from redux store.
-   * @returns {JSX.Element[]} - Array of react elements to put inside of Masonry component.
-   */
-  getMasonryElements(objects) {
-    return objects.map((object) => (
-      (<li key={object.id} className="masonry-grid-element">
-          {this.getGridListElement(object)}
-      </li>)
-    ));
-  };
-
   render() {
     // Destructure props.
-    const { isSearchPending, hasMoreResults, gridStyle, isFilterActive } = this.props;
+    const {
+      // For masonry grid display.
+      isSearchPending,
+      hasMoreResults,
+      gridStyle,
+
+      // Props for GridListElement.
+      liveObjects,
+      shouldLinksUseModal,
+      modalPreviousLocation,
+      clearObject
+    } = this.props;
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
 
+    // Convert object[] to an array of ArtObjects wrapped in Links.
+    const uncutMasonryElements = liveObjects.map((object) => (
+      <GridListElement
+        key={object.id}
+        object={object}
+        shouldLinksUseModal={shouldLinksUseModal}
+        modalPreviousLocation={modalPreviousLocation}
+        clearObject={clearObject}
+      />
+    ));
+
     // If this is a "View More" Grid, truncate results.
-    const uncutMasonryElements = this.getMasonryElements(this.props.liveObjects);
     const masonryElements = hasMoreResults ? uncutMasonryElements.slice(0, this.state.truncateThreshold) : uncutMasonryElements;
     
     // Body is only rendered if searching is falsy.
@@ -129,18 +141,14 @@ class ArtObjectGrid extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    object: state.object,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},
-    ObjectActions,
-    ModalActions,
-    FilterSetsActions
-  ), dispatch);
-}
+const mapStateToProps = state => ({ object: state.object });
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(
+    Object.assign({},
+      ObjectActions,
+      ModalActions,
+      FilterSetsActions
+    ), dispatch)
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);
