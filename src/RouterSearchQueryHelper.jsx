@@ -10,8 +10,6 @@ import { getQueryKeywordUrl, getQueryFilterUrl } from './helpers';
 import { withRouter } from 'react-router'
 import { DEV_WARN } from './devLogging';
 
-// const queryString = require('query-string');
-
 class RouterSearchQueryHelper extends Component {
   componentWillMount() {
     this.props.onRef(this);
@@ -21,40 +19,21 @@ class RouterSearchQueryHelper extends Component {
     this.props.onRef(null);
   }
 
-  getInitialQuery() {
-    const parsedQuery = queryString.parse(this.props.location.search);
-    const queryType = parsedQuery.qtype || '';
-    const queryVal = parsedQuery.qval || '';
-    const querySearchIsValid = (queryType === 'filter' || queryType === 'keyword') &&
-      queryVal.length > 0;
-
-    return querySearchIsValid ? {
-      queryType: queryType,
-      queryVal: queryVal,
-    } : null;
-  }
-
-  setInitialQueryOnLoad(initialQuery) {
-    const queryType = initialQuery.queryType;
-    const queryVal = initialQuery.queryVal;
-
+  setInitialQueryOnLoad({ queryType, queryVal }) {
     if (queryType === 'filter') {
-      this.setInitialFilterSearch(queryVal);
+      let filterSelection = {};
+
+      try {
+        filterSelection = JSON.parse(queryVal);
+      } catch (e) {
+        DEV_WARN('invalid search syntax in the url');
+      }
+
+      this.props.setFilters(filterSelection);
+
     } else if (queryType === 'keyword') {
       this.props.addSearchTerm(queryVal);
     }
-  }
-
-  setInitialFilterSearch(queryVal) {
-    let filterSelection = {};
-
-    try {
-      filterSelection = JSON.parse(queryVal);
-    } catch (e) {
-      DEV_WARN('invalid search syntax in the url');
-    }
-
-    this.props.setFilters(filterSelection);
   }
 
   componentDidUpdate() {
@@ -69,29 +48,33 @@ class RouterSearchQueryHelper extends Component {
 
     const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
 
-    if (Boolean(search.length)) {
+    if (search.length) {
       if (search !== queryVal) {
         this.props.history.push(getQueryKeywordUrl(search));
       }
-    } else if (Boolean(filters.ordered && filters.ordered.length)) {
+    } else if (filters.ordered && filters.ordered.length) {
 
       // Reduce and stringify filter state to compare with queryVal.
       const filtersVal = JSON.stringify(filters.ordered.reduce((acc, filter) => ({
-        // For lines and colors we just use the name and for space and light we use the value.
-        ...acc, [filter.filterType]: filter.value || filter.name,
+        ...acc, [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
       }), {}));
 
       if (filtersVal !== queryVal) this.props.history.push(getQueryFilterUrl(filtersVal));
-
     } else if (queryType) {
       // there's no search or Filters, so the query url needs to be cleared.
+      // TODO => This is firing and causing us trouble on hitting landing page.
       this.props.history.push(``);
     }
   }
 
   runSearchQueryOrDeferredFetch(deferredFetch) {
-    const initialQuery = this.getInitialQuery();
-    
+    const { qtype = '', qval = '' } = queryString.parse(this.props.location.search); // Destructure querystring.
+    const initialQuery = ((qtype === 'filter' || qtype === 'keyword') && qval.length)
+      ? {
+        queryType: qtype,
+        queryVal: qval,
+      } : null;
+
     if (initialQuery) {
       this.setInitialQueryOnLoad(initialQuery);
     } else if (deferredFetch) {

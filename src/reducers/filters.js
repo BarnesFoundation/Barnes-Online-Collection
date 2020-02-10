@@ -126,7 +126,7 @@ const selectChosenFilters = (filterSelection) => {
   });
 };
 
-const filters = (state = initialState, { type, filter }) => {
+const filtersReducer = (state = initialState, { type, filter, filters = {} }) => {
   const filterType = filter ? filter.filterType : null;
 
   switch (type) {
@@ -151,7 +151,7 @@ const filters = (state = initialState, { type, filter }) => {
     case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
     case ActionTypes.SHUFFLE_FILTERS: return buildFilterStateObject(selectRandomFilters());
     case ActionTypes.SET_FILTERS: {
-      const selectedFilters = selectChosenFilters(filters || {});
+      const selectedFilters = selectChosenFilters(filters);
       return buildFilterStateObject(selectedFilters);
     };
     case ActionTypes.ADD_ADVANCED_FILTER: {
@@ -189,4 +189,4 @@ const filters = (state = initialState, { type, filter }) => {
   }
 }
 
-export default filters;
+export default filtersReducer;

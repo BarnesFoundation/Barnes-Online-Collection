@@ -49,22 +49,14 @@ class CollectionFilters extends Component {
     );
   }
 
-  inMobileFilterMode(props) {
-    return props.mobileFilters.visible;
-  }
-
-  inMobileSearchMode(props) {
-    return props.mobileSearch.visible;
-  }
-
   mobileFiltersApplied(props) {
     return props.mobileFilters.filtersApplied;
   }
 
   componentWillReceiveProps(nextProps) {
-    const mobileFiltersWasOpen = this.inMobileFilterMode(this.props);
-    const mobileFiltersWillBeOpen = this.inMobileFilterMode(nextProps);
-    const mobileSearchWillBeOpen = this.inMobileSearchMode(nextProps);
+    const mobileFiltersWasOpen = this.props.mobileFilters.visible;
+    const mobileFiltersWillBeOpen = nextProps.mobileFilters.visible;
+    const mobileSearchWillBeOpen = nextProps.mobileSearch.visible;
 
     // this will keep these html class states correct.
     if (mobileFiltersWillBeOpen || mobileSearchWillBeOpen) {
