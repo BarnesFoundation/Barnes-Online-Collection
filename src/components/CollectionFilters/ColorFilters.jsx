@@ -9,16 +9,13 @@ import Filter from './Filter';
 
 class ColorFilters extends Component {
   buildFilters() {
-    const colorFilters = this.props.filterSets.sets.colors.options;
-    return colorFilters.map((option, index) => {
-      return (
-        <Filter
-          key={index}
-          index={index}
-          filter={option}
-        />
-      );
-    });
+    return this.props.filterSets.sets.colors.options.map((option, index) => (
+      <Filter
+        key={index}
+        index={index}
+        filter={option}
+      />
+    ));
   }
 
   render() {

@@ -76,12 +76,12 @@ class CollectionFilters extends Component {
     }
 
     // if it's been reset
-    if (this.hasBeenReset(nextProps)) {
-      this.props.getAllObjects();
-      this.props.closeMobileFilters();
-      this.props.closeMobileSearch();
-      return;
-    }
+    // if (this.hasBeenReset(nextProps)) {
+    //   this.props.getAllObjects();
+    //   this.props.closeMobileFilters();
+    //   this.props.closeMobileSearch();
+    //   return;
+    // }
 
     if (mobileFiltersWasOpen) {
       // if we're editing mobile filters

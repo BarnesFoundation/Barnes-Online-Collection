@@ -289,6 +289,7 @@ export const getNextObjects = (fromIndex, query=null) => {
 }
 
 export const getAllObjects = (fromIndex=0) => {
+  console.log('f');
   let body = getObjectsRequestBody(fromIndex);
   let options = {};
 
