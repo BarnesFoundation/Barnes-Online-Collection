@@ -49,9 +49,7 @@ class CollectionFilters extends Component {
       props.filters.ordered !== this.props.filters.ordered ||
       JSON.stringify(props.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)
     );
-
-    console.log(filtersHaveChanged);
-
+    
     return hasNothingSet && (
       searchHasChanged || filtersHaveChanged
     );
