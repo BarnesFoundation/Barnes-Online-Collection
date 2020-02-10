@@ -22,7 +22,7 @@ class CommonWrap extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.scrollToTopOnRouteChange(prevProps);
+    // this.scrollToTopOnRouteChange(prevProps);
   }
 
   handleKeyDown(event) {
