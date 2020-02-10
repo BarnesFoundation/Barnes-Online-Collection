@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as ObjectsActions from '../../actions/objects';
+import { withRouter } from 'react-router'
+
+import queryString from 'query-string';
+
+import { getAllObjects } from '../../actions/objects';
+import { addSearchTerm } from '../../actions/search';
+import { setFilters } from '../../actions/filters';
 import { closeFilterSet } from '../../actions/filterSets';
-import {getMetaTagsFromObject} from '../../helpers';
+import { getMetaTagsFromObject, getQueryKeywordUrl, getQueryFilterUrl} from '../../helpers';
+
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
 import HtmlClassManager from '../../components/HtmlClassManager';
-import RouterSearchQueryHelper from '../../RouterSearchQueryHelper';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../../components/Footer/Footer';
@@ -18,6 +24,80 @@ import './landingPage.css';
 class LandingPage extends Component {
   constructor(props) {
     super(props);
+  }
+
+  /**
+   * Parse JSON from querystring and set up search, filters, and advanced filters.
+   */
+  componentDidMount() {
+    const { qtype, qval, } = queryString.parse(this.props.location.search); // Destructure querystring.
+
+    // If there is a querystring, run filtered search.
+    if (qval.length) {
+      // For filters
+      if (qtype === 'filter') {
+        let filterSelection = {};
+  
+        try {
+          filterSelection = JSON.parse(qval);
+        } catch (e) {
+          console.error('Invalid JSON in filter.');
+        }
+  
+        this.props.setFilters(filterSelection);
+
+      // For search
+      } else if (qtype === 'keyword') {
+        this.props.addSearchTerm(qval);
+      }
+    } else {
+      // Otherwise, get all objects.
+      this.props.getAllObjects();
+    }
+  }
+
+  /**
+   * On props update.
+   * TODO => This is convoluted and fires on either search, filters, or history changing.  Rewrite this in a more declarative way.
+   */
+  componentDidUpdate() {
+    const {
+      search,
+      filters,
+      history: { location: { state: newState }} // For detecting if a modal is open.
+    } = this.props;
+
+    // Detect if we just opened a modal. If so, just return.
+    if (newState && newState.isModal) return;
+
+    const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
+
+    if (search.length) {
+      if (search !== queryVal) this.props.history.push(getQueryKeywordUrl(search));
+    } else if (
+      (filters.ordered && filters.ordered.length) // If there are ordered filters
+      || Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // Or advanced filters.
+      ) {
+
+      // Reduce and stringify filter state to compare with queryVal.
+      const filtersVal = JSON.stringify({
+        // Convert ordered array into object for higher ordered filters.
+        ...filters.ordered.reduce((acc, filter) => ({
+          ...acc, [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
+        }), {}),
+
+        // Stringify advanced filters
+        advancedFilters: filters.advancedFilters,
+      });
+
+      if (filtersVal !== queryVal) {
+        this.props.history.push(getQueryFilterUrl(filtersVal));
+      }
+    } else if (queryType) {
+      // there's no search or Filters, so the query url needs to be cleared.
+      // TODO => This is firing and causing us trouble on hitting landing page.
+      this.props.history.push(``);
+    }
   }
 
   render() {
@@ -34,7 +114,6 @@ class LandingPage extends Component {
       <div className="app app-landing-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
-        <RouterSearchQueryHelper />
         <SiteHeader />
 
         <div className="landing-page">
@@ -76,6 +155,11 @@ class LandingPage extends Component {
 
 function mapStateToProps(state) {
   return {
+    modalIsOpen: state.modal.modalIsOpen,
+    modal: state.modal,
+    filters: state.filters,
+    search: state.search,
+
     object: state.object,
     objects: state.objects,
     objectsQuery: state.objectsQuery,
@@ -86,9 +170,17 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign(
     {},
-    ObjectsActions,
-    { closeFilterSet },
+    {
+      //Objects
+      getAllObjects, 
+      // Search
+      addSearchTerm,
+      // Filters
+      setFilters,
+      // FilterSet
+      closeFilterSet
+    },
   ), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LandingPage));
