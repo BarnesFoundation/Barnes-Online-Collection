@@ -55,9 +55,15 @@ class RouterSearchQueryHelper extends Component {
     } else if (filters.ordered && filters.ordered.length) {
 
       // Reduce and stringify filter state to compare with queryVal.
-      const filtersVal = JSON.stringify(filters.ordered.reduce((acc, filter) => ({
-        ...acc, [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
-      }), {}));
+      const filtersVal = JSON.stringify({
+        // Convert ordered array into object for higher ordered filters.
+        ...filters.ordered.reduce((acc, filter) => ({
+          ...acc, [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
+        }), {}),
+
+        // Stringify advanced filters
+        advancedFilters: filters.advancedFilters,
+      });
 
       if (filtersVal !== queryVal) this.props.history.push(getQueryFilterUrl(filtersVal));
     } else if (queryType) {

@@ -15,7 +15,8 @@ class MobilePanelCloser extends Component {
   }
 
   handleClick(e) {
-    this.props.shuffleFilters();
+    // We have removed the shuffle option from the collections site.
+    // this.props.shuffleFilters();
   }
 
   render() {

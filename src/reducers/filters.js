@@ -1,6 +1,5 @@
 import * as ActionTypes from '../constants';
 import { filterSetsInitialState } from './filterSets';
-import { DEV_WARN } from '../devLogging';
 
 const initialState = {
   colors: null,
@@ -44,87 +43,33 @@ const getFilterSetData = (setType) => {
   }
 }
 
-const getRandomFilterFromSet = (setType) => {
-  let set = getFilterSetData(setType);
+const selectChosenFilters = ({ advancedFilters, ...rest }) => ({
+  // Operate according to previous higher order filter logic.
+  filters: Object.entries(rest)
+    .map(([filterType, filterVal]) => {
+      console.log(filterType);
+      // Assign filter to correct filterType.
+      switch(filterType) {
+        // For colors, line compposition, and line linearity, getFilterSetData and find matching filter.
+        case 'colors':
+        case 'lines_composition':
+        case 'lines_linearity': return getFilterSetData(filterType).find(filter => filter.name === filterVal);
+    
+        // For light and space, get slider information.
+        case 'light':
+        case 'space':
+          const slider = getSliderData(filterType);
+          slider.value = filterVal;
+          return slider;
+        // Default return null, filtered out in later .filter method.
+        default: return null;
+      }
+    })
+    .filter(Boolean),
 
-  return set[Math.floor(Math.random()*set.length)];
-}
-
-const selectRandomFilters = () => {
-  const getRandomSliderValue = (sliderType) => {
-    let slider = getSliderData(sliderType);
-    slider.value = Math.floor(Math.random() * 101);
-    return slider;
-  }
-
-  const randomColorFilter = getRandomFilterFromSet('colors');
-  const randomLineCompositionFilter = getRandomFilterFromSet('lines_composition');
-  const randomLineLinearityFilter = getRandomFilterFromSet('lines_linearity');
-  const randomLightFilter = getRandomSliderValue('light');
-  const randomSpaceFilter = getRandomSliderValue('space');
-
-  return [
-    randomColorFilter,
-    randomLineCompositionFilter,
-    randomLineLinearityFilter,
-    randomLightFilter,
-    randomSpaceFilter
-  ];
-};
-
-const getFilterDataByValue = (filterType, val) => {
-  let filter;
-  let set;
-
-  // get set
-  switch(filterType) {
-    case 'colors':
-      set = getFilterSetData(filterType);
-      filter = set.find((filter) => {
-        return filter.name === val;
-      });
-      break;
-    case 'lines_composition':
-    case 'lines_linearity':
-      set = getFilterSetData(filterType);
-
-      filter = set.find((filter) => {
-        return filter.name === val;
-      });
-      break;
-    case 'light':
-    case 'space':
-      let slider = getSliderData(filterType);
-
-      slider.value = val;
-      filter = slider;
-      break;
-    default:
-      break;
-  }
-
-  // go! Return the filter
-  return filter;
-}
-
-const selectChosenFilters = (filterSelection) => {
-  // parse each key:value pair in the filterSelection
-  const ret = Object.keys(filterSelection).map((filterType) => {
-    const filterVal = filterSelection[filterType];
-    const filterDataByValue = getFilterDataByValue(filterType, filterVal);
-
-    if (!filterDataByValue) {
-      DEV_WARN(`invalid filter value: ${filterType}:${filterVal}`);
-    }
-
-    return getFilterDataByValue(filterType, filterSelection[filterType]);
-  });
-
-  // filter out undefined invalid filters
-  return ret.filter((validFilter) => {
-    return validFilter;
-  });
-};
+  // Destructure advancedFilters to append to state later.
+  advancedFilters,
+})
 
 const filtersReducer = (state = initialState, { type, filter, filters = {} }) => {
   const filterType = filter ? filter.filterType : null;
@@ -149,7 +94,6 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
       });
     }
     case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
-    case ActionTypes.SHUFFLE_FILTERS: return buildFilterStateObject(selectRandomFilters());
     case ActionTypes.SET_FILTERS: {
       const selectedFilters = selectChosenFilters(filters);
       return buildFilterStateObject(selectedFilters);
