@@ -23,12 +23,7 @@ const initialState = {
 
 const removeFromOrderedSet = (orderedSet, filterType) => (
   orderedSet.filter(filterEl => filterEl.filterType !== filterType)
-)
-
-// Refactored existing code into this function.
-// It's a little weird to have these initial null values,
-// but this is the form it wants to be in with the data passed to the 'ordered' property.
-const buildFilterStateObject = ordered => ({ ...initialState, ordered });
+);
 
 const getSliderData = sliderType => filterSetsInitialState.sets[sliderType].filter;
 
@@ -45,9 +40,8 @@ const getFilterSetData = (setType) => {
 
 const selectChosenFilters = ({ advancedFilters, ...rest }) => ({
   // Operate according to previous higher order filter logic.
-  filters: Object.entries(rest)
+  ordered: Object.entries(rest)
     .map(([filterType, filterVal]) => {
-      console.log(filterType);
       // Assign filter to correct filterType.
       switch(filterType) {
         // For colors, line compposition, and line linearity, getFilterSetData and find matching filter.
@@ -95,8 +89,8 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
     }
     case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
     case ActionTypes.SET_FILTERS: {
-      const selectedFilters = selectChosenFilters(filters);
-      return buildFilterStateObject(selectedFilters);
+      const { ordered, advancedFilters } = selectChosenFilters(filters);
+      return { ...initialState, ordered, advancedFilters };
     };
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
