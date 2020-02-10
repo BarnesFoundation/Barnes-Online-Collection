@@ -25,45 +25,16 @@ const removeFromOrderedSet = (orderedSet, filterType) => (
   orderedSet.filter(filterEl => filterEl.filterType !== filterType)
 );
 
-const getSliderData = sliderType => filterSetsInitialState.sets[sliderType].filter;
-
 const getFilterSetData = (setType) => {
   const { sets } = filterSetsInitialState;
 
-  switch(setType) {
+  switch (setType) {
     case 'colors': return sets.colors.options;
     case 'lines_composition': return sets.lines.options.composition;
     case 'lines_linearity': return sets.lines.options.linearity;
-    default: throw new Error('unexpected setType');
+    default: return null;
   }
-}
-
-const selectChosenFilters = ({ advancedFilters, ...rest }) => ({
-  // Operate according to previous higher order filter logic.
-  ordered: Object.entries(rest)
-    .map(([filterType, filterVal]) => {
-      // Assign filter to correct filterType.
-      switch(filterType) {
-        // For colors, line compposition, and line linearity, getFilterSetData and find matching filter.
-        case 'colors':
-        case 'lines_composition':
-        case 'lines_linearity': return getFilterSetData(filterType).find(filter => filter.name === filterVal);
-    
-        // For light and space, get slider information.
-        case 'light':
-        case 'space':
-          const slider = getSliderData(filterType);
-          slider.value = filterVal;
-          return slider;
-        // Default return null, filtered out in later .filter method.
-        default: return null;
-      }
-    })
-    .filter(Boolean),
-
-  // Destructure advancedFilters to append to state later.
-  advancedFilters,
-})
+};
 
 const filtersReducer = (state = initialState, { type, filter, filters = {} }) => {
   const filterType = filter ? filter.filterType : null;
@@ -89,8 +60,30 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
     }
     case ActionTypes.CLEAR_ALL_FILTERS: return initialState;
     case ActionTypes.SET_FILTERS: {
-      const { ordered, advancedFilters } = selectChosenFilters(filters);
-      return { ...initialState, ordered, advancedFilters };
+      const { advancedFilters, ...rest } = filters;
+
+      // Get ordered array from queryString object.
+      const ordered = Object.entries(rest)
+        .map(([filterType, filterVal]) => {
+          // For selection filters.
+          if (filterType === 'colors' || filterType === 'lines_composition' || filterType === 'lines_linearity') {  
+            return getFilterSetData(filterType).find(filter => filter.name === filterVal);
+
+          // For slider filters.
+          } else if (filterType === 'light' || filterType === 'space') {
+            return ({
+              ...filterSetsInitialState.sets[filterType].filter, // Spread filter
+              value: filterVal // and add new value.
+            });
+          }
+        })
+        .filter(Boolean); // Filter out nulls
+
+      return ({
+        ...initialState,
+        ordered,
+        advancedFilters,
+      });
     };
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
