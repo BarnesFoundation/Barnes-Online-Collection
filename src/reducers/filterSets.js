@@ -3,7 +3,7 @@ import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings';
 
 const initialState = {
   // TODO => Revert this to null.
-  visibleFilterSet: 'search',
+  visibleFilterSet: null,
   sets: {
     colors: {
       title: 'Colors',
