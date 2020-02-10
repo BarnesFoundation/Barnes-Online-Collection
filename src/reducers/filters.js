@@ -21,6 +21,12 @@ const initialState = {
   ordered: [],
 };
 
+/**
+ * Filter out item from ordered set.
+ * @param {[object]} orderedSet - array of filter objects.
+ * @param {string} filterType - string to filter out.
+ * @returns {[object]} - array of filter objects with string arg filtered out.
+ */
 const removeFromOrderedSet = (orderedSet, filterType) => (
   orderedSet.filter(filterEl => filterEl.filterType !== filterType)
 );
@@ -36,16 +42,34 @@ const getFilterSetData = (setType) => {
   }
 };
 
+/**
+ * Get highest index key from filters.
+ * This is to keep filters in order on adding them.
+ * @param {[Object]} array - array of filter objects
+ * @returns {number} highest index in array.
+ */
+const getHighestIndex = array => array.reduce((acc, { index }) => Math.max(acc, index), 0);
+
 const filtersReducer = (state = initialState, { type, filter, filters = {} }) => {
   const filterType = filter ? filter.filterType : null;
 
+  // Index to keep ordering correct between ordered array and advancedFilters object.
+  const index = Math.max(
+    getHighestIndex(state.ordered), // Get indexes in array
+    getHighestIndex(
+      Object.values(state.advancedFilters) // Get advanced filter subitems.
+        .flatMap(advancedFilter => Object.values(advancedFilter)) // Flatmap over all subitems.
+    ),
+  ) + 1; // Add 1 to max number.
+
   switch (type) {
     case ActionTypes.ADD_FILTER: {
+
       return ({
         ...state, // Deep copy state.
 
         // For unique, higher-level filters, remove any existing filter of same type and replace it with the new filter.
-        ordered: [...removeFromOrderedSet(state.ordered, filterType), filter],
+        ordered: [...removeFromOrderedSet(state.ordered, filterType), { ...filter, index }], // Add filter w/ index.
 
         // The 'all types' works differently -- it acts as a clear
         [filterType]: !(filterType === 'lines_linearity' && filter.name === 'all types') ? filter : null,
@@ -77,6 +101,7 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
             });
           }
         })
+        .map((obj, index) => ({ ...obj, index })) // Add index to all filter sets.
         .filter(Boolean); // Filter out nulls
 
       return ({
@@ -95,7 +120,7 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
           ...advancedFilters, // Deep copy existing advanced filter via spread.
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
-            [filter.term]: { filterType, value: filter.value, term: filter.term }, // Add filter into advanced filter type.
+            [filter.term]: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
           }
         }
       };

@@ -4,8 +4,8 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import LandingPage from './layouts/LandingPage/LandingPage';
-import ArtObjectPage from './layouts/ArtObjectPage/ArtObjectPage';
+import LandingPage from './components/LandingPage/LandingPage';
+import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
 import * as ModalActions from './actions/modal';
 

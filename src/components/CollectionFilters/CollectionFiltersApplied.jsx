@@ -4,34 +4,33 @@ import ClearAllButton from '../SearchInput/ClearAllButton';
 import MobilePanelShuffleButton from './MobilePanelShuffleButton';
 import FilterTag from './FilterTag';
 
-const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => (
-  Boolean(ordered.length || orderedAdvanced.length) && 
-    <div className="applied-filter-tags-container-wrap">
-      <div className="flex-left">
-        <div className="applied-filter-tags-container">
-          {ordered.map((filter, index) => (
-            <FilterTag
-              key={index}
-              index={index}
-              filter={filter}
-            />)
-          )}
-          {orderedAdvanced.map((filter, index) => (
-            <FilterTag
-              advancedFilter
-              key={index}
-              index={index}
-              filter={filter}
-            />)
-          )}
+const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
+  const mergedOrders = [
+    ...ordered,
+    ...orderedAdvanced.map(order => ({ ...order, isAdvanced: true })), // So we know that this is an advanced filter.
+  ].sort((orderA, orderB) => orderA.index - orderB.index) // Sort by index key.
+
+  return (
+    Boolean(ordered.length || orderedAdvanced.length) && 
+      <div className="applied-filter-tags-container-wrap">
+        <div className="flex-left">
+          <div className="applied-filter-tags-container">
+            {mergedOrders.map((filter) => (
+              <FilterTag
+                advancedFilter={Boolean(filter.isAdvanced)}
+                key={filter.index}
+                filter={filter}
+              />)
+            )}
+          </div>
+        </div>
+        <div className="flex-right">
+          <ClearAllButton />
+          <MobilePanelShuffleButton />
         </div>
       </div>
-      <div className="flex-right">
-        <ClearAllButton />
-        <MobilePanelShuffleButton />
-      </div>
-    </div>
-);
+  );
+}
 
 const mapStateToProps = (state) => ({
   ordered: state.filters.ordered,
