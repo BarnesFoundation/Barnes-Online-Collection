@@ -354,8 +354,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       switch(filterType) {
         case DROPDOWN_TERMS.CULTURE: {
           // Map over terms, place into single array like ["American", "French"].
-          console.error(`${filterType} not set up.`);
-          body.query('terms', { 'culture': Object.values(appliedFilters).map(({ term }) => term) });
+          body.query('terms', { 'culture.keyword': Object.values(appliedFilters).map(({ term }) => term) });
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
