@@ -40,9 +40,17 @@ class CollectionFilters extends Component {
   }
 
   hasBeenReset(props) {
-    const hasNothingSet = props.search.length === 0 && props.filters.ordered.length === 0;
+    const hasNothingSet = !props.search.length
+      && !props.filters.ordered.length
+      && !Object.values(props.filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0);
+
     const searchHasChanged = props.search !== this.props.search;
-    const filtersHaveChanged = props.filters.ordered !== this.props.filters.ordered;
+    const filtersHaveChanged = (
+      props.filters.ordered !== this.props.filters.ordered ||
+      JSON.stringify(props.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)
+    );
+
+    console.log(filtersHaveChanged);
 
     return hasNothingSet && (
       searchHasChanged || filtersHaveChanged
@@ -76,12 +84,12 @@ class CollectionFilters extends Component {
     }
 
     // if it's been reset
-    // if (this.hasBeenReset(nextProps)) {
-    //   this.props.getAllObjects();
-    //   this.props.closeMobileFilters();
-    //   this.props.closeMobileSearch();
-    //   return;
-    // }
+    if (this.hasBeenReset(nextProps)) {
+      this.props.getAllObjects();
+      this.props.closeMobileFilters();
+      this.props.closeMobileSearch();
+      return;
+    }
 
     if (mobileFiltersWasOpen) {
       // if we're editing mobile filters
