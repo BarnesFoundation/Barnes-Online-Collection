@@ -29,6 +29,8 @@ export const SEARCH_FIELDS = [
   "invno",
   "medium.*",
   "period",
+  "longDescription.*",
+  "shortDescription.*"
 ];
 
 export const MORE_LIKE_THIS_FIELDS = [
