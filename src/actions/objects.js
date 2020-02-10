@@ -379,8 +379,13 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
         }
         case DROPDOWN_TERMS.COPYRIGHT: {
           // Map over terms, place into single array like ["copyrightA", "copyRightB"].
-          console.error(`${filterType} not set up.`);
-          body.query('terms', { 'culture': Object.values(appliedFilters).map(({ term }) => term) });
+          body.query(
+            'terms',
+            { 'objRightsTypeId': Object.values(appliedFilters)
+                .flatMap(({ term }) => searchAssets.copyrights[term])
+                .map(number => parseInt(number))
+            }
+          );
           break;
         }
         case DROPDOWN_TERMS.ARTIST: {

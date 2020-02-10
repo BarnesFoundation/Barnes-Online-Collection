@@ -28,7 +28,7 @@ const DROPDOWN_TERMS_MAP = {
     [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
     [DROPDOWN_TERMS.MEDIUM]: searchAssets.mediums, // TODO => populate this.
     [DROPDOWN_TERMS.LOCATION]: Object.keys(searchAssets.locations).map(key => ({ key })), 
-    [DROPDOWN_TERMS.COPYRIGHT]: Object.values(searchAssets.copyrights).map(key => ({ key })),
+    [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
     [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
 };
 
