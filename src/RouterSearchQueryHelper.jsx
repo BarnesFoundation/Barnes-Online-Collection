@@ -40,10 +40,10 @@ class RouterSearchQueryHelper extends Component {
     const {
       search,
       filters,
-      location: { state: newState } // For detecting if a modal is open.
+      history: { location: { state: newState }} // For detecting if a modal is open.
     } = this.props;
 
-    // If a modal is open, just return;
+    // Detect if we just opened a modal. If so, just return.
     if (newState && newState.isModal) return;
 
     const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
@@ -65,7 +65,9 @@ class RouterSearchQueryHelper extends Component {
         advancedFilters: filters.advancedFilters,
       });
 
-      if (filtersVal !== queryVal) this.props.history.push(getQueryFilterUrl(filtersVal));
+      if (filtersVal !== queryVal) {
+        this.props.history.push(getQueryFilterUrl(filtersVal));
+      }
     } else if (queryType) {
       // there's no search or Filters, so the query url needs to be cleared.
       // TODO => This is firing and causing us trouble on hitting landing page.
