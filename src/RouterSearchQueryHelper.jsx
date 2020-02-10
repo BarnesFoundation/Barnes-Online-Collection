@@ -11,13 +11,6 @@ import { withRouter } from 'react-router'
 import { DEV_WARN } from './devLogging';
 
 class RouterSearchQueryHelper extends Component {
-  componentWillMount() {
-    this.props.onRef(this);
-  }
-
-  componentWillUnmount() {
-    this.props.onRef(null);
-  }
 
   setInitialQueryOnLoad({ queryType, queryVal }) {
     if (queryType === 'filter') {
@@ -29,6 +22,7 @@ class RouterSearchQueryHelper extends Component {
         DEV_WARN('invalid search syntax in the url');
       }
 
+      console.log(filterSelection);
       this.props.setFilters(filterSelection);
 
     } else if (queryType === 'keyword') {
@@ -52,7 +46,10 @@ class RouterSearchQueryHelper extends Component {
       if (search !== queryVal) {
         this.props.history.push(getQueryKeywordUrl(search));
       }
-    } else if (filters.ordered && filters.ordered.length) {
+    } else if (
+      (filters.ordered && filters.ordered.length) // If there are ordered filters
+      || Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // Or advanced filters.
+      ) {
 
       // Reduce and stringify filter state to compare with queryVal.
       const filtersVal = JSON.stringify({
@@ -75,7 +72,7 @@ class RouterSearchQueryHelper extends Component {
     }
   }
 
-  runSearchQueryOrDeferredFetch(deferredFetch) {
+  componentDidMount() {
     const { qtype = '', qval = '' } = queryString.parse(this.props.location.search); // Destructure querystring.
     const initialQuery = ((qtype === 'filter' || qtype === 'keyword') && qval.length)
       ? {
@@ -83,10 +80,12 @@ class RouterSearchQueryHelper extends Component {
         queryVal: qval,
       } : null;
 
+    // If there is a querystring, run filtered search.
     if (initialQuery) {
       this.setInitialQueryOnLoad(initialQuery);
-    } else if (deferredFetch) {
-      deferredFetch();
+    } else {
+      // Otherwise, get all objects.
+      this.props.getAllObjects();
     }
   }
 

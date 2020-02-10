@@ -18,11 +18,6 @@ import './landingPage.css';
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    this.routerSearchQueryHelper.runSearchQueryOrDeferredFetch(this.props.getAllObjects);
   }
 
   render() {
@@ -39,7 +34,7 @@ class LandingPage extends Component {
       <div className="app app-landing-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
-        <RouterSearchQueryHelper onRef={ref => (this.routerSearchQueryHelper = ref)} />
+        <RouterSearchQueryHelper />
         <SiteHeader />
 
         <div className="landing-page">
