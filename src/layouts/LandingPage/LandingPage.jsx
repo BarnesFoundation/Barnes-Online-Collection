@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
-
 import queryString from 'query-string';
-
 import { getAllObjects } from '../../actions/objects';
 import { addSearchTerm } from '../../actions/search';
 import { setFilters } from '../../actions/filters';
 import { closeFilterSet } from '../../actions/filterSets';
 import { getMetaTagsFromObject, getQueryKeywordUrl, getQueryFilterUrl} from '../../helpers';
-
 import LandingPageHeader from './LandingPageHeader';
 import SiteHeader from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../../components/SiteHtmlHelmetHead';
@@ -18,7 +15,6 @@ import HtmlClassManager from '../../components/HtmlClassManager';
 import CollectionFilters from '../../components/CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../../components/ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../../components/Footer/Footer';
-
 import './landingPage.css';
 
 class LandingPage extends Component {
@@ -94,9 +90,8 @@ class LandingPage extends Component {
         this.props.history.push(getQueryFilterUrl(filtersVal));
       }
     } else if (queryType) {
-      // there's no search or Filters, so the query url needs to be cleared.
-      // TODO => This is firing and causing us trouble on hitting landing page.
-      this.props.history.push(``);
+      // Else if there is querytype but no filters or search, reset URL to /.
+      this.props.history.push('');
     }
   }
 
