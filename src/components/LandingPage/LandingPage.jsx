@@ -22,11 +22,9 @@ import './landingPage.css';
 const LandingPageHeader = () => (
   <div className='o-hero o-hero--landing-page'>
     <div className='o-hero__inner'>
-      <div
-        className='container o-hero__container'
-      >
+      <div className='container o-hero__container'>
         <div className='o-hero__copy'>
-          <p className='o-hero__supporting'>The minute you step into the galleries of the Barnes collection, you know you're in for an experience like no other.</p>
+          <p className='o-hero__supporting'>The Barnes Foundation houses the world's largest collections of Renoir and Cezanne, and important works by Matisse, Picasso and Modigliani.</p>
         </div>
       </div>
     </div>

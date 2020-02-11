@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
+import { SideMenu } from '../SideMenu/SideMenu';
 import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
 import searchAssets from '../../searchAssets.json';
 import './dropdowns.css';
@@ -61,6 +62,33 @@ const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
     </ul>
 );
 
+/** Actual dropdown menu. */
+const DropdownOverlay = ({
+    children,
+    clear,
+    headerText,
+}) => (
+    <div
+        className='dropdown'
+        onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        }}
+    >
+        <div className='dropdown__header'>
+            <span className='font-delta dropdown__header--text'>{headerText}</span>
+            <Icon
+                svgId='-icon_close'
+                classes='dropdown__icon dropdown__icon--x'
+                onClick={clear}
+            />
+        </div>
+        <div className='dropdown__content'>
+            {children}
+        </div>
+    </div>
+);
+
 /** Dropdown menu for filtering artwork. */
 class DropdownMenus extends Component {
     constructor(props) {
@@ -110,23 +138,42 @@ class DropdownMenus extends Component {
      * @param {string} term - name of clicked item.
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */
-    getDropdownContent = () => {
+    getDropdownContent = (term) => {
         const { activeItem } = this.state;
         const { activeTerms } = this.props;
         const data = DROPDOWN_TERMS_MAP[activeItem];
 
         switch (activeItem) {
-            case(DROPDOWN_TERMS.YEAR): {
-                return <span>Lorem Ipsum</span>;
+            case (DROPDOWN_TERMS.YEAR): {
+                return (
+                    <DropdownOverlay
+                        headerText={term}
+                        clear={() => this.setActiveItem(null)}
+                    >
+                        <span>Lorem Ipsum</span>;
+                    </DropdownOverlay>
+                );
             };
+            case (DROPDOWN_TERMS.ARTIST): {
+                return (
+                    <SideMenu isOpen={true}>
+                        
+                    </SideMenu>
+                );
+            }
             default: {
                 return (
-                    <DropdownList
-                        data={data}
-                        activeTerms={activeTerms}
-                        setActiveTerm={this.setActiveTerm}
-                    />
-                )
+                    <DropdownOverlay
+                        headerText={term}
+                        clear={() => this.setActiveItem(null)}
+                    >
+                        <DropdownList
+                            data={data}
+                            activeTerms={activeTerms}
+                            setActiveTerm={this.setActiveTerm}
+                        />
+                    </DropdownOverlay>
+                );
             }
         }
     };
@@ -162,28 +209,7 @@ class DropdownMenus extends Component {
                         >
                             <span className='dropdowns-menu__button-content'>{term}</span>
                             {!isLastDropdown && <Icon svgId='-icon_arrow_down' classes={iconClassName} />}
-                            {isActiveItem &&
-                                // Prevent propogation of event to deselecting button with onClick.
-                                <div
-                                    className='dropdown'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                    }}
-                                >
-                                    <div className='dropdown__header'>
-                                        <span className='font-delta dropdown__header--text'>{term}</span>
-                                        <Icon
-                                            svgId='-icon_close'
-                                            classes='dropdown__icon dropdown__icon--x'
-                                            onClick={() => this.setActiveItem(null)}
-                                        />
-                                    </div>
-                                    <div className='dropdown__content'>
-                                        {this.getDropdownContent()}
-                                    </div>
-                                </div>
-                            }
+                            {isActiveItem && this.getDropdownContent(term)}
                         </button>
                     );
                 })}
