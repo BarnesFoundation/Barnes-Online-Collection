@@ -36,7 +36,7 @@ const DROPDOWN_TERMS_MAP = {
 };
 
 /**
- * Regular dropdown list.
+ * Formatted listed content for child of DropdownMenu or ArtistSideMenu.
  * @see getDropdownContent
  * */
 const ListedContent = ({ data, activeTerms, setActiveTerm, isArtists }) => (
@@ -109,7 +109,7 @@ class DropdownSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeItem: 'Artist', // null,
+            activeItem: null,
         };
     };
 
@@ -173,51 +173,18 @@ class DropdownSection extends Component {
                 return (
                     <ArtistSideMenu
                         closeMenu={() => this.setActiveItem(null)}
-                    >
-                        <ListedContent
-                            isArtists
-                            data={data}
-                            activeTerms={activeTerms}
-                            setActiveTerm={this.setActiveTerm}
-                        />
-                    </ArtistSideMenu>
-                    // <SideMenu
-                    //     isOpen={this.state.activeItem === DROPDOWN_TERMS.ARTIST}
-                    //     closeMenu={() => this.setActiveItem(null)}
-                    // >
-                    //     <div>
-                    //         <div className='side-menu__header'>Artists</div>
-                    //         <div className='side-menu__radio-selection-container'>
-                    //             {ARTISTS_RADIOS_ARRAY.map((value) => {
-                                    
-                    //                 return (
-                    //                 <span
-                    //                     key={value}
-                    //                     className='side-menu__radio-container'
-                    //                 >
-                    //                     <input
-                    //                         type='radio'
-                    //                         className='side-menu__radio'
-                    //                         value={value}
-                    //                         checked={this.state.artistRadio === value}
-                    //                         onChange={() => {
-                    //                             this.setState({ artistRadio: value })
-                    //                         }}
-                    //                     />
-                    //                     <span className='side-menu__radio-text'>{value}</span>
-                    //                 </span>
-                    //             )})}
-                    //         </div>
-                    //         <div className='side-menu__artist-selection-container'>
-                    //             <ListedContent
-                    //                 isArtists
-                    //                 data={data}
-                    //                 activeTerms={activeTerms}
-                    //                 setActiveTerm={this.setActiveTerm}
-                    //             />
-                    //         </div>
-                    //     </div>
-                    // </SideMenu>
+                        data={data}
+                        // Sort data inside of artistMenu component.
+                        render={sortedData => (
+                            <ListedContent
+                                isArtists
+                                data={sortedData}
+                                activeTerms={activeTerms}
+                                setActiveTerm={this.setActiveTerm}
+                            />
+                        )}
+                    />
+                    
                 );
             }
             default: {

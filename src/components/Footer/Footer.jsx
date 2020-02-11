@@ -117,12 +117,12 @@ export const Footer = ({ hasHours }) => {
             </a>
             
             {/* TODO => Add updated link. */}
-            <a className='g-footer__nav__link' href={MAIN_WEBSITE_DOMAIN + '/about'}>
-              Non-descrimination
+            <a className='g-footer__nav__link' href={MAIN_WEBSITE_DOMAIN + '/non-discrimination'}>
+              Non-discrimination
             </a>
 
-            <a className='g-footer__nav__link' href={MAIN_WEBSITE_DOMAIN + '/'}>
-              Copywrite &amp; Image Licensing
+            <a className='g-footer__nav__link' href={MAIN_WEBSITE_DOMAIN + '/copyright-and-image-licensing'}>
+              Copyright &amp; Image Licensing
             </a>
           </nav>
           <div className='g-footer__social-container'>

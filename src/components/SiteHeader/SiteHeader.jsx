@@ -17,7 +17,6 @@ class SiteHeader extends Component {
   handleNavBtnClick(e) {
     e.preventDefault();
     this.setState({ isSideMenuOpen: true });
-    // this.props.htmlClassesToggle(CLASSNAME_NAV_ACTIVE);
   }
 
   render() {
