@@ -123,18 +123,16 @@ class ArtObjectGrid extends Component {
       </div>);
 
     return (
-      <div className='component-art-object-grid__wrapper'>
-        <div className="container m-block m-block--shallow m-block--no-border m-block--flush-top">
-          <div
-            className={`
-              component-art-object-grid
-              ${masonryElements.length ? 'has-elements' : ''}
-              ${isSearchPending ? 'is-pending' : ''}
-            `}
-            data-grid-style={gridStyle}
-          >
-              {searching || body}
-          </div>
+      <div className='component-art-object-grid__wrapper container m-block m-block--shallow m-block--no-border m-block--flush-top'>
+        <div
+          className={`
+            component-art-object-grid
+            ${masonryElements.length ? 'has-elements' : ''}
+            ${isSearchPending ? 'is-pending' : ''}
+          `}
+          data-grid-style={gridStyle}
+        >
+            {searching || body}
         </div>
       </div>
     );
