@@ -79,19 +79,8 @@
     // Margins/Padding
     padding: 10px 20px;
 
-    // Scrollbar
-    overflow-y: scroll;
-
-    &::-webkit-scrollbar {
-        width: 22px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        min-height: 120px;
-        background-color: $color-border;
-        border: solid 8px white;
-    }
+    // Style scrollbar
+    @include scrollbar();
 
 
     // Header item
