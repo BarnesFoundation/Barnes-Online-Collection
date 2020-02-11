@@ -110,6 +110,7 @@ class DropdownSection extends Component {
         super(props);
         this.state = {
             activeItem: 'Artist', // null,
+            filterPredicate: null, // for artist search filter order.
         };
     };
 
@@ -170,11 +171,16 @@ class DropdownSection extends Component {
                 );
             };
             case (DROPDOWN_TERMS.ARTIST): {
+                const { filterPredicate } = this.state;
+
                 return (
-                    <ArtistSideMenu closeMenu={() => this.setActiveItem(null)} >
+                    <ArtistSideMenu
+                        closeMenu={() => this.setActiveItem(null)}
+                        setFilterPredicate={filterPredicate => this.setState({ filterPredicate })}
+                    >
                         <ListedContent
                             isArtists
-                            data={data}
+                            data={filterPredicate ? data.sort(filterPredicate) : data}
                             activeTerms={activeTerms}
                             setActiveTerm={this.setActiveTerm}
                         />

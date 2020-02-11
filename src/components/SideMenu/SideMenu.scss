@@ -9,7 +9,6 @@
     */
     &--active {
         .g-nav {
-            transform: translate3d(-100%, 0, 0);
 
             &__inner {
                 // Style scrollbar
@@ -19,6 +18,7 @@
     
         .g-nav-overlay {
             cursor: default; // This is to prevent pointer for artists.
+            
             overflow: hidden;
             background: rgb(0, 0, 0);
             height: 100vh;
@@ -26,7 +26,7 @@
             opacity: 0.2;
             position: fixed;
             top: 0;
-            transition: opacity 300ms ease 0;
+            transition: opacity 350ms ease 0;
             width: 100%;
             z-index: 6;
             
@@ -57,33 +57,19 @@
         padding: 18px 0;
         margin: 0 0 24px 0;
         display: grid;
-        grid-template-columns: repeat(2, 130px);
-    }
-
-    &__radio-container {
-        position: relative;
-
-        input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
-    }
-
-    &__radio {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 25px;
-        width: 25px;
-        background-color: red;
-        border-radius: 50%;
+        grid-template-columns: repeat(2, 140px);
 
         &:hover {
             cursor: pointer;
         }
+    }
+
+    &__radio-container {
+        position: relative;
+    }
+
+    &__radio {
+        display: none;
 
         &:checked {
             background-color: $color-red-barnes;
@@ -91,8 +77,75 @@
     }
 
     &__radio-text {
+        $radioText: &;
+
         position: absolute;
-        left: 35px;
+
+        &:hover {
+            color: $color-red-barnes;
+        }
+
+        &:before {
+            content: " ";
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            top: 1px;
+            margin: 0 8px 0 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 11px;
+            border: 1px solid $color-grey-light;
+            background-color: transparent;
+        }
+
+        &:hover {
+            &:before{
+                content: " ";
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                top: 1px;
+                margin: 0 8px 0 0;
+                width: 12px;
+                height: 12px;
+                border-radius: 11px;
+                border: 1px solid $color-red-barnes;
+                background-color: transparent;
+            }
+        }
+
+        &--active {
+            &:before {
+                content: " ";
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                top: 1px;
+                margin: 0 8px 0 0;
+                width: 12px;
+                height: 12px;
+                border-radius: 11px;
+                border: 4px solid $color-red-barnes;
+                background-color: $color-white;
+            }
+
+            &:hover {
+                &:before {
+                    content: " ";
+                    cursor: pointer;
+                    display: inline-block;
+                    position: relative;
+                    top: 1px;
+                    margin: 0 8px 0 0;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 11px;
+                    border: 4px solid $color-red-barnes;
+                    background-color: $color-white;
+                }
+            }
+        }
     }
 
     &__artist {
@@ -110,8 +163,10 @@
 
 .g-nav {
     $self: &;
+    // transition: 5000ms ease 50ms;
     
     &--custom {
+        // transform: none;
         cursor: default;
         color: $color-black;
 

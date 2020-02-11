@@ -89,60 +89,88 @@ const DefaultSideMenu = () => (
 );
 
 /**
- * Side menu component. 
+ * Side menu component.
+ * TODO => Add TRANSITION GROUPS. 
  */
-const SideMenu = ({ children, isOpen, closeMenu, resetLock }) => {
-  const handleNavCloseBtnClick = (e) => {
-    e.preventDefault();
-    resetLock();
-    closeMenu();
-  };
+class SideMenu extends Component {
+  constructor(props) {
+    super(props);
 
-  let sideMenuClassNames = 'side-menu';
-  if (isOpen) sideMenuClassNames = `${sideMenuClassNames} side-menu--active`;
+    this.ref = null;
+  }
 
-  let gNavClassNames = 'g-nav';
-  if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`
+  /**
+   * On cDM, if this isOpen, translate left.
+   */
+  componentDidMount() {
+    if (this.props.isOpen) this.ref.style.transform = 'translate3d(-100%, 0, 0)';
+  }
 
-  return (
-    <div className={sideMenuClassNames}>
-      <div
-        className={gNavClassNames}
-        data-behavior='nav'
-        tabIndex={-1}
-      >
+  /**
+   * On update, if the isOpen prop has changed then place back.
+   */
+  componentWillUpdate(prevProps) {
+    if (prevProps.isOpen !== this.props.isOpen) {
+      this.ref.style.transform = `translate3d(${this.props.isOpen ? '0' : '-100%'}, 0, 0)`;
+    }
+  }
+
+  render() {
+    const { resetLock, closeMenu, isOpen, children } = this.props;
+
+    const handleNavCloseBtnClick = (e) => {
+      e.preventDefault();
+      resetLock();
+      closeMenu();
+    };
+
+    let sideMenuClassNames = 'side-menu';
+    if (isOpen) sideMenuClassNames = `${sideMenuClassNames} side-menu--active`;
+
+    let gNavClassNames = 'g-nav';
+    if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`
+
+    return (
+      <div className={sideMenuClassNames}>
         <div
-          className='g-nav__inner'
-          onClick={(e) => {
-            // Prevent cancellation from propagating in Dropdowns.jsx.
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+          className={gNavClassNames}
+          data-behavior='nav'
+          tabIndex={-1}
+          ref={ref => this.ref = ref}
         >
-          <button
-            onClick={handleNavCloseBtnClick}
-            className='g-nav__close btn btn--icon-only html4-hidden'
-            type='button'
-            aria-labelledby='nav-close-title'
-            data-nav-hide
+          <div
+            className='g-nav__inner'
+            onClick={(e) => {
+              // Prevent cancellation from propagating in Dropdowns.jsx.
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
-            <svg className='icon--close' width={20} height={20}>
-              <title id='nav-close-title'>Close menu</title>
-              <use xlinkHref='#icon--icon_close' />
-            </svg>
-          </button>
-          <h2 className='visuallyhidden' id='g-nav__title'>Main menu</h2>
-          {children || <DefaultSideMenu />}
+            <button
+              onClick={handleNavCloseBtnClick}
+              className='g-nav__close btn btn--icon-only html4-hidden'
+              type='button'
+              aria-labelledby='nav-close-title'
+              data-nav-hide
+            >
+              <svg className='icon--close' width={20} height={20}>
+                <title id='nav-close-title'>Close menu</title>
+                <use xlinkHref='#icon--icon_close' />
+              </svg>
+            </button>
+            <h2 className='visuallyhidden' id='g-nav__title'>Main menu</h2>
+            {children || <DefaultSideMenu />}
+          </div>
         </div>
+        <div
+          onClick={handleNavCloseBtnClick}
+          className='g-nav-overlay'
+          data-nav-overlay
+        ></div>
       </div>
-      <div
-        onClick={handleNavCloseBtnClick}
-        className='g-nav-overlay'
-        data-nav-overlay
-      ></div>
-    </div>
-  );
-};
+    );
+  };
+}
 
 const mapStateToProps = state => ({ htmlClassManager: state.htmlClassManager });
 const mapDispatchToProps = dispatch => (
@@ -186,7 +214,8 @@ class LockScroll extends Component {
       this.setState({ scrollY: window.pageYOffset });
     }
 
-    document.getElementById('root').style.position = isLock ? 'absolute' : null
+    document.getElementById('root').style.position = isLock ? 'absolute' : null;
+    document.getElementById('root').style.width = isLock ? '100%' : null
     document.getElementById('root').style.top = isLock ? `-${windowScrollY}px` : null;
     document.getElementById('a17').style.height = isLock ? '100vh' : null;
     document.getElementById('a17').style.overflow = isLock ? 'hidden' : null;
