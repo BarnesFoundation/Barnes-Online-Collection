@@ -485,10 +485,19 @@ export const searchObjects = (term, fromIndex=0) => {
 
     let body = getObjectsRequestBody(fromIndex).build();
 
-    const query = {
+	const query = {
       'query': term,
-      'fields': SEARCH_FIELDS
-    };
+	  'fields': SEARCH_FIELDS
+	};
+	
+	// Add the search fields to the highlight -- so we know what field caused an object to show up on search
+	body.highlight = { 'fields': {} };
+	body.highlight.fields = {
+		...(SEARCH_FIELDS.reduce((acc, sf) => {
+			acc[sf] = {}
+			return acc;
+		}, {}))
+	}
 
     body.query.bool['must'] = {
       'multi_match': query
