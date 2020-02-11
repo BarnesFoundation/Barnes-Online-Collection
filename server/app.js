@@ -593,9 +593,35 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
   }).send()
 })
 
+/** Endpoint for generating the assets file for the frontend */
 app.get('/api/build-search-assets', async (req, res) => {
 	const result = await buildSearchAssets.generateAssets();
 	res.json(result);
+});
+
+/** Endpoint for retrieving entries from the www Craft site */
+app.get('/api/entries', async (request, response) => {
+
+	// Request for fetching entry
+	const entryRequest = (slug) => {
+		let config = {
+			baseURL: process.env.REACT_APP_WWW_URL,
+			url: `/api/entry?slug=${slug}`,
+			method: 'get'
+		};
+
+		// Add authentication if running in staging/development
+		if (process.env.NODE_ENV.toLowerCase() !== 'production') {
+			config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
+		}
+
+		return axios(config);
+	};
+
+	// Fetch all in parallel
+	const entries = (await Promise.all([entryRequest('the-barnes-arboretum'), entryRequest('the-barnes-collection'), entryRequest('library-archives')])).map((response) => response.data);
+
+	response.json(entries);
 });
 
 app.use(function (req, res) {
