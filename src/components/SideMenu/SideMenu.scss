@@ -1,13 +1,19 @@
-/**
-* Overwrite how active body behaves from components-barnes-toolkit/scss/state/_nav-active.scss;
-*/
+@import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+
 .side-menu {
+    font-weight: normal;
+
+    /**
+    * Overwrite how .g-nav class behaves from components-barnes-toolkit/scss/state/_nav-active.scss;
+    */
     &--active {
         .g-nav {
             transform: translate3d(-100%, 0, 0);
         }
     
         .g-nav-overlay {
+            cursor: default; // This is to prevent pointer for artists.
             overflow: hidden;
             background: rgb(0, 0, 0);
             height: 100vh;
@@ -24,6 +30,93 @@
             }
         }
     }
+
+    &__header {
+        padding-top: 24px;
+        font-size: 24px;
+        line-height: 36px;
+        font-weight: bold;
+
+        @include breakpoint('medium+') {
+            font-size: 32px;
+            line-height: 40px;
+        }
+
+        @include breakpoint('large+') {
+            font-size: 38px;
+            line-height: 50px;
+        }
+    }
+
+    &__radio-selection-container {
+        padding: 18px 0;
+        margin: 0 0 24px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 130px);
+    }
+
+    &__radio-container {
+        position: relative;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+    }
+
+    &__radio {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: red;
+        border-radius: 50%;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:checked {
+            background-color: $color-red-barnes;
+        }
+    }
+
+    &__radio-text {
+        position: absolute;
+        left: 35px;
+    }
+
+    &__artist {
+        line-height: 24px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &__artist-doc-count {
+        color: $color-grey-medium;
+    }
+}
+
+.g-nav {
+    $self: &;
     
-    
+    &--custom {
+        cursor: default;
+        color: $color-black;
+
+        #{ $self }__inner {
+            cursor: default;
+            background-color: $color-white;
+        }
+
+        .g-nav-overlay {
+            cursor: default;
+        }
+    }
 }

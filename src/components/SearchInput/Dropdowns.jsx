@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
-import { SideMenu } from '../SideMenu/SideMenu';
+import { ArtistSideMenu } from './ArtistSideMenu';
 import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
 import searchAssets from '../../searchAssets.json';
 import './dropdowns.css';
@@ -16,6 +16,7 @@ export const DROPDOWN_TERMS = {
     COPYRIGHT: 'Copyright',
     ARTIST: 'Artist',
 };
+
 const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.CULTURE,
     DROPDOWN_TERMS.YEAR,
@@ -24,6 +25,7 @@ const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
 ];
+
 const DROPDOWN_TERMS_MAP = {
     [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
     [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
@@ -37,15 +39,18 @@ const DROPDOWN_TERMS_MAP = {
  * Regular dropdown list.
  * @see getDropdownContent
  * */
-const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
+const ListedContent = ({ data, activeTerms, setActiveTerm, isArtists }) => (
     <ul className='dropdown__list'>
         {data
             .filter(({ key }) => key) // Filter out null items.
-            .map(({ key }) => {
+            .map(({ key, doc_count }) => {
                 const isActiveItem = activeTerms.includes(key);
 
                 let listItemClassNames = 'dropdown__list-item';
                 if (activeTerms.includes(key)) listItemClassNames = `${listItemClassNames} ${listItemClassNames}--active`;
+
+                let dropdownIconClassNames = 'dropdown__icon';
+                if (doc_count) dropdownIconClassNames = `${dropdownIconClassNames} dropdown__icon--artist`
 
                 return (
                     <li
@@ -54,7 +59,17 @@ const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
                         onClick={() => setActiveTerm(key)}
                     >
                         <span>{key}</span>
-                        {isActiveItem && <Icon svgId='icon-checkmark' classes='dropdown__icon' />}
+                        {isArtists &&
+                            <span className='side-menu__artist-doc-count'>
+                                &nbsp;({doc_count})
+                            </span>
+                        }
+                        {isActiveItem &&
+                            <Icon
+                                svgId='icon-checkmark'
+                                classes={dropdownIconClassNames}
+                            />
+                        }
                     </li>
                 );
             }
@@ -63,7 +78,7 @@ const DropdownList = ({ data, activeTerms, setActiveTerm }) => (
 );
 
 /** Actual dropdown menu. */
-const DropdownOverlay = ({
+const DropdownMenu = ({
     children,
     clear,
     headerText,
@@ -90,11 +105,11 @@ const DropdownOverlay = ({
 );
 
 /** Dropdown menu for filtering artwork. */
-class DropdownMenus extends Component {
+class DropdownSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeItem: null,
+            activeItem: 'Artist', // null,
         };
     };
 
@@ -146,33 +161,77 @@ class DropdownMenus extends Component {
         switch (activeItem) {
             case (DROPDOWN_TERMS.YEAR): {
                 return (
-                    <DropdownOverlay
+                    <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
                     >
                         <span>Lorem Ipsum</span>;
-                    </DropdownOverlay>
+                    </DropdownMenu>
                 );
             };
             case (DROPDOWN_TERMS.ARTIST): {
                 return (
-                    <SideMenu isOpen={true}>
-                        
-                    </SideMenu>
-                );
-            }
-            default: {
-                return (
-                    <DropdownOverlay
-                        headerText={term}
-                        clear={() => this.setActiveItem(null)}
+                    <ArtistSideMenu
+                        closeMenu={() => this.setActiveItem(null)}
                     >
-                        <DropdownList
+                        <ListedContent
+                            isArtists
                             data={data}
                             activeTerms={activeTerms}
                             setActiveTerm={this.setActiveTerm}
                         />
-                    </DropdownOverlay>
+                    </ArtistSideMenu>
+                    // <SideMenu
+                    //     isOpen={this.state.activeItem === DROPDOWN_TERMS.ARTIST}
+                    //     closeMenu={() => this.setActiveItem(null)}
+                    // >
+                    //     <div>
+                    //         <div className='side-menu__header'>Artists</div>
+                    //         <div className='side-menu__radio-selection-container'>
+                    //             {ARTISTS_RADIOS_ARRAY.map((value) => {
+                                    
+                    //                 return (
+                    //                 <span
+                    //                     key={value}
+                    //                     className='side-menu__radio-container'
+                    //                 >
+                    //                     <input
+                    //                         type='radio'
+                    //                         className='side-menu__radio'
+                    //                         value={value}
+                    //                         checked={this.state.artistRadio === value}
+                    //                         onChange={() => {
+                    //                             this.setState({ artistRadio: value })
+                    //                         }}
+                    //                     />
+                    //                     <span className='side-menu__radio-text'>{value}</span>
+                    //                 </span>
+                    //             )})}
+                    //         </div>
+                    //         <div className='side-menu__artist-selection-container'>
+                    //             <ListedContent
+                    //                 isArtists
+                    //                 data={data}
+                    //                 activeTerms={activeTerms}
+                    //                 setActiveTerm={this.setActiveTerm}
+                    //             />
+                    //         </div>
+                    //     </div>
+                    // </SideMenu>
+                );
+            }
+            default: {
+                return (
+                    <DropdownMenu
+                        headerText={term}
+                        clear={() => this.setActiveItem(null)}
+                    >
+                        <ListedContent
+                            data={data}
+                            activeTerms={activeTerms}
+                            setActiveTerm={this.setActiveTerm}
+                        />
+                    </DropdownMenu>
                 );
             }
         }
@@ -223,7 +282,7 @@ const mapStateToProps = state => ({
         .flatMap((value) => (Object.values(value)).map(({ term }) => term)) // Go through every object value and get the term, flatMap into single array.
 });  
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter }), dispatch);
-const Dropdowns = connect(mapStateToProps, mapDispatchToProps)(DropdownMenus);
+const Dropdowns = connect(mapStateToProps, mapDispatchToProps)(DropdownSection);
 
 /** Component to keep track of clicking outside of menu. */
 class ClickTracker extends Component {
