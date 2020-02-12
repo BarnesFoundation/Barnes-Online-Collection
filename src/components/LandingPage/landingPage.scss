@@ -98,7 +98,7 @@
   &--landing-page {
     overflow: hidden;
     height: 55vh;
-    // padding-top: 50px;
+    padding-top: 95px;
 
     @include breakpoint('medium+') {
       padding-top: 0;
@@ -107,6 +107,12 @@
 
     @include breakpoint('large+') {
       height: 70vh;
+    }
+  }
+
+  &__supporting {
+    @include breakpoint('medium-') {
+      line-height: 1.2;
     }
   }
 
