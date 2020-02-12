@@ -635,7 +635,7 @@ const getEntries = () => {
 		};
 
 		// Fetch all in parallel
-		const entries = (await Promise.all([entryRequest('the-barnes-arboretum'), entryRequest('the-barnes-collection'), entryRequest('library-archives')])).map((response) => response.data);
+		const entries = (await Promise.all([entryRequest('the-barnes-collection'), entryRequest('library-archives'), entryRequest('the-barnes-arboretum')])).map((response) => response.data);
 
 		resolve(entries);
 	});
