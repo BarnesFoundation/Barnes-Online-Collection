@@ -17,7 +17,10 @@ const ViewMoreButton = ({ onClick }) => (
   <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
     <button
       className="btn"
-      onClick={onClick}
+      onClick={({ target }) => {
+        onClick(); // Perform onClick prop.
+        target.blur(); // Unfocus to remove styling.
+      }}
     >
       View More
     </button>
