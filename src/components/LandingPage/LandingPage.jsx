@@ -156,15 +156,17 @@ class LandingPage extends Component {
                   closeFilterSet()
                 }}>  
               </div>
-              <ArtObjectGrid
-                gridStyle="full-size"
-                shouldLinksUseModal={true}
-                modalPreviousLocation="/"
-                isSearchPending={isSearchPending}
-                liveObjects={liveObjects}
-                pageType={pageType}
-                hasMoreResults
-              />
+              <div className='container'>
+                <ArtObjectGrid
+                  gridStyle="full-size"
+                  shouldLinksUseModal={true}
+                  modalPreviousLocation="/"
+                  isSearchPending={isSearchPending}
+                  liveObjects={liveObjects}
+                  pageType={pageType}
+                  hasMoreResults
+                />
+              </div>
               <Footer hasHours/>
             </div>
           </div>
