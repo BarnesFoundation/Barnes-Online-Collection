@@ -38,6 +38,20 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
 };
 
 /**
+ * Memoize initial response of entries from server.
+ * @returns {() => Promise<object>} - closure with scoped fetching function and stateful entries.
+ */
+const getEntries = (() => {
+    const data = { value: null };
+    const fetchData = async () => {
+        data.value = (await axios({ url: '/api/entries' })).data;
+        return data.value;
+    };
+
+    return async () => (data.value || await fetchData());
+})();
+
+/**
  * More from collection section.
  * @param {object[]} moreFromDetails - Array of Event/More from Collection detail objects.
  * @returns {any} - React functional component for "More from collection" section.
@@ -49,7 +63,7 @@ export class MoreFromCollection extends React.Component {
 	}
 
 	async componentDidMount() {
-		const entries = (await axios({ url: '/api/entries' })).data;
+		const entries = await getEntries();
 		this.setState({ entries });
 	}
 
