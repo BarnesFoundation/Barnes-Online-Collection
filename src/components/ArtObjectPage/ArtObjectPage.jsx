@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
 import * as ObjectActions from '../../actions/object';
 import {getMetaTagsFromObject} from '../../helpers';
-import SiteHeader from '../../components/SiteHeader/SiteHeader';
+import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
 import HtmlClassManager from '../HtmlClassManager';
 import ArtObjectPageShell from '../ArtObjectPageComponents/ArtObjectPageShell';

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { SideMenu } from '../SideMenu/SideMenu';
-import * as Actions from '../../actions/htmlClassManager';
-import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE } from '../../constants';
+import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './siteHeader.css';
 
-class SiteHeader extends Component {
+export class SiteHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,12 +95,3 @@ class SiteHeader extends Component {
     );
   }
 };
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-    Actions
-  ), dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(SiteHeader);

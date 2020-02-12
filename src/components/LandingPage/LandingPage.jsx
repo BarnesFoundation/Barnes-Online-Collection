@@ -8,7 +8,7 @@ import { addSearchTerm } from '../../actions/search';
 import { setFilters } from '../../actions/filters';
 import { closeFilterSet } from '../../actions/filterSets';
 import { getMetaTagsFromObject, getQueryKeywordUrl, getQueryFilterUrl} from '../../helpers';
-import SiteHeader from '../SiteHeader/SiteHeader';
+import { SiteHeader } from '../SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
 import HtmlClassManager from '../HtmlClassManager';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
