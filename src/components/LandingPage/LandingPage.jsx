@@ -14,6 +14,7 @@ import HtmlClassManager from '../HtmlClassManager';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
+import heroVideo from './barnesCollectionEnsemble.mp4'
 import './landingPage.css';
 
 /**
@@ -28,7 +29,17 @@ const LandingPageHeader = () => (
         </div>
       </div>
     </div>
-    <picture>
+    <div className='o-hero__video-wrapper'>
+      <video
+        style={{ opacity: 1 }}
+        className='o-hero__video'
+        src={heroVideo}
+        autoPlay
+        loop
+        playsInline
+      />
+    </div>
+    {/* <picture>
       <source
         media='(min-width: 990px)'
         srcSet='https://barnesfoundation.imgix.net/sharedBackgroundImages/Personalized-Docent-Tour_190122_145459.jpg?crop=faces&amp;fit=crop&amp;fm=pjpg&amp;fp-x=0.5&amp;fp-y=0.5&amp;h=800&amp;ixlib=php-2.1.1&amp;w=1380' type='image/jpeg' />
@@ -39,7 +50,7 @@ const LandingPageHeader = () => (
         className='o-hero__image'
         src='https://barnesfoundation.imgix.net/sharedBackgroundImages/Personalized-Docent-Tour_190122_145459.jpg?crop=faces&amp;fit=crop&amp;fm=pjpg&amp;fp-x=0.5&amp;fp-y=0.5&amp;h=380&amp;ixlib=php-2.1.1&amp;w=380'
         alt='' />
-    </picture>
+    </picture> */}
   </div>
 );
 
