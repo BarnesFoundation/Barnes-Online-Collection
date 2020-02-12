@@ -17,13 +17,20 @@ html:not([class=""]) {
 
 .g-header {
   z-index: 3; // $z-index-g-header;
-  position: absolute;
+  position: fixed;
+  top: 0;
 
-  &--scrolled {
-    transition: none;
+  &--unlocked {
+    position: fixed;
+    transform: translate3d(0,-200%,0);
+  }
+
+  &--locked {
+    position: fixed;
     color: $color-red-barnes-logo !important;
     background-color: $color-white !important;
-    position: fixed;
+    
+    transform: translate3d(0,0,0);
 
     .btn,
     .a-logo {
