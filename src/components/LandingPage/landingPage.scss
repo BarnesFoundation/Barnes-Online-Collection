@@ -97,8 +97,8 @@
 
   &--landing-page {
     overflow: hidden;
-    height: 50vh;
-    padding-top: 50px;
+    height: 55vh;
+    // padding-top: 50px;
 
     @include breakpoint('medium+') {
       padding-top: 0;

@@ -54,3 +54,25 @@ html:not([class=""]) {
     }
   }
 }
+
+.header-mobile-links-section {
+  background-color: $color-white;
+  height: 45px !important; // Overwrite .g-header > .container
+  padding-bottom: 3px;
+
+  &__link {
+    font-size: 20px;
+    margin-right: 20px;
+    text-decoration: none;
+    color: $color__red--barnes;
+  }
+
+  @include breakpoint('small+') {
+    background-color: transparent;
+    display: none;
+
+    &__link {
+      display: none;
+    }
+  }
+}

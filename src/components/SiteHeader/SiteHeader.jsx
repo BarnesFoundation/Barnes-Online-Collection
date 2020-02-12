@@ -74,6 +74,20 @@ class SiteHeader extends Component {
               </button>
             </nav>
           </div>
+          <div className='container header-mobile-links-section'>
+            <div>
+              <a
+                className='header-mobile-links-section__link'
+                href='https://tickets.barnesfoundation.org/orders/316/calendar'>
+                Buy Tickets
+              </a>
+              <a
+                className='header-mobile-links-section__link'
+                href='https://barnesfoundation.org/plan-your-visit'>
+                Visit
+              </a>
+            </div>
+          </div>
         </header>
         <SideMenu
           closeMenu={() => this.setState({ isSideMenuOpen: false })}
