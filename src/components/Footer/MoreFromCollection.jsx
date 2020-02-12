@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 // TODO => Delete this, this is for testing layout.
 const MOCK_OBJECT = {
@@ -15,7 +16,7 @@ const MOCK_OBJECTS = [...Array(3)].map(() => MOCK_OBJECT);
  * @param {object} param - Event/More from Collection detail.
  * @returns {JSX.Element} - Event/More from Collection JSX card.
  */
-const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImage, dateField, description }}) => (
+const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImage, date, description }}) => (
     <div className='m-card-event vevent'>
         <div className='m-card-event__header'>
             <a className='m-card-event__media-link' href='/'>
@@ -33,10 +34,10 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
                 </a>
             </h3>
             <div className='dtstart font-delta m-card-event__date'>
-                {dateField}
+                {date}
             </div>
             <div className='summary m-card-event__summary'>
-                <p>{description}</p>
+                <p dangerouslySetInnerHTML={{ __html: description}}></p>
             </div>
         </div>
     </div>
@@ -45,20 +46,37 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
 /**
  * More from collection section.
  * @param {object[]} moreFromDetails - Array of Event/More from Collection detail objects.
- * @returns {React.FC} - React functional component for "More from collection" section.
+ * @returns {any} - React functional component for "More from collection" section.
  */
-export const MoreFromCollection = ({ moreFromDetails }) => {
+export class MoreFromCollection extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 
-    // TODO => The details for this will eventually be passed.
-    return (
-        <div className='container'>
-            <div className='m-block'>
-                <h2 className='font-beta m-block__title'>More from the collection</h2>
-                <div className='m-card-event-list'>
-                    {(moreFromDetails || MOCK_OBJECTS).map((moreFromDetail, i) => <MoreFromCollectionCard key={i} moreFromDetail={moreFromDetail}/>)}
-                </div>
-            </div>
-        </div>
-    );
+	async componentDidMount() {
+		const entries = (await axios({ url: '/api/entries' })).data;
+		this.setState({ entries });
+	}
+
+	// TODO => The details for this will eventually be passed.
+	render() {
+
+		const { entries } = this.state;
+
+		if (entries) {
+			return (
+				<div className='container'>
+					<div className='m-block'>
+						<h2 className='font-beta m-block__title'>More from the collection</h2>
+						<div className='m-card-event-list'>
+							{(entries || MOCK_OBJECTS).map((entry, i) => <MoreFromCollectionCard key={i} moreFromDetail={entry} />)}
+						</div>
+					</div>
+				</div>
+			);
+		}
+		return <div></div>
+	}
 }
 
