@@ -90,3 +90,36 @@
 .no-bottom-margin {
   margin-bottom: 0px;
 }
+
+@mixin getImageHeight() {
+  min-height: 240px;
+
+  @include breakpoint('medium+') {
+    min-height: 317px;
+  }
+
+  @include breakpoint('large+') {
+    min-height: 354px;
+  }
+}
+
+/* Change a17 event card to match redesign. */
+.m-card-event {
+
+  &__media-link {
+    @include getImageHeight();
+
+    padding: 0;
+  }
+
+  &__media {
+    @include getImageHeight();
+
+    padding-bottom: 0;
+
+    // Make empty size same as image image size.
+    &:empty {
+      padding-bottom: 0;
+    }
+  }
+}

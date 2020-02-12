@@ -9,6 +9,7 @@ import { MAIN_WEBSITE_DOMAIN } from '../../constants';
  */
 const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImage, date, description, customSlug } }) => {
 	const entryUrl = `${MAIN_WEBSITE_DOMAIN}/${customSlug}`;
+	
 	return (
 		<div className='m-card-event vevent'>
 			<div className='m-card-event__header'>
@@ -39,7 +40,7 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
 
 /**
  * Memoize initial response of entries from server.
- * @returns {() => Promise<object>} - closure with scoped fetching function and stateful entries.
+ * @returns {() => Promise<object>} - async closure with scoped fetching function and stateful entries.
  */
 const getEntries = (() => {
     const data = { value: null };
@@ -48,13 +49,12 @@ const getEntries = (() => {
         return data.value;
     };
 
-    return async () => (data.value || await fetchData());
+    return async () => data.value || await fetchData();
 })();
 
 /**
  * More from collection section.
  * @param {object[]} moreFromDetails - Array of Event/More from Collection detail objects.
- * @returns {any} - React functional component for "More from collection" section.
  */
 export class MoreFromCollection extends React.Component {
 	constructor(props) {
