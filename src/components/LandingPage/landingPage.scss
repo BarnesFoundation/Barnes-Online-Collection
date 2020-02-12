@@ -97,8 +97,8 @@
 
   &--landing-page {
     overflow: hidden;
-    height: 100%;
-    // padding-top: 70px;
+    height: 50vh;
+    padding-top: 50px;
 
     @include breakpoint('medium+') {
       padding-top: 0;
@@ -120,11 +120,17 @@
 
   &__video {
     object-fit: fill;
-    width: 100%;
+    height: 100%;
+    width: 150%;
+
+    @include breakpoint('small-') {
+      transform: translateX(-16%);
+    }
     
     @include breakpoint('medium+') {
+      width: 100%;
+      height: auto;
       max-height: 55vh;
-      // margin-top: -80px;
     }
 
     @include breakpoint('large+') {
