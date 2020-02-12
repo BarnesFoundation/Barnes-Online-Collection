@@ -102,6 +102,7 @@
 
     @include breakpoint('medium+') {
       padding-top: 0;
+      // max-height: 600px;
       height: 55vh;
     }
 
@@ -121,7 +122,6 @@
       height: 100%;
       position: relative;
       background: $color-white;
-
   }
 
   &__video {
@@ -134,13 +134,16 @@
     }
     
     @include breakpoint('medium+') {
-      width: 100%;
+      min-width: 100%;
       height: auto;
       max-height: 55vh;
     }
 
     @include breakpoint('large+') {
+      min-width: 100%;
+      min-height: 1080px;
       max-height: 70vh;
+      transform: translateY(-15%);
     }
 
     opacity: 0;
