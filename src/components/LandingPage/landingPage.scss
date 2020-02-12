@@ -129,21 +129,21 @@
     height: 100%;
     width: 150%;
 
-    @include breakpoint('small-') {
-      transform: translateX(-16%);
-    }
+    transform: translateX(-16%);
     
     @include breakpoint('medium+') {
+      width: 100%;
       min-width: 100%;
       height: auto;
       max-height: 55vh;
+      transform: translateX(0);
     }
 
     @include breakpoint('large+') {
       min-width: 100%;
       min-height: 1080px;
       max-height: 70vh;
-      transform: translateY(-15%);
+      transform: translate(0, -15%)
     }
 
     opacity: 0;
