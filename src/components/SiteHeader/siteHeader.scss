@@ -19,6 +19,23 @@ html:not([class=""]) {
   z-index: 3; // $z-index-g-header;
   position: absolute;
 
+  &--scrolled {
+    transition: none;
+    color: $color-red-barnes-logo !important;
+    background-color: $color-white !important;
+    position: fixed;
+
+    .btn,
+    .a-logo {
+      transition: none;
+
+      &__svg {
+        transition: none;
+      }
+    }
+    
+  }
+
   .g-header__btn__search {
     // hide on the collections site
     display: none;

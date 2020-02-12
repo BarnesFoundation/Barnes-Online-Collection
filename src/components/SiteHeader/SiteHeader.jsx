@@ -8,8 +8,43 @@ export class SiteHeader extends Component {
     super(props);
     this.state = {
       isSideMenuOpen: false,
+      scrollHeight: 0,
+      isHeaderHidden: false,
     };
   }
+
+  /**
+   * Add event listener for scroll on mount and cleanup event listener on unmount.
+   */
+  componentDidMount() { window.addEventListener('scroll', this.scroll); }
+  componentWillUnmount() { window.removeEventListener('scroll', this.scroll); }
+
+  /**
+   * IIFE to keep w/ stateful variable to keep track of scroll state.
+   * Wrapped in STO, per: @see https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
+   */
+  scroll = (() => {
+    let isScrolling = { value: false };
+
+    return () => {
+      // Only perform update if this has not already been fired.
+      if (!isScrolling.value) {
+        isScrolling.value = true; // Set firing status to true.
+
+        setTimeout(() => {
+          const { scrollHeight: previousScrollHeight } = this.state;
+          const currentScrollHeight = window.pageYOffset;
+
+          this.setState({
+            scrollHeight: currentScrollHeight,
+            isHeaderHidden: Boolean(currentScrollHeight - previousScrollHeight < 0 && currentScrollHeight > 300),
+          });
+
+          isScrolling.value = false; // Reset firing status.
+        }, 100);
+      }
+    };
+  })();
 
   handleNavBtnClick(e) {
     e.preventDefault();
@@ -17,12 +52,16 @@ export class SiteHeader extends Component {
   }
 
   render() {
-    // Define class to change color of header and padding.
-    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null;
+    const { isHeaderHidden } = this.state;
+
+    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+
+    let gHeaderClassNames = 'g-header';
+    if (isHeaderHidden) gHeaderClassNames = `${gHeaderClassNames} g-header--scrolled`;
 
     return (
       <div className={isArtObjectClassNames}>
-        <header className='g-header' data-behavior='header'>
+        <header className={gHeaderClassNames} data-behavior='header'>
           <div className='container'>
             <a className='a-logo g-header__logo' href={MAIN_WEBSITE_DOMAIN}>
               <span className='html4-label'>Barnes</span>
