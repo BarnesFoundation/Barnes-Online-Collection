@@ -65,7 +65,7 @@ export const Footer = ({ hasHours }) => {
             </div>
             <div className='g-footer__hours'>
               <h2 className='font-zeta footer-detail'>Hours</h2>
-              <p>Wed–Mon: 11am–5pm<br />Closed Tuesdays <br />Closed Thanksgiving, Christmas, New Year's Day, and July 4th</p>
+              <p>Wed–Mon: 11am – 5pm<br />Closed Tuesdays <br />Closed Thanksgiving, Christmas, New Year's Day, and July 4th</p>
             </div>
             <div className='g-footer__subscribe'>
               <h2 className='font-zeta'>Newsletter</h2>

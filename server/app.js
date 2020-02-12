@@ -599,30 +599,51 @@ app.get('/api/build-search-assets', async (req, res) => {
 	res.json(result);
 });
 
-/** Endpoint for retrieving entries from the www Craft site */
-app.get('/api/entries', async (request, response) => {
+/** Stores the entries to be displayed in a cache */
+const entryCache = async (request, response) => {
+	const key = `__cache__api_craft__entries`;
+	const body = memoryCache.get(key);
 
-	// Request for fetching entry
-	const entryRequest = (slug) => {
-		let config = {
-			baseURL: process.env.REACT_APP_WWW_URL,
-			url: `/api/entry?slug=${slug}`,
-			method: 'get'
+	if (body) {
+		response.append('x-cached', true);
+		response.send(body);
+	}
+	else { 
+		const entries = await getEntries();
+		response.json(entries);
+		memoryCache.put(key, entries, oneDay);
+	 }
+}
+
+/** Returns the entries from the main Craft site */
+const getEntries = () => {
+	return new Promise( async(resolve) => {
+		
+		// Request for fetching entry
+		const entryRequest = (slug) => {
+			let config = {
+				baseURL: process.env.REACT_APP_WWW_URL,
+				url: `/api/entry?slug=${slug}`,
+				method: 'get'
+			};
+
+			// Add authentication if running in staging/development
+			if (process.env.NODE_ENV.toLowerCase() !== 'production') {
+				config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
+			}
+			return axios(config);
 		};
 
-		// Add authentication if running in staging/development
-		if (process.env.NODE_ENV.toLowerCase() !== 'production') {
-			config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
-		}
+		// Fetch all in parallel
+		const entries = (await Promise.all([entryRequest('the-barnes-arboretum'), entryRequest('the-barnes-collection'), entryRequest('library-archives')])).map((response) => response.data);
 
-		return axios(config);
-	};
+		resolve(entries);
+	});
+}
 
-	// Fetch all in parallel
-	const entries = (await Promise.all([entryRequest('the-barnes-arboretum'), entryRequest('the-barnes-collection'), entryRequest('library-archives')])).map((response) => response.data);
 
-	response.json(entries);
-});
+/** Endpoint for retrieving entries from the www Craft site */
+app.get('/api/entries', entryCache);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
