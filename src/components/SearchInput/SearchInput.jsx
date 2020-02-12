@@ -15,22 +15,44 @@ class SearchInput extends Component {
     super(props);
 
     this.state = {
-      value: ''
+      value: '',
+      isFocused: true,
     };
   }
 
-  onChange = ({ target: { value }}) => {
-    this.setState({ value });
+  /**
+   * If enter key is pressed and search is focused, execute search.
+   */
+  searchOnEnter = (e) => {
+    const { isFocused } = this.state;
+
+    if (e.key === 'Enter' && isFocused) {
+      this.submit();
+    }
   };
 
+  /**
+   * Add event listener for pressing enter on mount and cleanup event listener on unmount.
+   */
+  componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
+  componentWillUnmount() { window.removeEventListener('keydown', this.searchOnEnter); }
+
+  onChange = ({ target: { value }}) => this.setState({ value });
+  setFocus = isFocused => this.setState({ isFocused }); // Set focus
+
+  /**
+   * Submit search.
+   * @param {SyntheticEvent?} - optional event, depending if this was from button or from enter press.
+   */
   submit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     this.props.addSearchTerm(this.state.value);
     this.setState({ value: '' });
   };
 
   render() {
+    
     return (
       <div>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
@@ -61,6 +83,8 @@ class SearchInput extends Component {
                   value={this.state.value}
                   placeholder='Search a keyword, artist, room number, and more'
                   onChange={this.onChange}
+                  onFocus={() => this.setFocus(true)}
+                  onBlur={() => this.setFocus(false)}
                 />
                 <button
                   className='btn btn--primary search__button'
