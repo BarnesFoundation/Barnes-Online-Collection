@@ -83,7 +83,8 @@ class SiteHeader extends Component {
               </a>
               <a
                 className='header-mobile-links-section__link'
-                href='https://barnesfoundation.org/plan-your-visit'>
+                href='https://barnesfoundation.org/plan-your-visit'
+              >
                 Visit
               </a>
             </div>

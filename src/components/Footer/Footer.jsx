@@ -48,8 +48,8 @@ export const Footer = ({ hasHours }) => {
             <div className='g-footer__cta'>
               <div className='font-delta g-footer__cta-title'><p><strong>Your support helps</strong><strong> research and conservation at the Barnes, so we can present exhibitions and events.</strong></p></div>
               <div className='m-btn-group'>
-                  <a className='btn btn--100' href='https://tickets.barnesfoundation.org/orders/316/tickets'>Donate</a>
-                  <a className='btn btn--100' href='/support/membership'>Become a Member</a>
+                  <a className='btn btn--100' href='https://www.barnesfoundation.org/support/individual-giving'>Donate</a>
+                  <a className='btn btn--100' href='https://www.barnesfoundation.org/support/membership'>Become a Member</a>
               </div>
             </div>
           </div>
