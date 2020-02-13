@@ -1,18 +1,63 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { SideMenu } from '../SideMenu/SideMenu';
-import * as Actions from '../../actions/htmlClassManager';
-import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE } from '../../constants';
+import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './siteHeader.css';
 
-class SiteHeader extends Component {
+const HEADER_HIDDEN = {
+  DEFAULT: 'DEFAULT',
+  LOCKED: 'LOCKED',
+  UNLOCKED: 'UNLOCKED',
+};
+
+export class SiteHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isSideMenuOpen: false,
+      isHeaderHidden: false,
     };
   }
+
+  /**
+   * Add event listener for scroll on mount and cleanup event listener on unmount.
+   */
+  componentDidMount() { window.addEventListener('scroll', this.scroll); }
+  componentWillUnmount() { window.removeEventListener('scroll', this.scroll); }
+
+  /**
+   * IIFE to keep w/ stateful variable to keep track of scroll state.
+   * Wrapped in STO, per: @see https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
+   */
+  scroll = (() => {
+    // State object for closure, keeps track if a scroll event has been fired and last scroll position.
+    const scrollState = {
+      isScrolling: false,
+      height: 0,
+    };
+
+    return () => {
+      // Only perform update if this has not already been fired.
+      if (!scrollState.isScrolling) {
+        scrollState.isScrolling = true; // Set firing status to true.
+
+        setTimeout(() => {
+          const { height: previousScrollHeight } = scrollState;
+          const currentScrollHeight = window.pageYOffset;
+
+          let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
+          if (currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
+          if (Boolean(currentScrollHeight < previousScrollHeight && currentScrollHeight > 250)) isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+
+          // Update React component state.
+          this.setState({ isHeaderHidden });
+
+          // Update closure state.
+          scrollState.height = currentScrollHeight; // Update scrollState height variable.
+          scrollState.isScrolling = false; // Reset firing status.
+        }, 100); // TODO => This is a magic number, replace this.
+      }
+    };
+  })();
 
   handleNavBtnClick(e) {
     e.preventDefault();
@@ -20,12 +65,17 @@ class SiteHeader extends Component {
   }
 
   render() {
-    // Define class to change color of header and padding.
-    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null;
+    const { isHeaderHidden } = this.state;
+
+    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+
+    let gHeaderClassNames = 'g-header';
+    if (isHeaderHidden === HEADER_HIDDEN.UNLOCKED) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
+    if (isHeaderHidden === HEADER_HIDDEN.LOCKED) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
 
     return (
       <div className={isArtObjectClassNames}>
-        <header className='g-header' data-behavior='header'>
+        <header className={gHeaderClassNames} data-behavior='header'>
           <div className='container'>
             <a className='a-logo g-header__logo' href={MAIN_WEBSITE_DOMAIN}>
               <span className='html4-label'>Barnes</span>
@@ -98,12 +148,3 @@ class SiteHeader extends Component {
     );
   }
 };
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-    Actions
-  ), dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(SiteHeader);
