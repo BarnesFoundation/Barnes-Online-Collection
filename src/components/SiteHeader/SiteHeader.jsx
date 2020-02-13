@@ -5,11 +5,32 @@ import { SearchBar } from '../SearchInput/SearchBar';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './siteHeader.css';
 
+// For header state.
 const HEADER_HIDDEN = {
   DEFAULT: 'DEFAULT',
   LOCKED: 'LOCKED',
   UNLOCKED: 'UNLOCKED',
 };
+
+/**
+ * JSX element for Barnes logos.
+ */
+const Logo = ({ size, width, height }) => (
+  <svg className={`a-logo__svg a-logo__svg--${size}`} width={width} height={height} aria-labelledby='logo-title'>
+    <title id='logo-title'>Barnes</title>
+    <use xlinkHref={`#icon--logo-${size}`}></use>
+  </svg>
+);
+
+// Static info mapped to static Logo JSX element.
+const LOGOS = [
+  { size: 's', width: 121, height: 37 },
+  { size: 'm', width: 146, height: 45 },
+  { size: 'l', width: 164.958, height: 50 },
+  { size: 'xl', width: 200, height: 62 },
+].map((logo => <Logo key={logo.size} {...logo} />));
+
+const SUGGESTED_TERMS = ['CAREERS', 'CONTACT', 'SHOP', 'INTERNSHIP', 'MEMBERSHIP', 'PARKING', 'RESTAURANT', 'TICKETS'];
 
 const MobileLinks = () => (
   <div className='container header-mobile-links-section'>
@@ -100,23 +121,7 @@ class SiteHeader extends Component {
         <header className={gHeaderClassNames} data-behavior='header'>
           <div className='container'>
             <a className='a-logo g-header__logo' href={MAIN_WEBSITE_DOMAIN}>
-              <span className='html4-label'>Barnes</span>
-              <svg className='a-logo__svg a-logo__svg--s' width='121' height='37' aria-labelledby='logo-title'>
-                <title id='logo-title'>Barnes</title>
-                <use xlinkHref='#icon--logo-s'></use>
-              </svg>
-              <svg className='a-logo__svg a-logo__svg--m' width='146' height='45'>
-                <title>Barnes</title>
-                <use xlinkHref='#icon--logo-m'></use>
-              </svg>
-              <svg className='a-logo__svg a-logo__svg--l' width='164.958' height='50'>
-                <title>Barnes</title>
-                <use xlinkHref='#icon--logo-l'></use>
-              </svg>
-              <svg className='a-logo__svg a-logo__svg--xl' width='200' height='62'>
-                <title>Barnes</title>
-                <use xlinkHref='#icon--logo-xl'></use>
-              </svg>
+              {LOGOS}
             </a>
             <nav className='g-header__nav'>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
@@ -147,21 +152,21 @@ class SiteHeader extends Component {
               </button>
             </nav>
           </div>
+          <MobileLinks />
           {isGlobalSearchHeader &&
             <div className='global-search'>
               <SearchBar
-                className='container'
+                className='container search__searchbar--global'
                 submit={() => console.error('This is not set up yet.')}
               />
+              <div className='container global-search__buttons-area'>
+                <span className='global-search__buttons-term'>Suggested terms</span>
+                <div className='global-search__buttons-group'>
+                  {SUGGESTED_TERMS.map(term => <button className='btn font-zeta global-search__button '>{term}</button>)}
+                </div>
+              </div>
             </div>
           }
-          {/* {isGlobalSearchHeader &&
-            <div className='container global-search__buttons'>
-                <h4>Suggested terms</h4>
-            </div>
-          } */}
-          <MobileLinks />
-          
           <SideMenu
               closeMenu={() => this.setState({ isSideMenuOpen: false })}
               isOpen={this.state.isSideMenuOpen}
@@ -177,7 +182,7 @@ class SiteHeaderGlobalSearch extends Component {
     super(props);
 
     this.state = {
-      isGlobalSearchActive: false,
+      isGlobalSearchActive: true,
     }
   };
 

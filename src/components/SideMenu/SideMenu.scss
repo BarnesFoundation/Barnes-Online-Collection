@@ -1,6 +1,18 @@
 @import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
 
+@mixin beforeContent() {
+    content: " ";
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    margin: 0 8px 0 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 11px;
+}
+
 .side-menu {
     font-weight: normal;
 
@@ -87,30 +99,14 @@
         }
 
         &:before {
-            content: " ";
-            cursor: pointer;
-            display: inline-block;
-            position: relative;
-            top: 1px;
-            margin: 0 8px 0 0;
-            width: 12px;
-            height: 12px;
-            border-radius: 11px;
+            @include beforeContent();
             border: 1px solid $color-grey-light;
             background-color: transparent;
         }
 
         &:hover {
             &:before{
-                content: " ";
-                cursor: pointer;
-                display: inline-block;
-                position: relative;
-                top: 1px;
-                margin: 0 8px 0 0;
-                width: 12px;
-                height: 12px;
-                border-radius: 11px;
+                @include beforeContent();
                 border: 1px solid $color-red-barnes;
                 background-color: transparent;
             }
@@ -118,30 +114,14 @@
 
         &--active {
             &:before {
-                content: " ";
-                cursor: pointer;
-                display: inline-block;
-                position: relative;
-                top: 1px;
-                margin: 0 8px 0 0;
-                width: 12px;
-                height: 12px;
-                border-radius: 11px;
+                @include beforeContent();
                 border: 4px solid $color-red-barnes;
                 background-color: $color-white;
             }
 
             &:hover {
                 &:before {
-                    content: " ";
-                    cursor: pointer;
-                    display: inline-block;
-                    position: relative;
-                    top: 1px;
-                    margin: 0 8px 0 0;
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 11px;
+                    @include beforeContent();
                     border: 4px solid $color-red-barnes;
                     background-color: $color-white;
                 }

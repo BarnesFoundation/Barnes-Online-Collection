@@ -33,7 +33,7 @@ html:not([class=""]) {
 
   &--unlocked {
     position: fixed;
-    transform: translate3d(0,-200%,0);
+    transform: translate3d(0,-300%,0);
   }
 
   &--locked {
@@ -95,6 +95,8 @@ html:not([class=""]) {
   background-color: $color-white;
   height: 45px !important; // Overwrite .g-header > .container
   padding-bottom: 3px;
+  border-top: 1px solid $color-grey-super-light;
+  border-bottom: 1px solid $color-grey-super-light;
 
   &__link {
     font-size: 20px;
@@ -103,9 +105,14 @@ html:not([class=""]) {
     color: $color__red--barnes;
   }
 
+  // Hide mobile section on all larger sizes.
   @include breakpoint('small+') {
     background-color: transparent;
     display: none;
+    height: 0px !important;
+    margin: 0;
+    padding: 0;
+    border: none;
 
     &__link {
       display: none;
@@ -116,4 +123,39 @@ html:not([class=""]) {
 .global-search {
   background-color: white;
   width: 100%;
+
+  padding-top: 20px;
+
+  @include breakpoint('medium+') {
+    padding-top: 35px;
+  }
+
+  @include breakpoint('large+') {
+    padding-top: 10px;
+  }
+
+  &__buttons-area {
+    padding-top: 30px;
+  }
+
+  &__button {
+    margin-left: 0 !important;
+    margin-right: 15px;
+    margin-top: 10px !important;
+    margin: 10px 15px 0 0 !important;
+  }
+
+  &__buttons-term {
+    font-weight: bold;
+    font-size: 18px;
+    color: $color-grey-light;
+  }
+
+  &__buttons-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    align-items: left;
+  }
 }

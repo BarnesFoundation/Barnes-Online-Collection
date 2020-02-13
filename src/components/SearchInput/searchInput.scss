@@ -5,15 +5,32 @@ $button-width: 60px;
 $button-margin: 15px;
 
 .search {
+  $self: &;
+
   background-color: $color-grey-ultra-light-2;
   padding: 30px 40px;
   border-left: 1px solid #dcdcdc;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
-  
+
   &__searchbar {
     display: grid;
     grid-template-columns: calc(100% - 115px) 60px;
+
+    // Hide button for global search for mobile devices.
+    &--global {
+      @include breakpoint('small-') {
+        grid-template-columns: none;
+    
+        #{ $self }__button {
+          display: none;
+        }
+
+        #{ $self }__input {
+          width: 100%;
+        }
+      }
+    }
   }
 
   &__input-group {
@@ -36,8 +53,6 @@ $button-margin: 15px;
       color: $color-grey-light;
     }
   }
-
-  
 
   &__button {
     font-weight: normal;

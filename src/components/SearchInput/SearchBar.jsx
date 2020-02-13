@@ -45,7 +45,7 @@ export class SearchBar extends Component {
         const { hasTooltip, className, placeholder } = this.props;
 
         return (
-            <div className={`${className} search__searchbar`}>
+            <div className={`search__searchbar ${className}`}>
                 <div className='search__input-group'>
                     <input
                         className='search__input'
