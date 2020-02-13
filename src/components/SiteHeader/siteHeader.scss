@@ -16,7 +16,9 @@ html:not([class=""]) {
 }
 
 .g-header {
-  z-index: 3; // $z-index-g-header;
+  $self: &;
+
+  z-index: 4; // $z-index-g-header;
   position: fixed;
   top: 0;
 
@@ -32,6 +34,19 @@ html:not([class=""]) {
     
     transform: translate3d(0,0,0);
 
+    #{ $self } {
+      &__nav {
+        &__btn,
+        &__link {
+          color: $color-black;
+
+          &[aria-current] {
+            color: $color__red--barnes;
+          }
+        }
+      }
+    }
+
     .btn,
     .a-logo {
       transition: none;
@@ -43,7 +58,7 @@ html:not([class=""]) {
     
   }
 
-  .g-header__btn__search {
+  &__btn__search {
     // hide on the collections site
     display: none;
   }
