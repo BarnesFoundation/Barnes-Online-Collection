@@ -35,7 +35,11 @@ const SearchInput = ({ addSearchTerm }) => (
     {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max}> */}
       <div className='search'>
         <div className='search__content'>
-          <SearchBar submit={addSearchTerm}/>
+          <SearchBar
+            hasTooltip
+            submit={addSearchTerm}
+            placeholder='Search a keyword, artist, room number, and more'
+          />
           <div className='search__dropdowns'>
             <Dropdowns />
           </div>

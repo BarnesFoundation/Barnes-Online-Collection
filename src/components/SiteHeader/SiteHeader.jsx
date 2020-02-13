@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { LockScroll } from '../LockScroll';
 import { SideMenu } from '../SideMenu/SideMenu';
+import { SearchBar } from '../SearchInput/SearchBar';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './siteHeader.css';
 
@@ -89,6 +90,7 @@ class SiteHeader extends Component {
     const isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
 
     // Set up g-header classes.
+    // TODO => Change this to be more expressive.
     let gHeaderClassNames = 'g-header';
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
@@ -146,24 +148,14 @@ class SiteHeader extends Component {
             </nav>
           </div>
           {isGlobalSearchHeader &&
-            <div className='container global-search search__input-group'>
-                <input
-                  className='search__input'
-                  type='text'
-                  autoFocus='true'
-                  // value={this.state.value}
-                  placeholder='Search'
-                  // onChange={this.onChange}
-                  // onFocus={() => this.setFocus(true)}
-                  // onBlur={() => this.setFocus(false)}
-                />
-                <button
-                  className='btn btn--primary search__button'
-                  type='submit'
-                  onClick={this.submit}
-                >
-                  Search
-                </button>
+            <SearchBar
+              className='container global-search'
+              submit={() => console.error('This is not set up yet.')}
+            />
+          }
+          {isGlobalSearchHeader &&
+            <div className='container global-search__buttons'>
+                <h4>Suggested terms</h4>
             </div>
           }
           <MobileLinks />

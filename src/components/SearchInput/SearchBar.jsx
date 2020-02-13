@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Icon from '../Icon';
 
+/**
+ * Controlled input component w/ search on enter.
+ */
 export class SearchBar extends Component {
     constructor(props) {
         super(props);
@@ -39,18 +42,17 @@ export class SearchBar extends Component {
     }
 
     render() {
-        const { hasTooltip, className } = this.props;
-        // console.log(className);
+        const { hasTooltip, className, placeholder } = this.props;
 
         return (
-            <div className='search__searchbar'>
+            <div className={`${className} search__searchbar`}>
                 <div className='search__input-group'>
                     <input
                         className='search__input'
                         type='text'
                         autoFocus='true'
                         value={this.state.value}
-                        placeholder='Search a keyword, artist, room number, and more'
+                        placeholder={placeholder || 'Search'}
                         onChange={this.onChange}
                         onFocus={() => this.setFocus(true)}
                         onBlur={() => this.setFocus(false)}
