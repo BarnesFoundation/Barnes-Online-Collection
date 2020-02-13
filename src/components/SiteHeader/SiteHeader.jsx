@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { LockScroll } from '../LockScroll';
 import { SideMenu } from '../SideMenu/SideMenu';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './siteHeader.css';
@@ -9,7 +10,25 @@ const HEADER_HIDDEN = {
   UNLOCKED: 'UNLOCKED',
 };
 
-export class SiteHeader extends Component {
+const MobileLinks = () => (
+  <div className='container header-mobile-links-section'>
+    <div>
+      <a
+        className='header-mobile-links-section__link'
+        href='https://tickets.barnesfoundation.org/orders/316/calendar'>
+        Buy Tickets
+      </a>
+      <a
+        className='header-mobile-links-section__link'
+        href='https://barnesfoundation.org/plan-your-visit'
+      >
+        Visit
+      </a>
+    </div>
+  </div>
+);
+
+class SiteHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,19 +78,20 @@ export class SiteHeader extends Component {
     };
   })();
 
-  handleNavBtnClick(e) {
-    e.preventDefault();
+  openSideMenu = (e) => {
     this.setState({ isSideMenuOpen: true });
   }
 
   render() {
     const { isHeaderHidden } = this.state;
+    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive } = this.props;
 
-    const isArtObjectClassNames = this.props.isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+    const isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
 
+    // Set up g-header classes.
     let gHeaderClassNames = 'g-header';
-    if (isHeaderHidden === HEADER_HIDDEN.UNLOCKED) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
-    if (isHeaderHidden === HEADER_HIDDEN.LOCKED) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
+    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
+    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
 
     return (
       <div className={isArtObjectClassNames}>
@@ -99,19 +119,20 @@ export class SiteHeader extends Component {
             <nav className='g-header__nav'>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
-              <a className='g-header__nav__link' aria-current='true' href='/'>Our Collection</a>
+              <a className={Boolean(!isGlobalSearchActive) ? 'g-header__nav__link g-header__nav__link--active' : 'g-header__nav__link'} href='/'>Our Collection</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
-              <a
-                href={MAIN_WEBSITE_DOMAIN + '/search'}
+              <btn
+                onClick={toggleGlobalSearch}
+                aria-current={Boolean(isGlobalSearchActive)}
                 className='g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden'
               >
                 <svg width='26' height='26'>
                   <title id='search-open-title'>Search</title>
                   <use xlinkHref='#icon--icon_search'></use>
                 </svg>
-              </a>
+              </btn>
               <button
-                onClick={this.handleNavBtnClick.bind(this)}
+                onClick={this.openSideMenu}
                 className='g-header__nav__btn btn btn--icon-only html4-hidden'
                 data-nav-show
                 type='button'
@@ -124,27 +145,69 @@ export class SiteHeader extends Component {
               </button>
             </nav>
           </div>
-          <div className='container header-mobile-links-section'>
-            <div>
-              <a
-                className='header-mobile-links-section__link'
-                href='https://tickets.barnesfoundation.org/orders/316/calendar'>
-                Buy Tickets
-              </a>
-              <a
-                className='header-mobile-links-section__link'
-                href='https://barnesfoundation.org/plan-your-visit'
-              >
-                Visit
-              </a>
+          {isGlobalSearchHeader &&
+            <div className='container global-search search__input-group'>
+                <input
+                  className='search__input'
+                  type='text'
+                  autoFocus='true'
+                  // value={this.state.value}
+                  placeholder='Search'
+                  // onChange={this.onChange}
+                  // onFocus={() => this.setFocus(true)}
+                  // onBlur={() => this.setFocus(false)}
+                />
+                <button
+                  className='btn btn--primary search__button'
+                  type='submit'
+                  onClick={this.submit}
+                >
+                  Search
+                </button>
             </div>
-          </div>
+          }
+          <MobileLinks />
+          
+          <SideMenu
+              closeMenu={() => this.setState({ isSideMenuOpen: false })}
+              isOpen={this.state.isSideMenuOpen}
+          />
         </header>
-        <SideMenu
-          closeMenu={() => this.setState({ isSideMenuOpen: false })}
-          isOpen={this.state.isSideMenuOpen}
-        />
       </div>
     );
   }
 };
+
+class SiteHeaderGlobalSearch extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isGlobalSearchActive: true,
+    }
+  };
+
+  render() {
+    const { isArtObject } = this.props;
+    const { isGlobalSearchActive } = this.state;
+
+    return (
+      <div>
+        <SiteHeader
+          isArtObject={Boolean(isArtObject)}
+          toggleGlobalSearch={() => this.setState({ isGlobalSearchActive: !isGlobalSearchActive }) }
+        />
+        <SiteHeader
+          isGlobalSearchHeader
+          isGlobalSearchActive={isGlobalSearchActive}
+          isArtObject={Boolean(isArtObject)}
+          toggleGlobalSearch={() => this.setState({ isGlobalSearchActive: !isGlobalSearchActive }) }
+        />
+        {/* Lock scroll on global search activation. */}
+        <LockScroll isLocked={isGlobalSearchActive}/>
+      </div>
+    );
+  }
+}
+
+export { SiteHeaderGlobalSearch as SiteHeader };

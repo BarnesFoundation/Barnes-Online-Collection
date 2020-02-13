@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { LockScroll } from '../LockScroll';
 import { htmlClassesRemove } from '../../actions/htmlClassManager';
 import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE} from '../../constants';
 import './SideMenu.css';
@@ -179,60 +180,11 @@ const mapDispatchToProps = dispatch => (
 
 const ConnectedSideMenu = connect(mapStateToProps, mapDispatchToProps)(SideMenu);
 
-/** HOC to lock scroll in place. */
-class LockScroll extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      scrollY: 0,
-    };
-  }
-  
-  componentDidUpdate(prevProps) {
-    if (prevProps.isOpen !== this.props.isOpen) {
-      this.setUpScrollLock(this.props.isOpen);
-    }
-  }
+// Wrap in LockScroll component.
+const LockScollWrap = ({ ...props }) => (
+  <LockScroll isLocked={props.isOpen} >
+    <ConnectedSideMenu {...props} />
+  </LockScroll>
+);
 
-  componentDidMount() {
-    this.setUpScrollLock(this.props.isOpen);
-  }
-
-  componentWillUnmount() {
-    this.setUpScrollLock(false);
-  }
-
-  /**
-   * On update, access a17 and root to lock scrollbar in place
-   * TODO => Rewrite this in a more declarative style, not accessing DOM elements imperatively.
-   * @param {boolean} isLock - if scroll should be locked.
-   * */
-  setUpScrollLock(isLock) {
-    const windowScrollY = window.pageYOffset;
-
-    if (isLock) { // On menu appearing, set up where the scroll was.
-      this.setState({ scrollY: window.pageYOffset });
-    }
-
-    document.getElementById('root').style.position = isLock ? 'absolute' : null;
-    document.getElementById('root').style.width = isLock ? '100%' : null
-    document.getElementById('root').style.top = isLock ? `-${windowScrollY}px` : null;
-    document.getElementById('a17').style.height = isLock ? '100vh' : null;
-    document.getElementById('a17').style.overflow = isLock ? 'hidden' : null;
-
-    if (!isLock) { // On menu disappearing, scroll down to where saved state is.
-      window.scrollTo(0, this.state.scrollY);
-    }
-  }
-
-  render() {
-    return (
-    <ConnectedSideMenu
-      {...this.props}
-      resetLock={() => this.setUpScrollLock(false)}
-    />
-    )
-  }
-}
-
-export { LockScroll as SideMenu };
+export { LockScollWrap as SideMenu };

@@ -21,14 +21,14 @@ $button-margin: 15px;
   }
 
   &__input {
-    padding-right: 25px;
+    margin-right: 20px;
     border: 2px solid $color-border;
     width: calc(100% - 25px);
 
     color: $color-grey-medium;
     display: block;
     font-size: 18px;
-    line-height: 60px;
+    line-height: 56px;
     padding: 0 22px;
 
     &::placeholder {
@@ -39,6 +39,8 @@ $button-margin: 15px;
   
 
   &__button {
+    font-weight: normal;
+    font-size: 18px;
     width: $button-width;
   }
 }
