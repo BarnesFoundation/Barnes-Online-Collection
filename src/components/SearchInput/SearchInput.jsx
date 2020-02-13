@@ -55,7 +55,7 @@ class SearchInput extends Component {
     
     return (
       <div>
-        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
+        {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className='mobile-filters-section search-input'>
             <form className='mobile-filters-form' onSubmit={this.handleSubmit}>
               <div className='form-field'>
@@ -70,9 +70,9 @@ class SearchInput extends Component {
               </div>
             </form>
           </div>
-        </MediaQuery>
+        </MediaQuery> */}
 
-        <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
+        {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max}> */}
           <div className='search'>
             <div className='search__content'>
               <div className='search__searchbar'>
@@ -99,7 +99,7 @@ class SearchInput extends Component {
               </div>
             </div>
           </div>
-        </MediaQuery>
+        {/* </MediaQuery> */}
       </div>
     );
   }
