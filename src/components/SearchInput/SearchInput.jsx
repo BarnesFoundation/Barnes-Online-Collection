@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Icon from '../Icon';
 import MediaQuery from 'react-responsive';
 import { Dropdowns } from './Dropdowns';
 import { BREAKPOINTS } from '../../constants';
 import * as SearchActions from '../../actions/search';
 import MobilePanelCloseButton from '../CollectionFilters/MobilePanelCloseButton';
-
 import './searchInput.css';
 
 class SearchInput extends Component {
@@ -76,16 +76,28 @@ class SearchInput extends Component {
           <div className='search'>
             <div className='search__content'>
               <div className='search__searchbar'>
-                <input
-                  className='search__input'
-                  type='text'
-                  autoFocus='true'
-                  value={this.state.value}
-                  placeholder='Search a keyword, artist, room number, and more'
-                  onChange={this.onChange}
-                  onFocus={() => this.setFocus(true)}
-                  onBlur={() => this.setFocus(false)}
-                />
+                <div className='search__input-group'>
+                  <input
+                    className='search__input'
+                    type='text'
+                    autoFocus='true'
+                    value={this.state.value}
+                    placeholder='Search a keyword, artist, room number, and more'
+                    onChange={this.onChange}
+                    onFocus={() => this.setFocus(true)}
+                    onBlur={() => this.setFocus(false)}
+                  />
+                  <div className='search-information'>
+                    <Icon svgId='-icon-information' classes='search-information__icon'/>
+                    <div className='font-chapo search-information__tooltip'>
+                      <Icon
+                          svgId='-icon_close'
+                          classes='search-information__icon search-information__icon--x'
+                      />
+                      <span>Find exactly what you're looking for in our collection by searching for artist, accession number, object description, bibliography, provenance, exhibitions, or history</span>
+                    </div>
+                  </div>
+                </div>
                 <button
                   className='btn btn--primary search__button'
                   type='submit'
