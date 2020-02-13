@@ -12,7 +12,36 @@ const copyrights = {
 	'In Copyright': [1, 3],
 	'Copyright Undetermined': [2, 6],
 	'Public Domain': [4, 7, 8, 10],
-}
+};
+
+// Static years list
+const years = [
+	'-4000',
+	'1',
+	'1000',
+	'1500',
+	'1600',
+	'1700',
+	'1800',
+	'1810',
+	'1820',
+	'1830',
+	'1840',
+	'1850',
+	'1860',
+	'1870',
+	'1880',
+	'1890',
+	'1900',
+	'1905',
+	'1910',
+	'1915',
+	'1920',
+	'1930',
+	'1940',
+	'1950',
+	'1960'
+];
 
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
@@ -94,7 +123,8 @@ const generateAssets = async () => {
 		cultures: await getUniqueSearchValues('uniq_cultures', 'culture.keyword'),
 		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
 		locations: generateLocations(),
-		copyrights
+		copyrights,
+		years
 	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
