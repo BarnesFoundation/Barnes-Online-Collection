@@ -4,6 +4,7 @@
 .side-menu {
     font-weight: normal;
 
+
     /**
     * Overwrite how .g-nav class behaves from components-barnes-toolkit/scss/state/_nav-active.scss;
     */
@@ -163,6 +164,8 @@
 
 .g-nav {
     $self: &;
+    z-index: 8;
+
     // transition: 5000ms ease 50ms;
     
     &--custom {

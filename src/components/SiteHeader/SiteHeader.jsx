@@ -148,16 +148,18 @@ class SiteHeader extends Component {
             </nav>
           </div>
           {isGlobalSearchHeader &&
-            <SearchBar
-              className='container global-search'
-              submit={() => console.error('This is not set up yet.')}
-            />
+            <div className='global-search'>
+              <SearchBar
+                className='container'
+                submit={() => console.error('This is not set up yet.')}
+              />
+            </div>
           }
-          {isGlobalSearchHeader &&
+          {/* {isGlobalSearchHeader &&
             <div className='container global-search__buttons'>
                 <h4>Suggested terms</h4>
             </div>
-          }
+          } */}
           <MobileLinks />
           
           <SideMenu
@@ -175,7 +177,7 @@ class SiteHeaderGlobalSearch extends Component {
     super(props);
 
     this.state = {
-      isGlobalSearchActive: true,
+      isGlobalSearchActive: false,
     }
   };
 

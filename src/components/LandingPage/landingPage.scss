@@ -19,7 +19,7 @@
     transition: opacity 0.5s ease;
 
     &--active {
-      z-index: 2;
+      z-index: 1;
       opacity: 50%;
     }
   }
