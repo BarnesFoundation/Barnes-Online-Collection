@@ -28,6 +28,8 @@
     }
 
     &--higher {
+      position: fixed;
+      top: 0;
       height: 100vh;
       z-index: 4;
     }
