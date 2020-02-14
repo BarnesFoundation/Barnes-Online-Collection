@@ -181,35 +181,49 @@ class SiteHeaderGlobalSearch extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { isGlobalSearchActive: false };
+    this.state = {
+      isGlobalSearchActive: false,
+      overlayActive: false,
+    };
   };
+
+  setGlobalSearchStatus = (isGlobalSearchActive) => {
+    this.setState({ isGlobalSearchActive });
+    
+    // This drops the z-index of the shaded overlay only after animation has completed, to prevent a FOUC.
+    if (isGlobalSearchActive) {
+      this.setState({ overlayActive: true });
+    } else {
+      setTimeout(() => this.setState({ overlayActive: false }), 300);
+    }
+  }
 
   render() {
     const { isArtObject } = this.props;
-    const { isGlobalSearchActive } = this.state;
+    const { isGlobalSearchActive, overlayActive } = this.state;
 
     // Apply shaded overlay classes. These are applied in this order so the z-index of higher is not overwritten.
     let shadedOverlayClassNames = 'shaded-background__tint'
     if (isGlobalSearchActive) shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--active`;
-    shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--higher`;
+    if (overlayActive) shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--higher`;
 
     return (
       <div>
         <SiteHeader
           isArtObject={Boolean(isArtObject)}
-          toggleGlobalSearch={() => this.setState({ isGlobalSearchActive: !isGlobalSearchActive }) }
+          toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
         />
         <SiteHeader
           isGlobalSearchHeader
           isGlobalSearchActive={isGlobalSearchActive}
           isArtObject={Boolean(isArtObject)}
-          toggleGlobalSearch={() => this.setState({ isGlobalSearchActive: !isGlobalSearchActive }) }
+          toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
         />
         {/* Lock scroll on global search activation. */}
         <LockScroll isLocked={isGlobalSearchActive}/>
         <div
           className='shaded-background shaded-background--header'
-          onClick={() => this.setState({ isGlobalSearchActive: false })}
+          onClick={() => this.setGlobalSearchStatus(false)}
         >
           <div className={shadedOverlayClassNames}></div>
         </div>
