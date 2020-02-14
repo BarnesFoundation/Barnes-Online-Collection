@@ -88,6 +88,14 @@
     }
 
     .button-inner {
+      &__text {
+        display: none; // Hide text for mobile.
+        
+        @include breakpoint('medium+') {
+          display: inline;
+        }
+      }
+
       &__content {
         border-bottom: 5px solid transparent;
         padding: 20px 0px 15px 0px;
