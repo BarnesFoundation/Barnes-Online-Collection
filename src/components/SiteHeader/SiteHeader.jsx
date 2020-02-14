@@ -116,6 +116,12 @@ class SiteHeader extends Component {
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
 
+    let gHeaderNavLinkClassNames = 'g-header__nav__link';
+    if (!isGlobalSearchActive) gHeaderNavLinkClassNames = `${gHeaderNavLinkClassNames} g-header__nav__link--active`;
+
+    let gHeaderBtnClassNames = 'g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden';
+    if (isGlobalSearchActive) gHeaderBtnClassNames = `${gHeaderBtnClassNames} g-header__nav__btn--active`;
+
     return (
       <div className={isArtObjectClassNames}>
         <header className={gHeaderClassNames} data-behavior='header'>
@@ -126,12 +132,11 @@ class SiteHeader extends Component {
             <nav className='g-header__nav'>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
-              <a className={Boolean(!isGlobalSearchActive) ? 'g-header__nav__link g-header__nav__link--active' : 'g-header__nav__link'} href='/'>Our Collection</a>
+              <a className={gHeaderNavLinkClassNames} href='/'>Our Collection</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
               <btn
                 onClick={toggleGlobalSearch}
-                aria-current={Boolean(isGlobalSearchActive)}
-                className='g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden'
+                className={gHeaderBtnClassNames}
               >
                 <svg width='26' height='26'>
                   <title id='search-open-title'>Search</title>
@@ -162,7 +167,7 @@ class SiteHeader extends Component {
               <div className='container global-search__buttons-area'>
                 <span className='global-search__buttons-term'>Suggested terms</span>
                 <div className='global-search__buttons-group'>
-                  {SUGGESTED_TERMS.map(term => <button className='btn font-zeta global-search__button '>{term}</button>)}
+                  {SUGGESTED_TERMS.map(term => <button key={term} className='btn font-zeta global-search__button '>{term}</button>)}
                 </div>
               </div>
             </div>

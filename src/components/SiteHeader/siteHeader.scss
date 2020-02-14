@@ -55,7 +55,7 @@ html:not([class=""]) {
           color: $color-black;
 
           &:hover,
-          &[aria-current] {
+          &--active {
             color: $color__red--barnes;
           }
         }
