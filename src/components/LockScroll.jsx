@@ -47,11 +47,7 @@ export class LockScroll extends Component {
     // Map over children and add scroll lock reset function.
     return (
         <div>
-            {React.Children.map(children, (child) => (
-                React.cloneElement(child, {
-                    resetLock: () => this.setUpScrollLock(false), // add resetFunction for components that do not unmount.
-                })
-            ))}
+            {children}
         </div>
     );
   }

@@ -92,10 +92,9 @@ const DefaultSideMenu = () => (
 /**
  * Side menu component.
  */
-const SideMenu = ({ resetLock, closeMenu, isOpen, children }) => {
+const SideMenu = ({ closeMenu, isOpen, children }) => {
   const handleNavCloseBtnClick = (e) => {
     e.preventDefault();
-    resetLock();
     closeMenu();
   };
 
