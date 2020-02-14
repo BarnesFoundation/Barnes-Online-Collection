@@ -174,7 +174,7 @@ class CollectionFilters extends Component {
 
     return (
       <div
-        className='container'
+        className='container collection-filters-wrap__container'
         ref={ref => this.ref = ref}
       >
           {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>

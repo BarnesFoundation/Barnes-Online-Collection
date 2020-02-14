@@ -19,12 +19,6 @@ export class LockScroll extends Component {
   }
 
   /**
-   * Lock according to prop on mount, always unlock on unmount.
-   */
-  componentDidMount() { this.setUpScrollLock(this.props.isLocked) }
-  componentWillUnmount() { this.setUpScrollLock(false) }
-
-  /**
    * On update, access a17 and root to lock scrollbar in place
    * TODO => Rewrite this in a more declarative style, not accessing DOM elements imperatively.
    * @param {boolean} isLock - if scroll should be locked.

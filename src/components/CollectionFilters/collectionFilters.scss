@@ -5,15 +5,33 @@
 .applied-filters {
   width: 99.7%;
   border: none;
+
+  @include breakpoint('medium-') {
+    order: 1;
+  }
 }
 
 .collection-filters-wrap {
   @include breakpoint('medium-') {
     padding-bottom: 0;
+    position: fixed;
+    bottom: 0;
+    z-index: 3;
+
+    &__container {
+      width: 100%;
+      padding: 0;
+      display:flex;
+      flex-flow: column;
+    }
   }
 }
 
 .collection-filters {
+  @include breakpoint('medium-') {
+    order: 2;
+  }
+
   z-index: 4;
 
   display: flex;
@@ -98,7 +116,12 @@
       }
 
       &__content {
-        border-bottom: 5px solid transparent;
+        border-top: 5px solid transparent;
+
+        @include breakpoint('large+') {
+          border-bottom: 5px solid transparent;
+          border-top: none;
+        }
         padding: 20px 0px 15px 0px;
       }
       text-align: left;
