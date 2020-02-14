@@ -181,14 +181,17 @@ class SiteHeaderGlobalSearch extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isGlobalSearchActive: true,
-    }
+    this.state = { isGlobalSearchActive: false };
   };
 
   render() {
     const { isArtObject } = this.props;
     const { isGlobalSearchActive } = this.state;
+
+    // Apply shaded overlay classes. These are applied in this order so the z-index of higher is not overwritten.
+    let shadedOverlayClassNames = 'shaded-background__tint'
+    if (isGlobalSearchActive) shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--active`;
+    shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--higher`;
 
     return (
       <div>
@@ -204,8 +207,11 @@ class SiteHeaderGlobalSearch extends Component {
         />
         {/* Lock scroll on global search activation. */}
         <LockScroll isLocked={isGlobalSearchActive}/>
-        <div className='shaded-background shaded-background--header'>
-          <div className='shaded-background__tint shaded-background__tint--active shaded-background__tint--higher'></div>
+        <div
+          className='shaded-background shaded-background--header'
+          onClick={() => this.setState({ isGlobalSearchActive: false })}
+        >
+          <div className={shadedOverlayClassNames}></div>
         </div>
       </div>
     );
