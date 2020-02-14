@@ -22,12 +22,12 @@
     opacity: 0%;
     transition: opacity 0.5s ease;
 
-    // @include breakpoint('medium-') {
-    //   position: fixed;
-    //   top: 0;
-    //   height: 100vh;
-    //   // z-index: 4;
-    // }
+    @include breakpoint('medium-') {
+      position: fixed;
+      top: 0;
+      height: 100vh;
+      // z-index: 4;
+    }
 
     &--active {
       z-index: 1;
