@@ -1,43 +1,27 @@
-import React, { Component } from 'react';
-
-import { bindActionCreators } from 'redux';
+import React from 'react';
 import { connect } from 'react-redux';
-
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
-import ReactTooltip from 'react-tooltip';
 
-class CollectionFiltersMenu extends Component {
-  render() {
-    const filterSets = this.props.filterSets.sets;
-    return (
-      <div className='collection-filters'>
-        <ReactTooltip id="collectionFilterMenuItem" effect="solid"/>
-        {
-          Object
-          .keys(filterSets)
-          .map(key =>
-            <CollectionFiltersMenuItem
-              key={key}
-              title={filterSets[key].title}
-              slug={filterSets[key].slug}
-              svgId={filterSets[key].svgId}
-              tooltip={filterSets[key].tooltip}
-            />
-          )
-        }
-      </div>
-    );
-  }
-}
+// import ReactTooltip from 'react-tooltip';
 
-const mapStateToProps = state => {
-  return {
-    filterSets: state.filterSets
-  }
-}
+const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
+  <div
+    className='collection-filters'
+    onClick={() => parentContainer.scrollIntoView({ behavior: 'smooth' })}
+  >
+    {/* <ReactTooltip id="collectionFilterMenuItem" effect="solid"/> */}
+    {Object.entries(sets)
+        .map(([key, { title, slug, svgId, tooltip }]) => (
+          <CollectionFiltersMenuItem
+            key={key}
+            title={title}
+            slug={slug}
+            svgId={svgId}
+            tooltip={tooltip}
+          />
+        ))}
+  </div>
+);
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}), dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersMenu);
+const mapStateToProps = (state) => ({ sets: state.filterSets.sets });
+export default connect(mapStateToProps)(CollectionFiltersMenu);

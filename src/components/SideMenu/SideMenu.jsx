@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { LockScroll } from '../LockScroll';
 import { htmlClassesRemove } from '../../actions/htmlClassManager';
-import { MAIN_WEBSITE_DOMAIN, CLASSNAME_NAV_ACTIVE} from '../../constants';
+import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './sideMenu.css';
 
 /**
