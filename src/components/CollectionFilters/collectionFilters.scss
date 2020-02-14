@@ -8,13 +8,14 @@
 }
 
 .collection-filters-wrap {
-  z-index: 2;
   @include breakpoint('medium-') {
     padding-bottom: 0;
   }
 }
 
 .collection-filters {
+  z-index: 4;
+
   display: flex;
   justify-content: center;
 

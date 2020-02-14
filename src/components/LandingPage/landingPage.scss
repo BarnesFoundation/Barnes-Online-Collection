@@ -87,9 +87,9 @@
       // padding-bottom: 1rem;
 
       // stay under the header. Unless the mobile-panel is open
-      z-index: $z-index-mobile-panel-overlay;
+      // z-index: $z-index-mobile-panel-overlay;
       .mobile-panel-open & {
-        z-index: $z-index-mobile-panel;
+        // z-index: $z-index-mobile-panel;
       }
     }
   }

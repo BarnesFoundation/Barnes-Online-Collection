@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Icon from '../Icon';
 import { selectFilterSet } from '../../actions/filterSets';
 
-const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, tooltip, visibleFilterSet }) => {
+const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibleFilterSet }) => {
   let filterClassNames = 'btn-collection-filter font-zeta color-light';
   if (slug === 'search') filterClassNames = `${filterClassNames} btn-collection-filter--search`;
   if (slug === 'shuffle') filterClassNames = `${filterClassNames} btn-collection-filter--shuffle`;
@@ -14,8 +14,6 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, toolti
     <button
       className={filterClassNames}
       onClick={() => selectFilterSet(slug)}
-      data-tip={tooltip}
-      data-for='collectionFilterMenuItem'
     >
       <div className='button-inner'>
         <div className='button-inner__content'>

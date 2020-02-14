@@ -33,7 +33,7 @@ const LOGOS = [
 const SUGGESTED_TERMS = ['CAREERS', 'CONTACT', 'SHOP', 'INTERNSHIP', 'MEMBERSHIP', 'PARKING', 'RESTAURANT', 'TICKETS'];
 
 const MobileLinks = () => (
-  <div className='container header-mobile-links-section'>
+  <div className='container header-mobile-links-section header-mobile-links-section--active'>
     <div>
       <a
         className='header-mobile-links-section__link'
@@ -122,6 +122,9 @@ class SiteHeader extends Component {
     let gHeaderBtnClassNames = 'g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden';
     if (isGlobalSearchActive) gHeaderBtnClassNames = `${gHeaderBtnClassNames} g-header__nav__btn--active`;
 
+    let gHeaderNavClassNames = 'g-header__nav';
+    // if (true) gHeaderNavClassNames = `${gHeaderNavClassNames} g-header__nav--hidden`;
+
     return (
       <div className={isArtObjectClassNames}>
         <header className={gHeaderClassNames} data-behavior='header'>
@@ -129,7 +132,7 @@ class SiteHeader extends Component {
             <a className='a-logo g-header__logo' href={MAIN_WEBSITE_DOMAIN}>
               {LOGOS}
             </a>
-            <nav className='g-header__nav'>
+            <nav className={gHeaderNavClassNames}>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
               <a className={gHeaderNavLinkClassNames} href='/'>Our Collection</a>

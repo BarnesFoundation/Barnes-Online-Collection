@@ -2,15 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 
-// import ReactTooltip from 'react-tooltip';
-
 const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
   <div
     className='collection-filters'
     // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
-    onClick={() => parentContainer.scrollIntoView({ behavior: 'smooth' })}
+    // This is wrapped in a RAF to prevent no scroll on clicking Search button.
+    onClick={() => requestAnimationFrame(() => parentContainer.scrollIntoView({ behavior: 'smooth' }))}
   >
-    {/* <ReactTooltip id="collectionFilterMenuItem" effect="solid"/> */}
     {Object.entries(sets)
         .map(([key, { title, slug, svgId, tooltip }]) => (
           <CollectionFiltersMenuItem

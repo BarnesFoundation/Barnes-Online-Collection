@@ -29,6 +29,14 @@ html:not([class=""]) {
         border-color: $color__red--barnes;
       }
     }
+
+    &--hidden {
+      #{ $self }__nav {
+        &__link {
+          display: none;
+        }
+      }
+    }
   }
 
   &--unlocked {
