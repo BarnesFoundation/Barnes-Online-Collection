@@ -9,6 +9,10 @@
   position: relative;
   overflow-x: hidden;
 
+  &--header {
+    position: inherit;
+  }
+
   &__tint {
     position: absolute;
     background-color: black;
@@ -21,6 +25,11 @@
     &--active {
       z-index: 1;
       opacity: 50%;
+    }
+
+    &--higher {
+      height: 100vh;
+      z-index: 4;
     }
   }
 }

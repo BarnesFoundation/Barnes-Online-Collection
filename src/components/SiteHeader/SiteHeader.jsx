@@ -204,6 +204,9 @@ class SiteHeaderGlobalSearch extends Component {
         />
         {/* Lock scroll on global search activation. */}
         <LockScroll isLocked={isGlobalSearchActive}/>
+        <div className='shaded-background shaded-background--header'>
+          <div className='shaded-background__tint shaded-background__tint--active shaded-background__tint--higher'></div>
+        </div>
       </div>
     );
   }

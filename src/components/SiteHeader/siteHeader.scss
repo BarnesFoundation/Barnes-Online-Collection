@@ -18,7 +18,7 @@ html:not([class=""]) {
 .g-header {
   $self: &;
 
-  z-index: 4; // $z-index-g-header;
+  z-index: 5; // $z-index-g-header;
   position: fixed;
   top: 0;
 
@@ -33,7 +33,12 @@ html:not([class=""]) {
 
   &--unlocked {
     position: fixed;
-    transform: translate3d(0,-300%,0);
+
+    transform: translate3d(0,-1000%,0);
+
+    @include breakpoint('medium+') {
+      transform: translate3d(0,-500%,0);
+    }
   }
 
   &--locked {
@@ -136,9 +141,19 @@ html:not([class=""]) {
 
   &__buttons-area {
     padding-top: 30px;
+    padding-bottom: 30px;
+
+    @include breakpoint('medium+') {
+      padding-bottom: 60px;
+    }
   }
 
   &__button {
+    width: auto;
+
+    @include breakpoint('small-') {
+    }
+
     margin-left: 0 !important;
     margin-right: 15px;
     margin-top: 10px !important;
