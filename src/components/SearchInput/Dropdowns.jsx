@@ -108,6 +108,7 @@ const DropdownMenu = ({
 class DropdownSection extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             activeItem: null,
         };

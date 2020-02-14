@@ -30,7 +30,7 @@ class CollectionFilters extends Component {
   constructor(props) {
     super(props);
 
-    this.ref = null;
+    this.ref = null; // This ref is for CollectionFiltersMenu scrollIntoView method.
   }
 
   getFilterSet() {

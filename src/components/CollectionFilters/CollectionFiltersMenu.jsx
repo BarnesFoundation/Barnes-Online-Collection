@@ -7,6 +7,7 @@ import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
   <div
     className='collection-filters'
+    // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
     onClick={() => parentContainer.scrollIntoView({ behavior: 'smooth' })}
   >
     {/* <ReactTooltip id="collectionFilterMenuItem" effect="solid"/> */}
