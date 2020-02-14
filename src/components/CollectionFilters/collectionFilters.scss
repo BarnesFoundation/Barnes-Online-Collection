@@ -3,11 +3,21 @@
 
 // Magic string so applied filters border matches box.
 .applied-filters {
-  width: 99.7%;
+  width: 100%;
   border: none;
 
   @include breakpoint('medium-') {
     order: 1;
+  }
+
+  @include breakpoint('large+') {
+    width: 99.7%;
+  }
+
+  .search {
+    border-left: none;
+    border-right: none;
+    // border-top: 1px #dcdcdc solid;
   }
 }
 
@@ -40,7 +50,7 @@
   padding-left: 2%;
   padding-right: 2%;
 
-  width: 99.7%; // Magic number to line up with masonry.
+  width: 100; // Magic number to line up with masonry.
   white-space: nowrap;
   margin-bottom: -2px; // So border is flush with images.
   
@@ -51,6 +61,7 @@
   }
 
   @include breakpoint('large+') {
+    width: 99.7%;
     border-bottom: 1px solid #dcdcdc;
     margin-bottom: 0;
   }
