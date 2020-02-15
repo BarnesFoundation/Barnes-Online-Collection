@@ -9,6 +9,10 @@
   position: relative;
   overflow-x: hidden;
 
+  &--header {
+    position: inherit;
+  }
+
   &__tint {
     position: absolute;
     background-color: black;
@@ -18,9 +22,23 @@
     opacity: 0%;
     transition: opacity 0.5s ease;
 
+    @include breakpoint('medium-') {
+      position: fixed;
+      top: 0;
+      height: 100vh;
+      // z-index: 4;
+    }
+
     &--active {
-      z-index: 2;
-      opacity: 50%;
+      z-index: 1;
+      opacity: 20%;
+    }
+
+    &--higher {
+      position: fixed;
+      top: 0;
+      height: 100vh;
+      z-index: 4;
     }
   }
 }
@@ -76,9 +94,9 @@
       // padding-bottom: 1rem;
 
       // stay under the header. Unless the mobile-panel is open
-      z-index: $z-index-mobile-panel-overlay;
+      // z-index: $z-index-mobile-panel-overlay;
       .mobile-panel-open & {
-        z-index: $z-index-mobile-panel;
+        // z-index: $z-index-mobile-panel;
       }
     }
   }

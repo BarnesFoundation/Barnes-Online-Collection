@@ -5,30 +5,48 @@ $button-width: 60px;
 $button-margin: 15px;
 
 .search {
+  $self: &;
+
   background-color: $color-grey-ultra-light-2;
   padding: 30px 40px;
   border-left: 1px solid #dcdcdc;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
-  
+
   &__searchbar {
     display: grid;
     grid-template-columns: calc(100% - 115px) 60px;
+
+    // Hide button for global search for mobile devices.
+    &--global {
+      @include breakpoint('small-') {
+        grid-template-columns: none;
+    
+        #{ $self }__button {
+          display: none;
+        }
+
+        #{ $self }__input {
+          width: 100%;
+        }
+      }
+    }
   }
 
   &__input-group {
     position: relative;
+    width: 100%;
   }
 
   &__input {
-    padding-right: 25px;
+    margin-right: 20px;
     border: 2px solid $color-border;
     width: calc(100% - 25px);
 
     color: $color-grey-medium;
     display: block;
     font-size: 18px;
-    line-height: 60px;
+    line-height: 56px;
     padding: 0 22px;
 
     &::placeholder {
@@ -36,9 +54,9 @@ $button-margin: 15px;
     }
   }
 
-  
-
   &__button {
+    font-weight: normal;
+    font-size: 18px;
     width: $button-width;
   }
 }

@@ -108,6 +108,7 @@ const DropdownMenu = ({
 class DropdownSection extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             activeItem: null,
         };
@@ -159,6 +160,7 @@ class DropdownSection extends Component {
         const data = DROPDOWN_TERMS_MAP[activeItem];
 
         switch (activeItem) {
+            case (DROPDOWN_TERMS.ARTIST): return null;
             case (DROPDOWN_TERMS.YEAR): {
                 return (
                     <DropdownMenu
@@ -169,24 +171,6 @@ class DropdownSection extends Component {
                     </DropdownMenu>
                 );
             };
-            case (DROPDOWN_TERMS.ARTIST): {
-                return (
-                    <ArtistSideMenu
-                        closeMenu={() => this.setActiveItem(null)}
-                        data={data}
-                        // Sort data inside of artistMenu component.
-                        render={sortedData => (
-                            <ListedContent
-                                isArtists
-                                data={sortedData}
-                                activeTerms={activeTerms}
-                                setActiveTerm={this.setActiveTerm}
-                            />
-                        )}
-                    />
-                    
-                );
-            }
             default: {
                 return (
                     <DropdownMenu
@@ -212,6 +196,7 @@ class DropdownSection extends Component {
 
     render() {
         const { activeItem } = this.state;
+        const { activeTerms } = this.props;
 
         return (
             <div className='dropdowns-menu'>
@@ -236,6 +221,21 @@ class DropdownSection extends Component {
                             <span className='dropdowns-menu__button-content'>{term}</span>
                             {!isLastDropdown && <Icon svgId='-icon_arrow_down' classes={iconClassName} />}
                             {isActiveItem && this.getDropdownContent(term)}
+
+                            <ArtistSideMenu
+                                isOpen={isActiveItem}
+                                closeMenu={() => this.setActiveItem(null)}
+                                data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                                // Sort data inside of artistMenu component.
+                                render={sortedData => (
+                                    <ListedContent
+                                        isArtists
+                                        data={sortedData}
+                                        activeTerms={activeTerms}
+                                        setActiveTerm={this.setActiveTerm}
+                                    />
+                                )}
+                            />
                         </button>
                     );
                 })}

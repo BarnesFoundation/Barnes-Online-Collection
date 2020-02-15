@@ -27,6 +27,12 @@ import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
 import './collectionFilters.css';
 
 class CollectionFilters extends Component {
+  constructor(props) {
+    super(props);
+
+    this.ref = null; // This ref is for CollectionFiltersMenu scrollIntoView method.
+  }
+
   getFilterSet() {
     const { visibleFilterSet } = this.props.filterSets;
 
@@ -167,7 +173,10 @@ class CollectionFilters extends Component {
     const filterSet = this.getFilterSet();
 
     return (
-      <div className='container'>
+      <div
+        className='container collection-filters-wrap__container'
+        ref={ref => this.ref = ref}
+      >
           {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
             { mobileFiltersVisible &&
               <div>
@@ -190,7 +199,7 @@ class CollectionFilters extends Component {
           </MediaQuery> */}
           {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}> */}
           {/* <MediaQuery> */}
-              <CollectionFiltersMenu />
+            <CollectionFiltersMenu parentContainer={this.ref}/>
           {/* </MediaQuery> */}
         <div className="m-block m-block--flush applied-filters">
           {filterSet}

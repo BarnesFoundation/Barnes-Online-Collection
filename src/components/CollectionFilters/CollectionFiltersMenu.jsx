@@ -1,43 +1,26 @@
-import React, { Component } from 'react';
-
-import { bindActionCreators } from 'redux';
+import React from 'react';
 import { connect } from 'react-redux';
-
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
-import ReactTooltip from 'react-tooltip';
 
-class CollectionFiltersMenu extends Component {
-  render() {
-    const filterSets = this.props.filterSets.sets;
-    return (
-      <div className='collection-filters'>
-        <ReactTooltip id="collectionFilterMenuItem" effect="solid"/>
-        {
-          Object
-          .keys(filterSets)
-          .map(key =>
-            <CollectionFiltersMenuItem
-              key={key}
-              title={filterSets[key].title}
-              slug={filterSets[key].slug}
-              svgId={filterSets[key].svgId}
-              tooltip={filterSets[key].tooltip}
-            />
-          )
-        }
-      </div>
-    );
-  }
-}
+const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
+  <div
+    className='collection-filters'
+    // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
+    // This is wrapped in a RAF to prevent no scroll on clicking Search button.
+    onClick={() => requestAnimationFrame(() => parentContainer.scrollIntoView({ behavior: 'smooth' }))}
+  >
+    {Object.entries(sets)
+        .map(([key, { title, slug, svgId, tooltip }]) => (
+          <CollectionFiltersMenuItem
+            key={key}
+            title={title}
+            slug={slug}
+            svgId={svgId}
+            tooltip={tooltip}
+          />
+        ))}
+  </div>
+);
 
-const mapStateToProps = state => {
-  return {
-    filterSets: state.filterSets
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({}), dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersMenu);
+const mapStateToProps = (state) => ({ sets: state.filterSets.sets });
+export default connect(mapStateToProps)(CollectionFiltersMenu);

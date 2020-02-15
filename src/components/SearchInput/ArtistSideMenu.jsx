@@ -37,14 +37,12 @@ export class ArtistSideMenu extends Component {
     }
     
     render() {
-        const { closeMenu, render } = this.props;
+        const { closeMenu, render, isOpen } = this.props;
         const { artistRadio, data } = this.state;
-
-        console.log(data);
-
+        
         return (
             <SideMenu
-                isOpen={true}
+                isOpen={isOpen}
                 closeMenu={closeMenu}
             >
                 <div>

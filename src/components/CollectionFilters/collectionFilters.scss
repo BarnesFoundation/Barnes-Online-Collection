@@ -3,25 +3,54 @@
 
 // Magic string so applied filters border matches box.
 .applied-filters {
-  width: 99.7%;
+  width: 100%;
   border: none;
+
+  @include breakpoint('medium-') {
+    order: 1;
+  }
+
+  @include breakpoint('large+') {
+    width: 99.7%;
+  }
+
+  .search {
+    border-left: none;
+    border-right: none;
+    // border-top: 1px #dcdcdc solid;
+  }
 }
 
 .collection-filters-wrap {
-  z-index: 2;
   @include breakpoint('medium-') {
     padding-bottom: 0;
+    position: fixed;
+    bottom: 0;
+    z-index: 3;
+
+    &__container {
+      width: 100%;
+      padding: 0;
+      display:flex;
+      flex-flow: column;
+    }
   }
 }
 
 .collection-filters {
+  @include breakpoint('medium-') {
+    order: 2;
+  }
+
+  z-index: 4;
+
   display: flex;
   justify-content: center;
 
   padding-left: 2%;
   padding-right: 2%;
 
-  width: 99.7%; // Magic number to line up with masonry.
+  width: 100; // Magic number to line up with masonry.
   white-space: nowrap;
   margin-bottom: -2px; // So border is flush with images.
   
@@ -32,6 +61,7 @@
   }
 
   @include breakpoint('large+') {
+    width: 99.7%;
     border-bottom: 1px solid #dcdcdc;
     margin-bottom: 0;
   }
@@ -88,8 +118,21 @@
     }
 
     .button-inner {
+      &__text {
+        display: none; // Hide text for mobile.
+        
+        @include breakpoint('medium+') {
+          display: inline;
+        }
+      }
+
       &__content {
-        border-bottom: 5px solid transparent;
+        border-top: 5px solid transparent;
+
+        @include breakpoint('large+') {
+          border-bottom: 5px solid transparent;
+          border-top: none;
+        }
         padding: 20px 0px 15px 0px;
       }
       text-align: left;
