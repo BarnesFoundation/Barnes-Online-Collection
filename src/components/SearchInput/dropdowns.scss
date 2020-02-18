@@ -3,6 +3,7 @@
 
 .dropdowns-menu {
     $self: &;
+    text-align: left;
 
     @include breakpoint('medium-') {
         display: none;
@@ -11,15 +12,15 @@
     &--active {
         @include breakpoint('medium-') {
             margin-top: 30px;
-            display: grid;
-            grid-template-rows: repeat(6, 1fr);
+            display: flex;
+            flex-direction: column;
 
             #{ $self }__button {
                 border-top: 1px solid $color-border;
                 border-left: 1px solid $color-border;
                 border-right: 1px solid $color-border;
 
-                &:last-of-type {
+                &--last {
                     border-bottom: 1px solid $color-border;
                 }
 
@@ -38,7 +39,14 @@
         }
     }
 
-    text-align: left;
+
+    &__button-wrapper {
+        @include breakpoint('large+') {
+            position: relative;
+        }
+
+        display: inline;
+    }
     
     &__button {
         // Font
@@ -57,6 +65,12 @@
         background: transparent;
         cursor: pointer;
 
+        width: 100%;
+
+        @include breakpoint('large+') {
+            width: auto;
+        }
+
         // For dividing line before last item.
         &--last {
             @include breakpoint('large+') {
@@ -72,10 +86,6 @@
                     top: 80%;
                 }
             }
-        }
-
-        @include breakpoint('medium+') {
-            // min-width: 120px;
         }
     }
 
@@ -99,36 +109,61 @@
 }
 
 .dropdown {
-    // Element positioning relative to parent button.
-    position: absolute;
-    top: 60px;
-    left: -20px;
-    z-index: 5;
-
-    // Dropdown dimensions
-    width: 210px;
-    height: 300px;
-
-    // Styling
-    background-color: white;
-    border: 2px solid $color-border;
     cursor: default;
-
-    // Margins/Padding
-    padding: 10px 20px;
 
     // Style scrollbar
     @include scrollbar();
+    overflow-x: hidden;
+    position: absolute;
+    z-index: 5;
+
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background-color: $color-grey-ultra-light-2;
+
+    @include breakpoint('large+') {
+        // Element positioning relative to parent button.
+        position: absolute;
+        top: 40px;
+        left: -20px;
+
+        // Dropdown dimensions
+        width: 210px;
+        height: 300px;
+
+        // Styling
+        background-color: white;
+        border: 2px solid $color-border;
+
+        // Margins/Padding
+        padding: 10px 20px;
+    }
 
 
     // Header item
     &__header {
-        position: relative;
-        margin-bottom: 10px;
+        margin-top: 15px;
+        padding: 0px 40px 15px 40px;
 
-        &--text {
-            margin-top: 0; // Remove default font-gamma margin.
-            margin-bottom: 15px;
+        border-bottom: 1px solid $color-border;
+        
+        @include breakpoint('large+') {
+            display: block;
+
+            position: relative;
+
+            padding: 0;
+            border-bottom: none;
+            margin-top: 0;
+
+            &--text {
+                margin-top: 0; // Remove default font-gamma margin.
+                margin-bottom: 15px;
+            }
         }
     }
 
@@ -136,6 +171,7 @@
     &__icon {
         // Positioning
         position: absolute;
+
         right: -11px;
         top: 3px;
 
@@ -147,21 +183,54 @@
 
         // Pad down x mark.
         &--x {
-            right: -10px;
-            top: 10px;
+            display: none;
+            
 
-            font-size: 11px;
+            @include breakpoint('large+') {
+                display: inline;
+
+                right: -10px;
+                top: 10px;
+
+                font-size: 11px;
+            }
+        }
+
+        &--back {
+            display: inline-block;
+            font-size: 19px;
+            position: relative;
+            transform: rotate(90deg);
+            margin-right: 20px;
+
+            @include breakpoint('large') {
+                display: none;
+            }
         }
 
         &--artist {
-            position: relative;
-            margin-bottom: 2px;
+            position: absolute;
+            right: 10px;
+            top: 13px;
+
+            @include breakpoint('large+') {
+                position: relative;
+                margin-bottom: 2px;
+            }
         }
     }
 
     &__content {
         font-weight: normal;
         font-size: 15px;
+
+        margin-top: 10px;
+        padding: 0px 40px 15px 40px;
+
+        @include breakpoint('large+') {
+            padding: 0;
+            margin-top: 0;
+        }
     }
 
     &__list {
@@ -170,7 +239,13 @@
 
     &__list-item {
         position: relative;
-        margin: 0 0 10px 0;
+        margin: 0;
+
+        line-height: 40px;
+
+        @include breakpoint('large') {
+            line-height: 30px;
+        }
         
         &--active,
         &:hover {

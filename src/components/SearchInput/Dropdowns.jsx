@@ -91,6 +91,12 @@ const DropdownMenu = ({
         }}
     >
         <div className='dropdown__header'>
+            {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
+            <Icon
+                svgId='-icon_arrow_down'
+                classes='dropdown__icon dropdown__icon--back'
+                onClick={clear}
+            />
             <span className='font-delta dropdown__header--text'>{headerText}</span>
             <Icon
                 svgId='-icon_close'
@@ -218,15 +224,18 @@ class DropdownSection extends Component {
                     if (isLastDropdown) iconClassName = `${iconClassName} dropdowns-menu__icon--last`;
                     
                     return (
-                        <button
-                            key={term}
-                            className={buttonClassName}
-                            onClick={() => this.setActiveItem(term)}
-                        >
-                            <span className='dropdowns-menu__button-content'>{term}</span>
-                            <Icon svgId='-icon_arrow_down' classes={iconClassName} />
+                        <div className='dropdowns-menu__button-wrapper'>
+                            <button
+                                key={term}
+                                className={buttonClassName}
+                                onClick={() => this.setActiveItem(term)}
+                            >
+                                <span className='dropdowns-menu__button-content'>{term}</span>
+                                <Icon svgId='-icon_arrow_down' classes={iconClassName} />
+                                
+                            </button>
                             {isActiveItem && this.getDropdownContent(term)}
-                        </button>
+                        </div>
                     );
                 })}
 

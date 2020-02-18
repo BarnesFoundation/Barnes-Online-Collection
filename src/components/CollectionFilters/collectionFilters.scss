@@ -46,7 +46,7 @@
 
   width: 100; // Magic number to line up with masonry.
   white-space: nowrap;
-  margin-bottom: -2px; // So border is flush with images.
+  margin-bottom: 10px;
   
   @include breakpoint('medium+') {
     // overflow: hidden;
@@ -151,6 +151,7 @@
       @include breakpoint('medium+') {
         float: none;
       }
+      
       margin-right: 0;
 
       .button-inner {
@@ -172,8 +173,13 @@
           position: absolute;
           height: $collection-filter-icon-font-size;
           border-left: 1px solid #dcdcdc;
-          transform: translateY(-50%);
           top: 50%;
+
+          transform: translateY(-35%);
+
+          @include breakpoint('large+') {
+            transform: translateY(-50%);
+          }
         }
 
         .collection-filter-icon {
@@ -275,47 +281,40 @@
 }
 
 .applied-filter-tags-container-wrap {
+  display: none;
+  padding-top: 0;
+
   @include clearfix();
 
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: $mobile-filters-section-padding;
-
-  .flex-right {
-    // make them stay left and right
-    margin-left: auto;
-  }
-
-  .btn-filter-shuffle {
-    display: none;
-  }
-
-  @include breakpoint('medium-') {
-    padding-top: 0;
-    
-    // let the tags and the 'clear all' button wrap
-    display: block;
+  @include breakpoint('large+') {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: $mobile-filters-section-padding;
 
     .flex-right {
-      text-align: left;
+      // make them stay left and right
+      margin-left: auto;
     }
-
+  
     .btn-filter-shuffle {
-      float: right;
-      // display: inline-block;
+      display: none;
     }
   }
 }
 
 .applied-filter-tags-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: none;
 
-  &.hidden {
-    display: none;
+  @include breakpoint('large+') {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    &.hidden {
+      display: none;
+    }
   }
 }
 

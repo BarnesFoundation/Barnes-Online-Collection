@@ -6,6 +6,16 @@
     position: relative;
     width: 100%;
     height: 100%;
+
+    margin-top: 15px;
+
+    @include breakpoint('medium+') {
+      margin-top: 30px;
+    }
+
+    @include breakpoint('large+') {
+      margin-top: 0px;
+    }
   }
 
   .component-art-object-grid-results {
