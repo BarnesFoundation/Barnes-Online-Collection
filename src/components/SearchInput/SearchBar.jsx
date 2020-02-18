@@ -42,7 +42,7 @@ export class SearchBar extends Component {
     }
 
     render() {
-        const { hasTooltip, className, placeholder } = this.props;
+        const { hasTooltip, className, placeholder, onFocus } = this.props;
 
         return (
             <div className={`search__searchbar ${className}`}>
@@ -54,7 +54,11 @@ export class SearchBar extends Component {
                         value={this.state.value}
                         placeholder={placeholder || 'Search'}
                         onChange={this.onChange}
-                        onFocus={() => this.setFocus(true)}
+                        onFocus={() => {
+                            this.setFocus(true); // Set focus state for this component.
+
+                            if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
+                        }}
                         onBlur={() => this.setFocus(false)}
                     />
                     {hasTooltip &&
