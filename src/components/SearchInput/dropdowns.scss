@@ -111,12 +111,13 @@
 .dropdown {
     cursor: default;
 
-    // Style scrollbar
-    @include scrollbar();
-    overflow-x: hidden;
+    @include breakpoint('medium-') {
+        display: grid;
+        grid-template-rows: 60px 1fr;
+    }
+
     position: absolute;
     z-index: 5;
-
 
     width: 100%;
     height: 100%;
@@ -126,6 +127,10 @@
     background-color: $color-grey-ultra-light-2;
 
     @include breakpoint('large+') {
+        // Style scrollbar
+        @include scrollbar();
+        overflow-x: hidden;
+
         // Element positioning relative to parent button.
         position: absolute;
         top: 40px;
@@ -146,21 +151,33 @@
 
     // Header item
     &__header {
+        cursor: pointer;
+
+        &--text {
+            font-size: 21px;
+        }
+
         margin-top: 15px;
         padding: 0px 40px 15px 40px;
 
         border-bottom: 1px solid $color-border;
         
         @include breakpoint('large+') {
+            cursor: default;
             display: block;
+
+            font-size: 25px;
 
             position: relative;
 
             padding: 0;
             border-bottom: none;
             margin-top: 0;
+            margin-bottom: 5px;
 
             &--text {
+                font-size: 25px;
+
                 margin-top: 0; // Remove default font-gamma margin.
                 margin-bottom: 15px;
             }
@@ -190,7 +207,7 @@
                 display: inline;
 
                 right: -10px;
-                top: 10px;
+                top: 15px;
 
                 font-size: 11px;
             }
@@ -203,19 +220,19 @@
             transform: rotate(90deg);
             margin-right: 20px;
 
-            @include breakpoint('large') {
+            @include breakpoint('large+') {
                 display: none;
             }
         }
 
         &--artist {
-            position: absolute;
-            right: 10px;
-            top: 13px;
+            position: relative;
+            margin-bottom: 2px;
 
-            @include breakpoint('large+') {
-                position: relative;
-                margin-bottom: 2px;
+            @include breakpoint('medium-') {
+                position: absolute;
+                right: 10px;
+                top: 13px;
             }
         }
     }
@@ -224,10 +241,15 @@
         font-weight: normal;
         font-size: 15px;
 
+        @include scrollbar($color-grey-ultra-light-2);
+        overflow-x: hidden;
+
         margin-top: 10px;
         padding: 0px 40px 15px 40px;
 
         @include breakpoint('large+') {
+            overflow-x: none;
+            overflow-y: none;
             padding: 0;
             margin-top: 0;
         }
@@ -243,7 +265,7 @@
 
         line-height: 40px;
 
-        @include breakpoint('large') {
+        @include breakpoint('large+') {
             line-height: 30px;
         }
         

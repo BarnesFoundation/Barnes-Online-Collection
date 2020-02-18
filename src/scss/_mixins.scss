@@ -32,7 +32,7 @@
   }
 }
 
-@mixin scrollbar() {
+@mixin scrollbar($border: white) {
   // Scrollbar
   overflow-y: scroll;
 
@@ -44,7 +44,7 @@
       border-radius: 10px;
       min-height: 120px;
       background-color: $color-border;
-      border: solid 8px white;
+      border: solid 8px $border;
   }
 }
 

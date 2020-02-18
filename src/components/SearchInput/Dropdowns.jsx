@@ -90,18 +90,19 @@ const DropdownMenu = ({
             e.stopPropagation();
         }}
     >
-        <div className='dropdown__header'>
+        <div
+            className='dropdown__header'
+            onClick={clear}
+        >
             {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
             <Icon
                 svgId='-icon_arrow_down'
                 classes='dropdown__icon dropdown__icon--back'
-                onClick={clear}
             />
             <span className='font-delta dropdown__header--text'>{headerText}</span>
             <Icon
                 svgId='-icon_close'
                 classes='dropdown__icon dropdown__icon--x'
-                onClick={clear}
             />
         </div>
         <div className='dropdown__content'>
