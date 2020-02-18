@@ -221,24 +221,23 @@ class DropdownSection extends Component {
                             <span className='dropdowns-menu__button-content'>{term}</span>
                             {!isLastDropdown && <Icon svgId='-icon_arrow_down' classes={iconClassName} />}
                             {isActiveItem && this.getDropdownContent(term)}
-
-                            <ArtistSideMenu
-                                isOpen={isActiveItem}
-                                closeMenu={() => this.setActiveItem(null)}
-                                data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
-                                // Sort data inside of artistMenu component.
-                                render={sortedData => (
-                                    <ListedContent
-                                        isArtists
-                                        data={sortedData}
-                                        activeTerms={activeTerms}
-                                        setActiveTerm={this.setActiveTerm}
-                                    />
-                                )}
-                            />
                         </button>
                     );
                 })}
+                <ArtistSideMenu
+                    isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
+                    closeMenu={() => this.setActiveItem(null)}
+                    data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                    // Sort data inside of artistMenu component.
+                    render={sortedData => (
+                        <ListedContent
+                            isArtists
+                            data={sortedData}
+                            activeTerms={activeTerms}
+                            setActiveTerm={this.setActiveTerm}
+                        />
+                    )}
+                />
             </div>
         )
     }

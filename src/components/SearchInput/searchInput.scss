@@ -73,7 +73,7 @@ $button-margin: 15px;
   &__icon {
     // Hide icon for smaller viewports.
     @include breakpoint('medium-') {
-      // display: none;
+      display: none;
     }
 
     position: absolute;
