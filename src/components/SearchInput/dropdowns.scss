@@ -2,11 +2,43 @@
 @import '../../scss/mixins.scss';
 
 .dropdowns-menu {
-    text-align: left;
+    $self: &;
 
-    // For Mobile
-    // display: grid;
-    // grid-template-rows: repeat(6, 1fr);
+    @include breakpoint('medium-') {
+        display: none;
+    }
+
+    &--active {
+        @include breakpoint('medium-') {
+            margin-top: 30px;
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+
+            #{ $self }__button {
+                border-top: 1px solid $color-border;
+                border-left: 1px solid $color-border;
+                border-right: 1px solid $color-border;
+
+                &:last-of-type {
+                    border-bottom: 1px solid $color-border;
+                }
+
+                margin-right: 0;
+                padding: 20px 15px;
+
+                background-color: $color-white;
+            }
+
+            #{ $self }__icon {
+                top: 19px; // Replicate padding.
+                right: 20px;
+                transform: rotate(-90deg);
+                display: inline;
+            }
+        }
+    }
+
+    text-align: left;
     
     &__button {
         // Font
@@ -27,16 +59,18 @@
 
         // For dividing line before last item.
         &--last {
-            padding-left: 30px;
-            &:before {
-                display: block;
-                left: 0;
-                content: ' ';
-                position: absolute;
-                height: $collection-filter-icon-font-size;
-                border-left: 1px solid $color-grey-light;
-                transform: translateY(-50%);
-                top: 80%;
+            @include breakpoint('large+') {
+                padding-left: 30px;
+                &:before {
+                    display: block;
+                    left: 0;
+                    content: ' ';
+                    position: absolute;
+                    height: $collection-filter-icon-font-size;
+                    border-left: 1px solid $color-grey-light;
+                    transform: translateY(-50%);
+                    top: 80%;
+                }
             }
         }
 
@@ -56,6 +90,10 @@
 
         &--active {
             transform: rotate(-180deg);
+        }
+
+        &--last {
+            display: none;
         }
     }
 }

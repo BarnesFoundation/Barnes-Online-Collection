@@ -50,7 +50,7 @@ export class SearchBar extends Component {
                     <input
                         className='search__input'
                         type='text'
-                        autoFocus='true'
+                        // autoFocus={true}
                         value={this.state.value}
                         placeholder={placeholder || 'Search'}
                         onChange={this.onChange}
