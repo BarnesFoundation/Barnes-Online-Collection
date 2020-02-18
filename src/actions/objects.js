@@ -498,10 +498,10 @@ export const searchObjects = (term, fromIndex=0) => {
 			return acc;
 		}, {}))
 	}
-
-    body.query.bool['must'] = {
-      'multi_match': query
-    };
+	
+    body.query.bool['must'] = [
+      { 'multi_match': query }
+	];
 
     DEV_LOG(body);
 
