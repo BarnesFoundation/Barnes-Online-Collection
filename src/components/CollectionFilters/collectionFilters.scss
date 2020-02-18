@@ -13,12 +13,6 @@
   @include breakpoint('large+') {
     width: 99.7%;
   }
-
-  .search {
-    border-left: none;
-    border-right: none;
-    // border-top: 1px #dcdcdc solid;
-  }
 }
 
 .collection-filters-wrap {

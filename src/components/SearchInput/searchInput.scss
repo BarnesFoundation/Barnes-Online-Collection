@@ -9,9 +9,14 @@ $button-margin: 15px;
 
   background-color: $color-grey-ultra-light-2;
   padding: 30px 40px;
-  border-left: 1px solid #dcdcdc;
-  border-right: 1px solid #dcdcdc;
-  border-bottom: 1px solid #dcdcdc;
+  border-left: 1px solid $color-border;
+  border-right: 1px solid $color-border;
+  border-bottom: 1px solid $color-border;
+
+  @include breakpoint('medium-') {
+    border-left: none;
+    border-right: none;
+  }
 
   &__searchbar {
     display: grid;

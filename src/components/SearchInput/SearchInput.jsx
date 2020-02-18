@@ -24,6 +24,7 @@ class SearchInput extends Component {
 
   render() {
     const { addSearchTerm } = this.props;
+    const { dropdownsActive } = this.state;
 
     return (
       <div>
@@ -49,12 +50,14 @@ class SearchInput extends Component {
             <div className='search__content'>
               <SearchBar
                 hasTooltip
-                onFocus={() => this.setState({ dropdownsActive: true })}
+                onFocus={() => {
+                  this.setState({ dropdownsActive: true });
+                }}
                 submit={addSearchTerm}
                 placeholder='Search a keyword, artist, room number, and more'
               />
               <div className='search__dropdowns'>
-                <Dropdowns />
+                <Dropdowns dropdownsActive={dropdownsActive}/>
               </div>
             </div>
           </div>

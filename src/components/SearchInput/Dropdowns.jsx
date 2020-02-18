@@ -84,7 +84,7 @@ const DropdownMenu = ({
     headerText,
 }) => (
     <div
-        className='dropdown'
+        className='dropdowns-menu__dropdown dropdown'
         onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -160,6 +160,7 @@ class DropdownSection extends Component {
         const data = DROPDOWN_TERMS_MAP[activeItem];
 
         switch (activeItem) {
+            // Do not return for artist, as menu needs to be stateful for animation.
             case (DROPDOWN_TERMS.ARTIST): return null;
             case (DROPDOWN_TERMS.YEAR): {
                 return (
@@ -196,10 +197,13 @@ class DropdownSection extends Component {
 
     render() {
         const { activeItem } = this.state;
-        const { activeTerms } = this.props;
+        const { activeTerms, dropdownsActive } = this.props;
+        
+        let dropdownsMenuClassName = 'dropdowns-menu';
+        if (dropdownsActive) dropdownsMenuClassName = `${dropdownsMenuClassName} dropdowns-menu--active`
 
         return (
-            <div className='dropdowns-menu'>
+            <div className={dropdownsMenuClassName}>
                 {DROPDOWN_TERMS_ARRAY.map((term, i) => {
                     const isLastDropdown = i === DROPDOWN_TERMS_ARRAY.length - 1;
                     const isActiveItem = activeItem === term;
@@ -211,6 +215,7 @@ class DropdownSection extends Component {
                     // If this is the active item, we want to flip the chevron.
                     let iconClassName = 'dropdowns-menu__icon';
                     if (isActiveItem) iconClassName = `${iconClassName} dropdowns-menu__icon--active`;
+                    if (isLastDropdown) iconClassName = `${iconClassName} dropdowns-menu__icon--last`;
                     
                     return (
                         <button
@@ -219,11 +224,12 @@ class DropdownSection extends Component {
                             onClick={() => this.setActiveItem(term)}
                         >
                             <span className='dropdowns-menu__button-content'>{term}</span>
-                            {!isLastDropdown && <Icon svgId='-icon_arrow_down' classes={iconClassName} />}
+                            <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             {isActiveItem && this.getDropdownContent(term)}
                         </button>
                     );
                 })}
+
                 <ArtistSideMenu
                     isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
                     closeMenu={() => this.setActiveItem(null)}
@@ -281,7 +287,7 @@ class ClickTracker extends Component {
     render() {
         return (
             <div ref={ref => this.ref = ref}>
-                <Dropdowns setResetFunction={this.setResetFunction}/>
+                <Dropdowns {...this.props} setResetFunction={this.setResetFunction}/>
             </div>
         );
     }
