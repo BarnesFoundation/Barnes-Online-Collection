@@ -225,7 +225,7 @@ class DropdownSection extends Component {
                     if (isLastDropdown) iconClassName = `${iconClassName} dropdowns-menu__icon--last`;
                     
                     return (
-                        <div className='dropdowns-menu__button-wrapper'>
+                        <div key={term} className='dropdowns-menu__button-wrapper'>
                             <button
                                 key={term}
                                 className={buttonClassName}
@@ -233,7 +233,6 @@ class DropdownSection extends Component {
                             >
                                 <span className='dropdowns-menu__button-content'>{term}</span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
-                                
                             </button>
                             {isActiveItem && this.getDropdownContent(term)}
                         </div>

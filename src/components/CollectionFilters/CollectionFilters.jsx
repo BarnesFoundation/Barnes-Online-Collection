@@ -38,8 +38,6 @@ class CollectionFilters extends Component {
 
     if (visibleFilterSet === 'search') {
       return <SearchInput />;
-    } else if (visibleFilterSet === 'shuffle' || visibleFilterSet === null) {
-      return null;
     } else {
       return <CollectionFiltersSet />
     }
@@ -59,10 +57,6 @@ class CollectionFilters extends Component {
     return hasNothingSet && (
       searchHasChanged || filtersHaveChanged
     );
-  }
-
-  mobileFiltersApplied(props) {
-    return props.mobileFilters.filtersApplied;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -168,8 +162,8 @@ class CollectionFilters extends Component {
       filtersApplied = <CollectionFiltersApplied visible={Boolean(this.props.filterSets.visibleFilterSet)} />;
     }
 
-    const mobileFiltersVisible = this.props.mobileFilters.visible;
-    const mobileSearchVisible = this.props.mobileSearch.visible;
+    // const mobileFiltersVisible = this.props.mobileFilters.visible;
+    // const mobileSearchVisible = this.props.mobileSearch.visible;
     const filterSet = this.getFilterSet();
 
     return (

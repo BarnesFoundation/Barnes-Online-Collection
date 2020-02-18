@@ -25,7 +25,7 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibl
   );
 }
 
-const mapStateToProps = (state) => ({ visibleFilterSet: state.filterSets.visibleFilterSet });
-const mapDispatchToProps = (dispatch) => (bindActionCreators(Object.assign({}, { selectFilterSet }), dispatch));
+const mapStateToProps = state => ({ visibleFilterSet: state.filterSets.visibleFilterSet });
+const mapDispatchToProps = dispatch => (bindActionCreators(Object.assign({}, { selectFilterSet }), dispatch));
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersMenuItem);

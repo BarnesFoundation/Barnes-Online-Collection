@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Dropdowns } from './Dropdowns';
 import { addSearchTerm } from '../../actions/search';
+import { addFilter } from '../../actions/filters';
 import './searchInput.css';
 
 /*
@@ -23,7 +24,7 @@ class SearchInput extends Component {
   }
 
   render() {
-    const { addSearchTerm } = this.props;
+    const { addSearchTerm, addFilter } = this.props;
     const { dropdownsActive } = this.state;
 
     return (
@@ -54,6 +55,7 @@ class SearchInput extends Component {
                   this.setState({ dropdownsActive: true });
                 }}
                 submit={addSearchTerm}
+                // submit={value => addFilter({ filterType: 'search', value })}
                 placeholder='Search a keyword, artist, room number, and more'
               />
               <div className='search__dropdowns'>
@@ -67,7 +69,15 @@ class SearchInput extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({ search: state.search });
-const mapDispatchToProps = (dispatch) => (bindActionCreators(Object.assign({}, { addSearchTerm }), dispatch));
+const mapStateToProps = state => ({ search: state.search });
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(
+    Object.assign({}, {
+      addSearchTerm,
+      addFilter,
+    }),
+    dispatch
+  )
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchInput);

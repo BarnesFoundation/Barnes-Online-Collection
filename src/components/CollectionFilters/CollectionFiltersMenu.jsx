@@ -22,5 +22,5 @@ const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
   </div>
 );
 
-const mapStateToProps = (state) => ({ sets: state.filterSets.sets });
+const mapStateToProps = state => ({ sets: state.filterSets.sets });
 export default connect(mapStateToProps)(CollectionFiltersMenu);

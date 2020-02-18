@@ -7,6 +7,7 @@ const initialState = {
   lines_linearity: null,
   light: null,
   space: null,
+  search: null,
   /** 
    * This is a copy of DROPDOWNS_TERM_MAP.
    * @see Dropdown.jsx. */
@@ -64,6 +65,7 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
 
   switch (type) {
     case ActionTypes.ADD_FILTER: {
+      console.log(filter);
 
       return ({
         ...state, // Deep copy state.
@@ -99,6 +101,8 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
               ...filterSetsInitialState.sets[filterType].filter, // Spread filter
               value: filterVal // and add new value.
             });
+          } else if (filterType === 'search') {
+            return filterVal;
           }
         })
         .map((obj, index) => ({ ...obj, index })) // Add index to all filter sets.
