@@ -281,40 +281,35 @@
 }
 
 .applied-filter-tags-container-wrap {
-  display: none;
-  padding-top: 0;
+  // display: none;
+  // padding-top: 0;
 
   @include clearfix();
 
-  @include breakpoint('large+') {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: $mobile-filters-section-padding;
-
-    .flex-right {
-      // make them stay left and right
-      margin-left: auto;
-    }
   
-    .btn-filter-shuffle {
-      display: none;
-    }
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $mobile-filters-section-padding;
+
+  .flex-right {
+    // make them stay left and right
+    margin-left: auto;
+  }
+
+  .btn-filter-shuffle {
+    display: none;
   }
 }
 
 .applied-filter-tags-container {
-  display: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
-  @include breakpoint('large+') {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    &.hidden {
-      display: none;
-    }
+  &.hidden {
+    display: none;
   }
 }
 

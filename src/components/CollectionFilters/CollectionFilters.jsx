@@ -143,7 +143,7 @@ class CollectionFilters extends Component {
     
     // otherwise, we're not in mobile search land, handle the new filter
     if (
-      (nextProps.filters.ordered.length && nextProps.filters.ordered !== this.props.filters.ordered) || // High-level filters
+      (nextProps.filters.ordered !== this.props.filters.ordered) || // High-level filters
       (JSON.stringify(nextProps.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)) // Advanced Filters
     ) {
       this.props.findFilteredObjects(nextProps.filters, 0);
