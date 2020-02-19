@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { closeFilterSet } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
+import './dropdownsApply.css';
 
 const DropdownApply = ({ closeFilterSet, isApply, apply, clear }) => {
     const buttonClass = `btn ${isApply ? 'btn--primary' : 'btn--disabled'}`;

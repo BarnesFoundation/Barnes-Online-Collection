@@ -286,8 +286,8 @@ class DropdownSection extends Component {
 
     /**
      * On mount: 
-     * 1) Set up reset function for HOC that keeps track of clicking out of dropdown. @see ClickTracker.
-     * 2) Set up function to apply pending terms in parent comoonent. @see SearchInput.jsx
+     * 1) Set up reset function for HOC that keeps track of clicking out of dropdown. @see ClickTracker.jsx
+     * 2) Set up function to apply pending terms in parent component. @see SearchInput.jsx
      * */
     componentDidMount() {
         const { setResetFunction, setApplyPendingTerms } = this.props;
@@ -323,7 +323,10 @@ class DropdownSection extends Component {
                                 className={buttonClassName}
                                 onClick={() => this.setActiveItem(term)}
                             >
-                                <span className='dropdowns-menu__button-content'>{term}</span>
+                                <span className='dropdowns-menu__button-content'>
+                                    {term}
+                                    <sup className='dropdowns-menu__button-sup'>1</sup>
+                                </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>
                             {isActiveItem && this.getDropdownContent(term)}

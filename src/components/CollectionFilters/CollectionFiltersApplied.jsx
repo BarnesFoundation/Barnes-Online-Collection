@@ -12,9 +12,9 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
 
   return (
     Boolean(ordered.length || orderedAdvanced.length) && 
-      <div className="applied-filter-tags-container-wrap">
-        <div className="flex-left">
-          <div className="applied-filter-tags-container">
+      <div className='applied-filter-tags-container-wrap'>
+        <div className='flex-left'>
+          <div className='applied-filter-tags-container'>
             {mergedOrders.map((filter) => (
               <FilterTag
                 advancedFilter={Boolean(filter.isAdvanced)}
@@ -24,7 +24,7 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
             )}
           </div>
         </div>
-        <div className="flex-right">
+        <div className='flex-right'>
           <ClearAllButton />
           <MobilePanelShuffleButton />
         </div>

@@ -291,28 +291,3 @@
         }
     }
 }
-
-.dropdown-apply-section {
-    background-color: $color-grey-ultra-light-2;
-    border-bottom: 1px solid $color-border;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 30px;
-    padding: 20px;
-
-    &__button {
-        height: 100%;
-        width: 100%;
-
-        &--cancel {
-            background-color: $color-white;
-        }
-    }
-
-    // Disabled button in spec is slightly larger than component library.
-    .btn--disabled {
-        color: $color-grey-medium;
-        background-color: $color-grey-super-light;
-    }
-}
