@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { SearchBar } from './SearchBar';
-import { Dropdowns } from './Dropdowns';
+import { Dropdowns } from './Dropdowns/Dropdowns';
+import { DropdownApply } from './Dropdowns/DropdownsApply';
 import { addFilter } from '../../actions/filters';
 import { BREAKPOINTS } from '../../constants';
 import './searchInput.css';
@@ -20,40 +21,55 @@ class SearchInput extends Component {
     super(props);
 
     this.state = {
-      dropdownsActive: false,
+      pendingTerms: [], // For mobile, filters are actioned on apply.
+      applyPendingTerms: null,
     };
   }
 
+  updatePendingTerms = pendingTerms => this.setState({ pendingTerms });
+  setApplyPendingTerms = applyPendingTerms => this.setState({ applyPendingTerms });
+
   render() {
     const { addFilter } = this.props;
-    const { dropdownsActive } = this.state;
+    const { applyPendingTerms, pendingTerms } = this.state;
 
     // Spread these props in search bar regardless of device size.
     const searchBarProps = {
       hasTooltip: true,
-      onFocus: () => this.setState({ dropdownsActive: true }),
       submit: value => addFilter({ filterType: 'search', value }),
     };
 
     return (
-      <div className='search'>
-        <div className='search__content'>
-          <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
-            <SearchBar
-              {...searchBarProps}
-              placeholder='Search collection'
-            />
-          </MediaQuery>
-          <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
-            <SearchBar
-              {...searchBarProps}
-              placeholder='Search a keyword, artist, room number, and more'
-            />
-          </MediaQuery>
-          <div className='search__dropdowns'>
-            <Dropdowns dropdownsActive={dropdownsActive}/>
+      <div>
+        <div className='search'>
+          <div className='search__content'>
+            <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+              <SearchBar
+                {...searchBarProps}
+                placeholder='Search collection'
+              />
+              
+            </MediaQuery>
+            <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+              <SearchBar
+                {...searchBarProps}
+                placeholder='Search a keyword, artist, room number, and more'
+              />
+            </MediaQuery>
+            <div className='search__dropdowns'>
+              <Dropdowns
+                pendingTerms={pendingTerms}
+                setApplyPendingTerms={this.setApplyPendingTerms}
+                updatePendingTerms={this.updatePendingTerms}
+              />
+            </div>
           </div>
         </div>
+        <DropdownApply
+          isApply={Boolean(pendingTerms && pendingTerms.length)}
+          apply={applyPendingTerms}
+          clear={() => this.setState({ dropdownsActive: false })}
+        />
       </div>
     )
   }

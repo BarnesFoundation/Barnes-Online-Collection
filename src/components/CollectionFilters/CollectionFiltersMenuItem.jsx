@@ -10,7 +10,7 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibl
     filterClassNames = `${filterClassNames} btn-collection-filter--search`;
     
     // Check if there are any advanced filters, if so, add class for notification.
-    if (hasAdvancedFiltersOrSearch) filterClassNames = `${filterClassNames} btn-collection-filter--applied`
+    if (hasAdvancedFiltersOrSearch) filterClassNames = `${filterClassNames} btn-collection-filter--applied`;
   }
   if (slug === 'shuffle') filterClassNames = `${filterClassNames} btn-collection-filter--shuffle`;
   if (slug === visibleFilterSet) filterClassNames = `${filterClassNames} is-selected`;
@@ -37,8 +37,8 @@ const mapStateToProps = (state) => ({
   hasAdvancedFiltersOrSearch: (
     // Check advanced filters
     Object.values(state.filters.advancedFilters)
-    .flatMap(Object.keys) // Get all keys from advancedFilter's children.
-    .some(obj => obj.length) || // Check if there are any keys.
+      .flatMap(Object.keys) // Get all keys from advancedFilter's children.
+      .some(obj => obj.length) || // Check if there are any keys.
 
     // Check search.
     state.filters.search

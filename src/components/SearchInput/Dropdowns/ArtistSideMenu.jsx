@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SideMenu } from '../SideMenu/SideMenu';
+import { SideMenu } from '../../SideMenu/SideMenu';
 
 // Set up options for artists radios.
 const ARTISTS_RADIOS = { ABUNDANCE: 'Abundance', ALPHABETICAL: 'Alphabetical '};

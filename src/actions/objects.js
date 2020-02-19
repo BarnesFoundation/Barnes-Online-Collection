@@ -3,7 +3,7 @@ import { getObjectsRequestBody } from '../helpers';
 import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
-import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns';
+import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
 import searchAssets from '../searchAssets.json';
 
 const uniqBy = require('lodash/uniqBy');
