@@ -160,6 +160,8 @@
         margin-top: 15px;
         padding: 0px 40px 15px 40px;
 
+        margin-left: -20px;
+
         border-bottom: 1px solid $color-border;
         
         @include breakpoint('large+') {
@@ -170,8 +172,10 @@
 
             position: relative;
 
-            padding: 0;
             border-bottom: none;
+
+            margin-left: auto;
+            padding: 0;
             margin-top: 0;
             margin-bottom: 5px;
 
