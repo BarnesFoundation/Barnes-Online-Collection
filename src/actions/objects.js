@@ -339,7 +339,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
 
   let body = getObjectsRequestBody(fromIndex);
 
-  if (filters.ordered.length) {
+  if (filters.ordered.filter(filter => filter.filterType !== 'search').length) {
     body = assembleDisMaxQuery(body, queries);
   }
 
@@ -396,9 +396,32 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           console.error(`Missing filter type: ${filterType}.`);
         }
       }
-  })
+  });
 
   body = body.build();
+
+  if (filters.search) {    
+    const query = {
+      'multi_match': {
+        query: filters.search.value || filters.search,
+        fields: SEARCH_FIELDS,
+      },
+    };
+
+    if (Array.isArray(body.query.bool['must'])) {
+      body.query.bool['must'] = [
+        ...body.query.bool['must'],
+        query,
+      ];
+    } else if (body.query.bool['must']) {
+      body.query.bool['must'] = [
+        body.query.bool['must'],
+        query,
+      ];
+    } else {
+      body.query.bool['must'] = [query];
+    }
+  }
 
   return (dispatch) => {
     fetchResults(body, dispatch, options);

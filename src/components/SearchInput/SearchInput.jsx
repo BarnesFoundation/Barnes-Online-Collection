@@ -54,8 +54,8 @@ class SearchInput extends Component {
                 onFocus={() => {
                   this.setState({ dropdownsActive: true });
                 }}
-                submit={addSearchTerm}
-                // submit={value => addFilter({ filterType: 'search', value })}
+                // submit={addSearchTerm}
+                submit={value => addFilter({ filterType: 'search', value })}
                 placeholder='Search a keyword, artist, room number, and more'
               />
               <div className='search__dropdowns'>

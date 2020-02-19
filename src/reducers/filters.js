@@ -102,7 +102,7 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
               value: filterVal // and add new value.
             });
           } else if (filterType === 'search') {
-            return filterVal;
+            return ({ filterType: 'search', value: filterVal.value || filterVal });
           }
         })
         .map((obj, index) => ({ ...obj, index })) // Add index to all filter sets.
@@ -110,6 +110,7 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
 
       return ({
         ...initialState,
+        ...rest,
         ordered,
         advancedFilters,
       });
