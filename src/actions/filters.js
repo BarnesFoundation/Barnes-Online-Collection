@@ -30,4 +30,4 @@ export function clearAllFilters() {
 // Actions for advanced filtering.
 export const addAdvancedFilter = filter => ({ type: ActionTypes.ADD_ADVANCED_FILTER, filter });
 export const removeAdvancedFilter = filter => ({ type: ActionTypes.REMOVE_ADVANCED_FILTER, filter });
-
+export const setAdvancedFilters = advancedFilters => ({ type: ActionTypes.SET_ADVANCED_FILTERS, advancedFilters });

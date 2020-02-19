@@ -28,9 +28,7 @@ const initialState = {
  * @param {string} filterType - string to filter out.
  * @returns {[object]} - array of filter objects with string arg filtered out.
  */
-const removeFromOrderedSet = (orderedSet, filterType) => (
-  orderedSet.filter(filterEl => filterEl.filterType !== filterType)
-);
+const removeFromOrderedSet = (orderedSet, filterType) => orderedSet.filter(filterEl => filterEl.filterType !== filterType);
 
 const getFilterSetData = (setType) => {
   const { sets } = filterSetsInitialState;
@@ -51,7 +49,7 @@ const getFilterSetData = (setType) => {
  */
 const getHighestIndex = array => array.reduce((acc, { index }) => Math.max(acc, index), 0);
 
-const filtersReducer = (state = initialState, { type, filter, filters = {} }) => {
+const filtersReducer = (state = initialState, { type, advancedFilters, filter, filters = {} }) => {
   const filterType = filter ? filter.filterType : null;
 
   // Index to keep ordering correct between ordered array and advancedFilters object.
@@ -65,8 +63,6 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
 
   switch (type) {
     case ActionTypes.ADD_FILTER: {
-      console.log(filter);
-
       return ({
         ...state, // Deep copy state.
 
@@ -145,6 +141,16 @@ const filtersReducer = (state = initialState, { type, filter, filters = {} }) =>
           [filterType]: { ...rest } // Spread subfilter with filter.term removed.
         }
       };
+    }
+    case ActionTypes.SET_ADVANCED_FILTERS: {
+      const newAdvancedFilters = advancedFilters.reduce((acc, advancedFilter) => ({
+        ...acc, [advancedFilter.filterType]: { ...acc[advancedFilter.filterType], [advancedFilter.term]: advancedFilter }
+      }), {});
+
+      return {
+        ...state,
+        advancedFilters: newAdvancedFilters
+      }
     }
     default: return state;
   }

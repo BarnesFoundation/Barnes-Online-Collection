@@ -18,7 +18,7 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
             {mergedOrders.map((filter) => (
               <FilterTag
                 advancedFilter={Boolean(filter.isAdvanced)}
-                key={filter.index}
+                key={filter.term}
                 filter={filter}
               />)
             )}

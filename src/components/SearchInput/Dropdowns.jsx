@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import Icon from '../Icon';
 import { ArtistSideMenu } from './ArtistSideMenu';
-import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
+import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../actions/filters';
 import { BREAKPOINTS } from '../../constants';
 import searchAssets from '../../searchAssets.json';
 import './dropdowns.css';
@@ -41,15 +41,18 @@ const DROPDOWN_TERMS_MAP = {
  * Formatted listed content for child of DropdownMenu or ArtistSideMenu.
  * @see getDropdownContent
  * */
-const ListedContent = ({ data, activeTerms, setActiveTerm, isArtists }) => (
+const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, isArtists }) => (
     <ul className='dropdown__list'>
         {data
             .filter(({ key }) => key) // Filter out null items.
             .map(({ key, doc_count }) => {
-                const isActiveItem = activeTerms.includes(key);
+                // The following lines allow for toggling between applied and yet to be applied.
+                const activeTermsHasKey = activeTerms.includes(key);
+                const pendingTermsHasKey = pendingTerms.map(({ term }) => term).includes(key);
+                const isActiveItem = (activeTermsHasKey && !pendingTermsHasKey) || (!activeTermsHasKey && pendingTermsHasKey);
 
                 let listItemClassNames = 'dropdown__list-item';
-                if (activeTerms.includes(key)) listItemClassNames = `${listItemClassNames} ${listItemClassNames}--active`;
+                if (isActiveItem) listItemClassNames = `${listItemClassNames} ${listItemClassNames}--active`;
 
                 let dropdownIconClassNames = 'dropdown__icon';
                 if (doc_count) dropdownIconClassNames = `${dropdownIconClassNames} dropdown__icon--artist`
@@ -84,34 +87,61 @@ const DropdownMenu = ({
     children,
     clear,
     headerText,
-}) => (
-    <div
-        className='dropdowns-menu__dropdown dropdown'
-        onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        }}
-    >
+    isApply,
+    apply
+}) => {
+    const buttonClass = `btn ${isApply ? 'btn--primary' : 'btn--disabled'}`;
+
+    return (
         <div
-            className='dropdown__header'
-            onClick={clear}
+            className='dropdowns-menu__dropdown dropdown'
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
         >
-            {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
-            <Icon
-                svgId='-icon_arrow_down'
-                classes='dropdown__icon dropdown__icon--back'
-            />
-            <span className='font-delta dropdown__header--text'>{headerText}</span>
-            <Icon
-                svgId='-icon_close'
-                classes='dropdown__icon dropdown__icon--x'
-            />
+            <div
+                className='dropdown__header'
+                onClick={clear}
+            >
+                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
+                <Icon
+                    svgId='-icon_arrow_down'
+                    classes='dropdown__icon dropdown__icon--back'
+                />
+                <span className='font-delta dropdown__header--text'>{headerText}</span>
+                <Icon
+                    svgId='-icon_close'
+                    classes='dropdown__icon dropdown__icon--x'
+                />
+            </div>
+            <div className='dropdown__content'>
+                {children}
+            </div>
+            {/** Manual filter application section, only for mobile */}
+            <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                <div className='dropdown__apply-section'>
+                    <div>
+                        <btn
+                            className={`${buttonClass} dropdown__apply-section-button`}
+                            onClick={apply}
+                        >
+                            Apply
+                        </btn>
+                    </div>
+                    <div>
+                        <btn
+                            className='btn dropdown__apply-section-button dropdown__apply-section-button--cancel'
+                            onClick={clear}
+                        >
+                            Cancel
+                        </btn>
+                    </div>
+                </div>
+            </MediaQuery>
         </div>
-        <div className='dropdown__content'>
-            {children}
-        </div>
-    </div>
-);
+    );
+};
 
 /** Dropdown menu for filtering artwork. */
 class DropdownSection extends Component {
@@ -153,10 +183,10 @@ class DropdownSection extends Component {
 
         // If this is for a manual application process, i.e. mobile.
         if (isManualApply) {
-            if (pendingTerms.includes(term)) {
-                this.setState({ pendingTerms: pendingTerms.filter(pendingTerm => pendingTerm !== term)})
+            if (pendingTerms.map(({ term: pTerm }) => pTerm).includes(term)) {
+                this.setState({ pendingTerms: pendingTerms.filter(pendingTerm => pendingTerm.term !== term) })
             } else {
-                this.setState({ pendingTerms: [...pendingTerms, term] });
+                this.setState({ pendingTerms: [...pendingTerms, filter] });
             }
         // If this is an automatic filter application process, i.e. desktop.
         } else {
@@ -170,18 +200,53 @@ class DropdownSection extends Component {
     };
 
     /**
+     * Apply all pending terms to redux store.
+     * This is only for mobile devices.
+     */
+    applyPendingTerms = () => {
+        const { pendingTerms } = this.state;
+        const { advancedFilters, setAdvancedFilters } = this.props;
+
+        // Reduce existing redux store to flattened array of filter objects.
+        const flattenedAdvancedFilters = Object.values(advancedFilters)
+            .flatMap((advancedFilter) => Object.values(advancedFilter));
+
+
+        // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
+        const newActiveTerms = pendingTerms.reduce((acc, pendingTerm) => {
+            const index = acc.findIndex(({ term }) => term === pendingTerm.term);
+
+            // If index is located, remove item from array.
+            if (index >= 0) {
+                return [...acc.splice(0, index), ...acc.splice(index + 1, acc.length)];
+
+            // If no index is found, append to array.
+            } else {
+                return [...acc, pendingTerm];
+            }
+        }, flattenedAdvancedFilters);
+
+        this.setState({ pendingTerms: [] }); // Reset local state.
+        setAdvancedFilters(newActiveTerms); // Update redux state for advanced filters.
+    }
+
+    /**
      * Get inner content for dropdown.
      * TODO => This generates a new element on every re-render, this should be a separate FC.
      * @param {string} term - name of clicked item.
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */
     getDropdownContent = (term) => {
-        const { activeItem } = this.state;
+        const { activeItem, pendingTerms } = this.state;
         const { activeTerms } = this.props;
         const data = DROPDOWN_TERMS_MAP[activeItem];
         
         // Props that are spread regardless of MediaQuery outcome.
-        const listedContentSpreadProps = { data, activeTerms };
+        const listedContentSpreadProps = {
+            data,
+            activeTerms,
+            pendingTerms,
+        };
 
         switch (activeItem) {
             case (DROPDOWN_TERMS.ARTIST): {
@@ -190,6 +255,8 @@ class DropdownSection extends Component {
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
+                        isApply={Boolean(pendingTerms && pendingTerms.length)}
+                        apply={this.applyPendingTerms}
                     >
                         {/** This will always behave in the manual application process. */}
                         <ListedContent
@@ -215,16 +282,18 @@ class DropdownSection extends Component {
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
+                        isApply={Boolean(pendingTerms && pendingTerms.length)}
+                        apply={this.applyPendingTerms}
                     >
                         {/** Mobile devices */}
-                        <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+                        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
                             <ListedContent
                                 {...listedContentSpreadProps}
                                 setActiveTerm={term => this.setActiveTerm(term, true)}
                             />
                         </MediaQuery>
                         {/** Desktops */}
-                        <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+                        <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
                             <ListedContent
                                 {...listedContentSpreadProps}
                                 setActiveTerm={term => this.setActiveTerm(term, false)}
@@ -301,10 +370,11 @@ class DropdownSection extends Component {
 };
 
 const mapStateToProps = state => ({
+    advancedFilters: state.filters.advancedFilters,
     activeTerms: Object.values(state.filters.advancedFilters) // Go over every key in advanced filter.
         .flatMap((value) => (Object.values(value)).map(({ term }) => term)) // Go through every object value and get the term, flatMap into single array.
 });  
-const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter }), dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters }), dispatch);
 const Dropdowns = connect(mapStateToProps, mapDispatchToProps)(DropdownSection);
 
 /** Component to keep track of clicking outside of menu. */

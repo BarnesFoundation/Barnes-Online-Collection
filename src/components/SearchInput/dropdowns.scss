@@ -113,7 +113,7 @@
 
     @include breakpoint('medium-') {
         display: grid;
-        grid-template-rows: 60px 1fr;
+        grid-template-rows: 60px 1fr 100px;
     }
 
     position: absolute;
@@ -238,6 +238,10 @@
                 right: 10px;
                 top: 13px;
             }
+
+            @include breakpoint('small-') {
+                right: 0px;
+            }
         }
     }
 
@@ -249,7 +253,7 @@
         overflow-x: hidden;
 
         margin-top: 10px;
-        padding: 0px 40px 15px 40px;
+        padding: 0px 10px 15px 40px;
 
         @include breakpoint('large+') {
             overflow-x: none;
@@ -273,10 +277,33 @@
             line-height: 30px;
         }
         
-        &--active,
+        &--active {
+            color: $color-red-barnes;
+        }
+
         &:hover {
             cursor: pointer;
-            color: $color-red-barnes;
+
+            @include breakpoint('large+') {
+                color: $color-red-barnes;
+            }
+        }
+    }
+
+    &__apply-section {
+        border-top: 1px solid $color-border;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 30px;
+        padding: 20px;
+    }
+
+    &__apply-section-button {
+        height: 100%;
+        width: 100%;
+
+        &--cancel {
+            background-color: $color-white;
         }
     }
 }
