@@ -31,20 +31,23 @@
   }
 }
 
-.collection-filters {
+.collection-filters-container {
   @include breakpoint('medium-') {
     order: 2;
   }
+}
+
+.collection-filters {
 
   z-index: 4;
 
   display: flex;
-  justify-content: center;
+  // justify-content: center;
 
-  padding-left: 2%;
-  padding-right: 2%;
+  // padding-left: 2%;
+  // padding-right: 2%;
 
-  width: 100; // Magic number to line up with masonry.
+  width: 100%;
   white-space: nowrap;
   margin-bottom: 10px;
   
@@ -67,7 +70,7 @@
     margin-top: -0.08em;
     
     @include breakpoint ('medium+') {
-      margin-right: 0.5em;
+      margin-right: 15px;
     }
   }
 
@@ -79,11 +82,15 @@
     float: left;
     white-space: nowrap;
     padding: 0;
-    margin-right: 12%;
+    margin-right: 35px;
 
     @include breakpoint('medium+') {
       float: none;
-      margin-right: 2%;
+      margin-right: 15px;
+    }
+
+    @include breakpoint('large+') {
+      margin-right: 30px;
     }
     
     background: white;
@@ -105,11 +112,6 @@
     margin-left: 0;
     line-height: normal;
     cursor: pointer;
-
-    @include breakpoint('medium+') {
-      // border-top: 5px solid transparent;
-      min-width: 100px;
-    }
 
     .button-inner {
       &__text {
@@ -138,12 +140,6 @@
       }
     }
 
-    &:nth-child(5) {
-      @include breakpoint ('small') {
-        margin-right: calc(#{$collection-filter-item-margin} + 5px);
-      }
-    }
-
     &--search {
       white-space: nowrap;
       float: right;
@@ -156,13 +152,13 @@
 
       .button-inner {
         position: relative;
-        padding-left: calc(#{$collection-filter-item-margin} + 5px);
+        padding-left: 35px;
         
         text-align: right;
 
         @include breakpoint('medium+') {
           text-align: center;
-          padding-left: $collection-filter-item-margin;
+          padding-left: 15px;
         }
 
         // make a vert centered border with a height to match the larger icons

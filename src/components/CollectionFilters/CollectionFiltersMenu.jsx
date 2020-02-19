@@ -4,21 +4,23 @@ import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 
 const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
   <div
-    className='collection-filters'
+    className='container collection-filters-container'
     // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
     // This is wrapped in a RAF to prevent no scroll on clicking Search button.
     onClick={() => requestAnimationFrame(() => parentContainer.scrollIntoView({ behavior: 'smooth' }))}
   >
-    {Object.entries(sets)
-        .map(([key, { title, slug, svgId, tooltip }]) => (
-          <CollectionFiltersMenuItem
-            key={key}
-            title={title}
-            slug={slug}
-            svgId={svgId}
-            tooltip={tooltip}
-          />
-        ))}
+    <div className='collection-filters'>
+      {Object.entries(sets)
+          .map(([key, { title, slug, svgId, tooltip }]) => (
+            <CollectionFiltersMenuItem
+              key={key}
+              title={title}
+              slug={slug}
+              svgId={svgId}
+              tooltip={tooltip}
+            />
+          ))}
+    </div>
   </div>
 );
 

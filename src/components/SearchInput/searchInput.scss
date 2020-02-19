@@ -22,19 +22,9 @@ $button-margin: 15px;
     display: grid;
     grid-template-columns: calc(100% - 115px) 60px;
 
-    // Hide button for global search for mobile devices.
-    &--global {
-      @include breakpoint('small-') {
-        grid-template-columns: none;
-    
-        #{ $self }__button {
-          display: none;
-        }
-
-        #{ $self }__input {
-          width: 100%;
-        }
-      }
+    // Hide button for search on mobile devices.
+    @include breakpoint('small-') {
+      grid-template-columns: none;
     }
   }
 
@@ -47,6 +37,10 @@ $button-margin: 15px;
     margin-right: 20px;
     border: 2px solid $color-border;
     width: calc(100% - 25px);
+
+    @include breakpoint('small-') {
+      width: 100%;
+    }
 
     color: $color-grey-medium;
     display: block;
@@ -63,6 +57,10 @@ $button-margin: 15px;
     font-weight: normal;
     font-size: 18px;
     width: $button-width;
+
+    @include breakpoint('small-') {
+      display: none;
+    }
   }
 }
 

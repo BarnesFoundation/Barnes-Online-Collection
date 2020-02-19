@@ -164,7 +164,7 @@ class SiteHeader extends Component {
           {isGlobalSearchHeader &&
             <div className='global-search'>
               <SearchBar
-                className='container search__searchbar--global'
+                className='container search__searchbar'
                 submit={() => console.error('This is not set up yet.')}
               />
               <div className='container global-search__buttons-area'>
