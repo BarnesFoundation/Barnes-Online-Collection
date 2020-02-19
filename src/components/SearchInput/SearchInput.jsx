@@ -68,7 +68,6 @@ class SearchInput extends Component {
         <DropdownApply
           isApply={Boolean(pendingTerms && pendingTerms.length)}
           apply={applyPendingTerms}
-          clear={() => this.setState({ dropdownsActive: false })}
         />
       </div>
     )

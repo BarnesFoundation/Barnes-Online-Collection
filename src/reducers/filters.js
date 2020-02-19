@@ -143,8 +143,12 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
       };
     }
     case ActionTypes.SET_ADVANCED_FILTERS: {
-      const newAdvancedFilters = advancedFilters.reduce((acc, advancedFilter) => ({
-        ...acc, [advancedFilter.filterType]: { ...acc[advancedFilter.filterType], [advancedFilter.term]: advancedFilter }
+      const newAdvancedFilters = advancedFilters.reduce((acc, advancedFilter, i) => ({
+        ...acc, // Spread accumulator
+        [advancedFilter.filterType]: {
+          ...acc[advancedFilter.filterType], // Spread current filter type
+          [advancedFilter.term]: { ...advancedFilter, index: index + 1 } // Add current advanced filter and increment index.
+        }
       }), {});
 
       return {

@@ -6,11 +6,11 @@ import { closeFilterSet } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import './dropdownsApply.css';
 
-const DropdownApply = ({ closeFilterSet, isApply, apply, clear }) => {
+const DropdownApply = ({ closeFilterSet, isApply, apply }) => {
     const buttonClass = `btn ${isApply ? 'btn--primary' : 'btn--disabled'}`;
 
     return (
-        <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
             <div className='dropdown-apply-section'>
                 <div>
                     <btn
