@@ -13,6 +13,10 @@ $button-margin: 15px;
   overflow-y: scroll;
   overflow-x: hidden;
 
+  @include breakpoint('large+') {
+    overflow: initial;
+  }
+
   background-color: $color-grey-ultra-light-2;
   padding: 30px 40px;
   border-left: 1px solid $color-border;

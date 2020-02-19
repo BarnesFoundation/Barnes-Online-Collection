@@ -342,7 +342,7 @@ class DropdownSection extends Component {
                             >
                                 <span className='dropdowns-menu__button-content'>
                                     {term}
-                                    <sup className='dropdowns-menu__button-sup'>{advancedFilterObject[term]}</sup>
+                                    <sup className='dropdowns-menu__button-sup'>&nbsp;{advancedFilterObject[term]}</sup>
                                 </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>

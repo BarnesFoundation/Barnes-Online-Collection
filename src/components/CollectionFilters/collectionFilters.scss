@@ -42,10 +42,7 @@
   z-index: 4;
 
   display: flex;
-  // justify-content: center;
-
-  // padding-left: 2%;
-  // padding-right: 2%;
+  
 
   width: 100%;
   white-space: nowrap;
@@ -61,6 +58,7 @@
     width: 99.7%;
     border-bottom: 1px solid #dcdcdc;
     margin-bottom: 0;
+    justify-content: center;
   }
 
   .icon {
