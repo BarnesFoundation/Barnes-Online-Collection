@@ -36,6 +36,7 @@ const LandingPageHeader = () => (
         src={heroVideo}
         autoPlay
         loop
+        muted={true}
         playsInline
       />
     </div>
