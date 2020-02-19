@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import MediaQuery from 'react-responsive';
 import Icon from '../Icon';
 import { ArtistSideMenu } from './ArtistSideMenu';
 import { addAdvancedFilter, removeAdvancedFilter } from '../../actions/filters';
+import { BREAKPOINTS } from '../../constants';
 import searchAssets from '../../searchAssets.json';
 import './dropdowns.css';
 
@@ -117,7 +119,8 @@ class DropdownSection extends Component {
         super(props);
         
         this.state = {
-            activeItem: null,
+            activeItem: null, // What dropdown is selected.
+            pendingTerms: [], // For mobile, filters are actioned on apply.
         };
     };
 
@@ -139,19 +142,30 @@ class DropdownSection extends Component {
     /**
      * Add or remove selected term to filters.
      * @param {string} term - filter search term.
+     * @param {boolean} mobile - if this is an apply filter manual or auto.
      */
-    setActiveTerm = (term) => {
-        const { activeItem } = this.state;
+    setActiveTerm = (term, isManualApply) => {
+        const { activeItem, pendingTerms } = this.state;
         const { activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
         const filter = { filterType: activeItem, value: `${activeItem}: "${term}"`, term };
 
-        // If we are removing an item, filter it out of the array, otherwise append it to the array.
-        if (activeTerms.includes(term)) {
-            removeAdvancedFilter(filter);
+        // If this is for a manual application process, i.e. mobile.
+        if (isManualApply) {
+            if (pendingTerms.includes(term)) {
+                this.setState({ pendingTerms: pendingTerms.filter(pendingTerm => pendingTerm !== term)})
+            } else {
+                this.setState({ pendingTerms: [...pendingTerms, term] });
+            }
+        // If this is an automatic filter application process, i.e. desktop.
         } else {
-            addAdvancedFilter(filter);
+            // If we are removing an item, filter it out of the array, otherwise append it to the array.
+            if (activeTerms.includes(term)) {
+                removeAdvancedFilter(filter);
+            } else {
+                addAdvancedFilter(filter);
+            }
         }
     };
 
@@ -165,10 +179,27 @@ class DropdownSection extends Component {
         const { activeItem } = this.state;
         const { activeTerms } = this.props;
         const data = DROPDOWN_TERMS_MAP[activeItem];
+        
+        // Props that are spread regardless of MediaQuery outcome.
+        const listedContentSpreadProps = { data, activeTerms };
 
         switch (activeItem) {
-            // Do not return for artist, as menu needs to be stateful for animation.
-            case (DROPDOWN_TERMS.ARTIST): return null;
+            case (DROPDOWN_TERMS.ARTIST): {
+                // Dropdown for artist should only be rendered for desktop devices.
+                return <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+                    <DropdownMenu
+                        headerText={term}
+                        clear={() => this.setActiveItem(null)}
+                    >
+                        {/** This will always behave in the manual application process. */}
+                        <ListedContent
+                            {...listedContentSpreadProps}
+                            setActiveTerm={term => this.setActiveTerm(term, true)}
+                        />
+                    </DropdownMenu>
+                </MediaQuery>
+
+            };
             case (DROPDOWN_TERMS.YEAR): {
                 return (
                     <DropdownMenu
@@ -185,11 +216,20 @@ class DropdownSection extends Component {
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
                     >
-                        <ListedContent
-                            data={data}
-                            activeTerms={activeTerms}
-                            setActiveTerm={this.setActiveTerm}
-                        />
+                        {/** Mobile devices */}
+                        <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+                            <ListedContent
+                                {...listedContentSpreadProps}
+                                setActiveTerm={term => this.setActiveTerm(term, true)}
+                            />
+                        </MediaQuery>
+                        {/** Desktops */}
+                        <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+                            <ListedContent
+                                {...listedContentSpreadProps}
+                                setActiveTerm={term => this.setActiveTerm(term, false)}
+                            />
+                        </MediaQuery>
                     </DropdownMenu>
                 );
             }
@@ -239,20 +279,22 @@ class DropdownSection extends Component {
                     );
                 })}
 
-                <ArtistSideMenu
-                    isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
-                    closeMenu={() => this.setActiveItem(null)}
-                    data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
-                    // Sort data inside of artistMenu component.
-                    render={sortedData => (
-                        <ListedContent
-                            isArtists
-                            data={sortedData}
-                            activeTerms={activeTerms}
-                            setActiveTerm={this.setActiveTerm}
-                        />
-                    )}
-                />
+                <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+                    <ArtistSideMenu
+                        isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
+                        closeMenu={() => this.setActiveItem(null)}
+                        data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                        // Sort data inside of artistMenu component.
+                        render={sortedData => (
+                            <ListedContent
+                                isArtists
+                                data={sortedData}
+                                activeTerms={activeTerms}
+                                setActiveTerm={this.setActiveTerm}
+                            />
+                        )}
+                    />
+                </MediaQuery>
             </div>
         )
     }
