@@ -186,6 +186,23 @@
       }
     }
 
+    &--applied {
+      @include breakpoint('medium-') {
+        &:after {
+          display: block;
+          right: 20px;
+          top: 18px;
+          content: ' ';
+          border-radius: 50%;
+          position: absolute;
+          background-color: $color-red-barnes;
+          height: 8px;
+          width: 8px;
+          z-index: 9;
+        }
+      }
+    }
+
     .collection-filter-icon {
       font-size: $collection-filter-icon-font-size;
     }

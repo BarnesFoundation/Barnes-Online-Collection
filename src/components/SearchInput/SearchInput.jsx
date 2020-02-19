@@ -28,11 +28,12 @@ class SearchInput extends Component {
     const { addFilter } = this.props;
     const { dropdownsActive } = this.state;
 
+    // Spread these props in search bar regardless of device size.
     const searchBarProps = {
       hasTooltip: true,
       onFocus: () => this.setState({ dropdownsActive: true }),
       submit: value => addFilter({ filterType: 'search', value }),
-    }
+    };
 
     return (
       <div className='search'>
