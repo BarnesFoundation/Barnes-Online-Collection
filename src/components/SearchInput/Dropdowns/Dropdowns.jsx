@@ -173,11 +173,11 @@ class DropdownSection extends Component {
     };
 
     /**
-     * Apply all pending terms to redux store.
-     * This is only for mobile devices.
+     * Get array of all new filters.
+     * @returns {[object]} - array or filter objects.
      */
-    applyPendingTerms = () => {
-        const { pendingTerms, updatePendingTerms, advancedFilters, setAdvancedFilters } = this.props;
+    getNewTerms = () => {
+        const { pendingTerms, advancedFilters } = this.props;
 
         // Reduce existing redux store to flattened array of filter objects.
         const flattenedAdvancedFilters = Object.values(advancedFilters)
@@ -185,7 +185,7 @@ class DropdownSection extends Component {
 
 
         // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
-        const newActiveTerms = pendingTerms.reduce((acc, pendingTerm) => {
+        return pendingTerms.reduce((acc, pendingTerm) => {
             const index = acc.findIndex(({ term }) => term === pendingTerm.term);
 
             // If index is located, remove item from array.
@@ -197,6 +197,17 @@ class DropdownSection extends Component {
                 return [...acc, pendingTerm];
             }
         }, flattenedAdvancedFilters);
+    }
+
+    /**
+     * Apply all pending terms to redux store.
+     * This is only for mobile devices.
+     */
+    applyPendingTerms = () => {
+        const { updatePendingTerms, setAdvancedFilters } = this.props;
+
+        // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
+        const newActiveTerms = this.getNewTerms()
 
         updatePendingTerms([]); // Reset parent state.
         setAdvancedFilters(newActiveTerms); // Update redux state for advanced filters.
@@ -298,6 +309,12 @@ class DropdownSection extends Component {
     render() {
         const { activeItem } = this.state;
         const { activeTerms } = this.props;
+
+        // Get count of each type of filter about to be appplied for superscript in dropdown button.
+        const advancedFilterObject = this.getNewTerms()
+            .reduce((acc, advancedFilter) => ({
+                ...acc, [advancedFilter.filterType]: acc[advancedFilter.filterType] ? acc[advancedFilter.filterType] + 1 : 1
+            }), {});
         
         const dropdownsMenuClassName = 'dropdowns-menu dropdowns-menu--active';
 
@@ -325,7 +342,7 @@ class DropdownSection extends Component {
                             >
                                 <span className='dropdowns-menu__button-content'>
                                     {term}
-                                    <sup className='dropdowns-menu__button-sup'>1</sup>
+                                    <sup className='dropdowns-menu__button-sup'>{advancedFilterObject[term]}</sup>
                                 </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>

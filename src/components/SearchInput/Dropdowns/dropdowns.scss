@@ -95,7 +95,12 @@
     }
 
     &__button-sup {
-        color: $color-red-barnes
+        color: $color-red-barnes;
+        font-size: 12px;
+
+        @include breakpoint('large+') {
+            display: none;
+        }
     }
 
     &__icon {
