@@ -126,7 +126,7 @@ class ArtObjectGrid extends Component {
       </div>);
 
     return (
-      <div className='component-art-object-grid__wrapper container m-block m-block--shallow m-block--no-border m-block--flush-top'>
+      <div className='m-block m-block--shallow m-block--no-border m-block--flush-top component-art-object-grid__wrapper'>
         <div
           className={`
             component-art-object-grid
