@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import Icon from '../Icon';
-import { ArtistSideMenu } from './ArtistSideMenu';
+import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../actions/filters';
 import { BREAKPOINTS } from '../../constants';
 import searchAssets from '../../searchAssets.json';
@@ -259,9 +259,20 @@ class DropdownSection extends Component {
                         apply={this.applyPendingTerms}
                     >
                         {/** This will always behave in the manual application process. */}
-                        <ListedContent
-                            {...listedContentSpreadProps}
-                            setActiveTerm={term => this.setActiveTerm(term, true)}
+                        
+                        <ArtistSideMenuContent
+                            data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                            // Sort data inside of artistMenu component.
+                            render={sortedData => (
+                                <ListedContent
+                                    {...listedContentSpreadProps}
+                                    isArtists
+                                    // Overwrite data from listedContentSpreadProps.
+                                    data={sortedData}
+                                    activeTerms={activeTerms}
+                                    setActiveTerm={term => this.setActiveTerm(term, true)}
+                                />
+                            )}
                         />
                     </DropdownMenu>
                 </MediaQuery>
@@ -348,21 +359,24 @@ class DropdownSection extends Component {
                     );
                 })}
 
-                <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+                <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
                     <ArtistSideMenu
                         isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
                         closeMenu={() => this.setActiveItem(null)}
-                        data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
-                        // Sort data inside of artistMenu component.
-                        render={sortedData => (
-                            <ListedContent
-                                isArtists
-                                data={sortedData}
-                                activeTerms={activeTerms}
-                                setActiveTerm={this.setActiveTerm}
-                            />
-                        )}
-                    />
+                    >
+                        <ArtistSideMenuContent
+                            data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                            // Sort data inside of artistMenu component.
+                            render={sortedData => (
+                                <ListedContent
+                                    isArtists
+                                    data={sortedData}
+                                    activeTerms={activeTerms}
+                                    setActiveTerm={this.setActiveTerm}
+                                />
+                            )}
+                        />
+                    </ArtistSideMenu>
                 </MediaQuery>
             </div>
         )

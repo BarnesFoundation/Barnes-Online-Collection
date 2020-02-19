@@ -5,7 +5,7 @@ import { SideMenu } from '../SideMenu/SideMenu';
 const ARTISTS_RADIOS = { ABUNDANCE: 'Abundance', ALPHABETICAL: 'Alphabetical '};
 const ARTISTS_RADIOS_ARRAY = [ARTISTS_RADIOS.ABUNDANCE, ARTISTS_RADIOS.ALPHABETICAL];
 
-export class ArtistSideMenu extends Component {
+export class ArtistSideMenuContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,48 +35,55 @@ export class ArtistSideMenu extends Component {
                 }),
         });
     }
-    
+
     render() {
-        const { closeMenu, render, isOpen } = this.props;
+        const { render, isOpen } = this.props;
         const { artistRadio, data } = this.state;
-        
+
         return (
-            <SideMenu
-                isOpen={isOpen}
-                closeMenu={closeMenu}
-            >
-                <div>
-                    <div className='side-menu__header'>Artists</div>
-                    <div className='side-menu__radio-selection-container'>
-                        {ARTISTS_RADIOS_ARRAY.map((value) => {
-                            const isActive = artistRadio === value;
+            <div>
+                <div className='side-menu__radio-selection-container'>
+                    {ARTISTS_RADIOS_ARRAY.map((value) => {
+                        const isActive = artistRadio === value;
 
-                            let radioTextClassNames = 'side-menu__radio-text';
-                            if (isActive) radioTextClassNames = `${radioTextClassNames} side-menu__radio-text--active`
+                        let radioTextClassNames = 'side-menu__radio-text';
+                        if (isActive) radioTextClassNames = `${radioTextClassNames} side-menu__radio-text--active`
 
-                            return (
-                                <span
-                                    key={value}
-                                    className='side-menu__radio-container'
-                                    onClick={() => this.changeSort(value)}
-                                >
-                                    <input
-                                        type='radio'
-                                        className='side-menu__radio'
-                                        value={value}
-                                        checked={isActive}
-                                        onChange={() => this.changeSort(value)}
-                                    />
-                                    <span className={radioTextClassNames}>{value}</span>
-                                </span>
-                            )
-                        })}
-                    </div>
-                    <div className='side-menu__artist-selection-container'>
-                        {render(data)}
-                    </div>
+                        return (
+                            <span
+                                key={value}
+                                className='side-menu__radio-container'
+                                onClick={() => this.changeSort(value)}
+                            >
+                                <input
+                                    type='radio'
+                                    className='side-menu__radio'
+                                    value={value}
+                                    checked={isActive}
+                                    onChange={() => this.changeSort(value)}
+                                />
+                                <span className={radioTextClassNames}>{value}</span>
+                            </span>
+                        )
+                    })}
                 </div>
-            </SideMenu>
+                <div className='side-menu__artist-selection-container'>
+                    {render(data)}
+                </div>
+            </div>
         );
     }
+};
+
+/** HOC to wrap artist menu in side menu. */
+export const ArtistSideMenu = ({ closeMenu, isOpen, children }) => {
+    return (
+        <SideMenu
+            isOpen={isOpen}
+            closeMenu={closeMenu}
+        >
+            <div className='side-menu__header'>Artists</div>
+            {children}
+        </SideMenu>
+    );
 };
