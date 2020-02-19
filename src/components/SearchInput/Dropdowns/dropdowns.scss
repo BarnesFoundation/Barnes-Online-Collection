@@ -1,5 +1,5 @@
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+@import '../../../scss/variables.scss';
+@import '../../../scss/mixins.scss';
 
 .dropdowns-menu {
     $self: &;
@@ -92,6 +92,10 @@
 
     &__button-content {
         margin-right: 5px;
+    }
+
+    &__button-sup {
+        color: $color-red-barnes
     }
 
     &__icon {
