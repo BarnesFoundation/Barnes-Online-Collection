@@ -43,6 +43,10 @@
   }
 }
 
+.landing-page-header-wrap {
+  overflow: hidden;
+}
+
 .app-landing-page {
   .landing-page-header {
     // the mock shows a font size outside the styleguide
@@ -113,6 +117,12 @@
   $spaceMedium: 40px;
   $spaceLarge: 60px;
 
+  position: relative;
+
+  &::after {
+    height: auto;
+  }
+
   &--landing-page {
     overflow: hidden;
     height: 55vh;
@@ -141,11 +151,11 @@
       overflow: hidden;
 
       @include breakpoint('medium+') {
-        max-height: 55vh;
+        //max-height: 55vh;
       }
 
       @include breakpoint('large+') {
-        max-height: 70vh;
+        // max-height: 70vh;
       }
   }
 

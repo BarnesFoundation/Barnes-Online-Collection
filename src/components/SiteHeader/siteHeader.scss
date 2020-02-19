@@ -25,7 +25,7 @@ html:not([class=""]) {
   &__nav {
     &__link {
       &--active {
-        color: $color__red--barnes;
+        color: $color__red--barnes !important;
         border-color: $color__red--barnes;
       }
     }
@@ -42,10 +42,10 @@ html:not([class=""]) {
   &--unlocked {
     position: fixed;
 
-    transform: translate3d(0,-1000%,0);
+    transform: translate3d(0,-1200%,0);
 
     @include breakpoint('medium+') {
-      transform: translate3d(0,-500%,0);
+      transform: translate3d(0,-600%,0);
     }
   }
 
@@ -138,6 +138,7 @@ html:not([class=""]) {
   width: 100%;
 
   padding-top: 20px;
+  overflow-y: scroll;
 
   @include breakpoint('medium+') {
     padding-top: 35px;

@@ -2,20 +2,10 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import MediaQuery from 'react-responsive';
-import { BREAKPOINTS, CLASSNAME_MOBILE_PANEL_OPEN } from '../../constants';
-
+import { CLASSNAME_MOBILE_PANEL_OPEN } from '../../constants';
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
 import SearchInput from '../SearchInput/SearchInput';
-import CollectionFiltersApplied from './CollectionFiltersApplied';
-import SearchApplied from '../SearchInput/SearchApplied';
-
-import MobileFiltersMenu from './MobileFiltersMenu';
-import MobileSearchMenu from './MobileSearchMenu';
-import MobileFiltersOpener from './MobileFiltersOpener';
-import MobilePanelCloser from './MobilePanelCloser';
-
 import * as FiltersActions from '../../actions/filters';
 import * as SearchActions from '../../actions/search';
 import * as FilterSetsActions from '../../actions/filterSets';
@@ -23,7 +13,11 @@ import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as MobileSearchActions from '../../actions/mobileSearch';
 import * as ObjectsActions from '../../actions/objects';
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
-
+// import MediaQuery from 'react-responsive';
+// import MobileFiltersMenu from './MobileFiltersMenu';
+// import MobileSearchMenu from './MobileSearchMenu';
+// import MobileFiltersOpener from './MobileFiltersOpener';
+// import MobilePanelCloser from './MobilePanelCloser';
 import './collectionFilters.css';
 
 class CollectionFilters extends Component {

@@ -291,7 +291,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: $mobile-filters-section-padding;
+
+  padding-bottom: 30px;
+
+  @include breakpoint('medium+') {
+    padding-bottom: 30px;
+  }
+
+  @include breakpoint('large+') {
+    padding-bottom: 40px;
+  }
 
   .flex-right {
     // make them stay left and right

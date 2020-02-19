@@ -25,14 +25,32 @@ class LandingPageHeader extends Component {
     super(props);
 
     this.ref = null; // For getting height.
+    this.state = { // For triggering rerender on resize.
+      innerHeight: null,
+      innerWidth: null,
+    }
   }
 
+  handleResize = () => {
+    const { innerHeight, innerWidth } = window;
+    this.setState({ innerHeight, innerWidth });
+  }
+
+  componentWillMount() { window.addEventListener('resize', this.handleResize) }
+  componentWillUnmount() { window.removeEventListener('resize', this.handleResize )}
+
   render() {
+    let height = 'auto';
+
+    if (this.ref) {
+      const { y, height: rectHeight } = this.ref.getBoundingClientRect();
+      height = y + rectHeight;
+    }
 
     return (
-      <div
-        className='o-hero o-hero--landing-page'
-        style={{ height: this.ref ? this.ref.offsetHeight : 'auto' }}
+      <div 
+        className='o-hero'
+        style={{ height }}
       >
         <div className='o-hero__inner'>
           <div className='container o-hero__container'>
@@ -155,9 +173,7 @@ class LandingPage extends Component {
         <div className="landing-page">
           {/* Prevent FOUC on mount. */}
           <div style={{ minHeight: '100vh' }}>
-            <div className="landing-page-header-wrap">
-              <LandingPageHeader />
-            </div>
+            <LandingPageHeader />
 
             <div className="m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap">
               <CollectionFilters />
