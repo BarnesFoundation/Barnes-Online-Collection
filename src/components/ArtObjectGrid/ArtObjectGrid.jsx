@@ -9,7 +9,7 @@ import { getArtObjectUrlFromId } from '../../helpers';
 import ArtObject from '../ArtObject/ArtObject';
 import SpinnerLoader from './SpinnerLoader';
 import MasonryGrid from '../MasonryGrid';
-
+import CollectionFiltersApplied from '../CollectionFilters/CollectionFiltersApplied';
 import './artObjectGrid.css';
 
 /** View more button component. */
@@ -127,6 +127,7 @@ class ArtObjectGrid extends Component {
 
     return (
       <div className='m-block m-block--shallow m-block--no-border m-block--flush-top component-art-object-grid__wrapper'>
+        <CollectionFiltersApplied />
         <div
           className={`
             component-art-object-grid

@@ -33,16 +33,6 @@ class CollectionFilters extends Component {
     this.ref = null; // This ref is for CollectionFiltersMenu scrollIntoView method.
   }
 
-  getFilterSet() {
-    const { visibleFilterSet } = this.props.filterSets;
-
-    if (visibleFilterSet === 'search') {
-      return <SearchInput />;
-    } else {
-      return <CollectionFiltersSet />
-    }
-  }
-
   hasBeenReset(props) {
     const hasNothingSet = !props.search.length
       && !props.filters.ordered.length
@@ -154,50 +144,44 @@ class CollectionFilters extends Component {
   }
 
   render() {
-    let filtersApplied;
-
-    if (this.props.search.length > 0) {
-      filtersApplied = <SearchApplied />;
-    } else {
-      filtersApplied = <CollectionFiltersApplied visible={Boolean(this.props.filterSets.visibleFilterSet)} />;
-    }
+    const { visibleFilterSet } = this.props.filterSets;
 
     // const mobileFiltersVisible = this.props.mobileFilters.visible;
     // const mobileSearchVisible = this.props.mobileSearch.visible;
-    const filterSet = this.getFilterSet();
 
     return (
       <div
         className='container collection-filters-wrap__container'
         ref={ref => this.ref = ref}
       >
-          {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-            { mobileFiltersVisible &&
-              <div>
-                <MobileFiltersMenu />
-                <MobilePanelCloser />
-              </div>
-            }
-            { mobileSearchVisible &&
-              <div>
-                <MobileSearchMenu />
-                <MobilePanelCloser />
-              </div>
-            }
-            { !(mobileFiltersVisible || mobileSearchVisible) &&
-              <div>
-                {filtersApplied}
-                <MobileFiltersOpener />
-              </div>
-            }
-          </MediaQuery> */}
-          {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}> */}
-          {/* <MediaQuery> */}
-            <CollectionFiltersMenu parentContainer={this.ref}/>
-          {/* </MediaQuery> */}
+        {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
+          { mobileFiltersVisible &&
+            <div>
+              <MobileFiltersMenu />
+              <MobilePanelCloser />
+            </div>
+          }
+          { mobileSearchVisible &&
+            <div>
+              <MobileSearchMenu />
+              <MobilePanelCloser />
+            </div>
+          }
+          { !(mobileFiltersVisible || mobileSearchVisible) &&
+            <div>
+              {filtersApplied}
+              <MobileFiltersOpener />
+            </div>
+          }
+        </MediaQuery> */}
+        {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}> */}
+        {/* <MediaQuery> */}
+        <CollectionFiltersMenu parentContainer={this.ref}/>
+        {/* </MediaQuery> */}
         <div className="m-block m-block--flush applied-filters">
-          {filterSet}
-          {filtersApplied}
+          {visibleFilterSet === 'search'
+            ? <SearchInput />
+            : <CollectionFiltersSet />}
         </div>
       </div>
     );
