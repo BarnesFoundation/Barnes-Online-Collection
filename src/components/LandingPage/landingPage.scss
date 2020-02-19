@@ -116,10 +116,8 @@
   &--landing-page {
     overflow: hidden;
     height: 55vh;
-    padding-top: 95px;
 
     @include breakpoint('medium+') {
-      padding-top: 0;
       // max-height: 600px;
       height: 55vh;
     }
@@ -140,28 +138,31 @@
       height: 100%;
       position: relative;
       background: $color-white;
+      overflow: hidden;
+
+      @include breakpoint('medium+') {
+        max-height: 55vh;
+      }
+
+      @include breakpoint('large+') {
+        max-height: 70vh;
+      }
   }
 
   &__video {
     object-fit: fill;
-    height: 100%;
-    width: 150%;
+    height: auto;
+    width: 200%;
 
-    transform: translateX(-16%);
+    transform: translateX(-25%);
     
     @include breakpoint('medium+') {
-      width: 100%;
-      min-width: 100%;
-      height: 100%;
-      max-height: 55vh;
-      transform: translateX(0);
+      width: 110%;      
+      transform: translateX(-5%);
     }
 
     @include breakpoint('large+') {
-      min-width: 100%;
-      min-height: 1080px;
-      max-height: 70vh;
-      transform: translate(0, -15%)
+      transform: translate(-5%, -20%);
     }
 
     opacity: 0;
