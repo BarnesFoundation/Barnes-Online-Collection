@@ -77,10 +77,13 @@
   }
 
   .btn-collection-filter {
+    $self: &;
+
     float: left;
     white-space: nowrap;
     padding: 0;
     margin-right: 35px;
+    
 
     @include breakpoint('medium+') {
       float: none;
@@ -176,6 +179,7 @@
           }
         }
 
+
         .collection-filter-icon {
           // use scale instead of a smaller font so that the
           // height stays consistent to ensure the border below doesn't jump
@@ -185,18 +189,21 @@
     }
 
     &--applied {
-      @include breakpoint('medium-') {
-        &:after {
-          display: block;
-          right: 20px;
-          top: 18px;
-          content: ' ';
-          border-radius: 50%;
-          position: absolute;
-          background-color: $color-red-barnes;
-          height: 8px;
-          width: 8px;
-          z-index: 9;
+      .button-inner__content {
+        @include breakpoint('medium-') {
+          position: relative;
+
+          &:after {
+            display: block;
+            left: 23px;
+            top: 13px;
+            content: ' ';
+            border-radius: 50%;
+            position: absolute;
+            background-color: $color-red-barnes;
+            height: 8px;
+            width: 8px;
+          }
         }
       }
     }
