@@ -29,15 +29,18 @@ export class YearInput extends Component {
         let newMinValue;
         let newMaxValue;
 
+        // For min slider.
         if (slider === SLIDERS.MIN) {
+            // If this value supercedes our pivot point, increment pivot.
             if (value >= pivot) {
-                newPivot = Math.min(pivot + 1, years.length - 1);
+                newPivot = Math.min(pivot + 1, years.length - 1); // The pivot has a limit of the years length minus two.
             }
 
             if (value > maxValue) {
-                newMaxValue = maxValue + 1;
+                newMaxValue = Math.min(maxValue + 1, years.length); // Max value tops out at the years length.
             }
 
+            // Update min, max on condition that it was bumped down, and pivot on condition it was moved.
             this.setState({
                 minValue: Math.min(value, years.length - 1),
                 maxValue: newMaxValue || maxValue,
@@ -45,13 +48,14 @@ export class YearInput extends Component {
             });
         } else if (slider === SLIDERS.MAX) {
             if (value <= pivot) {
-                newPivot = Math.max(pivot - 1, 1);
+                newPivot = Math.max(pivot - 1, 1); // The pivot has a floor of 1.
             }
 
             if (value < minValue) {
-                newMinValue = minValue - 1;
+                newMinValue = Math.max(minValue - 1, 0); // Min value bottoms at 0
             }
 
+            // Update max, min on condition that it was bumped down, and pivot on condition it was moved.
             this.setState({
                 maxValue: Math.max(value, 0),
                 minValue: newMinValue || minValue,
@@ -61,7 +65,7 @@ export class YearInput extends Component {
     }
 
     render() {
-        const { minValue, maxValue, pivot } = this.state;
+        const { minValue, maxValue } = this.state;
 
         const minWidth = Math.min(((minValue + 1)/years.length) * 100, 90);
         const maxWidth = Math.max(100 - (((minValue + 1)/years.length) * 100), 10);
@@ -79,7 +83,7 @@ export class YearInput extends Component {
                 />
                 <input
                     type='range'
-                    min={minValue + 1}
+                    min={minValue - 1}
                     max={years.length - 1}
                     value={maxValue}
                     className='year-input'
