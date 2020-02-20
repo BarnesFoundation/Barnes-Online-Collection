@@ -88,34 +88,40 @@ const DropdownMenu = ({
     children,
     clear,
     headerText,
-}) => (
-    <div
-        className='dropdowns-menu__dropdown dropdown'
-        onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        }}
-    >
+    topOffset
+}) => {
+    const additionalStyle = topOffset ? { top: `${topOffset}px` } : {}; // This is to make sure mobile is correctly vertically aligned.
+
+    return (
         <div
-            className='dropdown__header'
-            onClick={clear}
+            className='dropdowns-menu__dropdown dropdown'
+            style={additionalStyle}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
         >
-            {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
-            <Icon
-                svgId='-icon_arrow_down'
-                classes='dropdown__icon dropdown__icon--back'
-            />
-            <span className='font-delta dropdown__header--text'>{headerText}</span>
-            <Icon
-                svgId='-icon_close'
-                classes='dropdown__icon dropdown__icon--x'
-            />
+            <div
+                className='dropdown__header'
+                onClick={clear}
+            >
+                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
+                <Icon
+                    svgId='-icon_arrow_down'
+                    classes='dropdown__icon dropdown__icon--back'
+                />
+                <span className='font-delta dropdown__header--text'>{headerText}</span>
+                <Icon
+                    svgId='-icon_close'
+                    classes='dropdown__icon dropdown__icon--x'
+                />
+            </div>
+            <div className='dropdown__content'>
+                {children}
+            </div>
         </div>
-        <div className='dropdown__content'>
-            {children}
-        </div>
-    </div>
-);
+    );
+}
 
 /** Dropdown menu for filtering artwork. */
 class DropdownSection extends Component {
@@ -137,10 +143,10 @@ class DropdownSection extends Component {
 
         // If this is the current active item, reset to null.
         if (activeItem === term || term === null) {
-            setHasOverlay(false);
+            if (setHasOverlay) setHasOverlay(false);
             this.setState({ activeItem: null });
         } else {
-            setHasOverlay(true);
+            if (setHasOverlay) setHasOverlay(true);
             this.setState({ activeItem: term });
         }
     }
@@ -224,7 +230,7 @@ class DropdownSection extends Component {
      */
     getDropdownContent = (term) => {
         const { activeItem } = this.state;
-        const { pendingTerms, activeTerms } = this.props;
+        const { pendingTerms, activeTerms, topOffset } = this.props;
         const data = DROPDOWN_TERMS_MAP[activeItem];
         
         // Props that are spread regardless of MediaQuery outcome.
@@ -241,9 +247,9 @@ class DropdownSection extends Component {
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
+                        topOffset={topOffset}
                     >
                         {/** This will always behave in the manual application process. */}
-                        
                         <ArtistSideMenuContent
                             data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
                             // Sort data inside of artistMenu component.
@@ -277,6 +283,7 @@ class DropdownSection extends Component {
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
+                        topOffset={topOffset}
                     >
                         {/** Mobile devices */}
                         <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
@@ -319,10 +326,8 @@ class DropdownSection extends Component {
                 ...acc, [advancedFilter.filterType]: acc[advancedFilter.filterType] ? acc[advancedFilter.filterType] + 1 : 1
             }), {});
         
-        const dropdownsMenuClassName = 'dropdowns-menu dropdowns-menu--active';
-
         return (
-            <div className={dropdownsMenuClassName}>
+            <div className='dropdowns-menu'>
                 {DROPDOWN_TERMS_ARRAY.map((term, i) => {
                     const isLastDropdown = i === DROPDOWN_TERMS_ARRAY.length - 1;
                     const isActiveItem = activeItem === term;

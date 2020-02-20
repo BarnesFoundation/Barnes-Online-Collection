@@ -24,6 +24,7 @@ class SearchInput extends Component {
       applyPendingTerms: null,
       pendingTerms: [], // For mobile, filters are actioned on apply.
       hasOverlay: false, // If a dropdown has been selected.
+      topOffset: 0, // Offset for overlay.
     };
 
     this.ref = null;
@@ -34,7 +35,7 @@ class SearchInput extends Component {
 
   render() {
     const { addFilter } = this.props;
-    const { applyPendingTerms, pendingTerms, hasOverlay } = this.state;
+    const { applyPendingTerms, pendingTerms, hasOverlay, topOffset } = this.state;
 
     // Spread these props in search bar regardless of device size.
     const searchBarProps = {
@@ -66,15 +67,27 @@ class SearchInput extends Component {
               />
             </MediaQuery>
             <div className='search__dropdowns'>
-              <Dropdowns
-                pendingTerms={pendingTerms}
-                setApplyPendingTerms={this.setApplyPendingTerms}
-                updatePendingTerms={this.updatePendingTerms}
-                setHasOverlay={(hasOverlay) => {
-                  if (this.ref) this.ref.scrollTop = 0;
-                  this.setState({ hasOverlay });
-                }}
-              />
+              <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                <Dropdowns
+                  pendingTerms={pendingTerms}
+                  setApplyPendingTerms={this.setApplyPendingTerms}
+                  updatePendingTerms={this.updatePendingTerms}
+                  topOffset={topOffset}
+                  setHasOverlay={(hasOverlay) => {
+                    let topOffset = 0;
+
+                    if (this.ref) topOffset = this.ref.scrollTop; // Adjust to top to prevent cutoff
+                    this.setState({ hasOverlay, topOffset }); // Change search BEM modifier.
+                  }}
+                />
+              </MediaQuery>
+              <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                <Dropdowns
+                  pendingTerms={pendingTerms}
+                  setApplyPendingTerms={this.setApplyPendingTerms}
+                  updatePendingTerms={this.updatePendingTerms}
+                />
+              </MediaQuery>
             </div>
           </div>
         </div>

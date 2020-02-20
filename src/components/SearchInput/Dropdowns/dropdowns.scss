@@ -6,37 +6,31 @@
     text-align: left;
 
     @include breakpoint('medium-') {
-        display: none;
-    }
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
 
-    &--active {
-        @include breakpoint('medium-') {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
+        #{ $self }__button {
+            border-top: 1px solid $color-border;
+            border-left: 1px solid $color-border;
+            border-right: 1px solid $color-border;
 
-            #{ $self }__button {
-                border-top: 1px solid $color-border;
-                border-left: 1px solid $color-border;
-                border-right: 1px solid $color-border;
-
-                &--last {
-                    border-bottom: 1px solid $color-border;
-                }
-
-                margin-right: 0;
-                padding: 20px 15px;
-
-                background-color: $color-white;
+            &--last {
+                border-bottom: 1px solid $color-border;
             }
 
-            #{ $self }__icon {
-                top: 20px; // Replicate padding.
-                right: 22px;
-                font-size: 19px;
-                transform: rotate(-90deg);
-                display: inline;
-            }
+            margin-right: 0;
+            padding: 20px 15px;
+
+            background-color: $color-white;
+        }
+
+        #{ $self }__icon {
+            top: 20px; // Replicate padding.
+            right: 22px;
+            font-size: 19px;
+            transform: rotate(-90deg);
+            display: inline;
         }
     }
 
