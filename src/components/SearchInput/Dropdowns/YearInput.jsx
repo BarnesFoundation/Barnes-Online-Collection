@@ -12,7 +12,7 @@ export class YearInput extends Component {
         super(props);
 
         this.state = {
-            minValue: 0,
+            minValue: 1,
             maxValue: years.length - 1,
             pivot: Math.floor(years.length/2),
         }
@@ -70,24 +70,43 @@ export class YearInput extends Component {
         const minWidth = Math.min(((minValue + 1)/years.length) * 100, 90);
         const maxWidth = Math.max(100 - (((minValue + 1)/years.length) * 100), 10);
 
+        const minSliderMax = Math.min(minValue + 1, years.length - 1); // Max value for min slider.
+        const maxSliderMin = Math.max(minValue - 1, 1); // Min value for max slider.
+
+        // TODO => These are working, but rough.
+        const rightOfMinSlider = 100 - ((minSliderMax - (minValue - 1))/(minSliderMax)) * 100; // Calculating start point for gradient.
+        const leftOfMaxSlider = Math.max((((maxValue - minValue)/years.length) * 100)/(maxWidth/100), 8); // Calculating end points for gradient.
+
         return (
-            <div>
+            <div
+                style={{
+                    overflow: 'hidden',
+                    height: '100%',
+                    width: '100%',
+                }}
+            >
                 <input
                     type='range'
                     min={0}
-                    max={Math.min(minValue + 1, years.length - 1)}
-                    value={minValue}
+                    max={minSliderMax}
+                    value={Math.floor(minValue - 1, 0)}
                     className='year-input'
-                    style={{ width: `${Math.max(minWidth, 10)}%` }}
+                    style={{
+                        width: `${Math.max(minWidth, 10)}%`,
+                        background: `linear-gradient(to right, #dcdcdc 0%, #dcdcdc ${rightOfMinSlider}%, #282828 ${rightOfMinSlider}%, #282828 100%)`,
+                    }}
                     onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MIN, parseInt(value))}
                 />
                 <input
                     type='range'
-                    min={minValue - 1}
+                    min={maxSliderMin}
                     max={years.length - 1}
                     value={maxValue}
                     className='year-input'
-                    style={{ width: `${Math.min(maxWidth, 90)}%` }}
+                    style={{
+                        width: `${Math.min(maxWidth, 90)}%`,
+                        background: `linear-gradient(to right, #282828 0%, #282828 ${leftOfMaxSlider}%, #dcdcdc ${leftOfMaxSlider}%, #dcdcdc 100%)`,
+                    }}
                     onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MAX, parseInt(value))}
                 />
             </div>

@@ -3,11 +3,11 @@
 .year-input {
 
     border: none !important; // Overwrite global input style.
-    // width: 50% !important; // Overwrite global input style.
 
     -webkit-appearance: none;
     height: 3px;
-    background: $color-grey-dark;
+    // background: linear-gradient(to right, $color-grey-super-light 0%, $color-grey-super-light 66%, $color-grey-dark 66%, $color-grey-dark 100%);
+    //$color-grey-dark;
     
     opacity: 0.5;
 
@@ -20,6 +20,11 @@
             border: 2px solid $color-grey-super-light;
             background: $color-white;
             cursor: pointer;
+    }
+
+    &::-webkit-slider-runnable-track {
+        // height: 3px;
+        // background: red;
     }
 
     &::-moz-range-thumb {
