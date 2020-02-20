@@ -147,7 +147,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         ...acc, // Spread accumulator
         [advancedFilter.filterType]: {
           ...acc[advancedFilter.filterType], // Spread current filter type
-          [advancedFilter.term]: { ...advancedFilter, index: index + 1 } // Add current advanced filter and increment index.
+          [advancedFilter.term]: { ...advancedFilter, index: index + i } // Add current advanced filter and increment index.
         }
       }), {});
 

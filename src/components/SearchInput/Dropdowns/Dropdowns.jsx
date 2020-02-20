@@ -6,6 +6,7 @@ import { CSSTransitionGroup } from 'react-transition-group';
 import Icon from '../../Icon';
 import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
+import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
 import { BREAKPOINTS } from '../../../constants';
 import searchAssets from '../../../searchAssets.json';
@@ -122,7 +123,7 @@ const DropdownMenu = ({
             </div>
         </div>
     );
-}
+};
 
 /** Dropdown menu for filtering artwork. */
 class DropdownSection extends Component {
@@ -275,7 +276,7 @@ class DropdownSection extends Component {
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
                     >
-                        <span>Lorem Ipsum</span>;
+                        <YearInput></YearInput>
                     </DropdownMenu>
                 );
             };
@@ -406,6 +407,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters }), dispatch);
 const ConnectedDropdownSection = connect(mapStateToProps, mapDispatchToProps)(DropdownSection);
 
+// Wrap component in HOC that keeps track if a user has clicked out.
 const WrappedAndConnectedDropdownSection = ({ ...props }) => (
     <ClickTracker {...props}>
         <ConnectedDropdownSection />

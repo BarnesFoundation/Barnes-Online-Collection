@@ -1,0 +1,32 @@
+@import '../../../scss/variables.scss';
+
+.year-input {
+
+    border: none !important; // Overwrite global input style.
+    // width: 50% !important; // Overwrite global input style.
+
+    -webkit-appearance: none;
+    height: 3px;
+    background: $color-grey-dark;
+    
+    opacity: 0.5;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid $color-grey-super-light;
+            background: $color-white;
+            cursor: pointer;
+    }
+
+    &::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: $color-white;
+        cursor: pointer;
+    }
+}

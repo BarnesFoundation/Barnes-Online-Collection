@@ -7,7 +7,11 @@ const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
     className='container collection-filters-container'
     // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
     // This is wrapped in a RAF to prevent no scroll on clicking Search button.
-    onClick={() => requestAnimationFrame(() => parentContainer.scrollIntoView({ behavior: 'smooth' }))}
+    onClick={() => {
+      requestAnimationFrame(() => {
+        if (parentContainer) parentContainer.scrollIntoView({ behavior: 'smooth' });
+      })
+    }}
   >
     <div className='collection-filters'>
       {Object.entries(sets)
