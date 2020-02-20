@@ -1,24 +1,7 @@
 @import '../../../scss/variables.scss';
 @import '../../../scss/mixins.scss';
 
-.example-enter {
-    opacity: 0.01;
-}
-
-.example-enter.example-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
-}
-
-.example-leave {
-    opacity: 1;
-}
-
-.example-leave.example-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
-}
-
+/* Animation for mobile dropdown. */
 .dropdown-slide {
     $self: &;
 
@@ -27,7 +10,7 @@
 
         &#{ $self }-enter-active {
             transform: translateX(0%);
-            transition: transform 500ms ease 50ms
+            transition: transform 250ms ease 50ms
         }
     }
 
@@ -37,7 +20,7 @@
         &#{ $self }-leave-active {
             transform: translateX(100%);
 
-            transition: transform 500ms ease 50ms
+            transition: transform 250ms ease 50ms
         }
     }
 }
