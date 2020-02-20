@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
+import { CSSTransitionGroup } from 'react-transition-group';
 import Icon from '../../Icon';
 import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
@@ -354,7 +355,21 @@ class DropdownSection extends Component {
                                 </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>
-                            {isActiveItem && this.getDropdownContent(term)}
+                            {/** Have transition for mobile devices. */}
+                            <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                                <CSSTransitionGroup
+                                    transitionName='dropdown-slide'
+                                    transitionEnterTimeout={350}
+                                    transitionLeaveTimeout={350}
+                                >
+                                    {isActiveItem && this.getDropdownContent(term)}
+                                </CSSTransitionGroup>
+                            </MediaQuery>
+
+                            {/** Just render w/o animation for desktop. */}
+                            <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                                {isActiveItem && this.getDropdownContent(term)}
+                            </MediaQuery>
                         </div>
                     );
                 })}
