@@ -21,9 +21,12 @@ class SearchInput extends Component {
     super(props);
 
     this.state = {
-      pendingTerms: [], // For mobile, filters are actioned on apply.
       applyPendingTerms: null,
+      pendingTerms: [], // For mobile, filters are actioned on apply.
+      hasOverlay: false, // If a dropdown has been selected.
     };
+
+    this.ref = null;
   }
 
   updatePendingTerms = pendingTerms => this.setState({ pendingTerms });
@@ -31,7 +34,7 @@ class SearchInput extends Component {
 
   render() {
     const { addFilter } = this.props;
-    const { applyPendingTerms, pendingTerms } = this.state;
+    const { applyPendingTerms, pendingTerms, hasOverlay } = this.state;
 
     // Spread these props in search bar regardless of device size.
     const searchBarProps = {
@@ -39,9 +42,15 @@ class SearchInput extends Component {
       submit: value => addFilter({ filterType: 'search', value }),
     };
 
+    let searchClassName = 'search';
+    if (hasOverlay) searchClassName = `${searchClassName} search--active`
+
     return (
       <div>
-        <div className='search'>
+        <div
+          className={searchClassName}
+          ref={ref => this.ref = ref}
+        >
           <div className='search__content'>
             <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
               <SearchBar
@@ -61,6 +70,10 @@ class SearchInput extends Component {
                 pendingTerms={pendingTerms}
                 setApplyPendingTerms={this.setApplyPendingTerms}
                 updatePendingTerms={this.updatePendingTerms}
+                setHasOverlay={(hasOverlay) => {
+                  if (this.ref) this.ref.scrollTop = 0;
+                  this.setState({ hasOverlay });
+                }}
               />
             </div>
           </div>

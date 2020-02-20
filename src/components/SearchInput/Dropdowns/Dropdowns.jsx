@@ -133,11 +133,14 @@ class DropdownSection extends Component {
      */
     setActiveItem(term) {
         const { activeItem } = this.state;
+        const { setHasOverlay } = this.props; // Method from parent to lock scroll on search div.
 
         // If this is the current active item, reset to null.
         if (activeItem === term || term === null) {
+            setHasOverlay(false);
             this.setState({ activeItem: null });
         } else {
+            setHasOverlay(true);
             this.setState({ activeItem: term });
         }
     }
@@ -234,7 +237,7 @@ class DropdownSection extends Component {
         switch (activeItem) {
             case (DROPDOWN_TERMS.ARTIST): {
                 // Dropdown for artist should only be rendered for desktop devices.
-                return <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
+                return <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}

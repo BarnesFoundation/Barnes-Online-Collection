@@ -13,19 +13,21 @@ $button-margin: 15px;
   overflow-y: scroll;
   overflow-x: hidden;
 
+  padding: 30px 40px;
+
+  background-color: $color-grey-ultra-light-2;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid $color-border;
+
   @include breakpoint('large+') {
+    border-left: 1px solid $color-border;
+    border-right: 1px solid $color-border;
     overflow: initial;
   }
 
-  background-color: $color-grey-ultra-light-2;
-  padding: 30px 40px;
-  border-left: 1px solid $color-border;
-  border-right: 1px solid $color-border;
-  border-bottom: 1px solid $color-border;
-
-  @include breakpoint('medium-') {
-    border-left: none;
-    border-right: none;
+  &--active {
+    overflow-y: hidden;
   }
 
   &__searchbar {
