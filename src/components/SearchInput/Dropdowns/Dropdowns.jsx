@@ -258,6 +258,7 @@ class DropdownSection extends Component {
                     >
                         {/** This will always behave in the manual application process. */}
                         <ArtistSideMenuContent
+                            hasScroll
                             data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
                             // Sort data inside of artistMenu component.
                             render={sortedData => (

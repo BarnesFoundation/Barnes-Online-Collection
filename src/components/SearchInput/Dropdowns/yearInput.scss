@@ -3,6 +3,12 @@
 
 
 .year-input {
+    margin-right: 20px; // Make up for padding for no scrollbar.
+
+    @include breakpoint('large+') {
+        margin-right: 0px;
+    }
+
     &__header {
         margin-bottom: 10px;
     }

@@ -13,12 +13,16 @@ $button-margin: 15px;
   overflow-y: scroll;
   overflow-x: hidden;
 
-  padding: 30px 40px;
+  padding: 0px 40px 30px 40px; // Header applies spacing.
 
   background-color: $color-grey-ultra-light-2;
   border-left: none;
   border-right: none;
   border-bottom: 1px solid $color-border;
+
+  @include breakpoint('medium+') {
+    padding: 30px 40px; 
+  }
 
   @include breakpoint('large+') {
     border-left: 1px solid $color-border;
@@ -72,6 +76,15 @@ $button-margin: 15px;
     width: $button-width;
 
     @include breakpoint('small-') {
+      display: none;
+    }
+  }
+
+  &__header {
+    text-align: left;
+    padding: 15px 0;
+
+    @include breakpoint('medium+') {
       display: none;
     }
   }

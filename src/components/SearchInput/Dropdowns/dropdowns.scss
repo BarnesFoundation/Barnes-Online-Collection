@@ -163,7 +163,7 @@
         #{ $self }{
             &__content {
                 @include breakpoint('medium-') {
-                    @include scrollbar($color-grey-ultra-light-2);
+                    // @include scrollbar($color-grey-ultra-light-2);
                 }
             }
 
@@ -171,9 +171,6 @@
                 @include breakpoint('large+') {
                     right: -10px;
                 }
-                // &--x {
-                    
-                // }
             }
         }
     }

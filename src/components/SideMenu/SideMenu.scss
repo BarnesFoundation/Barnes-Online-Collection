@@ -142,6 +142,39 @@
     &__artist-doc-count {
         color: $color-grey-medium;
     }
+
+    &__quick-scroll {
+        // Handle positioning in here, for internal styling see separate BEM in this file.
+        position: sticky;
+        float: right;
+        z-index: 2;
+        margin-top: -15px;
+    }
+}
+
+.quick-scroll {
+    padding: 10px 15px 10px 0px;
+
+    background-color: $color-white;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+    border-top: 2px solid $color-border;
+    border-bottom: 2px solid $color-border;
+
+    
+    &__icon {
+        font-size: 19px;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &--up {
+            transform: rotate(180deg);
+        }
+    }
 }
 
 .g-nav {

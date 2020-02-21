@@ -50,6 +50,7 @@ export class SearchBar extends Component {
         return (
             <div className={searchClassName}>
                 <div className='search__input-group'>
+                    <div className='font-zeta search__header'>SEARCH COLLECTION</div>
                     <input
                         className='search__input'
                         type='text'

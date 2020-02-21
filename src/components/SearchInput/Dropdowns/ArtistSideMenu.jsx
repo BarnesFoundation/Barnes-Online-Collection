@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Icon from '../../Icon';
 import { SideMenu } from '../../SideMenu/SideMenu';
 
 // Set up options for artists radios.
@@ -37,7 +38,7 @@ export class ArtistSideMenuContent extends Component {
     }
 
     render() {
-        const { render, isOpen } = this.props;
+        const { render, hasScroll } = this.props;
         const { artistRadio, data } = this.state;
 
         return (
@@ -68,6 +69,18 @@ export class ArtistSideMenuContent extends Component {
                     })}
                 </div>
                 <div className='side-menu__artist-selection-container'>
+                    {hasScroll &&
+                        <div className='side-menu__quick-scroll quick-scroll'>
+                            <Icon
+                                svgId='-icon_arrow_down'
+                                classes='quick-scroll__icon quick-scroll__icon--up'
+                            />
+                            <Icon
+                                svgId='-icon_arrow_down'
+                                classes='quick-scroll__icon quick-scroll__icon--down'
+                            />
+                        </div>
+                    }
                     {render(data)}
                 </div>
             </div>
