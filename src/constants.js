@@ -16,6 +16,7 @@ export const CLEAR_OBJECT = 'CLEAR_OBJECT';
 // filterSets
 export const SELECT_FILTER_SET = 'SELECT_FILTER_SET';
 export const CLOSE_FILTER_SET = 'CLOSE_FILTER_SET';
+export const TOGGLE_ARTIST_MENU = 'TOGGLE_ARTIST_MENU';
 
 // mobileFilters
 export const OPEN_MOBILE_FILTERS = 'OPEN_MOBILE_FILTERS';

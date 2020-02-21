@@ -8,6 +8,7 @@ import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
 import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
+import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import searchAssets from '../../../searchAssets.json';
 import './dropdowns.css';
@@ -167,14 +168,19 @@ class DropdownSection extends Component {
      */
     setActiveItem(term) {
         const { activeItem } = this.state;
-        const { setHasOverlay } = this.props; // Method from parent to lock scroll on search div.
+        const { setHasOverlay, toggleArtistMenu } = this.props; // Method from parent to lock scroll on search div.
+
+        // If this is an artist menu, we will want to alter the redux store.
+        if (activeItem === DROPDOWN_TERMS.ARTIST || term === DROPDOWN_TERMS.ARTIST) toggleArtistMenu(term === DROPDOWN_TERMS.ARTIST);
 
         // If this is the current active item, reset to null.
         if (activeItem === term || term === null) {
             if (setHasOverlay) setHasOverlay(false);
+
             this.setState({ activeItem: null });
         } else {
             if (setHasOverlay) setHasOverlay(true);
+
             this.setState({ activeItem: term });
         }
     }
@@ -434,7 +440,12 @@ const mapStateToProps = state => ({
     activeTerms: Object.values(state.filters.advancedFilters) // Go over every key in advanced filter.
         .flatMap((value) => (Object.values(value)).map(({ term }) => term)) // Go through every object value and get the term, flatMap into single array.
 });
-const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters }), dispatch);
+const mapDispatchToProps = (dispatch) => (
+    bindActionCreators(
+        Object.assign(
+            {}, { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters, toggleArtistMenu }), dispatch
+        )
+);
 const ConnectedDropdownSection = connect(mapStateToProps, mapDispatchToProps)(DropdownSection);
 
 // Wrap component in HOC that keeps track if a user has clicked out.

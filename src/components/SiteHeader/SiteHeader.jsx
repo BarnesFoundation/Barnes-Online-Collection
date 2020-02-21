@@ -87,7 +87,7 @@ class SiteHeader extends Component {
 
           let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
           if (currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
-          if (Boolean(currentScrollHeight < previousScrollHeight && currentScrollHeight > 250)) isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+          if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
 
           // Update React component state.
           this.setState({ isHeaderHidden });
@@ -100,9 +100,7 @@ class SiteHeader extends Component {
     };
   })();
 
-  openSideMenu = (e) => {
-    this.setState({ isSideMenuOpen: true });
-  }
+  openSideMenu = () => this.setState({ isSideMenuOpen: true });
 
   render() {
     const { isHeaderHidden } = this.state;

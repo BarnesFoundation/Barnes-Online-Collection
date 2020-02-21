@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Icon from '../../Icon';
 import { SideMenu } from '../../SideMenu/SideMenu';
+import { toggleArtistMenu } from '../../../actions/filterSets';
 
 // Set up options for artists radios.
 const ARTISTS_RADIOS = { ABUNDANCE: 'Abundance', ALPHABETICAL: 'Alphabetical '};
@@ -96,14 +99,31 @@ export class ArtistSideMenuContent extends Component {
 };
 
 /** HOC to wrap artist menu in side menu. */
-export const ArtistSideMenu = ({ closeMenu, isOpen, children }) => {
-    return (
-        <SideMenu
-            isOpen={isOpen}
-            closeMenu={closeMenu}
-        >
-            <div className='side-menu__header'>Artists</div>
-            {children}
-        </SideMenu>
-    );
+class ArtistSideMenu extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    /** Dispatch to redux store on unmount. */
+    componentWillUnmount() { this.props.toggleArtistMenu(false); }
+
+    render() {
+        const { isOpen, closeMenu, children } = this.props;
+
+        return (
+            <SideMenu
+                isOpen={isOpen}
+                closeMenu={closeMenu}
+            >
+                <div className='side-menu__header'>Artists</div>
+                {children}
+            </SideMenu>
+        );
+    }
 };
+
+
+const mapDispatchToProps = (dispatch) => (bindActionCreators(Object.assign({}, { toggleArtistMenu }), dispatch));
+const connectedArtistSideMenu = connect(null, mapDispatchToProps)(ArtistSideMenu);
+
+export { connectedArtistSideMenu as ArtistSideMenu };

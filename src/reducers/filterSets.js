@@ -1,9 +1,9 @@
-import * as ActionTypes from '../constants';
+import { SELECT_FILTER_SET, CLOSE_FILTER_SET, TOGGLE_ARTIST_MENU } from '../constants';
 import { COLOR_FILTERS, LINE_FILTERS } from '../filterSettings';
 
 const initialState = {
-  // TODO => Revert this to null.
   visibleFilterSet: null,
+  isArtistMenuToggled: false,
   sets: {
     colors: {
       title: 'Colors',
@@ -71,8 +71,17 @@ const initialState = {
 
 const filterSets = (state = initialState, action) => {
   switch(action.type) {
-    case ActionTypes.SELECT_FILTER_SET: return Object.assign({}, state, { visibleFilterSet: action.slug });
-    case ActionTypes.CLOSE_FILTER_SET: return Object.assign({}, state, { visibleFilterSet: null });
+    case SELECT_FILTER_SET: return Object.assign({}, state, { visibleFilterSet: action.slug });
+    case CLOSE_FILTER_SET: return Object.assign({}, state, { visibleFilterSet: null });
+    case TOGGLE_ARTIST_MENU: {
+      const { isOpen } = action;
+      const { isArtistMenuToggled, ...rest } = state;
+
+      return {
+        isArtistMenuToggled: isOpen,
+        ...rest,
+      }
+    }
     default: return state;
   }
 }

@@ -1,14 +1,16 @@
-import * as ActionTypes from '../constants';
+import { SELECT_FILTER_SET, CLOSE_FILTER_SET, TOGGLE_ARTIST_MENU } from '../constants';
 
 export function selectFilterSet(slug) {
   return {
-    type: ActionTypes.SELECT_FILTER_SET,
+    type: SELECT_FILTER_SET,
     slug: slug
   }
-}
+};
 
 export function closeFilterSet() {
   return {
-    type: ActionTypes.CLOSE_FILTER_SET,
+    type: CLOSE_FILTER_SET,
   }
-}
+};
+
+export const toggleArtistMenu = isOpen => ({ type: TOGGLE_ARTIST_MENU, isOpen });

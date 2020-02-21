@@ -4,8 +4,10 @@ import React, { Component } from 'react';
 export class LockScroll extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       scrollY: 0,
+      willUnlock: null,
     };
   }
   
@@ -13,9 +15,25 @@ export class LockScroll extends Component {
    * If locked prop changes, modify scroll lock status.
    */
   componentDidUpdate(prevProps) {
-    if (prevProps.isLocked !== this.props.isLocked) {
-      this.setUpScrollLock(this.props.isLocked);
+    const { isLocked } = this.props;
+    if (prevProps.isLocked !== isLocked) {
+      if (isLocked) {
+        this.setUpScrollLock(isLocked);
+      } else {
+        
+        // Unlock after animation has performed.
+        this.setState({
+          willUnlock: setTimeout(() => this.setUpScrollLock(isLocked), 300),
+        });
+      }
     }
+  }
+
+  /** cWU to cleanup STO on unmount. */
+  componentWillUnmount() {
+    const { willUnlock } = this.state;
+
+    if (willUnlock) clearTimeout(willUnlock);
   }
 
   /**

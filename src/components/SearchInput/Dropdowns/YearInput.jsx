@@ -29,9 +29,7 @@ class YearInputTextBox extends Component {
     componentWillUnmount() {
         const { willCheck } = this.state;
         
-        if (willCheck) {
-            clearTimeout(willCheck);
-        }
+        if (willCheck) clearTimeout(willCheck);
     }
 
     /** Validate an input. */

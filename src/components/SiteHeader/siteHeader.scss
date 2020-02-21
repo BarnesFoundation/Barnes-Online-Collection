@@ -146,6 +146,7 @@ html:not([class=""]) {
 
   @include breakpoint('large+') {
     padding-top: 10px;
+    overflow-y: hidden;
   }
 
   &__buttons-area {
