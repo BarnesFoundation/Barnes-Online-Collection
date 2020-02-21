@@ -9,6 +9,7 @@ const ARTISTS_RADIOS_ARRAY = [ARTISTS_RADIOS.ABUNDANCE, ARTISTS_RADIOS.ALPHABETI
 export class ArtistSideMenuContent extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             artistRadio: ARTISTS_RADIOS.ABUNDANCE,
             data: this.props.data,
@@ -38,7 +39,7 @@ export class ArtistSideMenuContent extends Component {
     }
 
     render() {
-        const { render, hasScroll } = this.props;
+        const { render, hasScroll, parentRef } = this.props;
         const { artistRadio, data } = this.state;
 
         return (
@@ -74,10 +75,16 @@ export class ArtistSideMenuContent extends Component {
                             <Icon
                                 svgId='-icon_arrow_down'
                                 classes='quick-scroll__icon quick-scroll__icon--up'
+                                onClick={() => {
+                                    if (parentRef) parentRef.scrollTo(0, parentRef.scrollTop - 500);
+                                }}
                             />
                             <Icon
                                 svgId='-icon_arrow_down'
                                 classes='quick-scroll__icon quick-scroll__icon--down'
+                                onClick={() => {
+                                    if (parentRef) parentRef.scrollTo(0, parentRef.scrollTop + 500);
+                                }}
                             />
                         </div>
                     }

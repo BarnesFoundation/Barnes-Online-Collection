@@ -87,48 +87,69 @@ const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, is
 );
 
 /** Actual dropdown menu. */
-const DropdownMenu = ({
-    children,
-    clear,
-    headerText,
-    topOffset,
-    noScroll
-}) => {
-    const additionalStyle = topOffset ? { top: `${topOffset}px` } : {}; // This is to make sure mobile is correctly vertically aligned.
-    
-    let dropdownClassNames = 'dropdown';
-    if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`
+class DropdownMenu extends Component {
+    constructor(props) {
+        super(props);
 
-    return (
-        <div
-            className={`dropdowns-menu__dropdown ${dropdownClassNames}`}
-            style={additionalStyle}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }}
-        >
+        this.ref = null;
+    }
+
+    componentWillMount() {
+        this.setState({});
+    }
+
+    render() {
+        const { children, clear, headerText, topOffset, noScroll } = this.props
+
+        const additionalStyle = topOffset ? { top: `${topOffset}px` } : {}; // This is to make sure mobile is correctly vertically aligned.
+        
+        let dropdownClassNames = 'dropdown';
+        if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`;
+
+        console.log(this.ref);
+
+        return (
             <div
-                className='dropdown__header'
-                onClick={clear}
+                className={`dropdowns-menu__dropdown ${dropdownClassNames}`}
+                style={additionalStyle}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }}
             >
-                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
-                <Icon
-                    svgId='-icon_arrow_down'
-                    classes='dropdown__icon dropdown__icon--back'
-                />
-                <span className='font-delta dropdown__header--text'>{headerText}</span>
-                <Icon
-                    svgId='-icon_close'
-                    classes='dropdown__icon dropdown__icon--x'
-                />
+                <div
+                    className='dropdown__header'
+                    onClick={clear}
+                >
+                    {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
+                    <Icon
+                        svgId='-icon_arrow_down'
+                        classes='dropdown__icon dropdown__icon--back'
+                    />
+                    <span className='font-delta dropdown__header--text'>{headerText}</span>
+                    <Icon
+                        svgId='-icon_close'
+                        classes='dropdown__icon dropdown__icon--x'
+                    />
+                </div>
+                <div
+                    ref={(ref) => {
+                        // Ref will not be set on 1st render.
+                        if (!this.ref) {
+                            this.ref = ref;
+                            this.forceUpdate();
+                        }
+                    }}
+                    className='dropdown__content'
+                >
+                    {React.Children.map(children, (child) => (
+                        React.cloneElement(child, { parentRef: this.ref })
+                    ))}
+                </div>
             </div>
-            <div className='dropdown__content'>
-                {children}
-            </div>
-        </div>
-    );
-};
+        );
+    }
+}
 
 /** Dropdown menu for filtering artwork. */
 class DropdownSection extends Component {
