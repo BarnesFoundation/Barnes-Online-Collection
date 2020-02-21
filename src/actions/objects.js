@@ -358,7 +358,12 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
-          console.error(`${filterType} not set up.`);
+          const { DateRange: { term: { beginDate, endDate }}} = appliedFilters;
+
+          body
+            .query('range', 'beginDate', { 'gte': beginDate })
+            .query('range', 'endDate', { 'lte': endDate });
+          break;
         }
         case DROPDOWN_TERMS.MEDIUM: {
           // Map over terms, place into single array like ["Charcoal on brown wove paper", "Pen and brown ink on brown wove paper"].

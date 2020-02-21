@@ -114,6 +114,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
 
+      console.log(filter);
+
       return {
         // Take a deep breath.
         ...state, // Deep copy existing state via spread.
@@ -121,7 +123,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           ...advancedFilters, // Deep copy existing advanced filter via spread.
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
-            [filter.term]: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
+            // Quick hack to fix dates as object.
+            [typeof filter.term === 'string' ? filter.term : 'DateRange']: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
           }
         }
       };
@@ -147,7 +150,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         ...acc, // Spread accumulator
         [advancedFilter.filterType]: {
           ...acc[advancedFilter.filterType], // Spread current filter type
-          [advancedFilter.term]: { ...advancedFilter, index: index + i } // Add current advanced filter and increment index.
+          // Quick hack to fix dates as object.
+          [typeof advancedFilter.term === 'string' ? advancedFilter.term : 'DateRange']: { ...advancedFilter, index: index + i } // Add current advanced filter and increment index.
         }
       }), {});
 

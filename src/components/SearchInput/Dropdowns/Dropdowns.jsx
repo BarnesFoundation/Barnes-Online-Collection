@@ -95,10 +95,6 @@ class DropdownMenu extends Component {
         this.ref = null;
     }
 
-    componentWillMount() {
-        this.setState({});
-    }
-
     render() {
         const { children, clear, headerText, topOffset, noScroll } = this.props
 
@@ -106,8 +102,6 @@ class DropdownMenu extends Component {
         
         let dropdownClassNames = 'dropdown';
         if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`;
-
-        console.log(this.ref);
 
         return (
             <div
@@ -195,7 +189,9 @@ class DropdownSection extends Component {
         const { pendingTerms, updatePendingTerms, activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
-        const filter = { filterType: activeItem, value: `${activeItem}: "${term}"`, term };
+        const filter = activeItem !== DROPDOWN_TERMS.YEAR
+            ? { filterType: activeItem, value: `${activeItem}: "${term}"`, term }
+            : { filterType: DROPDOWN_TERMS.YEAR, value: `Years: ${term.beginDate}-${term.endDate}`, term};
 
         // If this is for a manual application process, i.e. mobile.
         if (isManualApply) {
@@ -311,7 +307,9 @@ class DropdownSection extends Component {
                         noScroll
                         topOffset={topOffset}
                     >
-                        <YearInput></YearInput>
+                        <YearInput
+                            setActiveTerm={term => this.setActiveTerm(term, true)}
+                        />
                     </DropdownMenu>
                 );
             };

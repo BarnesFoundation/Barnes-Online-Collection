@@ -104,6 +104,7 @@ export class YearInput extends Component {
     */
     updateSlider = (slider, value) => {
         const { minValue, maxValue, pivot } = this.state;
+        const { setActiveTerm } = this.props;
 
         let newPivot;
         let newMinValue;
@@ -120,6 +121,9 @@ export class YearInput extends Component {
                 newMaxValue = Math.min(maxValue + 1, years.length); // Max value tops out at the years length.
             }
 
+            // Update parent
+            setActiveTerm({ beginDate: years[Math.min(value, years.length - 1)], endDate: years[newMaxValue || maxValue] });
+
             // Update min, max on condition that it was bumped down, and pivot on condition it was moved.
             this.setState({
                 minValue: Math.min(value, years.length - 1),
@@ -134,6 +138,9 @@ export class YearInput extends Component {
             if (value < minValue) {
                 newMinValue = Math.max(minValue - 1, 0); // Min value bottoms at 0
             }
+
+            // Update parent
+            setActiveTerm({ beginDate: years[newMinValue || minValue], endDate: years[Math.max(value, 0)] })
 
             // Update max, min on condition that it was bumped down, and pivot on condition it was moved.
             this.setState({
