@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { LockScroll } from '../LockScroll';
 import { SideMenu } from '../SideMenu/SideMenu';
 import { SearchBar } from '../SearchInput/SearchBar';
@@ -78,6 +79,8 @@ class SiteHeader extends Component {
 
     return () => {
       // Only perform update if this has not already been fired.
+      const { isArtistMenuToggled } = this.props;
+
       if (!scrollState.isScrolling) {
         scrollState.isScrolling = true; // Set firing status to true.
 
@@ -86,8 +89,11 @@ class SiteHeader extends Component {
           const currentScrollHeight = window.pageYOffset;
 
           let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
-          if (currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
-          if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+          if ((currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) || isArtistMenuToggled) {
+            isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
+          } else if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) {
+            isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+          }
 
           // Update React component state.
           this.setState({ isHeaderHidden });
@@ -183,6 +189,9 @@ class SiteHeader extends Component {
   }
 };
 
+const mapStateToProps = state => ({ isArtistMenuToggled: state.filterSets.isArtistMenuToggled });
+const ConnectedSiteHeader = connect(mapStateToProps)(SiteHeader);
+
 class SiteHeaderGlobalSearch extends Component {
   constructor(props) {
     super(props);
@@ -215,11 +224,11 @@ class SiteHeaderGlobalSearch extends Component {
 
     return (
       <div>
-        <SiteHeader
+        <ConnectedSiteHeader
           isArtObject={Boolean(isArtObject)}
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
         />
-        <SiteHeader
+        <ConnectedSiteHeader
           isGlobalSearchHeader
           isGlobalSearchActive={isGlobalSearchActive}
           isArtObject={Boolean(isArtObject)}
