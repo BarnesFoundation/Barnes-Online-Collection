@@ -44,7 +44,7 @@ const DROPDOWN_TERMS_MAP = {
  * Formatted listed content for child of DropdownMenu or ArtistSideMenu.
  * @see getDropdownContent
  * */
-const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, isArtists }) => (
+const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, isArtists, isSideMenu }) => (
     <ul className='dropdown__list'>
         {data
             .filter(({ key }) => key) // Filter out null items.
@@ -57,8 +57,9 @@ const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, is
                 let listItemClassNames = 'dropdown__list-item';
                 if (isActiveItem) listItemClassNames = `${listItemClassNames} ${listItemClassNames}--active`;
 
+                // Apply special styling to icon so that is it adjacent to li for side menu only.
                 let dropdownIconClassNames = 'dropdown__icon';
-                if (doc_count) dropdownIconClassNames = `${dropdownIconClassNames} dropdown__icon--artist`
+                if (isArtists && isSideMenu) dropdownIconClassNames = `${dropdownIconClassNames} dropdown__icon--artist`;
 
                 return (
                     <li
@@ -90,13 +91,17 @@ const DropdownMenu = ({
     children,
     clear,
     headerText,
-    topOffset
+    topOffset,
+    noScroll
 }) => {
     const additionalStyle = topOffset ? { top: `${topOffset}px` } : {}; // This is to make sure mobile is correctly vertically aligned.
+    
+    let dropdownClassNames = 'dropdown';
+    if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`
 
     return (
         <div
-            className='dropdowns-menu__dropdown dropdown'
+            className={`dropdowns-menu__dropdown ${dropdownClassNames}`}
             style={additionalStyle}
             onClick={(e) => {
                 e.preventDefault();
@@ -275,6 +280,8 @@ class DropdownSection extends Component {
                     <DropdownMenu
                         headerText={term}
                         clear={() => this.setActiveItem(null)}
+                        noScroll
+                        topOffset={topOffset}
                     >
                         <YearInput></YearInput>
                     </DropdownMenu>
@@ -386,6 +393,7 @@ class DropdownSection extends Component {
                             render={sortedData => (
                                 <ListedContent
                                     isArtists
+                                    isSideMenu
                                     data={sortedData}
                                     activeTerms={activeTerms}
                                     setActiveTerm={this.setActiveTerm}

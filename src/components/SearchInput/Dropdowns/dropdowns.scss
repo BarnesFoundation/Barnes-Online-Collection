@@ -137,6 +137,7 @@
 }
 
 .dropdown {
+    $self: &;
     cursor: default;
 
     @include breakpoint('medium-') {
@@ -154,10 +155,31 @@
 
     background-color: $color-grey-ultra-light-2;
 
+    &--scroll {
+        @include breakpoint('large+') {
+            @include scrollbar();
+        }
+
+        #{ $self }{
+            &__content {
+                @include breakpoint('medium-') {
+                    @include scrollbar($color-grey-ultra-light-2);
+                }
+            }
+
+            &__icon {
+                @include breakpoint('large+') {
+                    right: -10px;
+                }
+                // &--x {
+                    
+                // }
+            }
+        }
+    }
+
     @include breakpoint('large+') {
         // Style scrollbar
-        @include scrollbar();
-        overflow-x: hidden;
 
         // Element positioning relative to parent button.
         position: absolute;
@@ -221,8 +243,13 @@
         // Positioning
         position: absolute;
 
-        right: -11px;
-        top: 3px;
+        right: 0px;
+        top: 10px;
+
+        @include breakpoint('large+') {
+            right: 0px;
+            top: 3px;
+        }
 
         font-size: 12px;
 
@@ -238,19 +265,20 @@
             @include breakpoint('large+') {
                 display: inline;
 
-                right: -10px;
                 top: 15px;
+                right: 8px;
 
                 font-size: 11px;
             }
         }
 
         &--back {
+            top: 3px;
             display: inline-block;
             font-size: 19px;
             position: relative;
             transform: rotate(90deg);
-            margin-right: 19px;
+            margin-right: 10px;
 
             @include breakpoint('large+') {
                 display: none;
@@ -277,15 +305,14 @@
         font-weight: normal;
         font-size: 15px;
 
-        @include scrollbar($color-grey-ultra-light-2);
         overflow-x: hidden;
 
         margin-top: 10px;
-        padding: 0px 10px 15px 40px;
+        padding: 0px 0px 15px 20px;
 
         @include breakpoint('large+') {
-            overflow-x: none;
-            overflow-y: none;
+            overflow-x: initial;
+            overflow-y: initial;
             padding: 0;
             margin-top: 0;
         }

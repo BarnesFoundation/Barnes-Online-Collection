@@ -12,7 +12,7 @@ export class YearInput extends Component {
         super(props);
 
         this.state = {
-            minValue: 1,
+            minValue: 0,
             maxValue: years.length - 1,
             pivot: Math.floor(years.length/2),
         }
@@ -77,38 +77,48 @@ export class YearInput extends Component {
         const rightOfMinSlider = 100 - ((minSliderMax - (minValue - 1))/(minSliderMax)) * 100; // Calculating start point for gradient.
         const leftOfMaxSlider = Math.max((((maxValue - minValue)/years.length) * 100)/(maxWidth/100), 8); // Calculating end points for gradient.
 
+        const yearRange = `${minValue === 0 ? '4000 BC' : years[minValue]}-${maxValue === years.length - 1 ? 'Present' : years[maxValue]}`
+
         return (
-            <div
-                style={{
-                    overflow: 'hidden',
-                    height: '100%',
-                    width: '100%',
-                }}
-            >
-                <input
-                    type='range'
-                    min={0}
-                    max={minSliderMax}
-                    value={Math.floor(minValue - 1, 0)}
-                    className='year-input'
-                    style={{
-                        width: `${Math.max(minWidth, 10)}%`,
-                        background: `linear-gradient(to right, #dcdcdc 0%, #dcdcdc ${rightOfMinSlider}%, #282828 ${rightOfMinSlider}%, #282828 100%)`,
-                    }}
-                    onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MIN, parseInt(value))}
-                />
-                <input
-                    type='range'
-                    min={maxSliderMin}
-                    max={years.length - 1}
-                    value={maxValue}
-                    className='year-input'
-                    style={{
-                        width: `${Math.min(maxWidth, 90)}%`,
-                        background: `linear-gradient(to right, #282828 0%, #282828 ${leftOfMaxSlider}%, #dcdcdc ${leftOfMaxSlider}%, #dcdcdc 100%)`,
-                    }}
-                    onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MAX, parseInt(value))}
-                />
+            <div className='year-input'>
+                <div className='year-input__header'>{yearRange}</div>
+                <div className='year-input__range-group'>
+                    <input
+                        type='range'
+                        min={0}
+                        max={minSliderMax}
+                        value={Math.max(minValue - 1, 0)}
+                        className='year-input__range'
+                        style={{
+                            width: `${Math.max(minWidth, 10)}%`,
+                            background: `linear-gradient(to right, #dcdcdc 0%, #dcdcdc ${rightOfMinSlider}%, #282828 ${rightOfMinSlider}%, #282828 100%)`,
+                        }}
+                        onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MIN, parseInt(value))}
+                    />
+                    <input
+                        type='range'
+                        min={maxSliderMin}
+                        max={years.length - 1}
+                        value={maxValue}
+                        className='year-input__range'
+                        style={{
+                            width: `${Math.min(maxWidth, 90)}%`,
+                            background: `linear-gradient(to right, #282828 0%, #282828 ${leftOfMaxSlider}%, #dcdcdc ${leftOfMaxSlider}%, #dcdcdc 100%)`,
+                        }}
+                        onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MAX, parseInt(value))}
+                    />
+                </div>
+                <div className='year-input__header'>Custom range</div>
+                <div className='year-input__text-input-group'>
+                    <input
+                        type='text'
+                        className='year-input__text-input'
+                    />
+                    <input
+                        type='text'
+                        className='year-input__text-input'
+                    />
+                </div>
             </div>
         );
     }

@@ -1,37 +1,85 @@
 @import '../../../scss/variables.scss';
+@import '../../../scss/mixins.scss';
+
 
 .year-input {
+    &__header {
+        margin-bottom: 10px;
+    }
 
-    border: none !important; // Overwrite global input style.
+    &__range-group {
+        margin-bottom: 35px;
 
-    -webkit-appearance: none;
-    height: 3px;
-    // background: linear-gradient(to right, $color-grey-super-light 0%, $color-grey-super-light 66%, $color-grey-dark 66%, $color-grey-dark 100%);
-    //$color-grey-dark;
-    
-    opacity: 0.5;
+        @include breakpoint('large+') {
+            margin-bottom: 25px;
+        }
+    }
 
-    &::-webkit-slider-thumb {
+    &__range {
+        border: none !important; // Overwrite global input style.
+
         -webkit-appearance: none;
-            appearance: none;
+        height: 3px;
+        
+        opacity: 0.5;
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+                appearance: none;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                border: 2px solid $color-grey-light;
+                background: $color-white;
+                cursor: pointer;
+
+                @include breakpoint('large+') {
+                    width: 12px;
+                    height: 12px;
+                }
+        }
+
+        &::-moz-range-thumb {
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            border: 2px solid $color-grey-super-light;
+            border: 2px solid $color-grey-light;
             background: $color-white;
             cursor: pointer;
+
+            @include breakpoint('large+') {
+                width: 12px;
+                height: 12px;
+            }
+        }
     }
 
-    &::-webkit-slider-runnable-track {
-        // height: 3px;
-        // background: red;
+    &__text-input-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 30px;
+
+        @include breakpoint('large+') {
+            column-gap: 10px;
+        }
     }
 
-    &::-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background: $color-white;
-        cursor: pointer;
+    &__text-input {
+        width: 100%;
+        border: 2px solid $color-border;
+        color: $color-grey-medium;
+        display: block;
+        font-size: 18px;
+        line-height: 46px;
+
+        padding: 0 22px;
+
+        @include breakpoint('large+') {
+            padding: 0 11px;
+        }
+
+        &::placeholder {
+            color: $color-grey-light;
+        }
     }
 }
