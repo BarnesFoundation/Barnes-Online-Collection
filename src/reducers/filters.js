@@ -74,6 +74,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
       });
     };
     case ActionTypes.REMOVE_FILTER: {
+      
       return ({
         ...state, // Deep copy state.
         ordered: removeFromOrderedSet(state.ordered, filterType), // Remove designated item.
@@ -114,8 +115,6 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
 
-      console.log(filter);
-
       return {
         // Take a deep breath.
         ...state, // Deep copy existing state via spread.
@@ -141,7 +140,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         ...state, // Deep copy existing state via spread.
         advancedFilters: { // Append new advanced filters.
           ...advancedFilters, // Deep copy existing advanced filter via spread.
-          [filterType]: { ...rest } // Spread subfilter with filter.term removed.
+          // Quick hack to replace year.
+          [filterType]: filterType !== 'Year' ? { ...rest } : {} // Spread subfilter with filter.term removed.
         }
       };
     }
