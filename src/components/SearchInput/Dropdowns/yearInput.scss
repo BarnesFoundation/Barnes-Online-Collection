@@ -1,8 +1,21 @@
 @import '../../../scss/variables.scss';
 @import '../../../scss/mixins.scss';
 
-
 .year-input {
+    // Override slider css
+    .rc-slider {
+        // margin-left: 30px;
+    }
+
+    .rc-slider-track {
+        background-color: $slider-handle-border-color !important;
+        height: $slider-track-height;
+    }
+    .rc-slider-rail {
+        background-color: $slider-track-color;
+        height: $slider-track-height;
+    }
+    
     margin-right: 20px; // Make up for padding for no scrollbar.
 
     @include breakpoint('large+') {
@@ -10,53 +23,15 @@
     }
 
     &__header {
-        margin-bottom: 10px;
+        margin: 10px 0;
     }
 
-    &__range-group {
+    &__slider {
+        margin-top: 30px;
         margin-bottom: 35px;
 
         @include breakpoint('large+') {
             margin-bottom: 25px;
-        }
-    }
-
-    &__range {
-        border: none !important; // Overwrite global input style.
-
-        -webkit-appearance: none;
-        height: 3px;
-        
-        opacity: 0.5;
-
-        &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-                appearance: none;
-                width: 25px;
-                height: 25px;
-                border-radius: 50%;
-                border: 2px solid $color-grey-light;
-                background: $color-white;
-                cursor: pointer;
-
-                @include breakpoint('large+') {
-                    width: 12px;
-                    height: 12px;
-                }
-        }
-
-        &::-moz-range-thumb {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            border: 2px solid $color-grey-light;
-            background: $color-white;
-            cursor: pointer;
-
-            @include breakpoint('large+') {
-                width: 12px;
-                height: 12px;
-            }
         }
     }
 

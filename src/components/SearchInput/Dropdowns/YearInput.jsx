@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
-import { years as rawYears } from '../../../searchAssets.json'; 
+import { Range } from 'rc-slider';
+import { years as rawYears } from '../../../searchAssets.json';
+import 'rc-slider/assets/index.css';
 import './yearInput.css';
 
-const SLIDERS = {
-    MIN: 'MIN',
-    MAX: 'MAX',
-};
 const years = rawYears
     .map(year => parseInt(year))
     .sort(); // Should be sorted, but sort anyways.
 
+const MIN = 0;
+const MAX = years.length - 1;
+
+// For input text box that controls sliders.
 class YearInputTextBox extends Component {
     constructor(props) {
         super(props);
 
         // Get floor and ceiling for validating input.
-        const { slider } = this.props;
+        const { isMin } = this.props;
         
-        this.min = slider === SLIDERS.MIN ? 0 : 1;
-        this.max = slider === SLIDERS.MIN ? years.length - 2 : years.length - 1;
+        this.min = isMin ? MIN : MIN + 1;
+        this.max = isMin ? MAX - 1 : MAX;
 
         this.state = {
             value: '', // Input string.
@@ -26,31 +28,35 @@ class YearInputTextBox extends Component {
         }
     }
 
+    /** Clean up STO on unmount, if exists. */
     componentWillUnmount() {
         const { willCheck } = this.state;
         
         if (willCheck) clearTimeout(willCheck);
     }
 
-    /** Validate an input. */
+    /**
+     * Validate an input.
+     * This function waits a second before reporting an error back to parent component.
+     * Logic for this setTimeout exists in the setState for willCheck.
+     * @param {string} value - value from text input.
+     */
     validateInput = (value) => {
         const { updateSlider, setError } = this.props;
-        const { min, max } = this;
 
         if (value.match(/^-?[0-9]*([\s]?BC)?$/)) {
             setError(false); // Update error to be false in parent component.
 
-            // Get value from string.
-            let [yearValue] = value.match(/^[0-9]*$/);
+            let [yearValue] = value.match(/[0-9]*$/);  // Get value from string.
             if (value.includes('-') || value.includes('BC')) yearValue = yearValue * -1; // If year is BC, invert it.
 
             // Map matching strings to their respective array index and calculate position from there.
-            const rangeIndexBase = Math.max(years.findIndex(year => year >= yearValue), min);
+            const rangeIndexBase = Math.max(years.findIndex(year => year >= yearValue), this.min);
 
-            if (rangeIndexBase > max || rangeIndexBase === -1) {
-                updateSlider(max);
-            } else if (rangeIndexBase < min) {
-                updateSlider(min);
+            if (rangeIndexBase > this.max || rangeIndexBase === -1) {
+                updateSlider(this.max);
+            } else if (rangeIndexBase < this.min) {
+                updateSlider(this.min);
             } else {
                 updateSlider(rangeIndexBase);
             }
@@ -89,67 +95,14 @@ export class YearInput extends Component {
         super(props);
 
         this.state = {
-            // Data for input range.
-            minValue: 0,
-            maxValue: years.length - 1,
-            pivot: Math.floor(years.length/2),
-
-            isError: false, // Error for inputs.
-        }
+            // For input range.
+            beginDateIndex: MIN + 9,
+            endDateIndex: MAX - 7,
+            
+            // For alerts about bad inputs.
+            isError: false,
+        };
     }
-
-    /** Update a slider value
-    * @param {string} slider - Slider name, @see SLIDERS.
-    * @param {number} value - new value for designated slider.  
-    */
-    updateSlider = (slider, value) => {
-        const { minValue, maxValue, pivot } = this.state;
-        const { setActiveTerm } = this.props;
-
-        let newPivot;
-        let newMinValue;
-        let newMaxValue;
-
-        // For min slider.
-        if (slider === SLIDERS.MIN) {
-            // If this value supercedes our pivot point, increment pivot.
-            if (value >= pivot) {
-                newPivot = Math.min(pivot + 1, years.length - 1); // The pivot has a limit of the years length minus two.
-            }
-
-            if (value > maxValue) {
-                newMaxValue = Math.min(maxValue + 1, years.length); // Max value tops out at the years length.
-            }
-
-            // Update parent
-            setActiveTerm({ beginDate: years[Math.min(value, years.length - 1)], endDate: years[newMaxValue || maxValue] });
-
-            // Update min, max on condition that it was bumped down, and pivot on condition it was moved.
-            this.setState({
-                minValue: Math.min(value, years.length - 1),
-                maxValue: newMaxValue || maxValue,
-                pivot: newPivot || pivot
-            });
-        } else if (slider === SLIDERS.MAX) {
-            if (value <= pivot) {
-                newPivot = Math.max(pivot - 1, 1); // The pivot has a floor of 1.
-            }
-
-            if (value < minValue) {
-                newMinValue = Math.max(minValue - 1, 0); // Min value bottoms at 0
-            }
-
-            // Update parent
-            setActiveTerm({ beginDate: years[newMinValue || minValue], endDate: years[Math.max(value, 0)] })
-
-            // Update max, min on condition that it was bumped down, and pivot on condition it was moved.
-            this.setState({
-                maxValue: Math.max(value, 0),
-                minValue: newMinValue || minValue,
-                pivot: newPivot || pivot
-            });
-        }
-    };
 
     /**
      * Update error state of inputs.
@@ -159,51 +112,44 @@ export class YearInput extends Component {
         this.setState({ isError })
     };
 
+    /**
+     * Update state for slider presentation and parents applied years.
+     * @param {beginDateIndex: number, endDateIndex: number} - indexes of years array to be sent to parent.
+     */
+    updateSlider = ({ beginDateIndex, endDateIndex }) => {
+        const { setActiveTerm } = this.props;
+
+        setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex] }); // Update parent state.
+        this.setState({ beginDateIndex, endDateIndex }); // Update local state.
+    }
+
     render() {
-        const { minValue, maxValue, isError } = this.state;
+        const { beginDateIndex, endDateIndex, isError } = this.state;
 
-        const minWidth = Math.min(((minValue + 1)/years.length) * 100, 90);
-        const maxWidth = Math.max(100 - (((minValue + 1)/years.length) * 100), 10);
-
-        const minSliderMax = Math.min(minValue + 1, years.length - 1); // Max value for min slider.
-        const maxSliderMin = Math.max(minValue - 1, 1); // Min value for max slider.
-
-        // TODO => These are working, but rough.
-        const rightOfMinSlider = 100 - ((minSliderMax - (minValue - 1))/(minSliderMax)) * 100; // Calculating start point for gradient.
-        const leftOfMaxSlider = Math.max((((maxValue - minValue)/years.length) * 100)/(maxWidth/100), 8); // Calculating end points for gradient.
-
-        const yearRange = `${minValue === 0 ? '4000 BC' : years[minValue]}-${maxValue === years.length - 1 ? 'Present' : years[maxValue]}`;
+        const [beginDate, endDate] = [beginDateIndex, endDateIndex]
+            .map((value) => {
+                if (value === MIN) return '4000 BC';
+                if (value === MAX) return 'Present';
+                return years[value];
+            });
+        const yearRange = `${beginDate}-${endDate}`;
 
         return (
             <div className='year-input'>
                 <div className='year-input__header'>{yearRange}</div>
-                <div className='year-input__range-group'>
-                    <input
-                        type='range'
-                        min={0}
-                        max={minSliderMax}
-                        value={Math.max(minValue - 1, 0)}
-                        className='year-input__range'
-                        style={{
-                            width: `${Math.max(minWidth, 10)}%`,
-                            background: `linear-gradient(to right, #dcdcdc 0%, #dcdcdc ${rightOfMinSlider}%, #282828 ${rightOfMinSlider}%, #282828 100%)`,
-                        }}
-                        onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MIN, parseInt(value))}
-                    />
-                    <input
-                        type='range'
-                        min={maxSliderMin}
-                        max={years.length - 1}
-                        value={maxValue}
-                        className='year-input__range'
-                        style={{
-                            width: `${Math.min(maxWidth, 90)}%`,
-                            background: `linear-gradient(to right, #282828 0%, #282828 ${leftOfMaxSlider}%, #dcdcdc ${leftOfMaxSlider}%, #dcdcdc 100%)`,
-                        }}
-                        onChange={({ target: { value }}) => this.updateSlider(SLIDERS.MAX, parseInt(value))}
+                <div className='component-slider year-input__slider'>
+                    <Range
+                        min={MIN}
+                        max={MAX}
+                        className='slider'
+                        allowCross={false}
+                        pushable={1}
+                        defaultValue={[MIN, MAX]}
+                        onChange={([beginDateIndex, endDateIndex]) => this.updateSlider({ beginDateIndex, endDateIndex })}
+                        value={[beginDateIndex, endDateIndex]}
                     />
                 </div>
-                <div className='year-input__header'>Custom range</div>
+                <div className='year-input__header color-light'>Custom range</div>
                 {isError &&
                     <div className='form-field__error form-field__error--summary'>
                         Please enter a valid year.
@@ -211,17 +157,16 @@ export class YearInput extends Component {
                 }
                 <div className='year-input__text-input-group'>
                     <YearInputTextBox
-                        slider={SLIDERS.MIN}
-                        updateSlider={value => this.updateSlider(SLIDERS.MIN, value)}
+                        isMin
+                        updateSlider={beginDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
                         setError={this.setError}
                     />
                     <YearInputTextBox
-                        slider={SLIDERS.MAX}
-                        updateSlider={value => this.updateSlider(SLIDERS.MAX, value)}
+                        updateSlider={endDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
                         setError={this.setError}
                     />
                 </div>
             </div>
-        );
+        )
     }
 }
