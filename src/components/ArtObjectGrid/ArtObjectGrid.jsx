@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import Masonry from 'react-masonry-component';
 import ArtObject from '../ArtObject/ArtObject';
 import SpinnerLoader from './SpinnerLoader';
-import { SearchResultsGrid } from './SearchResultsGrid';
 import CollectionFiltersApplied from '../CollectionFilters/CollectionFiltersApplied';
 import { clearObject } from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
+import './searchResultsGrid.css';
 import './artObjectGrid.css';
 
 /** View more button component. */
@@ -38,6 +38,16 @@ const MasonryGrid = ({ children }) => (
   >
     {children}
   </Masonry>
+);
+
+/**
+ * Search results grid component.
+ * @see searchResultsGrid.scss for styling.
+ * */
+const SearchResultsGrid = ({ children }) => (
+  <div className='search-results-grid'>
+      {children}
+  </div>
 );
 
 /** Masonry grid element. */
