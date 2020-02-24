@@ -25,26 +25,12 @@ class LandingPageHeader extends Component {
     super(props);
 
     this.ref = null; // For getting height.
-    this.state = { // For triggering rerender on resize.
-      innerHeight: null,
-      innerWidth: null,
-    }
   }
-
-  handleResize = () => {
-    const { innerHeight, innerWidth } = window;
-    this.setState({ innerHeight, innerWidth });
-  }
-
-  componentWillMount() { window.addEventListener('resize', this.handleResize) }
-  componentWillUnmount() { window.removeEventListener('resize', this.handleResize )}
 
   render() {
     let height = 'auto';
 
     if (this.ref) {
-      console.log(this.ref.getBoundingClientRect());
-
       const { y, height: rectHeight } = this.ref.getBoundingClientRect();
       height = rectHeight;
     }
