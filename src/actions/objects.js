@@ -56,7 +56,7 @@ const mapObjects = (objects) => {
     DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`);
   }
 
-  return mappedObjects.map(object => Object.assign({}, object._source, { id: object._id }));
+  return mappedObjects.map(object => Object.assign({}, object._source, { highlight: object.highlight } , { id: object._id }));
 }
 
 const fetchResults = (body, dispatch, options = {}) => {
@@ -404,6 +404,14 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   });
 
   body = body.build();
+
+  body.highlight = { 'fields': {} };
+	body.highlight.fields = {
+		...(SEARCH_FIELDS.reduce((acc, sf) => {
+			acc[sf] = {}
+			return acc;
+		}, {}))
+	};
 
   if (filters.search) {    
     const query = {
