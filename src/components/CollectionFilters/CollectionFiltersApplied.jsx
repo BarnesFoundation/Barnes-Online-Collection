@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ClearAllButton from '../SearchInput/ClearAllButton';
-import MobilePanelShuffleButton from './MobilePanelShuffleButton';
 import FilterTag from './FilterTag';
 
-const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
+const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount }) => {
   const mergedOrders = [
     ...ordered,
     ...orderedAdvanced.map(order => ({ ...order, isAdvanced: true })), // So we know that this is an advanced filter.
@@ -13,20 +11,17 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
   return (
     Boolean(ordered.length || orderedAdvanced.length) && 
       <div className='applied-filter-tags-container-wrap'>
-        <div className='flex-left'>
-          <div className='applied-filter-tags-container'>
-            {mergedOrders.map((filter) => (
-              <FilterTag
-                advancedFilter={Boolean(filter.isAdvanced)}
-                key={filter.index}
-                filter={filter}
-              />)
-            )}
-          </div>
+        <div className='applied-filter-tags-container'>
+          {mergedOrders.map((filter) => (
+            <FilterTag
+              advancedFilter={Boolean(filter.isAdvanced)}
+              key={filter.index}
+              filter={filter}
+            />)
+          )}
         </div>
-        <div className='flex-right'>
-          <ClearAllButton />
-          <MobilePanelShuffleButton />
+        <div className='applied-filter-tags-container-wrap__count'>
+          {Boolean(objectsCount) && `${objectsCount} Results`}
         </div>
       </div>
   );
@@ -35,7 +30,8 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced }) => {
 const mapStateToProps = (state) => ({
   ordered: state.filters.ordered,
   orderedAdvanced: Object.values(state.filters.advancedFilters)
-    .flatMap(value => Object.values(value))
+    .flatMap(value => Object.values(value)),
+  objectsCount: state.objects.length,
 });
 
 export default connect(mapStateToProps)(CollectionFiltersApplied);

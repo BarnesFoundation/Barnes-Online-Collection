@@ -299,20 +299,17 @@
 }
 
 .applied-filter-tags-container-wrap {
-  // display: none;
-  // padding-top: 0;
-
   @include clearfix();
-
   
   width: 100%;
-  display: flex;
+  
   justify-content: space-between;
   align-items: center;
 
   padding-bottom: 15px;
 
   @include breakpoint('medium+') {
+    display: flex;
     padding-bottom: 30px;
   }
 
@@ -320,9 +317,15 @@
     padding-bottom: 40px;
   }
 
-  .flex-right {
-    // make them stay left and right
-    margin-left: auto;
+  &__count {
+    width: 100%;
+    margin-top: 10px;
+
+    @include breakpoint('medium+') {
+      margin-top: 0px;
+      width: auto;
+      margin-left: auto;
+    }
   }
 
   .btn-filter-shuffle {

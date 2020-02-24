@@ -193,7 +193,7 @@ class DropdownSection extends Component {
             ? { filterType: activeItem, value: `${activeItem}: "${term}"`, term }
             : {
                 filterType: DROPDOWN_TERMS.YEAR,
-                value: `"${term.formattedYearsString}"`,
+                value: `${activeItem}: "${term.formattedYearsString}"`,
                 term
             };
 
