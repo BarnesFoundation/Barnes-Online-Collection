@@ -6,10 +6,11 @@ const Flickity = require('../../../../node_modules/flickity/dist/flickity.pkgd.j
 
 class FlickityMenu extends Component {
   componentDidMount() {
-    const selectedIndex = this.props.selectedIndex
+    const { selectedIndex } = this.props;
+
     const options = {
       // align the first one to the left, otherwise, center it.
-      cellAlign: selectedIndex === 0 ? 'left' : 'center',
+      cellAlign: (selectedIndex === 0) ? 'left' : 'center',
       initialIndex: selectedIndex,
       accessibility: true,
       pageDots: false,

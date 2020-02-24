@@ -78,13 +78,13 @@ class TabbedSubMenu extends Component {
       <div>
         <div className="container">
           <nav className="m-tabs m-tabs--post-cta" data-behavior="Tabs">
-            <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
+            <MediaQuery maxWidth={BREAKPOINTS.mobile_max}>
               <FlickityMenu
                 tabsList={tabsList}
                 selectedIndex={selectedIndex}
               />
             </MediaQuery>
-            <MediaQuery minWidth={BREAKPOINTS.tablet_max}>
+            <MediaQuery minWidth={BREAKPOINTS.mobile_max + 1}>
               <div className="m-tabs__list tabs-list-desktop">
                 {tabsList}
               </div>
