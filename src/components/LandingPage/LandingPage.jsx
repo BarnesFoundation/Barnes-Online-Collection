@@ -43,13 +43,15 @@ class LandingPageHeader extends Component {
     let height = 'auto';
 
     if (this.ref) {
+      console.log(this.ref.getBoundingClientRect());
+
       const { y, height: rectHeight } = this.ref.getBoundingClientRect();
-      height = y + rectHeight;
+      height = rectHeight;
     }
 
     return (
       <div 
-        className='o-hero'
+        className='o-hero o-hero--landing-page'
         style={{ height }}
       >
         <div className='o-hero__inner'>

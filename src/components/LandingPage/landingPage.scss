@@ -125,15 +125,15 @@
 
   &--landing-page {
     overflow: hidden;
-    height: 55vh;
+    max-height: 55vh;
 
     @include breakpoint('medium+') {
       // max-height: 600px;
-      height: 55vh;
+      max-height: 55vh;
     }
 
     @include breakpoint('large+') {
-      height: 70vh;
+      max-height: 70vh;
     }
   }
 
@@ -149,14 +149,6 @@
       position: relative;
       background: $color-white;
       overflow: hidden;
-
-      @include breakpoint('medium+') {
-        //max-height: 55vh;
-      }
-
-      @include breakpoint('large+') {
-        // max-height: 70vh;
-      }
   }
 
   &__video {
@@ -171,9 +163,9 @@
       transform: translateX(-5%);
     }
 
-    @include breakpoint('large+') {
-      transform: translate(-5%, -20%);
-    }
+    // @include breakpoint('large+') {
+    //   transform: translate(-5%, -20%);
+    // }
 
     opacity: 0;
     transition: opacity 1000ms ease 0s;
