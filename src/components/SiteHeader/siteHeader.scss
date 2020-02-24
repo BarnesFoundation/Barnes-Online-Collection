@@ -75,6 +75,11 @@ html:not([class=""]) {
 }
 
 .art-object-header {
+  &--absolute {
+    position: absolute;
+    top: 0;
+  }
+
   .g-header {
     position: relative;
     color: $color-red-barnes-logo;

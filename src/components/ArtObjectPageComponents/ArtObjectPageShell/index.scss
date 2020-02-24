@@ -34,6 +34,15 @@
     text-align: center;
     margin: 0 0 2rem 0;
 
+    &--main {
+      margin-bottom: 0;
+    }
+
+    &--date {
+      font-size: 30px;
+      line-height: 40px;
+    }
+
     .component-modal & {
       // leave room for the closing X.
       // Use important because it seems some js is adding styles?
