@@ -188,24 +188,12 @@ class DropdownSection extends Component {
         const { activeItem } = this.state;
         const { pendingTerms, updatePendingTerms, activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
-        let formattedYearsString;
-        if (activeItem === DROPDOWN_TERMS.YEAR) {
-            const { beginDate, endDate } = term;
-
-            const [beginDateFormat, endDateFormat] = [beginDate, endDate].map((value) => {
-                if (value < 0) return `${value * -1} BC`;
-                if (value >= 1960) return 'Present';
-                return value;
-            });
-            formattedYearsString = `Years: ${beginDateFormat} — ${endDateFormat}`
-        }
-
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
         const filter = activeItem !== DROPDOWN_TERMS.YEAR
             ? { filterType: activeItem, value: `${activeItem}: "${term}"`, term }
             : {
                 filterType: DROPDOWN_TERMS.YEAR,
-                value: formattedYearsString,
+                value: term.formattedYearsString,
                 term
             };
 
