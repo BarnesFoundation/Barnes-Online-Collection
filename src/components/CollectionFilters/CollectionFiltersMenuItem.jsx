@@ -18,7 +18,13 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibl
   return (
     <button
       className={filterClassNames}
-      onClick={() => selectFilterSet(slug)}
+      onClick={() => {
+        if (slug !== visibleFilterSet) {
+          selectFilterSet(slug);
+        } else {
+          selectFilterSet(null);
+        }
+      }}
     >
       <div className='button-inner'>
         <div className='button-inner__content'>

@@ -168,13 +168,13 @@ class LandingPage extends Component {
             </div>
             <div className='shaded-background'>
               {/** Shaded background. */}
-              <div
+              {/* <div
                 className={isBackgroundActiveClasses}
                 onClick={() => {
                   // TODO => Change this to include mobile filters.
                   closeFilterSet()
                 }}>  
-              </div>
+              </div> */}
               <div className='container'>
                 <ArtObjectGrid
                   gridStyle="full-size"
