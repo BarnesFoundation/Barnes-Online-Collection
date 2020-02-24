@@ -2,21 +2,20 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import * as ObjectActions from '../../actions/object';
-import * as ModalActions from '../../actions/modal';
-import * as FilterSetsActions from '../../actions/filterSets';
-import { getArtObjectUrlFromId } from '../../helpers';
+import Masonry from 'react-masonry-component';
 import ArtObject from '../ArtObject/ArtObject';
 import SpinnerLoader from './SpinnerLoader';
-import MasonryGrid from '../MasonryGrid';
+import { SearchResultsGrid } from './SearchResultsGrid';
 import CollectionFiltersApplied from '../CollectionFilters/CollectionFiltersApplied';
+import { clearObject } from '../../actions/object';
+import { getArtObjectUrlFromId } from '../../helpers';
 import './artObjectGrid.css';
 
 /** View more button component. */
 const ViewMoreButton = ({ onClick }) => (
-  <div className="view-more-button m-block m-block--no-border m-block--flush-bottom">
+  <div className='view-more-button m-block m-block--no-border m-block--flush-bottom'>
     <button
-      className="btn"
+      className='btn'
       onClick={({ target }) => {
         onClick(); // Perform onClick prop.
         target.blur(); // Unfocus to remove styling.
@@ -27,38 +26,58 @@ const ViewMoreButton = ({ onClick }) => (
   </div>
 );
 
+/** Masonry grid component. */
+const masonryOptions = { transitionDuration: 0 };
+const MasonryGrid = ({ children }) => (
+  <Masonry
+    className='component-masonry-grid'
+    elementType={'ul'}
+    options={masonryOptions}
+    disableImagesLoaded={false}
+    updateOnEachImageLoad={false}
+  >
+    {children}
+  </Masonry>
+);
+
 /** Masonry grid element. */
 const GridListElement = ({
   object,
   shouldLinksUseModal,
   modalPreviousLocation,
-  clearObject
-}) => (
-  <li className="masonry-grid-element">
-    <Link
-      to={{
-        pathname: getArtObjectUrlFromId(object.id, object.title),
-        state: {
-          isModal: shouldLinksUseModal || Boolean(modalPreviousLocation),
-          modalPreviousLocation: modalPreviousLocation
-        },
-      }}
-      onClick={() => {
-        // Clear the object right away to avoid a FOUC while the new object loads.
-        if (shouldLinksUseModal) clearObject();
-      }}
-      className="grid-list-el"
-    >
-      <ArtObject
-        key={object.id}
-        title={object.title}
-        people={object.people}
-        medium={object.medium}
-        imageUrlSmall={object.imageUrlSmall}
-      />
-    </Link>
-  </li>
-);
+  clearObject,
+  isSearchResult
+}) => {
+  let gridListElementClassNames = 'masonry-grid-element';
+  if (isSearchResult) gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
+
+  return (
+    <li className={gridListElementClassNames}>
+      <Link
+        to={{
+          pathname: getArtObjectUrlFromId(object.id, object.title),
+          state: {
+            isModal: shouldLinksUseModal || Boolean(modalPreviousLocation),
+            modalPreviousLocation: modalPreviousLocation
+          },
+        }}
+        onClick={() => {
+          // Clear the object right away to avoid a FOUC while the new object loads.
+          if (shouldLinksUseModal) clearObject();
+        }}
+        className='grid-list-el'
+      >
+        <ArtObject
+          key={object.id}
+          title={object.title}
+          people={object.people}
+          medium={object.medium}
+          imageUrlSmall={object.imageUrlSmall}
+        />
+      </Link>
+    </li>
+  );
+};
 
 /**
  * Class to manage converting raw object[] data into a masonry grid.
@@ -67,7 +86,7 @@ class ArtObjectGrid extends Component {
   constructor(props) {
     super(props);
 
-    // For "View More" results.
+    // For 'View More' results.
     this.state = {
       truncateThreshold: 20,
     };
@@ -90,11 +109,16 @@ class ArtObjectGrid extends Component {
       liveObjects,
       shouldLinksUseModal,
       modalPreviousLocation,
-      clearObject
+      clearObject,
+
+      // For detecting if a search has been placed.
+      hasSearch,
     } = this.props;
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
+
+    const isSearchResult = Boolean(shouldLinksUseModal && hasSearch);
 
     // Convert object[] to an array of ArtObjects wrapped in Links.
     const uncutMasonryElements = liveObjects.map((object) => (
@@ -104,23 +128,37 @@ class ArtObjectGrid extends Component {
         shouldLinksUseModal={shouldLinksUseModal}
         modalPreviousLocation={modalPreviousLocation}
         clearObject={clearObject}
+        isSearchResult={isSearchResult}
       />
     ));
 
-    // If this is a "View More" Grid, truncate results.
+    // If this is a 'View More' Grid, truncate results.
     const masonryElements = hasMoreResults ? uncutMasonryElements.slice(0, this.state.truncateThreshold) : uncutMasonryElements;
+
+    // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
+    // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
+    const displayGrid = isSearchResult
+      ? (
+      <SearchResultsGrid>
+        {masonryElements}
+      </SearchResultsGrid>
+      ) : (
+        <MasonryGrid>
+          {masonryElements}
+        </MasonryGrid>
+      );
     
     // Body is only rendered if searching is falsy.
     const body = (masonryElements && masonryElements.length)
       ? (<div>
-        <div className="component-art-object-grid-results">
-          <MasonryGrid masonryElements={masonryElements} />
+        <div className='component-art-object-grid-results'>
+          {displayGrid}
           {(hasMoreResults && uncutMasonryElements.length !== masonryElements.length) && <ViewMoreButton onClick={this.incrementTruncateThreshold}/>}
         </div>
       </div>)
-      : (<div className="m-block no-results">
-        <img className="no-results-image" width={140} src="/images/sad-face.svg" alt="no results icon" />
-        <div className="no-results-message">
+      : (<div className='m-block no-results'>
+        <img className='no-results-image' width={140} src='/images/sad-face.svg' alt='no results icon' />
+        <div className='no-results-message'>
           No results for this search.
         </div>
       </div>);
@@ -143,14 +181,7 @@ class ArtObjectGrid extends Component {
   }
 }
 
-const mapStateToProps = state => ({ object: state.object });
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(
-    Object.assign({},
-      ObjectActions,
-      ModalActions,
-      FilterSetsActions
-    ), dispatch)
-);
+const mapStateToProps = state => ({ object: state.object, hasSearch: Boolean(state.filters.search) });
+const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);

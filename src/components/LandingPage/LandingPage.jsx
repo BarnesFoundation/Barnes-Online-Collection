@@ -153,17 +153,17 @@ class LandingPage extends Component {
     if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
 
     return (
-      <div className="app app-landing-page">
+      <div className='app app-landing-page'>
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />
 
-        <div className="landing-page">
+        <div className='landing-page'>
           {/* Prevent FOUC on mount. */}
           <div style={{ minHeight: '100vh' }}>
             <LandingPageHeader />
 
-            <div className="m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap">
+            <div className='m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap'>
               <CollectionFilters />
             </div>
             <div className='shaded-background'>
@@ -177,9 +177,9 @@ class LandingPage extends Component {
               </div> */}
               <div className='container'>
                 <ArtObjectGrid
-                  gridStyle="full-size"
-                  shouldLinksUseModal={true}
-                  modalPreviousLocation="/"
+                  gridStyle='full-size'
+                  shouldLinksUseModal
+                  modalPreviousLocation='/'
                   isSearchPending={isSearchPending}
                   liveObjects={liveObjects}
                   pageType={pageType}

@@ -11,7 +11,7 @@ class FilterTag extends Component {
 
   getFilterIcon() {
     if (this.props.filter.filterType === 'colors') {
-      return <span className="color-filter-icon" style={{ background: this.props.filter.color }}></span>;
+      return <span className='color-filter-icon' style={{ background: this.props.filter.color }}></span>;
     } else if (this.props.filter.svgId) {
       return <Icon svgId={this.props.filter.svgId} classes='collection-filter-icon' />;
     } else {
@@ -23,9 +23,11 @@ class FilterTag extends Component {
     const { filter: { filterType, value }} = this.props;
 
     if (filterType === 'light' || filterType === 'space') {
-      return <span className="filter-tag-text">{value}%</span>;
-    } else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
-      return <span className="filter-tag-text">{value}</span>;
+      return <span className='filter-tag-text'>{value}%</span>;
+    } else if (filterType === 'search') {
+      return <span className='filter-tag-text'>"{value}"</span>;
+    }else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
+      return <span className='filter-tag-text'>{value}</span>;
     }
   }
 
