@@ -123,7 +123,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
             // Quick hack to fix dates as object.
-            [typeof filter.term === 'string' ? filter.term : 'DateRange']: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
+            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
           }
         }
       };
@@ -151,7 +151,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         [advancedFilter.filterType]: {
           ...acc[advancedFilter.filterType], // Spread current filter type
           // Quick hack to fix dates as object.
-          [typeof advancedFilter.term === 'string' ? advancedFilter.term : 'DateRange']: { ...advancedFilter, index: index + i } // Add current advanced filter and increment index.
+          [typeof advancedFilter.term === 'string' ? advancedFilter.term : 'dateRange']: { ...advancedFilter, index: index + i } // Add current advanced filter and increment index.
         }
       }), {});
 

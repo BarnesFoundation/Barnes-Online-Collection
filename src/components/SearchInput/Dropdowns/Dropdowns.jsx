@@ -188,10 +188,26 @@ class DropdownSection extends Component {
         const { activeItem } = this.state;
         const { pendingTerms, updatePendingTerms, activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
+        let formattedYearsString;
+        if (activeItem === DROPDOWN_TERMS.YEAR) {
+            const { beginDate, endDate } = term;
+
+            const [beginDateFormat, endDateFormat] = [beginDate, endDate].map((value) => {
+                if (value < 0) return `${value * -1} BC`;
+                if (value >= 1960) return 'Present';
+                return value;
+            });
+            formattedYearsString = `Years: ${beginDateFormat} — ${endDateFormat}`
+        }
+
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
         const filter = activeItem !== DROPDOWN_TERMS.YEAR
             ? { filterType: activeItem, value: `${activeItem}: "${term}"`, term }
-            : { filterType: DROPDOWN_TERMS.YEAR, value: `Years: ${term.beginDate}-${term.endDate}`, term};
+            : {
+                filterType: DROPDOWN_TERMS.YEAR,
+                value: formattedYearsString,
+                term
+            };
 
         // If this is for a manual application process, i.e. mobile.
         if (isManualApply) {
@@ -273,31 +289,32 @@ class DropdownSection extends Component {
         switch (activeItem) {
             case (DROPDOWN_TERMS.ARTIST): {
                 // Dropdown for artist should only be rendered for desktop devices.
-                return <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
-                    <DropdownMenu
-                        headerText={term}
-                        clear={() => this.setActiveItem(null)}
-                        topOffset={topOffset}
-                    >
-                        {/** This will always behave in the manual application process. */}
-                        <ArtistSideMenuContent
-                            hasScroll
-                            data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
-                            // Sort data inside of artistMenu component.
-                            render={sortedData => (
-                                <ListedContent
-                                    {...listedContentSpreadProps}
-                                    isArtists
-                                    // Overwrite data from listedContentSpreadProps.
-                                    data={sortedData}
-                                    activeTerms={activeTerms}
-                                    setActiveTerm={term => this.setActiveTerm(term, true)}
-                                />
-                            )}
-                        />
-                    </DropdownMenu>
-                </MediaQuery>
-
+                return (
+                    <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                        <DropdownMenu
+                            headerText={term}
+                            clear={() => this.setActiveItem(null)}
+                            topOffset={topOffset}
+                        >
+                            {/** This will always behave in the manual application process. */}
+                            <ArtistSideMenuContent
+                                hasScroll
+                                data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                                // Sort data inside of artistMenu component.
+                                render={sortedData => (
+                                    <ListedContent
+                                        {...listedContentSpreadProps}
+                                        isArtists
+                                        // Overwrite data from listedContentSpreadProps.
+                                        data={sortedData}
+                                        activeTerms={activeTerms}
+                                        setActiveTerm={term => this.setActiveTerm(term, true)}
+                                    />
+                                )}
+                            />
+                        </DropdownMenu>
+                    </MediaQuery>
+                );
             };
             case (DROPDOWN_TERMS.YEAR): {
                 return (
@@ -307,9 +324,17 @@ class DropdownSection extends Component {
                         noScroll
                         topOffset={topOffset}
                     >
-                        <YearInput
-                            setActiveTerm={term => this.setActiveTerm(term, true)}
-                        />
+                        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                            <YearInput
+                                setActiveTerm={term => this.setActiveTerm(term, true)}
+                            />
+                        </MediaQuery>
+                        <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                            <YearInput
+                                isDropdown
+                                setActiveTerm={term => this.setActiveTerm(term, false)}
+                            />
+                        </MediaQuery>
                     </DropdownMenu>
                 );
             };

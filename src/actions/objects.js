@@ -358,7 +358,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
-          const { DateRange: { term: { beginDate, endDate }}} = appliedFilters;
+          const { dateRange: { term: { beginDate, endDate }}} = appliedFilters;
 
           body
             .query('range', 'beginDate', { 'gte': beginDate })

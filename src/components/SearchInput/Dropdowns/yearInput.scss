@@ -3,8 +3,14 @@
 
 .year-input {
     // Override slider css
-    .rc-slider {
-        // margin-left: 30px;
+    .rc-slider-handle {
+
+        @include breakpoint('large+') {
+            height: 12px !important;
+            width: 12px !important;
+            margin-left: 0px !important;
+            margin-top: -4px !important;
+        }
     }
 
     .rc-slider-track {
@@ -16,7 +22,8 @@
         height: $slider-track-height;
     }
     
-    margin-right: 20px; // Make up for padding for no scrollbar.
+    // Make up for padding for no scrollbar for mobile devices.
+    margin-right: 20px; 
 
     @include breakpoint('large+') {
         margin-right: 0px;
@@ -31,10 +38,18 @@
         margin-bottom: 35px;
 
         @include breakpoint('large+') {
-            margin-bottom: 25px;
+            margin-top: 20px;
+            margin-bottom: 15px;
         }
     }
 
+    // Override default error margins.
+    &__error {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    // Display inputs as equal items in a grid with some separation via column grid.
     &__text-input-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -56,11 +71,30 @@
         padding: 0 22px;
 
         @include breakpoint('large+') {
+            height: 36px;
             padding: 0 11px;
         }
 
         &::placeholder {
             color: $color-grey-light;
+        }
+    }
+
+    // Resize button to match input sizes.
+    &__button {
+        margin-top: 10px;
+        width: 100%;
+        height: 44px;
+        line-height: 41px;
+    }
+
+    /** Pin apply section to bottom for large devices. */
+    &__bottom {
+        @include breakpoint('large+') {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding: 10px;
         }
     }
 }

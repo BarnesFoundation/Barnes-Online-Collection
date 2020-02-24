@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Range } from 'rc-slider';
 import { years as rawYears } from '../../../searchAssets.json';
 import 'rc-slider/assets/index.css';
@@ -90,7 +91,7 @@ class YearInputTextBox extends Component {
     }
 }
 
-export class YearInput extends Component {
+class YearInput extends Component {
     constructor(props) {
         super(props);
 
@@ -108,35 +109,81 @@ export class YearInput extends Component {
      * Update error state of inputs.
      * @param {boolean} isError - error state of either input.
      */
-    setError = isError => {
-        this.setState({ isError })
-    };
+    setError = isError => this.setState({ isError });
+
+    getFormattedYearsString() {
+        const { beginDateIndex, endDateIndex } = this.state;
+
+        // Map slider index to corresponding value in years array.
+        const [beginDate, endDate] = [beginDateIndex, endDateIndex].map(value => years[value]);
+
+        // Map over for formatting.
+        const [beginDateFormat, endDateFormat] = [beginDate, endDate].map((value) => {
+            if (value < 0) return `${value * -1} BC`;
+            if (value >= 1960) return 'Present';
+            return value;
+        });
+
+        return `${beginDateFormat} — ${endDateFormat}`;
+    }
 
     /**
      * Update state for slider presentation and parents applied years.
      * @param {beginDateIndex: number, endDateIndex: number} - indexes of years array to be sent to parent.
      */
     updateSlider = ({ beginDateIndex, endDateIndex }) => {
+        const { setActiveTerm, isDropdown } = this.props;
+
+        if (!isDropdown) setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex], formattedYearsString: this.getFormattedYearsString() }); // Update parent state.
+        this.setState({ beginDateIndex, endDateIndex }); // Update local state.
+    }
+
+    /**
+     * Click apply button, this is a method for large screen devices.
+     */
+    apply = () => {
+        const { beginDateIndex, endDateIndex } = this.state;
         const { setActiveTerm } = this.props;
 
-        setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex] }); // Update parent state.
-        this.setState({ beginDateIndex, endDateIndex }); // Update local state.
+        setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex], formattedYearsString: this.getFormattedYearsString() }); // Update parent state.
     }
 
     render() {
         const { beginDateIndex, endDateIndex, isError } = this.state;
+        const { isDropdown, appliedYears } = this.props;
 
-        const [beginDate, endDate] = [beginDateIndex, endDateIndex]
-            .map((value) => {
-                if (value === MIN) return '4000 BC';
-                if (value === MAX) return 'Present';
-                return years[value];
-            });
-        const yearRange = `${beginDate}-${endDate}`;
+        // Get string that appears above slider.
+        const formattedYearsString = this.getFormattedYearsString(); 
+
+        // Check redux store for applied years.
+        // If the applied years match our current years, do not allow clicking.
+        const [beginDate, endDate] = [beginDateIndex, endDateIndex].map(value => years[value]); // Get dates from state index map.
+
+        let buttonClass = 'btn';
+        let useApplyCallback = true; // Boolean indicating if callback should execute application.
+
+        // Check if there is any applied dates in redux store.
+        // TODO => Clean this up to only use useApplyCallback and not modify a string.
+        if (appliedYears && appliedYears.dateRange && appliedYears.dateRange.term) {
+            const { dateRange: { term: { beginDate: beginDatePrevious, endDate: endDatePrevious }}} = appliedYears;
+
+            // If dates don't match, allow for application.
+            if (beginDate !== beginDatePrevious || endDate !== endDatePrevious) {
+                buttonClass = `${buttonClass} btn--primary`;
+            } else {
+                buttonClass = `${buttonClass} btn--disabled`;
+                useApplyCallback = false;
+            }
+
+        // If there is no appliedYears data in the redux state, always allow for application.
+        // TODO => Fix this to include initial range of all dates, ie (4000BC - Present).
+        } else {
+            buttonClass = `${buttonClass} btn--primary`;
+        }
 
         return (
             <div className='year-input'>
-                <div className='year-input__header'>{yearRange}</div>
+                <div className='year-input__header'>{formattedYearsString}</div>
                 <div className='component-slider year-input__slider'>
                     <Range
                         min={MIN}
@@ -149,24 +196,39 @@ export class YearInput extends Component {
                         value={[beginDateIndex, endDateIndex]}
                     />
                 </div>
-                <div className='year-input__header color-light'>Custom range</div>
-                {isError &&
-                    <div className='form-field__error form-field__error--summary'>
-                        Please enter a valid year.
+                <div className='year-input__bottom'>
+                    <div className='year-input__header color-light'>Custom range</div>
+                    {isError &&
+                        <div className='form-field__error form-field__error--summary year-input__error'>
+                            Please enter a valid year.
+                        </div>
+                    }
+                    <div className='year-input__text-input-group'>
+                        <YearInputTextBox
+                            isMin
+                            updateSlider={beginDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
+                            setError={this.setError}
+                        />
+                        <YearInputTextBox
+                            updateSlider={endDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
+                            setError={this.setError}
+                        />
                     </div>
-                }
-                <div className='year-input__text-input-group'>
-                    <YearInputTextBox
-                        isMin
-                        updateSlider={beginDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
-                        setError={this.setError}
-                    />
-                    <YearInputTextBox
-                        updateSlider={endDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
-                        setError={this.setError}
-                    />
+                    {/** We only need manual application for large screens w/ traditional dropdowns. */}
+                    {isDropdown && 
+                        <button
+                            className={`${buttonClass} year-input__button`}
+                            onClick={useApplyCallback ? this.apply : null}
+                        >
+                                Apply
+                        </button>
+                    }
                 </div>
             </div>
         )
     }
 }
+
+const mapStateToProps = state => ({ appliedYears: state.filters.advancedFilters.Year });
+const connectedYearInput = connect(mapStateToProps)(YearInput);
+export { connectedYearInput as YearInput };
