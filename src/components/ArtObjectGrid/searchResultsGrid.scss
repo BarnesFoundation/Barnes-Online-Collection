@@ -67,3 +67,18 @@
         }
     }
 }
+
+.location-results {
+    border-top: 1px solid $color-border;
+
+    padding-bottom: 30px;
+    
+    @include breakpoint('large+') {
+        padding-bottom: 100px;
+    }
+
+    &__header {
+        margin-bottom: 30px;
+        margin-top: 20px;
+    }
+}

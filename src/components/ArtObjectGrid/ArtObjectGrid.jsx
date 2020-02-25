@@ -144,10 +144,14 @@ class ArtObjectGrid extends Component {
               [object.ensembleIndex]: acc[object.ensembleIndex] ? [...acc[object.ensembleIndex], object] : [object]
             }), {})
         )
-        .sort(([keyA], [keyB]) => keyB - keyA) // Sort keys by number to guarantee render in order.
-        .flatMap(([key, value]) => (
-          <div>
-            <h3>{ensembleIndexes[key].roomTitle}, {ensembleIndexes[key].wallTitle}</h3>
+        .sort(([keyA], [keyB]) => keyA - keyB) // Reverse sort keys by number to guarantee render in order.
+        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index.
+        .flatMap(([key, value], i) => (
+          <div
+            className='location-results'
+            key={ensembleIndexes[key].wallTitle}
+          >
+            <h3 className='font-delta location-results__header'>{ensembleIndexes[key].roomTitle}, {ensembleIndexes[key].wallTitle}</h3>
             <div className='search-results-grid'>
               {value.map((object) => (
                 <GridListElement
@@ -156,7 +160,7 @@ class ArtObjectGrid extends Component {
                   shouldLinksUseModal={shouldLinksUseModal}
                   modalPreviousLocation={modalPreviousLocation}
                   clearObject={clearObject}
-                  isSearchResult={isSearchResult}
+                  isSearchResult={true}
                 />))}
             </div>
           </div>
@@ -180,7 +184,7 @@ class ArtObjectGrid extends Component {
 
     // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
     // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
-    const displayGrid = isSearchResult
+    const displayGrid = (isSearchResult || isLocationResult)
       ? (
       <SearchResultsGrid isLocationResult={isLocationResult}>
         {masonryElements}
