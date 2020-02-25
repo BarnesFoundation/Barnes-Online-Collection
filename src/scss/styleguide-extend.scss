@@ -48,8 +48,7 @@ body {
 
 html,
 body {
-  // the styleguide sets this to hidden. But that breaks 'position: sticky'.
-  overflow-x: initial;
+  overflow-x: hidden;
 }
 
 ul,

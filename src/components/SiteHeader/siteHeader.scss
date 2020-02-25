@@ -75,6 +75,11 @@ html:not([class=""]) {
 }
 
 .art-object-header {
+  &--absolute {
+    position: absolute;
+    top: 0;
+  }
+
   .g-header {
     position: relative;
     color: $color-red-barnes-logo;
@@ -138,7 +143,7 @@ html:not([class=""]) {
   width: 100%;
 
   padding-top: 20px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @include breakpoint('medium+') {
     padding-top: 35px;

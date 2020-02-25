@@ -110,9 +110,10 @@ class SiteHeader extends Component {
 
   render() {
     const { isHeaderHidden } = this.state;
-    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive } = this.props;
+    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond } = this.props;
 
-    const isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+    let isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+    if (isArtObjectClassNames && isSecond) isArtObjectClassNames = `${isArtObjectClassNames} art-object-header--absolute`; // For second menu on artist page, absolutely position second menu.
 
     // Set up g-header classes.
     // TODO => Change this to be more expressive.
@@ -232,6 +233,7 @@ class SiteHeaderGlobalSearch extends Component {
           isGlobalSearchHeader
           isGlobalSearchActive={isGlobalSearchActive}
           isArtObject={Boolean(isArtObject)}
+          isSecond
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
         />
         {/* Lock scroll on global search activation. */}

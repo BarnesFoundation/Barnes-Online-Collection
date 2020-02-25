@@ -7,6 +7,7 @@
 
 .component-art-object-page-shell {
   @include breakpoint('small-') {
+    margin-top: 65px; // Increase top margin for Buy Tickets section.
 
     // fix style of how columns stack
     // todo: this needs to be more targeted.
@@ -33,6 +34,28 @@
   .art-object__title {
     text-align: center;
     margin: 0 0 2rem 0;
+
+    &--main {
+      margin-bottom: 0;
+
+      font-size: 32px;
+      line-height: 35px;
+
+      @include breakpoint('medium+') {
+        font-size: 38px;
+        line-height: 45px;
+      }
+    }
+
+    &--date {
+      font-size: 25px;
+      line-height: 30px;
+
+      @include breakpoint('medium+') {
+        font-size: 30px;
+        line-height: 40px;
+      }
+    }
 
     .component-modal & {
       // leave room for the closing X.

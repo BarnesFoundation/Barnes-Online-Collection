@@ -84,6 +84,10 @@ class SummaryTable extends Component {
           <div className="text">Dimensions</div>
           <div className="text color-light">{this.props.dimensions}</div>
         </div>
+        <div className='table-row'>
+          <div className="text">Viewing Status</div>
+          <div className="text color-light">{(this.props.onview && this.props.onview === "1") ? 'Currently on view': 'Currently not on view'}</div>
+        </div>
         <div className="table-row">
           <div className="text">Copyright Status</div>
           <div className="text color-light">

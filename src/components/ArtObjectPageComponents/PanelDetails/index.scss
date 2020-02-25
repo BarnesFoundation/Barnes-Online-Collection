@@ -19,17 +19,36 @@
   }
 }
 
-.share-button {
+.download-and-share {
+  display: block;
+
+  @include breakpoint('medium+') {
+    display: flex;
+  }
+}
+
+.panel-button {
+  $self: &;
+  
   cursor: pointer;
+  
   height: 60px;
+
   display: grid;
   justify-content: center;
   align-content: center;
 
-  float: center;
+  color: $color-grey-medium;
 
-  @include breakpoint ('medium+') {
-    float: right;
+  &--hide {
+    #{ $self }__icon {
+      transform: rotate(180deg);
+      top: 7px;
+    }
+  }
+
+  &--share {
+    color: $color-black;
   }
 
   &__icon {
@@ -41,7 +60,7 @@
 
   &__svg {
     position: absolute;
-    top: 0px;
+    top: 3px;
     left: 0;
   }
 
@@ -51,40 +70,58 @@
 }
 
 .image-caption {
-  $self: &;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   &__content {
     max-width: 100%;
   }
+}
 
-  &__grid {
-    max-width: 100%;
-    margin-top: 50px;
+.thumbnails {
+  $self: &;
+
+  margin-top: 57px; // Totals to 60 w/ first line of image-caption__grid.
+
+  // Center child grid.
+  &__grid-wrapper {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
 
+    &--none {
+      display: none;
+    }
   }
 
-  &__grid-image {
-    // TODO => Fix this design for working with shorter images.
+  &__grid {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-template-columns: repeat(5, 110px);
+    column-gap: 3px;
+    row-gap: 3px;
+
+    margin-top: 3px;
+    max-width: 100%;
+  }
+
+  &__grid-image {    
+    // overflow: hidden;
+    cursor: pointer;
+    position: relative;
+
+    margin: 0;
+
     max-width: 90px;
     max-height: 90px;
 
+    // TODO => Fix this design for working with shorter images.
     @include breakpoint('medium+') {
-      width: 110px;
+      width: 110px !important;
       height: auto;
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 110px;
+      max-height: 110px;
     }
-    
-    overflow: hidden;
-    margin-right: 3px;
-    margin-bottom: 3px;
-    cursor: pointer;
-    position: relative;
 
     // Add inner border on hover, keeping image size.
     &--active,
@@ -93,6 +130,35 @@
         box-shadow: inset 0 0 0 5px $color-red-barnes;
       }
     }
+  }
+
+  &__hidden-images {
+    opacity: 0;
+    height: 0;
+
+    #{ $self }__grid {
+      display: none;
+    }
+
+    &--active {
+      opacity: 1;
+      height: 100%;
+      transition: opacity 0.45s 0.15s, height 1s;
+
+      #{ $self }__grid {
+        display: grid;
+      }
+    }
+  }
+
+  &__thumbnail-wrapper {
+    height: 107px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+  &__thumbnail {
+    min-height: 110px;
   }
 
   &__inner-border {
@@ -113,15 +179,20 @@
 
   &__arrow-button {
     position: absolute;
+    top: 50%;
     z-index: 2;
+
     background-color: white;
+
     padding-left: 0;
     padding-right: 0;
-    margin: 0 -1px;
-    min-width: 60px;
-    max-width: 60px;
     margin: 0;
-    top: 50%;
+
+    
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    line-height: 24px;
 
     font-size: 26px;
 
@@ -141,7 +212,11 @@
 	float: right;
 	display: flex;
 	justify-content: center;
-	position: relative;
+  position: relative;
+  
+  @include breakpoint('medium+') {
+    margin-left: calc(40% - 110px);
+  }
 }
 
 .share-dialog {
