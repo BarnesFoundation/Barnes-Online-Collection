@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { LockScroll } from '../LockScroll';
 import { htmlClassesRemove } from '../../actions/htmlClassManager';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
-import './sideMenu.css';
+import './SideMenu.css';
 
 /**
  * Default side menu for navigation.
