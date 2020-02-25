@@ -1,14 +1,15 @@
-@import '../../scss/variables.scss';
 @import '../../scss/mixins.scss';
+@import '../../scss/variables.scss';
 
 .share {
-    float: right;
+    
     display: flex;
     justify-content: center;
     position: relative;
 
     @include breakpoint('medium+') {
-        margin-left: calc(40% - 110px);
+		float: right;
+		margin-left: calc(40% - 110px);
     }
 }
 

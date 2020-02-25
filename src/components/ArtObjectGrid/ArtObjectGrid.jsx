@@ -145,8 +145,8 @@ class ArtObjectGrid extends Component {
             }), {})
         )
         .sort(([keyA], [keyB]) => keyA - keyB) // Reverse sort keys by number to guarantee render in order.
-        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index.
-        .flatMap(([key, value], i) => (
+        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index. 
+        .flatMap(([key, value]) => (
           <div
             className='location-results'
             key={ensembleIndexes[key].wallTitle}

@@ -265,7 +265,10 @@ class PanelDetails extends Component {
                 <a className='btn' href={printAvailable.url} target='_blank' >
                   Purchase Print
                 </a>}
-				      <ShareDialog object={this.props.object} />
+
+				<div className="share">
+					<ShareDialog object={this.props.object} />
+				</div>
             </div>
 
             {object.shortDescription &&

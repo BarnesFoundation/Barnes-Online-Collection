@@ -13,11 +13,14 @@ class Share extends React.Component {
 			showShareDialog: false,
 			copyText: ''
 		};
+
+		this.copy = null;
 	}
 
 	componentDidMount() {
 		const { setResetFunction } = this.props;
 		setResetFunction(() => this.setState({ showShareDialog: !this.state.showShareDialog }));
+		console.log(this.copy);
 	}
 
 	toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
@@ -28,11 +31,10 @@ class Share extends React.Component {
 		const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
 
 		if (platform === sharePlatforms.COPY_URL) {
-			this.setState({ copyText: shareLink },
-				() => {
-					this.copy.select();
-					document.execCommand('copy');
-				});
+
+			this.setState({ copyText: shareLink });
+			this.copy.select();
+			document.execCommand('copy');
 		}
 		else window.open(shareLink, '_blank');
 	};
@@ -41,7 +43,7 @@ class Share extends React.Component {
 		const { copyText, showShareDialog } = this.state;
 
 		return (
-			<div className="share">
+			<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
 				{showShareDialog &&
 					<div className="share-dialog">
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
@@ -52,21 +54,21 @@ class Share extends React.Component {
 						<input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
 					</div>
 				}
-				<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
-					<div className='panel-button__content'>
-						<div className='panel-button__icon' >
-							<Icon svgId='-icon_share' classes='panel-button__svg' />
-						</div>
-						<span className='font-simple-heading panel-button__text'>Share It</span>
+				<div className='panel-button__content'>
+					<div className='panel-button__icon' >
+						<Icon svgId='-icon_share' classes='panel-button__svg' />
 					</div>
+					<span className='font-simple-heading panel-button__text'>Share It</span>
 				</div>
 			</div>
 		)
 	}
 }
 
-export const ShareDialog = (...props) => (
-	<ClickTracker>
-		<Share {...props} />
-	</ClickTracker>
-);
+export const ShareDialog = (props) => {
+	return (
+		<ClickTracker>
+			<Share {...props} />
+		</ClickTracker>
+	)
+};
