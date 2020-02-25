@@ -190,24 +190,26 @@ class PanelDetails extends Component {
                   Purchase Print
                 </a>}
 
-			{showShareDialog && 
-				<div className="share-dialog">
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+			<div className="share">
+				{showShareDialog && 
+					<div className="share-dialog">
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+					</div>
+				}
+				<div className='share-button'>
+					<div className='share-button__content'>
+					<div className='share-button__icon' >
+						<Icon svgId='-icon_share' classes='share-button__svg'/>
+					</div>
+					<span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
+					</div>
 				</div>
-			  }
-              <div className='share-button'>
-                <div className='share-button__content'>
-                  <div className='share-button__icon' >
-                    <Icon svgId='-icon_share' classes='share-button__svg'/>
-                  </div>
-				  <span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
-                </div>
-              </div>
-            </div>
+				</div>
+			</div>
 
             {object.shortDescription &&
               <div className="art-object__more-info m-block m-block--shallow">

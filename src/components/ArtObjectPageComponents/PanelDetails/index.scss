@@ -137,6 +137,13 @@
   }
 }
 
+.share {
+	float: right;
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
 .share-dialog {
 	background: white;
 	color: $color__copy--medium; 
@@ -144,7 +151,9 @@
 	padding: 30px;
 	width: 175px;
 	position: absolute;
+	top: -210px;
 	z-index: 10;
+	
 
 	&__link {
 		text-decoration: none;
