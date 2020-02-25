@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SummaryTable from './SummaryTable';
 import AccordionMenu from '../../AccordionMenu';
+import ArtObjectOverlay from '../../ArtObject/ArtObjectOverlay';
 import Zoom from '../../Zoom/Zoom';
 import Icon from '../../Icon';
 import * as ObjectActions from '../../../actions/object';
@@ -57,18 +58,36 @@ class Thumbnails extends Component {
 
     // TODO => This will eventually be dynamic data.
     const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => {
-      let className = 'thumbnails__grid-image';
-      if (activeImageIndex === i) className = `${className} thumbnails__grid-image--active`;
+      // Set up classNames, if selected add BEM modifier.
+      let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
+      let gridListElClassName = 'grid-list-el';
+
+      if (activeImageIndex === i) {
+        gridImageClassName = `${gridImageClassName} thumbnails__grid-image--active`;
+
+        // Uncomment this to keep caption open onClick.
+        // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
+      }
 
       return (
-        <div
+        <li
           onClick={() => setActiveImageIndex(i)}
-          className={className}
+          className={gridImageClassName}
           key={i}
         >
-          <img className='thumbnails__thumbnail'src={object.imageUrlSmall} />
-          <div className='thumbnails__inner-border'></div>
-        </div>
+          <div className={gridListElClassName}>
+            <div className='art-object-fade__in'>
+              <div className='thumbnails__thumbnail-wrapper'>
+                <img className='thumbnails__thumbnail' src={object.imageUrlSmall} />
+              </div>
+              <div className='thumbnails__inner-border'></div>
+            </div>
+            <ArtObjectOverlay
+              isThumbnail
+              people={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'}
+            />
+          </div>
+        </li>
       )
     });
 
@@ -84,17 +103,17 @@ class Thumbnails extends Component {
     if (isOpen) panelButtonClassNames = `${panelButtonClassNames} panel-button--hide`;
 
     return (
-      <div className='thumbnails'>
+      <div className='thumbnails component-art-object-grid'>
         <div className='thumbnails__grid-wrapper'>
-          <div className='thumbnails__grid'>
+          <ul className='thumbnails__grid'>
             {defaultImages}
-          </div>
+          </ul>
         </div>
         <div className={hiddenImagesClassNames}>
           <div className='thumbnails__grid-wrapper'>
-            <div className='thumbnails__grid'>
+            <ul className='thumbnails__grid'>
               {hiddenImages}
-            </div>
+            </ul>
           </div>
         </div>
         <div className={panelButtonClassNames}>
@@ -230,9 +249,12 @@ class PanelDetails extends Component {
           <div className='container-inner-narrow'>
             <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails}/>
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
-              {/* Removed rel='noopener noreferrer nofollow' from the following link. */}
-              <a className='btn btn--primary' href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl: requestImageUrl} target='_blank' >
-                {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
+              {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
+              <a
+                className='btn btn--primary'
+                href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl: requestImageUrl}
+                target='_blank' >
+                  {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
               </a>
               {printAvailable &&
                 <a className='btn' href={printAvailable.url} target='_blank' >

@@ -110,16 +110,18 @@
   }
 
   &__grid-image {    
-    overflow: hidden;
+    // overflow: hidden;
     cursor: pointer;
     position: relative;
+
+    margin: 0;
 
     max-width: 90px;
     max-height: 90px;
 
     // TODO => Fix this design for working with shorter images.
     @include breakpoint('medium+') {
-      width: 110px;
+      width: 110px !important;
       height: auto;
       max-width: 110px;
       max-height: 110px;
@@ -151,6 +153,12 @@
         display: grid;
       }
     }
+  }
+
+  &__thumbnail-wrapper {
+    height: 107px;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 
   &__thumbnail {

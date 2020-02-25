@@ -1,7 +1,7 @@
 import React from 'react';
 import { sentenceCase } from 'change-case';
 
-const ArtObjectCaption = ({ title, people, highlight }) => {
+const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
   // If there are any highlights, take the first key string.
   let highlightText = (highlight && Object.keys(highlight).length)
     ? Object.keys(highlight)[0]
@@ -13,8 +13,11 @@ const ArtObjectCaption = ({ title, people, highlight }) => {
   // Convert from camelCase to "Sentence case".
   if (highlightText) highlightText = sentenceCase(highlightText);
 
+  let captionClassName = 'art-object-caption';
+  if (isThumbnail) captionClassName = `${captionClassName} art-object-caption--thumbnail`
+
   return (
-    <div className="art-object-caption">
+    <div className={captionClassName}>
       <h2 className="h2 font-simple-heading">
         {title}
       </h2>

@@ -120,6 +120,7 @@
     }
 
     .grid-list-el {
+      &--active,
       &:hover,
       &:focus {
         .art-object-overlay {
@@ -137,6 +138,11 @@
     .h3 {
       line-height: 1.5em;
       margin: 0;
+    }
+
+    &--thumbnail {
+      width: 330px;
+      left: -110px;
     }
   }
 
