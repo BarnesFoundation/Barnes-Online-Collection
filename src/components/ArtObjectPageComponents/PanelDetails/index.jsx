@@ -206,7 +206,8 @@ class PanelDetails extends Component {
     this.state = {
       imageLoaded: false,
 	  activeImageIndex: 0,
-	  showShareDialog: false
+	  showShareDialog: false,
+	  copyText: ''
     };
   }
 
@@ -216,15 +217,25 @@ class PanelDetails extends Component {
   toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
 
   onShareLinkClick = (platform) => {
-  	const { id, people, title } = this.props.object;
+
+	const { id, people, title } = this.props.object;
 	const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
-	console.log(shareLink);
-	window.open(shareLink, '_blank');
+
+	if (platform === sharePlatforms.COPY_URL) {
+		this.setState({ copyText: shareLink },
+			() => {
+				this.copy.select();
+				console.log(this.copy);
+				document.execCommand('copy');
+			});
+	}
+	
+	else window.open(shareLink, '_blank');
   };
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, showShareDialog } = this.state;
+    const { imageLoaded, activeImageIndex, showShareDialog, copyText } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -271,24 +282,28 @@ class PanelDetails extends Component {
                   Purchase Print
                 </a>}
 
-			{showShareDialog && 
-				<div className="share-dialog">
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
-					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+			{/* We may want to make this a separate component that can just be dropped in -- since it's being used in at least 2 places */}
+			<div className="share">
+				{showShareDialog && 
+					<div className="share-dialog">
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+						<input style={{ position: 'absolute', height: 0, opacity: '.01' }}ref={(area) => this.copy = area} value={copyText} />
+					</div>
+				}
+				<div className='share-button'>
+					<div className='share-button__content'>
+					<div className='share-button__icon' >
+						<Icon svgId='-icon_share' classes='share-button__svg'/>
+					</div>
+					<span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
+					</div>
 				</div>
-			  }
-              <div className='share-button'>
-                <div className='share-button__content'>
-                  <div className='share-button__icon' >
-                    <Icon svgId='-icon_share' classes='share-button__svg'/>
-                  </div>
-				  <span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
-                </div>
-              </div>
-            </div>
+				</div>
+			</div>
 
             {object.shortDescription &&
               <div className='art-object__more-info m-block m-block--shallow'>
