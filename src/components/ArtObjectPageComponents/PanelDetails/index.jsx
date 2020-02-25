@@ -213,12 +213,12 @@ class PanelDetails extends Component {
 						<input style={{ position: 'absolute', height: 0, opacity: '.01' }}ref={(area) => this.copy = area} value={copyText} />
 					</div>
 				}
-				<div className='share-button'>
+				<div className='share-button' onClick={() => { this.toggleShareDialog(); }}>
 					<div className='share-button__content'>
 					<div className='share-button__icon' >
 						<Icon svgId='-icon_share' classes='share-button__svg'/>
 					</div>
-					<span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
+					<span className='font-simple-heading share-button__text'>Share It</span>
 					</div>
 				</div>
 				</div>
