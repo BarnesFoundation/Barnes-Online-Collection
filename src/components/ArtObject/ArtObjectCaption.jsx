@@ -3,7 +3,8 @@ import { sentenceCase } from 'change-case';
 
 const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
   // If there are any highlights, take the first key string.
-  let highlightText = (highlight && Object.keys(highlight).length)
+  let highlightText = Boolean(
+    highlight && Object.keys(highlight).length && Object.keys(highlight).every(key => !key.includes('people') && !key.includes('title')))
     ? Object.keys(highlight)[0]
     : null;
 
@@ -28,7 +29,7 @@ const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
       }
       {highlight &&
         <h4 className="h4 color-light">
-          ({highlightText})
+          {highlightText && `(${highlightText})`}
         </h4>
       }
     </div>
