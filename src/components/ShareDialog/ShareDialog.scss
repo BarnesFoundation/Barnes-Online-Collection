@@ -28,7 +28,12 @@
 	width: 175px;
     position: absolute;
     top: -210px;
+    
     z-index: 10;
+
+    @include breakpoint('small-') {
+        left: calc(50% - 87.5px);
+    }
 
 
     &__link {
