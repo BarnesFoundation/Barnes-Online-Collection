@@ -166,25 +166,29 @@ class Image extends Component {
           {isZoomed && <Zoom id={object.id} />}
           <img
             aria-hidden='true'
-            className=''
+            className='image-art-object__img'
             src={object.imageUrlLarge}
             alt={object.title}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
-          {isLoaded && <button
-            className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
-            onClick={() => setActiveImageIndex(activeImageIndex - 1)}
-          >
-            <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
-          </button>}
-          {isLoaded && <button
-            className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
-            onClick={() => setActiveImageIndex(activeImageIndex + 1)}
-          >
-            <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
-          </button>}
+          {isLoaded &&
+            <button
+              className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
+              onClick={() => setActiveImageIndex(activeImageIndex - 1)}
+            >
+              <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
+            </button>
+          }
+          {isLoaded &&
+            <button
+              className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
+              onClick={() => setActiveImageIndex(activeImageIndex + 1)}
+            >
+              <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
+            </button>
+          }
         </div>
         <div className='image-caption'>
           <div
