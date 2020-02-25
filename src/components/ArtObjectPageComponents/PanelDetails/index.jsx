@@ -268,47 +268,47 @@ class PanelDetails extends Component {
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
           <div className='container-inner-narrow'>
-            <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails}/>
+            <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails} />
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
               {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
               <a
                 className='btn btn--primary'
-                href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl: requestImageUrl}
+                href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl : requestImageUrl}
                 target='_blank' >
-                  {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
+                {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
               </a>
               {printAvailable &&
                 <a className='btn' href={printAvailable.url} target='_blank' >
                   Purchase Print
                 </a>}
 
-			{/* We may want to make this a separate component that can just be dropped in -- since it's being used in at least 2 places */}
-			<div className="share">
-				{showShareDialog && 
-					<div className="share-dialog">
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
-						<input style={{ position: 'absolute', height: 0, opacity: '.01' }}ref={(area) => this.copy = area} value={copyText} />
-					</div>
-				}
-				<div className='share-button'>
-					<div className='share-button__content'>
-					<div className='share-button__icon' >
-						<Icon svgId='-icon_share' classes='share-button__svg'/>
-					</div>
-					<span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
-					</div>
-				</div>
-				</div>
-			</div>
+              {/* We may want to make this a separate component that can just be dropped in -- since it's being used in at least 2 places */}
+              <div className="share">
+                {showShareDialog &&
+                  <div className="share-dialog">
+                    <a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
+                    <a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</a>
+                    <a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</a>
+                    <a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
+                    <a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
+                    <input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
+                  </div>
+                }
+                <div className='panel-button panel-button--share'>
+                  <div className='panel-button__content'>
+                    <div className='panel-button__icon' >
+                      <Icon svgId='-icon_share' classes='panel-button__svg' />
+                    </div>
+                    <span className='font-simple-heading panel-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {object.shortDescription &&
               <div className='art-object__more-info m-block m-block--shallow'>
                 <div className='art-object__short-description' dangerouslySetInnerHTML={{ __html: object.shortDescription }}>
-				        </div>
+                </div>
               </div>}
 
             {Boolean(accordionTabList) && <AccordionMenu tabList={accordionTabList} />}

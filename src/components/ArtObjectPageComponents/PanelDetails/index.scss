@@ -49,10 +49,6 @@
 
   &--share {
     color: $color-black;
-
-    @include breakpoint('medium+') {
-      margin-left: calc(40% - 110px);
-    }
   }
 
   &__icon {
@@ -172,10 +168,6 @@
     top: 0;
     left: 0;
   }
-
-  &__button {
-
-  }
 }
 
 .image-art-object {
@@ -220,7 +212,11 @@
 	float: right;
 	display: flex;
 	justify-content: center;
-	position: relative;
+  position: relative;
+  
+  @include breakpoint('medium+') {
+    margin-left: calc(40% - 110px);
+  }
 }
 
 .share-dialog {
