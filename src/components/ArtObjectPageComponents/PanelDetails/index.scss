@@ -19,17 +19,40 @@
   }
 }
 
-.share-button {
+.download-and-share {
+  display: block;
+
+  @include breakpoint('medium+') {
+    display: flex;
+  }
+}
+
+.panel-button {
+  $self: &;
+  
   cursor: pointer;
+  
   height: 60px;
+
   display: grid;
   justify-content: center;
   align-content: center;
 
-  float: center;
+  color: $color-grey-medium;
 
-  @include breakpoint ('medium+') {
-    float: right;
+  &--hide {
+    #{ $self }__icon {
+      transform: rotate(180deg);
+      top: 7px;
+    }
+  }
+
+  &--share {
+    color: $color-black;
+
+    @include breakpoint('medium+') {
+      margin-left: calc(40% - 110px);
+    }
   }
 
   &__icon {
@@ -41,7 +64,7 @@
 
   &__svg {
     position: absolute;
-    top: 0px;
+    top: 3px;
     left: 0;
   }
 
@@ -51,10 +74,28 @@
 }
 
 .image-caption {
-  $self: &;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &__content {
     max-width: 100%;
+  }
+}
+
+.thumbnails {
+  $self: &;
+
+  margin-top: 57px; // Totals to 60 w/ first line of image-caption__grid.
+
+  // Center child grid.
+  &__grid-wrapper {
+    display: flex;
+    justify-content: center;
+
+    &--none {
+      display: none;
+    }
   }
 
   &__grid {
@@ -64,8 +105,8 @@
     column-gap: 3px;
     row-gap: 3px;
 
+    margin-top: 3px;
     max-width: 100%;
-    margin-top: 50px;
   }
 
   &__grid-image {    
@@ -93,8 +134,27 @@
     }
   }
 
+  &__hidden-images {
+    opacity: 0;
+    height: 0;
+
+    #{ $self }__grid {
+      display: none;
+    }
+
+    &--active {
+      opacity: 1;
+      height: 100%;
+      transition: opacity 0.45s 0.15s, height 1s;
+
+      #{ $self }__grid {
+        display: grid;
+      }
+    }
+  }
+
   &__thumbnail {
-    min-height: 100%;
+    min-height: 110px;
   }
 
   &__inner-border {
@@ -103,6 +163,10 @@
     height: 100%;
     top: 0;
     left: 0;
+  }
+
+  &__button {
+
   }
 }
 

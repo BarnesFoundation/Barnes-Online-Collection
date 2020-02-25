@@ -7,6 +7,7 @@
 
 .component-art-object-page-shell {
   @include breakpoint('small-') {
+    margin-top: 65px; // Increase top margin for Buy Tickets section.
 
     // fix style of how columns stack
     // todo: this needs to be more targeted.
