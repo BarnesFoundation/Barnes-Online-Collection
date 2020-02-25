@@ -11,11 +11,11 @@
     row-gap: 75px;
 
     @include breakpoint('medium+') {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     @include breakpoint('large+') {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         column-gap: 25px;
         row-gap: 110px;
     }
