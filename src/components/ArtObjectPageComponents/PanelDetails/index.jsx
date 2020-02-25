@@ -126,7 +126,8 @@ class PanelDetails extends Component {
     this.state = {
       imageLoaded: false,
 	  activeImageIndex: 0,
-	  showShareDialog: false
+	  showShareDialog: false,
+	  copyText: ''
     };
   }
 
@@ -136,10 +137,20 @@ class PanelDetails extends Component {
   toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
 
   onShareLinkClick = (platform) => {
-  	const { id, people, title } = this.props.object;
+
+	const { id, people, title } = this.props.object;
 	const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
-	console.log(shareLink);
-	window.open(shareLink, '_blank');
+
+	if (platform === sharePlatforms.COPY_URL) {
+		this.setState({ copyText: shareLink },
+			() => {
+				this.copy.select();
+				console.log(this.copy);
+				document.execCommand('copy');
+			});
+	}
+	
+	else window.open(shareLink, '_blank');
   };
 
   /** Ref to determine width of caption and images. */
@@ -147,7 +158,7 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, showShareDialog } = this.state;
+    const { imageLoaded, activeImageIndex, showShareDialog, copyText } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -190,6 +201,7 @@ class PanelDetails extends Component {
                   Purchase Print
                 </a>}
 
+			{/* We may want to make this a separate component that can just be dropped in -- since it's being used in at least 2 places */}
 			<div className="share">
 				{showShareDialog && 
 					<div className="share-dialog">
@@ -198,6 +210,7 @@ class PanelDetails extends Component {
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+						<input style={{ position: 'absolute', height: 0, opacity: '.01' }}ref={(area) => this.copy = area} value={copyText} />
 					</div>
 				}
 				<div className='share-button'>
