@@ -21,8 +21,6 @@ export const BARNES_SETTINGS = {
 };
 
 export const SEARCH_FIELDS = [
-  "tags.tag.*",
-  "tags.category.*",
   "people.*",
   "culture.*",
   "title.*",
