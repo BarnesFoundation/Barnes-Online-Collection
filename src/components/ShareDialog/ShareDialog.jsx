@@ -61,7 +61,7 @@ export class ShareDialog extends React.Component {
 		}
 
 		return (
-			<ClickTracker setResetFunction={() => { console.log('Hello'); }}>
+			<ClickTracker resetFunction={() => { console.log('Hello'); }}>
 				<Share />
 			</ClickTracker>
 		)
