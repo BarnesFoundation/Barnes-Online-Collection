@@ -13,11 +13,14 @@ class Share extends React.Component {
 			showShareDialog: false,
 			copyText: ''
 		};
+
+		this.copy = null;
 	}
 
 	componentDidMount() {
 		const { setResetFunction } = this.props;
 		setResetFunction(() => this.setState({ showShareDialog: !this.state.showShareDialog }));
+		console.log(this.copy);
 	}
 
 	toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
@@ -28,11 +31,10 @@ class Share extends React.Component {
 		const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
 
 		if (platform === sharePlatforms.COPY_URL) {
-			this.setState({ copyText: shareLink },
-				() => {
-					this.copy.select();
-					document.execCommand('copy');
-				});
+
+			this.setState({ copyText: shareLink });
+			this.copy.select();
+			document.execCommand('copy');
 		}
 		else window.open(shareLink, '_blank');
 	};
