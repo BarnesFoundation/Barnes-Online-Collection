@@ -9,6 +9,7 @@ import FilterTagSetGeneric from '../../../components/CollectionFilters/FilterTag
 import { BARNES_SETTINGS } from '../../../barnesSettings';
 import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
 import { getObjectCopyright } from '../../../copyrightMap';
+import { ShareDialog } from '../../ShareDialog/ShareDialog';
 
 const getObjectMetaDataHtml = (object) => {
   const objectCopyright = getObjectCopyright(object);
@@ -146,6 +147,9 @@ class PanelVisuallyRelated extends Component {
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
               <div className="art-object__image-information">
                 {getObjectMetaDataHtml(object)}
+				<div className="share share--center">
+					<ShareDialog/>
+				</div>
               </div>
               { filterTags &&
                 <div className="art-object__search-tags">
