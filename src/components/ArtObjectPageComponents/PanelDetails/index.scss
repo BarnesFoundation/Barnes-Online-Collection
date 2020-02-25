@@ -213,35 +213,3 @@
     }
   }
 }
-
-.share {
-	float: right;
-	display: flex;
-	justify-content: center;
-  position: relative;
-  
-  @include breakpoint('medium+') {
-    margin-left: calc(40% - 110px);
-  }
-}
-
-.share-dialog {
-	background: white;
-	color: $color__copy--medium; 
-	border: 1px solid $color__border;
-	padding: 30px;
-	width: 175px;
-	position: absolute;
-	top: -210px;
-	z-index: 10;
-	
-
-	&__link {
-		text-decoration: none;
-		display: block;
-
-		&:hover {
-			cursor: pointer;
-		}
-	}
-}
