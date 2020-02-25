@@ -41,7 +41,7 @@ class Share extends React.Component {
 		const { copyText, showShareDialog } = this.state;
 
 		return (
-			<div className="share">
+			<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
 				{showShareDialog &&
 					<div className="share-dialog">
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
@@ -52,20 +52,18 @@ class Share extends React.Component {
 						<input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
 					</div>
 				}
-				<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
-					<div className='panel-button__content'>
-						<div className='panel-button__icon' >
-							<Icon svgId='-icon_share' classes='panel-button__svg' />
-						</div>
-						<span className='font-simple-heading panel-button__text'>Share It</span>
+				<div className='panel-button__content'>
+					<div className='panel-button__icon' >
+						<Icon svgId='-icon_share' classes='panel-button__svg' />
 					</div>
+					<span className='font-simple-heading panel-button__text'>Share It</span>
 				</div>
 			</div>
 		)
 	}
 }
 
-export const ShareDialog = (props) => {	
+export const ShareDialog = (props) => {
 	return (
 		<ClickTracker>
 			<Share {...props} />

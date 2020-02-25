@@ -266,7 +266,9 @@ class PanelDetails extends Component {
                   Purchase Print
                 </a>}
 
-				<ShareDialog object={this.props.object} />
+				<div className="share">
+					<ShareDialog object={this.props.object} />
+				</div>
             </div>
 
             {object.shortDescription &&
