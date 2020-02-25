@@ -136,3 +136,22 @@
     }
   }
 }
+
+.share-dialog {
+	background: white;
+	color: $color__copy--medium; 
+	border: 1px solid $color__border;
+	padding: 30px;
+	width: 175px;
+	position: absolute;
+	z-index: 10;
+
+	&__link {
+		text-decoration: none;
+		display: block;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

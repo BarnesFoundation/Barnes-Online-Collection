@@ -3,7 +3,8 @@ export const sharePlatforms = {
 	FACEBOOK: 'FACEBOOK',
 	TWITTER: 'TWITTER',
 	PINTEREST: 'PINTEREST',
-	EMAIL: 'EMAIL'
+	EMAIL: 'EMAIL',
+	COPY_URL: 'COPY_URL'
 };
 
 /** Generates the shareable link for an object
@@ -11,17 +12,20 @@ export const sharePlatforms = {
  * @param {string} id - the id of the object to share
  * @param {string} artworkTitle - title of the artwork to share
  * @param {string} platform - the platform the link should be generated for
+ * @param {string} imageUrl - the image url to be used for Pinterest
  */
-export const createShareForPlatform = (artist, artworkTitle, id, platform) => {
+export const createShareForPlatform = (artist, artworkTitle, id, platform, imageUrl) => {
 
 	const shareableText = generateShareableText(artist, artworkTitle, id);
-	return generateSharePlatformLink(platform, shareableText);
+	const shareableLink = generateSharePlatformLink(platform, shareableText, imageUrl);
+
+	return shareableLink;
 }
 
 /** Generates the Collection url for the passed object id
  * @param {string} id - the id of the object 
  */
-export const createObjectUrl = (id) => {
+const createObjectUrl = (id) => {
 	return `https://collection.barnesfoundation.org/objects/${id}`;
 }
 
@@ -48,7 +52,7 @@ const generateShareableText = (artist, artworkTitle, id) => {
  * @param {string} platform - platform to share on
  * @param {object} shareObject - share object containing items needed for sharing
  */
-const generateSharePlatformLink = (platform, { url, title, companyName, hashtags }) => {
+const generateSharePlatformLink = (platform, { url, title, companyName, hashtags }, imageUrl) => {
 
 	switch (platform) {
 		case sharePlatforms.FACEBOOK: {
@@ -62,16 +66,17 @@ const generateSharePlatformLink = (platform, { url, title, companyName, hashtags
 		}
 
 		case sharePlatforms.EMAIL: {
-			const body = `
-			${title} &mdash; ${url}
-			from The ${companyName}
-			`;
+			const body = `${title} – ${url}`;
 
 			return `mailto:?body=${body}&subject=${title}`;
 		}
 
+		case sharePlatforms.COPY_URL: {
+			return url;
+		}
+
 		case sharePlatforms.PINTEREST: {
-			return `http://pinterest.com/pin/create/button/?url${encodeURI(url)}&description=${title}`
+			return `http://pinterest.com/pin/create/link/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}&media=${encodeURIComponent(imageUrl)}`
 		}
 	}
 }
