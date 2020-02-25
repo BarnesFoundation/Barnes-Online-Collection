@@ -101,7 +101,7 @@ class ArtObjectGrid extends Component {
 
     // For 'View More' results.
     this.state = {
-      truncateThreshold: 20,
+      truncateThreshold: 12,
     };
   };
 

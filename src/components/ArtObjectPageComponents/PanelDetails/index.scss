@@ -173,6 +173,12 @@
 .image-art-object {
   position: relative;
 
+  &__img {
+
+    @include breakpoint('medium+') {
+      max-width: 70%;
+    }
+  }
   &__arrow {
     width: 1.2em;
   }
