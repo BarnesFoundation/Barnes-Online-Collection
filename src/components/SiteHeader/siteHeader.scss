@@ -143,7 +143,7 @@ html:not([class=""]) {
   width: 100%;
 
   padding-top: 20px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @include breakpoint('medium+') {
     padding-top: 35px;

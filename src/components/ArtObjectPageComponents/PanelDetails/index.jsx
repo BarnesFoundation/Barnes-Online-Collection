@@ -70,7 +70,7 @@ const Image = ({
           ref={setRef}
           style={{ ...additionalStyle }}
         />
-        {(isLoaded) && <button
+        {isLoaded && <button
           className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
           onClick={() => setActiveImageIndex(activeImageIndex - 1)}
         >
@@ -85,12 +85,10 @@ const Image = ({
       </div>
       {Boolean((isLoaded && width) || isZoomed) &&
         <div className='image-caption'>
-          <div
-            className='font-smallprint color-medium image-caption__content'
-            style={{ width: actualWidth }}
-          >
+          <div className='font-smallprint color-medium image-caption__content'>
             {object.people}. {object.title}, {object.displayDate}. {object.invno}. {object.creditLine}
           </div>
+          <div>
           <div
             className='image-caption__grid'
             style={{ width: actualWidth }}
@@ -106,11 +104,12 @@ const Image = ({
                   className={className}
                   key={i}
                 >
-                  <img src={object.imageUrlSmall} />
+                  <img className='image-caption__thumbnail'src={object.imageUrlSmall} />
                   <div className='image-caption__inner-border'></div>
                 </div>
               )
             })}
+          </div>
           </div>
         </div>}
     </div>

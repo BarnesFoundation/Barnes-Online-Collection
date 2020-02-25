@@ -36,11 +36,24 @@
 
     &--main {
       margin-bottom: 0;
+
+      font-size: 32px;
+      line-height: 35px;
+
+      @include breakpoint('medium+') {
+        font-size: 38px;
+        line-height: 45px;
+      }
     }
 
     &--date {
-      font-size: 30px;
-      line-height: 40px;
+      font-size: 25px;
+      line-height: 30px;
+
+      @include breakpoint('medium+') {
+        font-size: 30px;
+        line-height: 40px;
+      }
     }
 
     .component-modal & {
