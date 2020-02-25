@@ -4,7 +4,7 @@ import { sharePlatforms, createShareForPlatform } from './shareModule';
 import Icon from '../Icon';
 import { ClickTracker } from '../SearchInput/Dropdowns/ClickTracker';
 
-export class ShareDialog extends React.Component {
+class Share extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -13,6 +13,11 @@ export class ShareDialog extends React.Component {
 			showShareDialog: false,
 			copyText: ''
 		};
+	}
+
+	componentDidMount() {
+		const { setResetFunction } = this.props;
+		setResetFunction(() => this.setState({ showShareDialog: !this.state.showShareDialog }));
 	}
 
 	toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
@@ -35,35 +40,33 @@ export class ShareDialog extends React.Component {
 	render() {
 		const { copyText, showShareDialog } = this.state;
 
-		const Share = () => {
-			return (
-				<div className="share">
-					{showShareDialog &&
-						<div className="share-dialog">
-							<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
-							<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</a>
-							<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</a>
-							<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
-							<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
-							<input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
+		return (
+			<div className="share">
+				{showShareDialog &&
+					<div className="share-dialog">
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
+						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
+						<input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
+					</div>
+				}
+				<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
+					<div className='panel-button__content'>
+						<div className='panel-button__icon' >
+							<Icon svgId='-icon_share' classes='panel-button__svg' />
 						</div>
-					}
-					<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
-						<div className='panel-button__content'>
-							<div className='panel-button__icon' >
-								<Icon svgId='-icon_share' classes='panel-button__svg' />
-							</div>
-							<span className='font-simple-heading panel-button__text'>Share It</span>
-						</div>
+						<span className='font-simple-heading panel-button__text'>Share It</span>
 					</div>
 				</div>
-			)
-		}
-
-		return (
-			<ClickTracker setResetFunction={() => { console.log('Hello'); }}>
-				<Share />
-			</ClickTracker>
+			</div>
 		)
 	}
 }
+
+export const ShareDialog = (...props) => (
+	<ClickTracker>
+		<Share {...props} />
+	</ClickTracker>
+);
