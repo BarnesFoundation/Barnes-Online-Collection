@@ -9,6 +9,7 @@ import Icon from '../../Icon';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import { getObjectCopyright } from '../../../copyrightMap';
+import { sharePlatforms, createShareForPlatform } from '../../../shareModule';
 import './index.css';
 
 // use JSON.parse to parse string 'true' or 'false'
@@ -204,17 +205,26 @@ class PanelDetails extends Component {
     
     this.state = {
       imageLoaded: false,
-      activeImageIndex: 0,
+	  activeImageIndex: 0,
+	  showShareDialog: false
     };
   }
 
   /** Update state infomration. */
   onLoad = () => this.setState({ imageLoaded: true });
   setActiveImageIndex = index => this.setState({ activeImageIndex: index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT }); 
+  toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
+
+  onShareLinkClick = (platform) => {
+  	const { id, people, title } = this.props.object;
+	const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
+	console.log(shareLink);
+	window.open(shareLink, '_blank');
+  };
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex } = this.state;
+    const { imageLoaded, activeImageIndex, showShareDialog } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -259,14 +269,23 @@ class PanelDetails extends Component {
               {printAvailable &&
                 <a className='btn' href={printAvailable.url} target='_blank' >
                   Purchase Print
-                </a>
-              }
-              <div className='panel-button panel-button--share'>
-                <div className='panel-button__content'>
-                  <div className='panel-button__icon' >
-                    <Icon svgId='-icon_share' classes='panel-button__svg'/>
+                </a>}
+
+			{showShareDialog && 
+				<div className="share-dialog">
+					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK)}}>Facebook</a>
+					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER)}}>Twitter</a>
+					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST)}}>Pinterest</a>
+					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL)}}>Email</a>
+					<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL)}}>Copy Link</a>
+				</div>
+			  }
+              <div className='share-button'>
+                <div className='share-button__content'>
+                  <div className='share-button__icon' >
+                    <Icon svgId='-icon_share' classes='share-button__svg'/>
                   </div>
-                  <span className='font-simple-heading panel-button__text'>Share It</span>
+				  <span className='font-simple-heading share-button__text' onBlur={() => { this.toggleShareDialog(); }} onClick={() => { this.toggleShareDialog(); }}>Share It</span>
                 </div>
               </div>
             </div>
