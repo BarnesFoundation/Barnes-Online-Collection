@@ -209,7 +209,7 @@ class PanelDetails extends Component {
     
     this.state = {
       imageLoaded: false,
-	  activeImageIndex: 0
+	    activeImageIndex: 0
     };
   }
 

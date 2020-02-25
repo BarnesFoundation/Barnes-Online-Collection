@@ -8,7 +8,7 @@ export class ClickTracker extends Component {
         this.ref = null; // Ref for wrapper div.
 
         // This will essentially be () => reset() for Dropdowns on cDM.
-        this.state = { resetFunction: null };
+        this.state = { resetFunction: this.props.resetFunction || null };
     }
 
     // Listen to clicks outside of div and cleanup on unmount.
@@ -29,12 +29,17 @@ export class ClickTracker extends Component {
     setResetFunction = resetFunction => this.setState({ resetFunction });
     
     render() {
-        const { children } = this.props;
+        const { children, resetFunction } = this.props;
 
         return (
             <div ref={ref => this.ref = ref}>
-                {React.Children.map(children, (child) => (
-                    React.cloneElement(child, { ...this.props, setResetFunction: this.setResetFunction })
+                {resetFunction
+                ? children
+                : React.Children.map(children, (child) => (
+                    React.cloneElement(child, {
+                        ...this.props,
+                        setResetFunction: this.setResetFunction
+                    })
                 ))}
             </div>
         );

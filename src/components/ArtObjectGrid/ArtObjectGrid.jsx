@@ -8,6 +8,7 @@ import SpinnerLoader from './SpinnerLoader';
 import CollectionFiltersApplied from '../CollectionFilters/CollectionFiltersApplied';
 import { clearObject } from '../../actions/object';
 import { getArtObjectUrlFromId } from '../../helpers';
+import ensembleIndexes from '../../ensembleIndexes';
 import './searchResultsGrid.css';
 import './artObjectGrid.css';
 
@@ -44,8 +45,8 @@ const MasonryGrid = ({ children }) => (
  * Search results grid component.
  * @see searchResultsGrid.scss for styling.
  * */
-const SearchResultsGrid = ({ children }) => (
-  <div className='search-results-grid'>
+const SearchResultsGrid = ({ children, isLocationResult }) => (
+  <div className={!isLocationResult ? 'search-results-grid' : null}>
       {children}
   </div>
 );
@@ -107,7 +108,7 @@ class ArtObjectGrid extends Component {
 
   incrementTruncateThreshold = () => {
     const { truncateThreshold } = this.state;
-    this.setState({ ...this.state, truncateThreshold: truncateThreshold + 20 });
+    this.setState({ ...this.state, truncateThreshold: truncateThreshold + 12 });
   };
 
   render() {
@@ -124,35 +125,68 @@ class ArtObjectGrid extends Component {
       modalPreviousLocation,
       clearObject,
 
-      // For detecting if a search has been placed.
+      // For detecting if a search or location filter has been placed.
       hasSearch,
+      hasLocation,
     } = this.props;
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
 
     const isSearchResult = Boolean(shouldLinksUseModal && hasSearch);
+    const isLocationResult = Boolean(shouldLinksUseModal && hasLocation);
 
     // Convert object[] to an array of ArtObjects wrapped in Links.
-    const uncutMasonryElements = liveObjects.map((object) => (
-      <GridListElement
-        key={object.id}
-        object={object}
-        shouldLinksUseModal={shouldLinksUseModal}
-        modalPreviousLocation={modalPreviousLocation}
-        clearObject={clearObject}
-        isSearchResult={isSearchResult}
-      />
-    ));
+    const uncutMasonryElements = isLocationResult
+      ? Object.entries(
+          liveObjects.reduce((acc, object) => ({ // Put liveObjects into bucket according to ensemble index.
+              ...acc,
+              [object.ensembleIndex]: acc[object.ensembleIndex] ? [...acc[object.ensembleIndex], object] : [object]
+            }), {})
+        )
+        .sort(([keyA], [keyB]) => keyA - keyB) // Reverse sort keys by number to guarantee render in order.
+        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index. 
+        .flatMap(([key, value]) => (
+          <div
+            className='location-results'
+            key={ensembleIndexes[key].wallTitle}
+          >
+            <h3 className='font-delta location-results__header'>{ensembleIndexes[key].roomTitle}, {ensembleIndexes[key].wallTitle}</h3>
+            <div className='search-results-grid'>
+              {value.map((object) => (
+                <GridListElement
+                  key={object.id}
+                  object={object}
+                  shouldLinksUseModal={shouldLinksUseModal}
+                  modalPreviousLocation={modalPreviousLocation}
+                  clearObject={clearObject}
+                  isSearchResult={true}
+                />))}
+            </div>
+          </div>
+        ))
+      : liveObjects.map((object) => (
+        <GridListElement
+          key={object.id}
+          object={object}
+          shouldLinksUseModal={shouldLinksUseModal}
+          modalPreviousLocation={modalPreviousLocation}
+          clearObject={clearObject}
+          isSearchResult={isSearchResult}
+        />
+      ));
 
     // If this is a 'View More' Grid, truncate results.
-    const masonryElements = hasMoreResults ? uncutMasonryElements.slice(0, this.state.truncateThreshold) : uncutMasonryElements;
+    // This will always be false if location filter is applied.
+    const masonryElements = (hasMoreResults  && !isLocationResult)
+      ? uncutMasonryElements.slice(0, this.state.truncateThreshold)
+      : uncutMasonryElements;
 
     // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
     // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
-    const displayGrid = isSearchResult
+    const displayGrid = (isSearchResult || isLocationResult)
       ? (
-      <SearchResultsGrid>
+      <SearchResultsGrid isLocationResult={isLocationResult}>
         {masonryElements}
       </SearchResultsGrid>
       ) : (
@@ -166,7 +200,13 @@ class ArtObjectGrid extends Component {
       ? (<div>
         <div className='component-art-object-grid-results'>
           {displayGrid}
-          {(hasMoreResults && uncutMasonryElements.length !== masonryElements.length) && <ViewMoreButton onClick={this.incrementTruncateThreshold}/>}
+          {Boolean(
+            hasMoreResults
+              && uncutMasonryElements.length !== masonryElements.length
+              && !isLocationResult
+            ) &&
+            <ViewMoreButton onClick={this.incrementTruncateThreshold}
+          />}
         </div>
       </div>)
       : (<div className='m-block no-results'>
@@ -194,7 +234,10 @@ class ArtObjectGrid extends Component {
   }
 }
 
-const mapStateToProps = state => ({ object: state.object, hasSearch: Boolean(state.filters.search) });
+const mapStateToProps = state => ({
+  object: state.object,
+  hasSearch: Boolean(state.filters.search),
+  hasLocation: Boolean(state.filters.advancedFilters.Location && Object.keys(state.filters.advancedFilters.Location).length) });
 const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);
