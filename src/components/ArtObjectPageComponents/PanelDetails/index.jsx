@@ -9,9 +9,8 @@ import Icon from '../../Icon';
 import * as ObjectActions from '../../../actions/object';
 import * as PrintActions from '../../../actions/prints';
 import { getObjectCopyright } from '../../../copyrightMap';
-import { sharePlatforms, createShareForPlatform } from '../../../shareModule';
+import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
-import { ClickTracker } from '../../SearchInput/Dropdowns/ClickTracker';
 
 // use JSON.parse to parse string 'true' or 'false'
 const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse(process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE);
@@ -204,52 +203,19 @@ class Image extends Component {
   }
 }
 
-const Share = ({ onShareLinkClick, copyText, clickOut }) => (
-  <ClickTracker resetFunction={clickOut}>
-    <div className="share-dialog">
-      <a className="share-dialog__link" onClick={() => { onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
-      <a className="share-dialog__link" onClick={() => { onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</a>
-      <a className="share-dialog__link" onClick={() => { onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</a>
-      <a className="share-dialog__link" onClick={() => { onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
-      <a className="share-dialog__link" onClick={() => { onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
-      <input style={{ position: 'absolute', height: 0, opacity: '.01' }} ref={(area) => this.copy = area} value={copyText} />
-    </div>
-  </ClickTracker>
-);
-
 class PanelDetails extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
       imageLoaded: false,
-      activeImageIndex: 0,
-      showShareDialog: false,
-      copyText: ''
+	    activeImageIndex: 0
     };
   }
 
   /** Update state infomration. */
   onLoad = () => this.setState({ imageLoaded: true });
-  setActiveImageIndex = index => this.setState({ activeImageIndex: index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT });
-  toggleShareDialog = () => this.setState({ showShareDialog: !this.state.showShareDialog });
-
-  onShareLinkClick = (platform) => {
-
-    const { id, people, title } = this.props.object;
-    const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
-
-    if (platform === sharePlatforms.COPY_URL) {
-      this.setState({ copyText: shareLink },
-        () => {
-          this.copy.select();
-          console.log(this.copy);
-          document.execCommand('copy');
-        });
-    }
-
-    else window.open(shareLink, '_blank');
-  };
+  setActiveImageIndex = index => this.setState({ activeImageIndex: index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT }); 
 
   render() {
     const { object, prints } = this.props;
@@ -299,19 +265,7 @@ class PanelDetails extends Component {
                 <a className='btn' href={printAvailable.url} target='_blank' >
                   Purchase Print
                 </a>}
-
-              {/* We may want to make this a separate component that can just be dropped in -- since it's being used in at least 2 places */}
-              <div className="share">
-                {showShareDialog && <Share clickOut={this.toggleShareDialog}/>}
-                <div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
-                  <div className='panel-button__content'>
-                    <div className='panel-button__icon' >
-                      <Icon svgId='-icon_share' classes='panel-button__svg' />
-                    </div>
-                    <span className='font-simple-heading panel-button__text'>Share It</span>
-                  </div>
-                </div>
-              </div>
+				      <ShareDialog object={this.props.object} />
             </div>
 
             {object.shortDescription &&
