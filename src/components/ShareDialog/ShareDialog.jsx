@@ -65,8 +65,10 @@ class Share extends React.Component {
 	}
 }
 
-export const ShareDialog = (...props) => (
-	<ClickTracker>
-		<Share {...props} />
-	</ClickTracker>
-);
+export const ShareDialog = (props) => {	
+	return (
+		<ClickTracker>
+			<Share {...props} />
+		</ClickTracker>
+	)
+};
