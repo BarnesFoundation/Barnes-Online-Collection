@@ -26,7 +26,7 @@ export const createShareForPlatform = (artist, artworkTitle, id, platform, image
  * @param {string} id - the id of the object 
  */
 const createObjectUrl = (id) => {
-	return `https://collection.barnesfoundation.org/objects/${id}`;
+	return `${process.env.REACT_APP_CANONICAL_ROOT}/objects/${id}`;
 }
 
 
