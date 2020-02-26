@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { MediaQuery } from 'react-responsive';
 import SummaryTable from './SummaryTable';
 import AccordionMenu from '../../AccordionMenu';
 import ArtObjectOverlay from '../../ArtObject/ArtObjectOverlay';
@@ -173,22 +174,22 @@ class Image extends Component {
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
-          {isLoaded &&
+          {isLoaded && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
             </button>
-          }
-          {isLoaded &&
+            {/* TODO => This will eventually be dynamic data. */}
+            <span className='image-art-object__counter'>{activeImageIndex + 1} / {STATIC_IMAGE_COUNT}</span>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
               onClick={() => setActiveImageIndex(activeImageIndex + 1)}
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
             </button>
-          }
+          </div>}
         </div>
         <div className='image-caption'>
           <div
@@ -266,9 +267,9 @@ class PanelDetails extends Component {
                   Purchase Print
                 </a>}
 
-				<div className="share share--right">
-					<ShareDialog object={this.props.object} />
-				</div>
+              <div className="share share--right">
+                <ShareDialog object={this.props.object} />
+              </div>
             </div>
 
             {object.shortDescription &&

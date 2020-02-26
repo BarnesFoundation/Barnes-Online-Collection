@@ -82,6 +82,11 @@
 .thumbnails {
   $self: &;
 
+  display: none;
+  @include breakpoint('medium+') {
+    display: block;
+  }
+
   margin-top: 57px; // Totals to 60 w/ first line of image-caption__grid.
 
   // Center child grid.
@@ -179,21 +184,46 @@
       max-width: 70%;
     }
   }
+
+  &__button-group {
+    width: 100%;
+    min-height: 50px;
+    z-index: 2;
+
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    @include breakpoint('medium+') {
+      margin-top: 0;
+      margin-bottom: 0;
+      position: absolute;
+      top: 50%;
+    }
+  }
+
+  &__counter {
+    line-height: 50px; // Match height of arrow buttons
+    font-weight: bold;
+
+    @include breakpoint('medium+') {
+      display: none;
+    }
+  }
+
   &__arrow {
+    color: $color-black;
     width: 1.2em;
   }
 
   &__arrow-button {
     position: absolute;
-    top: 50%;
-    z-index: 2;
 
     background-color: white;
 
     padding-left: 0;
     padding-right: 0;
-    margin: 0;
-
+    margin: 0 !important; // Overwrite global .btn + .btn style.
     
     min-width: 50px;
     width: 50px;
