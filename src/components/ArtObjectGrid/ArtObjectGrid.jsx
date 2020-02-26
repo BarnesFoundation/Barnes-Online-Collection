@@ -57,10 +57,11 @@ const GridListElement = ({
   shouldLinksUseModal,
   modalPreviousLocation,
   clearObject,
-  isSearchResult
+  isFilterResult,
+  isSearchResult,
 }) => {
   let gridListElementClassNames = 'masonry-grid-element';
-  if (isSearchResult) gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
+  if (isFilterResult) gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
 
   return (
     <li className={gridListElementClassNames}>
@@ -86,7 +87,7 @@ const GridListElement = ({
           imageUrlSmall={object.imageUrlSmall}
 
           // Only pass highlight if this is for search results.
-          highlight={isSearchResult ? object.highlight : null}
+          highlight={(isSearchResult) ? object.highlight : null}
         />
       </Link>
     </li>
@@ -127,6 +128,7 @@ class ArtObjectGrid extends Component {
 
       // For detecting if a search or location filter has been placed.
       hasSearch,
+      hasFilter,
       hasLocation,
     } = this.props;
 
@@ -134,6 +136,7 @@ class ArtObjectGrid extends Component {
     const searching = isSearchPending && <SpinnerLoader />;
 
     const isSearchResult = Boolean(shouldLinksUseModal && hasSearch);
+    const isFilterResult = Boolean(shouldLinksUseModal && hasFilter);
     const isLocationResult = Boolean(shouldLinksUseModal && hasLocation);
 
     // Convert object[] to an array of ArtObjects wrapped in Links.
@@ -160,7 +163,8 @@ class ArtObjectGrid extends Component {
                   shouldLinksUseModal={shouldLinksUseModal}
                   modalPreviousLocation={modalPreviousLocation}
                   clearObject={clearObject}
-                  isSearchResult={true}
+                  isFilterResult={true}
+                  isSearchResult={false}
                 />))}
             </div>
           </div>
@@ -172,6 +176,7 @@ class ArtObjectGrid extends Component {
           shouldLinksUseModal={shouldLinksUseModal}
           modalPreviousLocation={modalPreviousLocation}
           clearObject={clearObject}
+          isFilterResult={isFilterResult}
           isSearchResult={isSearchResult}
         />
       ));
@@ -184,7 +189,7 @@ class ArtObjectGrid extends Component {
 
     // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
     // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
-    const displayGrid = (isSearchResult || isLocationResult)
+    const displayGrid = (isFilterResult || isLocationResult)
       ? (
       <SearchResultsGrid isLocationResult={isLocationResult}>
         {masonryElements}
@@ -237,7 +242,19 @@ class ArtObjectGrid extends Component {
 const mapStateToProps = state => ({
   object: state.object,
   hasSearch: Boolean(state.filters.search),
-  hasLocation: Boolean(state.filters.advancedFilters.Location && Object.keys(state.filters.advancedFilters.Location).length) });
+
+  // If this is a search via filter.
+  hasFilter: Boolean(
+    state.filters.ordered.length ||
+    Object.values(state.filters.advancedFilters)
+      .some(advancedFilter => Object.keys(advancedFilter).length)
+  ),
+
+  // If this is specifically a location search.
+  hasLocation: Boolean(
+    state.filters.advancedFilters.Location &&
+    Object.keys(state.filters.advancedFilters.Location).length)
+  });
 const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);
