@@ -78,6 +78,7 @@ html:not([class=""]) {
   &--absolute {
     position: absolute;
     top: 0;
+    width: 100%;
   }
 
   .g-header {
