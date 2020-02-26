@@ -9,19 +9,18 @@ const years = rawYears
     .map(year => parseInt(year))
     .sort(); // Should be sorted, but sort anyways.
 
+// Min and max values to determine number of increments on slider.
 const MIN = 0;
 const MAX = years.length - 1;
+
+// Floor and ceiling to determine min/max inputted values.
+const FLOOR = Math.min(...years);
+const CEILING = Math.max(...years);
 
 // For input text box that controls sliders.
 class YearInputTextBox extends Component {
     constructor(props) {
         super(props);
-
-        // Get floor and ceiling for validating input.
-        const { isMin } = this.props;
-        
-        this.min = isMin ? MIN : MIN + 1;
-        this.max = isMin ? MAX - 1 : MAX;
 
         this.state = {
             value: '', // Input string.
@@ -43,26 +42,53 @@ class YearInputTextBox extends Component {
      * @param {string} value - value from text input.
      */
     validateInput = (value) => {
-        const { updateSlider, setError } = this.props;
+        const { updateSlider, updateInput, setError, min, max } = this.props;
 
+        // Check if inputted text is a valid (-)YYYY(BC) matching string.
         if (value.match(/^-?[0-9]*([\s]?BC)?$/)) {
             setError(false); // Update error to be false in parent component.
 
-            let [yearValue] = value.match(/[0-9]*$/);  // Get value from string.
+            let yearValue = parseInt(value.match(/[0-9]*$/)[0]);  // Get value from string.
             if (value.includes('-') || value.includes('BC')) yearValue = yearValue * -1; // If year is BC, invert it.
 
             // Map matching strings to their respective array index and calculate position from there.
-            const rangeIndexBase = Math.max(years.findIndex(year => year >= yearValue), this.min);
+            const rangeIndexBase = (min || min === 0) // Account for 0 as falsy.
+                ? Math.max(years.findIndex(year => year >= yearValue), Math.floor(min) + 1)
+                : Math.min(years.findIndex(year => year >= yearValue), Math.floor(max) - 1);
 
-            if (rangeIndexBase > this.max || rangeIndexBase === -1) {
-                updateSlider(this.max);
-            } else if (rangeIndexBase < this.min) {
-                updateSlider(this.min);
+            // If a range is at it's floor or ceiling, 
+            if ((min || min === 0) && rangeIndexBase === -1) updateSlider(MAX);
+            if (max && rangeIndexBase === -1) updateSlider(MIN);
+
+            if ((min || min === 0) && rangeIndexBase !== min + 1) {
+                const arrDifference = years[rangeIndexBase] - years[rangeIndexBase - 1];
+                const valueDifference = years[rangeIndexBase] - value;
+                const difference = 1 - valueDifference/arrDifference;
+
+                updateInput({
+                    endDateIndex: rangeIndexBase + difference,
+                    endDate: Math.min(value, CEILING)
+                });
+            } else if (max && rangeIndexBase !== max - 1) {
+                const arrDifference = years[rangeIndexBase] - years[rangeIndexBase - 1];
+                const valueDifference = years[rangeIndexBase] - value;
+
+                // Ternary for NaN for outside of array index and divide by 0.
+                const difference = rangeIndexBase > 0 ? 1 - valueDifference/arrDifference : 0;
+
+                updateInput({
+                    beginDateIndex: rangeIndexBase + difference,
+                    beginDate: Math.max(FLOOR, value)
+                });
             } else {
+                // If the inputted text is past either bound, update slider to that bound.
                 updateSlider(rangeIndexBase);
             }
+
+            
+
         } else {
-            // If this doesn't match, set up callback to check state in a few MS.
+            // If the inputted text is not a valid date, set up callback to check state in a few MS.
             // This prevents bombarding a user with errors immediately.
             this.setState({
                 willCheck: setTimeout(() => {
@@ -99,6 +125,9 @@ class YearInput extends Component {
             // For input range.
             beginDateIndex: MIN,
             endDateIndex: MAX,
+
+            beginDate: years[MIN],
+            endDate: years[MAX],
             
             // For alerts about bad inputs.
             isError: false,
@@ -109,13 +138,14 @@ class YearInput extends Component {
     componentDidMount() {
         const { appliedYears } = this.props;
 
-        console.log(appliedYears);
         if (appliedYears && appliedYears.dateRange && appliedYears.dateRange.term) {
             // If for whatever reason property does not exist, default to constant.
             this.setState({
                 beginDateIndex: appliedYears.dateRange.term.beginDateIndex || MIN,
                 endDateIndex: appliedYears.dateRange.term.endDateIndex || MAX,
-            })
+                beginDate: appliedYears.dateRange.term.beginDate || years[MIN],
+                endDate: appliedYears.dateRange.term.endDate || years[MAX],
+            });
         }        
     }
 
@@ -130,11 +160,8 @@ class YearInput extends Component {
      * @param {{beginDateIndex: number, endDateIndex: number}?} options - optional object to generate formatted year string with.
      * @returns {string} formatted date string for header and active filter pill.
      */
-    getFormattedYearsString({ beginDateIndex, endDateIndex } = this.state) {
-
-        // Map slider index to corresponding value in years array.
-        const [beginDate, endDate] = [beginDateIndex, endDateIndex].map(value => years[value]);
-
+    getFormattedYearsString({ beginDate, endDate } = this.state) {
+        
         // Map over for formatting.
         const [beginDateFormat, endDateFormat] = [beginDate, endDate].map((value) => {
             if (value < 0) return `${value * -1} BC`;
@@ -153,30 +180,55 @@ class YearInput extends Component {
         const { setActiveTerm, isDropdown } = this.props;
 
         if (!isDropdown) {
+            // Update parent state.
             setActiveTerm({
                 beginDateIndex,
                 endDateIndex,
                 beginDate: years[beginDateIndex],
                 endDate: years[endDateIndex],
-                formattedYearsString: this.getFormattedYearsString({ beginDateIndex, endDateIndex })
-            }); // Update parent state.
+                formattedYearsString: this.getFormattedYearsString({
+                    beginDateIndex: years[beginDateIndex],
+                    endDateIndex: years[endDateIndex],
+                })
+            }); 
         }
-        this.setState({ beginDateIndex, endDateIndex }); // Update local state.
+
+        // Update local state.
+        this.setState({
+            beginDateIndex,
+            endDateIndex,
+            beginDate: years[beginDateIndex],
+            endDate: years[endDateIndex]
+        }); 
+    }
+
+    /**
+     * Update text input.
+     */
+    updateInput = ({ beginDateIndex, beginDate, endDate, endDateIndex }) => {
+        console.log({ beginDateIndex, beginDate, endDate, endDateIndex });
+        if ((beginDateIndex || beginDateIndex === 0) && beginDate) this.setState({ beginDateIndex, beginDate });
+        if (endDate && endDateIndex) this.setState({ endDate, endDateIndex });
     }
 
     /**
      * Click apply button, this is a method for large screen devices.
      */
     apply = () => {
-        const { beginDateIndex, endDateIndex } = this.state;
+        const {
+            beginDateIndex,
+            endDateIndex,
+            beginDate,
+            endDate,
+        } = this.state;
         const { setActiveTerm } = this.props;
 
         // Update parent state.
         setActiveTerm({
             beginDateIndex,
             endDateIndex,
-            beginDate: years[beginDateIndex],
-            endDate: years[endDateIndex],
+            beginDate,
+            endDate,
             formattedYearsString: this.getFormattedYearsString()
         }); 
     }
@@ -238,13 +290,18 @@ class YearInput extends Component {
                     }
                     <div className='year-input__text-input-group'>
                         <YearInputTextBox
-                            isMin
+                            max={endDateIndex}
                             updateSlider={beginDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
+                            updateInput={this.updateInput}
                             setError={this.setError}
+                            value={beginDate}
                         />
                         <YearInputTextBox
+                            min={beginDateIndex}
                             updateSlider={endDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
+                            updateInput={this.updateInput}
                             setError={this.setError}
+                            value={endDate}
                         />
                     </div>
                     {/** We only need manual application for large screens w/ traditional dropdowns. */}
