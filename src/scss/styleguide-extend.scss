@@ -4,6 +4,9 @@
 @import './style-components/nav.scss';
 
 html {
+
+  overflow-y: scroll;
+
   &.modal-open,
   &.nav-open,
   &.mobile-panel-open {
@@ -44,6 +47,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: $font-family;
+  overflow-y: hidden;
 }
 
 html,
