@@ -141,8 +141,12 @@
     }
 
     &--thumbnail {
-      width: 330px;
-      left: -110px;
+      width: 333px;
+      left: -111px;
+
+      h3 {
+        line-height: 1em !important;
+      }
     }
   }
 
