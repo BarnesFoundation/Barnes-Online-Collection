@@ -100,10 +100,6 @@ export class ArtistSideMenuContent extends Component {
 
 /** HOC to wrap artist menu in side menu. */
 class ArtistSideMenu extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     /** Dispatch to redux store on unmount. */
     componentWillUnmount() { this.props.toggleArtistMenu(false); }
 
