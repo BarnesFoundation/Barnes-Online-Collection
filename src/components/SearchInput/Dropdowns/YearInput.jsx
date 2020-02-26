@@ -97,12 +97,26 @@ class YearInput extends Component {
 
         this.state = {
             // For input range.
-            beginDateIndex: MIN + 9,
-            endDateIndex: MAX - 7,
+            beginDateIndex: MIN,
+            endDateIndex: MAX,
             
             // For alerts about bad inputs.
             isError: false,
         };
+    }
+
+    /** Set up initial slider values. */
+    componentDidMount() {
+        const { appliedYears } = this.props;
+
+        console.log(appliedYears);
+        if (appliedYears && appliedYears.dateRange && appliedYears.dateRange.term) {
+            // If for whatever reason property does not exist, default to constant.
+            this.setState({
+                beginDateIndex: appliedYears.dateRange.term.beginDateIndex || MIN,
+                endDateIndex: appliedYears.dateRange.term.endDateIndex || MAX,
+            })
+        }        
     }
 
     /**
@@ -111,8 +125,12 @@ class YearInput extends Component {
      */
     setError = isError => this.setState({ isError });
 
-    getFormattedYearsString() {
-        const { beginDateIndex, endDateIndex } = this.state;
+    /**
+     * Generate YYYY —— YYYY string for given indexes.
+     * @param {{beginDateIndex: number, endDateIndex: number}?} options - optional object to generate formatted year string with.
+     * @returns {string} formatted date string for header and active filter pill.
+     */
+    getFormattedYearsString({ beginDateIndex, endDateIndex } = this.state) {
 
         // Map slider index to corresponding value in years array.
         const [beginDate, endDate] = [beginDateIndex, endDateIndex].map(value => years[value]);
@@ -134,7 +152,15 @@ class YearInput extends Component {
     updateSlider = ({ beginDateIndex, endDateIndex }) => {
         const { setActiveTerm, isDropdown } = this.props;
 
-        if (!isDropdown) setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex], formattedYearsString: this.getFormattedYearsString() }); // Update parent state.
+        if (!isDropdown) {
+            setActiveTerm({
+                beginDateIndex,
+                endDateIndex,
+                beginDate: years[beginDateIndex],
+                endDate: years[endDateIndex],
+                formattedYearsString: this.getFormattedYearsString({ beginDateIndex, endDateIndex })
+            }); // Update parent state.
+        }
         this.setState({ beginDateIndex, endDateIndex }); // Update local state.
     }
 
@@ -145,7 +171,14 @@ class YearInput extends Component {
         const { beginDateIndex, endDateIndex } = this.state;
         const { setActiveTerm } = this.props;
 
-        setActiveTerm({ beginDate: years[beginDateIndex], endDate: years[endDateIndex], formattedYearsString: this.getFormattedYearsString() }); // Update parent state.
+        // Update parent state.
+        setActiveTerm({
+            beginDateIndex,
+            endDateIndex,
+            beginDate: years[beginDateIndex],
+            endDate: years[endDateIndex],
+            formattedYearsString: this.getFormattedYearsString()
+        }); 
     }
 
     render() {

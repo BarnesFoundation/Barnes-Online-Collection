@@ -3,12 +3,22 @@
 
 .year-input {
     // Override slider css
+    .rc-slider {
+        width: 95% !important;
+        margin-left: 2.5% !important; // Total to 100% w/ width @ 95%.
+
+        @include breakpoint('large+') {
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+    }
+
     .rc-slider-handle {
+        margin-left: 0px !important;
 
         @include breakpoint('large+') {
             height: 12px !important;
             width: 12px !important;
-            margin-left: 0px !important;
             margin-top: -4px !important;
         }
     }

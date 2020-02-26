@@ -7,6 +7,10 @@
     background: $color-grey-ultra-light-2;
   }
 
+  &__a17 { // Make sure footer bump does not wrap.
+    white-space: nowrap;
+  }
+
   &__donate {
     .h4 {
       // make the text match the mock

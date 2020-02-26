@@ -156,6 +156,8 @@
     background-color: $color-grey-ultra-light-2;
 
     &--scroll {
+        overflow-y: scroll;
+
         @include breakpoint('large+') {
             @include scrollbar();
         }
@@ -200,12 +202,14 @@
     &__header {
         cursor: pointer;
 
+        
+
         &--text {
             font-size: 21px;
         }
 
-        margin-top: 15px;
-        padding: 0px 40px 15px 40px;
+        // margin-top: 15px;
+        padding: 15px 40px 15px 40px;
 
         margin-left: -20px;
 
@@ -240,8 +244,8 @@
         // Positioning
         position: absolute;
 
-        right: 0px;
-        top: 10px;
+        right: 15px;
+        top: 13px;
 
         @include breakpoint('large+') {
             right: 0px;
@@ -271,6 +275,7 @@
 
         &--back {
             top: 3px;
+            right: 0;
             display: inline-block;
             font-size: 19px;
             position: relative;

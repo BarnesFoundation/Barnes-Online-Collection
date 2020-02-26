@@ -190,10 +190,10 @@ class DropdownSection extends Component {
 
         // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
         const filter = activeItem !== DROPDOWN_TERMS.YEAR
-            ? { filterType: activeItem, value: `${activeItem}: "${term}"`, term }
+            ? { filterType: activeItem, value: term, term }
             : {
                 filterType: DROPDOWN_TERMS.YEAR,
-                value: `${activeItem}: "${term.formattedYearsString}"`,
+                value: term.formattedYearsString,
                 term
             };
 
