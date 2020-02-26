@@ -206,9 +206,12 @@ class YearInput extends Component {
      * Update text input.
      */
     updateInput = ({ beginDateIndex, beginDate, endDate, endDateIndex }) => {
-        console.log({ beginDateIndex, beginDate, endDate, endDateIndex });
-        if ((beginDateIndex || beginDateIndex === 0) && beginDate) this.setState({ beginDateIndex, beginDate });
-        if (endDate && endDateIndex) this.setState({ endDate, endDateIndex });
+        if ((beginDateIndex || beginDateIndex === 0) && (beginDate || beginDate === 0) && beginDate < this.state.endDate) {
+            this.setState({ beginDateIndex, beginDate });
+        }
+        if ((endDateIndex || endDateIndex === 0) && (endDate || endDate === 0) && endDate > this.state.beginDate) {
+            this.setState({ endDate, endDateIndex });
+        }
     }
 
     /**
