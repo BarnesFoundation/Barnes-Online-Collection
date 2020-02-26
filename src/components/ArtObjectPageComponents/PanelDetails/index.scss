@@ -75,6 +75,7 @@
   justify-content: center;
 
   &__content {
+    margin-top: 10px;
     max-width: 100%;
   }
 }
@@ -192,7 +193,7 @@
 
     position: relative;
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     @include breakpoint('medium+') {
       margin-top: 0;

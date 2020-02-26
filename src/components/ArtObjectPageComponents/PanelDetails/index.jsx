@@ -16,6 +16,8 @@ import './index.css';
 // use JSON.parse to parse string 'true' or 'false'
 const isZoomEnabled = process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE && JSON.parse(process.env.REACT_APP_FEATURE_ZOOMABLE_IMAGE);
 
+const DEFAULT_THUMBNAIL_COUNT = 5;
+
 const getTabList = (artObjectProps) => (
   [
     {
@@ -40,101 +42,84 @@ const getTabList = (artObjectProps) => (
 // For modulo
 const STATIC_IMAGE_COUNT = 7;
 
-class Thumbnails extends Component {
-  constructor(props) {
-    super(props);
+const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen }) => {
 
-    this.state = {
-      isOpen: false
+  // TODO => This will eventually be dynamic data.
+  const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => {
+    // Set up classNames, if selected add BEM modifier.
+    let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
+    let gridListElClassName = 'grid-list-el';
+
+    if (activeImageIndex === i) {
+      gridImageClassName = `${gridImageClassName} thumbnails__grid-image--active`;
+
+      // Uncomment this to keep caption open onClick.
+      // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
     }
-  }
-
-  toggleOpenStatus = () => {
-    const { isOpen } = this.state;
-    this.setState({ isOpen: !isOpen });
-  }
-
-  render() {
-    const { activeImageIndex, setActiveImageIndex, object } = this.props;
-    const { isOpen } = this.state;
-
-    // TODO => This will eventually be dynamic data.
-    const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => {
-      // Set up classNames, if selected add BEM modifier.
-      let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
-      let gridListElClassName = 'grid-list-el';
-
-      if (activeImageIndex === i) {
-        gridImageClassName = `${gridImageClassName} thumbnails__grid-image--active`;
-
-        // Uncomment this to keep caption open onClick.
-        // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
-      }
-
-      return (
-        <li
-          onClick={() => setActiveImageIndex(i)}
-          className={gridImageClassName}
-          key={i}
-        >
-          <div className={gridListElClassName}>
-            <div className='art-object-fade__in'>
-              <div className='thumbnails__thumbnail-wrapper'>
-                <img className='thumbnails__thumbnail' src={object.imageUrlSmall} />
-              </div>
-              <div className='thumbnails__inner-border'></div>
-            </div>
-            <ArtObjectOverlay
-              isThumbnail
-              people={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'}
-            />
-          </div>
-        </li>
-      )
-    });
-
-    const defaultImages = images.slice(0, 5);
-    const hiddenImages = images.slice(5);
-
-    // Unless view more has been clicked, hide past 5.
-    let hiddenImagesClassNames = 'thumbnails__hidden-images';
-    if (isOpen) hiddenImagesClassNames = `${hiddenImagesClassNames} thumbnails__hidden-images--active`;
-
-    // If panel button is activated, add styling to flip and adjust icon positioning.
-    let panelButtonClassNames = 'panel-button';
-    if (isOpen) panelButtonClassNames = `${panelButtonClassNames} panel-button--hide`;
 
     return (
-      <div className='thumbnails component-art-object-grid'>
+      <li
+        onClick={() => setActiveImageIndex(i)}
+        className={gridImageClassName}
+        key={i}
+      >
+        <div className={gridListElClassName}>
+          <div className='art-object-fade__in'>
+            <div className='thumbnails__thumbnail-wrapper'>
+              <img className='thumbnails__thumbnail' src={object.imageUrlSmall} />
+            </div>
+            <div className='thumbnails__inner-border'></div>
+          </div>
+          <ArtObjectOverlay
+            isThumbnail
+            people={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'}
+          />
+        </div>
+      </li>
+    )
+  });
+
+  const defaultImages = images.slice(0, DEFAULT_THUMBNAIL_COUNT);
+  const hiddenImages = images.slice(DEFAULT_THUMBNAIL_COUNT);
+
+  // Unless view more has been clicked, hide past max.
+  let hiddenImagesClassNames = 'thumbnails__hidden-images';
+  if (isOpen) hiddenImagesClassNames = `${hiddenImagesClassNames} thumbnails__hidden-images--active`;
+
+  // If panel button is activated, add styling to flip and adjust icon positioning.
+  let panelButtonClassNames = 'panel-button';
+  if (isOpen) panelButtonClassNames = `${panelButtonClassNames} panel-button--hide`;
+
+  return (
+    <div className='thumbnails component-art-object-grid'>
+      <div className='thumbnails__grid-wrapper'>
+        <ul className='thumbnails__grid'>
+          {defaultImages}
+        </ul>
+      </div>
+      <div className={hiddenImagesClassNames}>
         <div className='thumbnails__grid-wrapper'>
           <ul className='thumbnails__grid'>
-            {defaultImages}
+            {hiddenImages}
           </ul>
         </div>
-        <div className={hiddenImagesClassNames}>
-          <div className='thumbnails__grid-wrapper'>
-            <ul className='thumbnails__grid'>
-              {hiddenImages}
-            </ul>
+      </div>
+      <div className={panelButtonClassNames}>
+        <div
+          className='panel-button__content'
+          onClick={toggleOpen}
+        >
+          <div className='panel-button__icon' >
+            <Icon svgId='-icon_arrow_down' classes='panel-button__svg'/>
           </div>
-        </div>
-        <div className={panelButtonClassNames}>
-          <div
-            className='panel-button__content'
-            onClick={this.toggleOpenStatus}
-          >
-            <div className='panel-button__icon' >
-              <Icon svgId='-icon_arrow_down' classes='panel-button__svg'/>
-            </div>
-            <span className='font-simple-heading panel-button__text'>
-              {!isOpen ? 'View More' : 'View Less'}
-            </span>
-          </div>
+          <span className='font-simple-heading panel-button__text'>
+            {!isOpen ? 'View More' : 'View Less'}
+          </span>
         </div>
       </div>
-    ); 
-  }
-}
+    </div>
+  ); 
+};
 
 /** Image component with caption. */
 class Image extends Component {
@@ -210,17 +195,35 @@ class PanelDetails extends Component {
     
     this.state = {
       imageLoaded: false,
-	    activeImageIndex: 0
+      activeImageIndex: 0,
+      thumbnailsOpen: false,
     };
   }
 
-  /** Update state infomration. */
+  /** On child image loading, update this state. */
   onLoad = () => this.setState({ imageLoaded: true });
-  setActiveImageIndex = index => this.setState({ activeImageIndex: index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT }); 
+
+  /**
+   * Update active index, circling around from 0 -> MAX - 1.
+   * If max is > DEFAULT_THUMBNAIL_COUNT, automatically open accordion. 
+   */
+  setActiveImageIndex = (index) => {
+    const nextIndex = index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT;
+
+    // Check if next index is greater than DEFAULT_THUMBNAIL_COUNT, set thumbnailsOpen to true.
+    if (nextIndex > DEFAULT_THUMBNAIL_COUNT - 1) {
+      this.setState({ activeImageIndex: nextIndex, thumbnailsOpen: true });
+    } else {
+      this.setState({ activeImageIndex: nextIndex });
+    }
+  }
+
+  /** Toggle thumbnail open status. */
+  toggleThumbnailOpenStatus = () => this.setState({ thumbnailsOpen: !this.state.thumbnailsOpen });
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, showShareDialog, copyText } = this.state;
+    const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -248,6 +251,8 @@ class PanelDetails extends Component {
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
               object={object}
+              isOpen={thumbnailsOpen}
+              toggleOpen={this.toggleThumbnailOpenStatus}
             />
           }
         </div>
