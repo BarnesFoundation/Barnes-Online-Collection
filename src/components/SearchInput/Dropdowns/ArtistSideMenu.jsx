@@ -42,7 +42,7 @@ export class ArtistSideMenuContent extends Component {
     }
 
     render() {
-        const { render, hasScroll, parentRef } = this.props;
+        const { render } = this.props;
         const { artistRadio, data } = this.state;
 
         return (
@@ -73,24 +73,6 @@ export class ArtistSideMenuContent extends Component {
                     })}
                 </div>
                 <div className='side-menu__artist-selection-container'>
-                    {/* {hasScroll &&
-                        <div className='side-menu__quick-scroll quick-scroll'>
-                            <Icon
-                                svgId='-icon_arrow_down'
-                                classes='quick-scroll__icon quick-scroll__icon--up'
-                                onClick={() => {
-                                    if (parentRef) parentRef.scrollTo(0, parentRef.scrollTop - 500);
-                                }}
-                            />
-                            <Icon
-                                svgId='-icon_arrow_down'
-                                classes='quick-scroll__icon quick-scroll__icon--down'
-                                onClick={() => {
-                                    if (parentRef) parentRef.scrollTo(0, parentRef.scrollTop + 500);
-                                }}
-                            />
-                        </div>
-                    } */}
                     {render(data)}
                 </div>
             </div>

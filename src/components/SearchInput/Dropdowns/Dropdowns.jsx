@@ -93,12 +93,7 @@ class DropdownMenu extends Component {
         super(props);
 
         this.ref = null;
-
-        this.state = {
-            top: 0,
-            isFixed: false,
-            sto: null,
-        };
+        this.state = { refHeight: 1 };
     }
 
     // Ref will not be set on 1st render, this method sets up event listener for the parent ref.
@@ -106,102 +101,64 @@ class DropdownMenu extends Component {
         if (!this.ref) {
             this.ref = ref;
 
-            // STO to prevent FOUC from CSSTransitionGroup.
-            this.setState({
-                sto: setTimeout(() => {
-                    this.calculateFixedTop();
-                }, 950)
-            })
-            
-            
             // Force re-render after ref has been set.
-            this.forceUpdate();
-        }
-    }
-
-    // Event listener for resize and cleanup.
-    componentDidMount() { window.addEventListener('resize', this.calculateFixedTop); }
-    componentWillUnmount() {
-        // Prevent memory leaks, if STO has not fired, clear it.
-        const { sto } = this.state;
-        if (sto) clearTimeout(sto);
-
-        window.removeEventListener('resize', this.calculateFixedTop);
-    }
-
-    calculateFixedTop = () => {
-        if (this.ref) {
-            const { top } = this.ref.getBoundingClientRect();
-            // Set up state variable for scroll, this is used to keep header and 
-            // This JS solution is necessary due to iOS not being able to scroll dropdown__content otherwise.
             this.setState({
-                top,
-                isFixed: true,
+                refHeight: ref.children[0].offsetHeight + 10
             });
         }
     }
 
     render() {
-        const { top, isFixed } = this.state;
+        const { refHeight } = this.state;
         const { children, clear, headerText, topOffset, noScroll, hasQuickScroll } = this.props
 
-        const offSetTopStyle = topOffset ? { top: `${topOffset}px` } : {}; // This is to make sure mobile is correctly vertically aligned.
+        let additionalStyle = {}; // This is to make sure mobile is correctly vertically aligned.
+        if (topOffset) additionalStyle = { top: `${topOffset}px` };
+        if (!noScroll) additionalStyle = { ...additionalStyle, scroll: `hidden` };
 
         let dropdownClassNames = 'dropdown';
         if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`;
 
         return (
             <div
-                className={`dropdowns-menu__dropdown ${dropdownClassNames}`}
+                className={`${dropdownClassNames}`}
                 style={{
-                    ...offSetTopStyle,
-                    overflowY: top ? 'initial' : 'hidden',
+                    ...additionalStyle,
                 }}
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                 }}
-                ref={this.setRef}
             >
+                <div
+                    className='dropdown__header'
+                    onClick={clear}
+                >
+                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
+                <Icon
+                        svgId='-icon_arrow_down'
+                        classes='dropdown__icon dropdown__icon--back'
+                    />
+                    <span className='font-delta dropdown__header-text'>{headerText}</span>
+                    <Icon
+                        svgId='-icon_close'
+                        classes='dropdown__icon dropdown__icon--x'
+                    />
+                </div>
+
                 <div className='dropdown__body-wrapper'>
                     <div
-                        className='dropdown__header'
-                        onClick={() => {
-                            this.setState({
-                                top: this.ref ? this.ref.scrollTop : 0,
-                                isFixed: false,
-                            }); // Update top state back to 0 before unmount.
-                            clear();
-                        }}
+                        className='dropdown__content'
+                        ref={this.setRef}
                         style={{
-                            top: `${top}px`,
-                            position: isFixed ? 'fixed' : 'absolute',
+                            minHeight: `calc(100% + 1px)`,
+                            height: `calc(100% + ${refHeight}px - 50vh + 60px)`
                         }}
                     >
-                        {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
-                        <Icon
-                            svgId='-icon_arrow_down'
-                            classes='dropdown__icon dropdown__icon--back'
-                        />
-                        <span className='font-delta dropdown__header--text'>{headerText}</span>
-                        <Icon
-                            svgId='-icon_close'
-                            classes='dropdown__icon dropdown__icon--x'
-                        />
-                    </div>
-                    <div className='dropdown__content'>
-                        {React.Children.map(children, (child) => (
-                            React.cloneElement(child, { parentRef: this.ref })
-                        ))}
+                        {children}
                     </div>
                     {hasQuickScroll &&
-                        <div
-                            className='dropdown__quick-scroll quick-scroll'
-                            style={{
-                                top: `${top + 97}px`,
-                                position: isFixed ? 'fixed' : 'absolute',
-                            }}
-                        >
+                        <div className='dropdown__quick-scroll quick-scroll'>
                             <Icon
                                 svgId='-icon_arrow_down'
                                 classes='quick-scroll__icon quick-scroll__icon--up'
@@ -481,8 +438,12 @@ class DropdownSection extends Component {
                                 </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>
-                            {/** Have transition for mobile devices. */}
-                            <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                            
+                            {isActiveItem && this.getDropdownContent(term)}
+                            {/** Have transition for tablet devices. */}
+                            {/* <MediaQuery
+                                maxDeviceWidth={BREAKPOINTS.tablet_max}
+                            >
                                 <CSSTransitionGroup
                                     transitionName='dropdown-slide'
                                     transitionEnterTimeout={950}
@@ -493,9 +454,9 @@ class DropdownSection extends Component {
                             </MediaQuery>
 
                             {/** Just render w/o animation for desktop. */}
-                            <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                            {/* <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
                                 {isActiveItem && this.getDropdownContent(term)}
-                            </MediaQuery>
+                            </MediaQuery> */}
                         </div>
                     );
                 })}

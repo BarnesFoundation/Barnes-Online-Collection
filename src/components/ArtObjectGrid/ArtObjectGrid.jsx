@@ -152,7 +152,7 @@ class ArtObjectGrid extends Component {
         .map(([key, value]) => (
           <div
             className='location-results'
-            key={ensembleIndexes[key].wallTitle}
+            key={`${ensembleIndexes[key].roomTitle}, ${ensembleIndexes[key].wallTitle}`}
           >
             <h3 className='font-delta location-results__header'>{ensembleIndexes[key].roomTitle}, {ensembleIndexes[key].wallTitle}</h3>
             <div className='search-results-grid'>
