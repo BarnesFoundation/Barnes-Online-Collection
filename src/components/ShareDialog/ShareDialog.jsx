@@ -19,7 +19,7 @@ class Share extends React.Component {
 
 	componentDidMount() {
 		const { setResetFunction } = this.props;
-		setResetFunction(() => this.setState({ showShareDialog: !this.state.showShareDialog }));
+		setResetFunction(() => this.setState({ showShareDialog: false }));
 		console.log(this.copy);
 	}
 

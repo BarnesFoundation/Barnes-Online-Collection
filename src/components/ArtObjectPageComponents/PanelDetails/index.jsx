@@ -262,13 +262,13 @@ class PanelDetails extends Component {
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
               {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
               <a
-                className='btn btn--primary'
+                className='btn btn--primary btn--100'
                 href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl : requestImageUrl}
                 target='_blank' >
                 {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
               </a>
               {printAvailable &&
-                <a className='btn' href={printAvailable.url} target='_blank' >
+                <a className='btn btn--100' href={printAvailable.url} target='_blank' >
                   Purchase Print
                 </a>}
 
