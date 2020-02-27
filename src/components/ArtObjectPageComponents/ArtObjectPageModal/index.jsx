@@ -24,8 +24,12 @@ class ModalArtObjectPage extends Component {
     };
   }
 
-  componentDidMount(nextProps) {
+  componentDidMount() {
     this.props.modalShow();
+  }
+
+  componentWillUnmount() {
+    this.props.modalHide();
   }
 
   componentWillUpdate(nextProps) {
