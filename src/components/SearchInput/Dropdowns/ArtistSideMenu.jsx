@@ -73,7 +73,7 @@ export class ArtistSideMenuContent extends Component {
                     })}
                 </div>
                 <div className='side-menu__artist-selection-container'>
-                    {hasScroll &&
+                    {/* {hasScroll &&
                         <div className='side-menu__quick-scroll quick-scroll'>
                             <Icon
                                 svgId='-icon_arrow_down'
@@ -90,7 +90,7 @@ export class ArtistSideMenuContent extends Component {
                                 }}
                             />
                         </div>
-                    }
+                    } */}
                     {render(data)}
                 </div>
             </div>

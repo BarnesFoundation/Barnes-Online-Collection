@@ -168,8 +168,8 @@ class YearInput extends Component {
                 beginDate: years[beginDateIndex],
                 endDate: years[endDateIndex],
                 formattedYearsString: this.getFormattedYearsString({
-                    beginDateIndex: years[beginDateIndex],
-                    endDateIndex: years[endDateIndex],
+                    beginDate: years[beginDateIndex],
+                    endDate: years[endDateIndex],
                 }),
             }); 
         }
@@ -223,7 +223,7 @@ class YearInput extends Component {
             endDate,
         } = this.state;
         const { setActiveTerm } = this.props;
-
+        
         // Update parent state.
         setActiveTerm({
             beginDateIndex,
