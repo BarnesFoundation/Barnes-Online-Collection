@@ -191,15 +191,17 @@ class YearInput extends Component {
         // Callback as argument after update.
         const callback = () => {
             const { beginDateIndex, beginDate, endDate, endDateIndex } = this.state;
-            const { setActiveTerm } = this.props;
+            const { setActiveTerm, isDropdown } = this.props;
 
-            setActiveTerm({
-                beginDateIndex,
-                endDateIndex,
-                beginDate,
-                endDate,
-                formattedYearsString: this.getFormattedYearsString({ beginDate, endDate }),
-            })
+            if (!isDropdown) {
+                setActiveTerm({
+                    beginDateIndex,
+                    endDateIndex,
+                    beginDate,
+                    endDate,
+                    formattedYearsString: this.getFormattedYearsString({ beginDate, endDate }),
+                });
+            }
         };
 
         if ((beginDateIndex || beginDateIndex === 0) && (beginDate || beginDate === 0) && beginDate < this.state.endDate) {
