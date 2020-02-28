@@ -33,7 +33,7 @@
     }
     
     // Make up for padding for no scrollbar for mobile devices.
-    // margin-right: 20px; 
+    margin-right: 20px; 
 
     @include breakpoint('large+') {
         margin-right: 0px;
