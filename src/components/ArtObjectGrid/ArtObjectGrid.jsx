@@ -154,7 +154,9 @@ class ArtObjectGrid extends Component {
             className='location-results'
             key={`${ensembleIndexes[key].roomTitle}, ${ensembleIndexes[key].wallTitle}`}
           >
-            <h3 className='font-delta location-results__header'>{ensembleIndexes[key].roomTitle}, {ensembleIndexes[key].wallTitle}</h3>
+            <h3 className='font-delta location-results__header'>
+              {ensembleIndexes[key].roomTitle} {ensembleIndexes[key].wallTitle ? `, ${ensembleIndexes[key].wallTitle}`: ''}
+            </h3>
             <div className='search-results-grid'>
               {value.map((object) => (
                 <GridListElement
