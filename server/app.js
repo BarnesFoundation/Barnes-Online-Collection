@@ -37,6 +37,16 @@ const oneDay = 60 * 60 * 24 * oneSecond
 
 const buildSearchAssets = require('../scripts/build-search-assets');
 
+let config = {
+	baseURL: process.env.REACT_APP_WWW_URL,
+	method: 'get'
+};
+
+// Add authentication if running in staging/development
+if (process.env.NODE_ENV.toLowerCase() !== 'production') {
+	config = { ...config, auth: { username: process.env.REACT_APP_WWW_USERNAME, password: process.env.REACT_APP_WWW_PASSWORD } };
+}
+
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
     req.query.dissimilarPercent = Math.round(req.query.dissimilarPercent / 10) * 10
@@ -621,17 +631,7 @@ const getEntries = () => {
 		
 		// Request for fetching entry
 		const entryRequest = (slug) => {
-			let config = {
-				baseURL: process.env.REACT_APP_WWW_URL,
-				url: `/api/entry?slug=${slug}`,
-				method: 'get'
-			};
-
-			// Add authentication if running in staging/development
-			if (process.env.NODE_ENV.toLowerCase() !== 'production') {
-				config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
-			}
-			return axios(config);
+			return axios(`/api/entry?slug=${slug}`, config);
 		};
 
 		// Fetch all in parallel
@@ -644,6 +644,13 @@ const getEntries = () => {
 
 /** Endpoint for retrieving entries from the www Craft site */
 app.get('/api/entries', entryCache);
+
+/** Endpoint for auto-suggest functionality from the www Craft site */
+app.get('/api/suggest', async (request, response) => {
+	const { q } = request.query;
+	const aConfig = { ...config, baseURL: 'http://localhost:8080', url: `/api/suggest?q=${q}`  };
+	response.json((await axios(aConfig)).data);
+});
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')

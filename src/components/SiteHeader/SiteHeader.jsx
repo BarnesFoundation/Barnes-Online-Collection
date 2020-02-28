@@ -169,6 +169,7 @@ class SiteHeader extends Component {
           {isGlobalSearchHeader &&
             <div className='global-search'>
               <SearchBar
+			  	autoSuggest={true}
                 className='container search__searchbar'
                 submit={() => console.error('This is not set up yet.')}
               />

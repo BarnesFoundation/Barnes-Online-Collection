@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Icon from '../Icon';
+import axios from 'axios';
 
 /**
  * Controlled input component w/ search on enter.
@@ -11,7 +12,7 @@ export class SearchBar extends Component {
         this.state = {
             value: '',
             isFocused: true,
-        };
+		};
     }
 
     /**
@@ -27,8 +28,106 @@ export class SearchBar extends Component {
     componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
     componentWillUnmount() { window.removeEventListener('keydown', this.searchOnEnter); }
 
-    onChange = ({ target: { value } }) => this.setState({ value }); // For controlled component.
-    setFocus = isFocused => this.setState({ isFocused }); // Set focus
+	setFocus = isFocused => this.setState({ isFocused }); // Set focus
+
+	// For controlled component.
+	onChange = ({ target: { value } }) => {
+		this.setState({ value });
+
+		// For auto-suggest functionality
+		if (this.props.autoSuggest) {
+			this.autoSuggest();
+		}
+	 } 
+
+	searchedQuery = '';
+	minimumWait = 1000;
+	maximumWait = 8000;
+
+	minimumTimeout;
+	maximumTimeout;
+	firstInputOcurred = null;
+		
+	autoSuggest = () => {
+
+		// Clear the previous timeout
+		clearTimeout(this.minimumTimeout);
+
+		// Set delay for suggestion to minimumWait from now
+		this.minimumTimeout = setTimeout(() => {
+			console.log("I'll execute the min suggest now");
+			this.execAutoSuggest();
+		}, this.minimumWait);
+
+		// Set delay for suggestion to occur maximumWait from out
+		if (this.firstInputOcurred == null) {
+			this.firstInputOcurred = true;
+
+			this.maximumTimeout = setTimeout(() => {
+				console.log("I'll execute the max suggest now");
+				this.execAutoSuggest();
+			}, this.minimumWait);
+		}
+	}
+
+	execAutoSuggest = async () => {
+		
+		// Get the query, suggestion area, and search current query
+		const query = this.state.value
+		this.searchedQuery = query;
+
+		// If the query becomes blank, remove the suggestions and reset firstInputOcurred
+		if (query.trim().length == 0) {
+			this.firstInputOcurred = null;
+		}
+
+		// Otherwise, do suggestion logic
+		else if (query.trim().length > 0) {
+			const results = (await axios(`api/suggest?q=${query}`)).data;
+
+			// Only append results that we're launced for the current query
+			if (this.searchedQuery === query) {
+				const { entryResults, collectionResults } = results;
+
+				// Display the artists
+				for (let i = 0; i < collectionResults.people.length; i++) {
+					const artist = collectionResults.people[i].key;
+					const artCount = collectionResults.people[i].doc_count;
+					const suggestionText = `See all artworks by ${artist} (${artCount})`;
+
+					// const aNode = document.createElement('a');
+					// aNode.classList.add('m-search-suggestion');
+					// aNode.innerHTML = suggestionText;
+					const href = collectionResults.people[i].url + JSON.stringify(collectionResults.people[i].query);
+					// suggestionArea.appendChild(aNode);
+
+					console.log(`${suggestionText} ${href}`);
+				}
+
+				// Display the entry results
+				for (let j = 0; j < entryResults.length; j++) {
+					const entry = entryResults[j];
+					const suggestionText = `${entry.title} (${entry.type})`;
+
+					//const aNode = document.createElement('a');
+					//aNode.classList.add(...['m-search-suggestion']);
+					//aNode.innerHTML = suggestionText;
+					const href = `${entry.url}`;
+					// suggestionArea.appendChild(aNode);
+
+					console.log(`${suggestionText} ${href}`);
+				}
+
+				// Display the "All search results for" item
+				//const aNode = document.createElement('a');
+				//aNode.classList.add(...['m-search-suggestion', 'last']);
+				//aNode.innerHTML =
+				//`<svg width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg>All search results for "${query}"`;
+				//aNode.href = `/search?q=${query}`;
+				//suggestionArea.appendChild(aNode);
+			}
+		}
+	}
 
     /**
      * Submit search.
