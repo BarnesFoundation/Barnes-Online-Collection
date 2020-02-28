@@ -25,15 +25,33 @@ class LandingPageHeader extends Component {
     super(props);
 
     this.ref = null; // For getting height.
+    this.state = { height: 'auto' };
+  }
+
+  // Set up event listener and cleanup.
+  componentDidMount() { window.addEventListener('resize', this.resize); }
+  componentWillUnmount() { window.removeEventListener('resize', this.resize); }
+
+  /**
+   * Set up ref.
+   */
+  setRef = (ref) => {
+    if (!this.ref) {
+      this.ref = ref;
+
+      this.resize(); // This will re-render the component.
+    }
+  }
+
+  resize = () => {
+    if (this.ref) {
+      const { height } = this.ref.getBoundingClientRect();
+      this.setState({ height });
+    }
   }
 
   render() {
-    let height = 'auto';
-
-    if (this.ref) {
-      const { y, height: rectHeight } = this.ref.getBoundingClientRect();
-      height = rectHeight;
-    }
+    const { height } = this.state;
 
     return (
       <div 
@@ -47,9 +65,12 @@ class LandingPageHeader extends Component {
             </div>
           </div>
         </div>
-        <div className='o-hero__video-wrapper'>
+        <div
+          className='o-hero__video-wrapper'
+          style={{ height }}
+        >
           <video
-            ref={ref => this.ref = ref}
+            ref={this.setRef}
             style={{ opacity: 1 }}
             className='o-hero__video'
             src={heroVideo}
