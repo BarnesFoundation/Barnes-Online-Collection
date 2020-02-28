@@ -38,13 +38,13 @@ const oneDay = 60 * 60 * 24 * oneSecond
 const buildSearchAssets = require('../scripts/build-search-assets');
 
 let config = {
-	baseURL: process.env.REACT_APP_WWW_URL,
+	baseURL: process.env.WWW_URL,
 	method: 'get'
 };
 
 // Add authentication if running in staging/development
 if (process.env.NODE_ENV.toLowerCase() !== 'production') {
-	config = { ...config, auth: { username: process.env.REACT_APP_WWW_USERNAME, password: process.env.REACT_APP_WWW_PASSWORD } };
+	config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
 }
 
 const normalizeDissimilarPercent = (req, res, next) => {
@@ -648,7 +648,7 @@ app.get('/api/entries', entryCache);
 /** Endpoint for auto-suggest functionality from the www Craft site */
 app.get('/api/suggest', async (request, response) => {
 	const { q } = request.query;
-	const aConfig = { ...config, baseURL: 'http://localhost:8080', url: `/api/suggest?q=${q}`  };
+	const aConfig = { ...config, url: `/api/suggest?q=${q}`  };
 	response.json((await axios(aConfig)).data);
 });
 
