@@ -18,7 +18,7 @@ export const DROPDOWN_TERMS = {
     CULTURE: 'Culture',
     YEAR: 'Year',
     MEDIUM: 'Medium',
-    LOCATION: 'Location',
+    ROOM: 'Room',
     COPYRIGHT: 'Copyright',
     ARTIST: 'Artist',
 };
@@ -27,7 +27,7 @@ const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.CULTURE,
     DROPDOWN_TERMS.YEAR,
     DROPDOWN_TERMS.MEDIUM,
-    DROPDOWN_TERMS.LOCATION,
+    DROPDOWN_TERMS.ROOM,
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
 ];
@@ -36,7 +36,7 @@ const DROPDOWN_TERMS_MAP = {
     [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
     [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
     [DROPDOWN_TERMS.MEDIUM]: searchAssets.mediums, // TODO => populate this.
-    [DROPDOWN_TERMS.LOCATION]: Object.keys(searchAssets.locations).map(key => ({ key })), 
+    [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
     [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
     [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
 };

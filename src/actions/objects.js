@@ -370,7 +370,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           body.query('terms', { 'medium.keyword': Object.values(appliedFilters).map(({ term }) => term) });
           break;
         }
-        case DROPDOWN_TERMS.LOCATION: {
+        case DROPDOWN_TERMS.ROOM: {
           // Flatmap over all locations then parseInt flattened Array, placing all ensembleIndexes into single array like [77, 78, 79, 80, 81...].
           body.query(
             'terms',

@@ -11,6 +11,7 @@ import { getArtObjectUrlFromId } from '../../helpers';
 import ensembleIndexes from '../../ensembleIndexes';
 import './searchResultsGrid.css';
 import './artObjectGrid.css';
+import { DROPDOWN_TERMS } from '../SearchInput/Dropdowns/Dropdowns';
 
 /** View more button component. */
 const ViewMoreButton = ({ onClick }) => (
@@ -45,8 +46,8 @@ const MasonryGrid = ({ children }) => (
  * Search results grid component.
  * @see searchResultsGrid.scss for styling.
  * */
-const SearchResultsGrid = ({ children, isLocationResult }) => (
-  <div className={!isLocationResult ? 'search-results-grid' : null}>
+const SearchResultsGrid = ({ children, isRoomResult }) => (
+  <div className={!isRoomResult ? 'search-results-grid' : null}>
       {children}
   </div>
 );
@@ -129,7 +130,7 @@ class ArtObjectGrid extends Component {
       // For detecting if a search or location filter has been placed.
       hasSearch,
       hasFilter,
-      hasLocation,
+      hasRoom,
     } = this.props;
 
     // Searching is rendered on default, on false body will render.
@@ -137,10 +138,10 @@ class ArtObjectGrid extends Component {
 
     const isSearchResult = Boolean(shouldLinksUseModal && hasSearch);
     const isFilterResult = Boolean(shouldLinksUseModal && hasFilter);
-    const isLocationResult = Boolean(shouldLinksUseModal && hasLocation);
+    const isRoomResult = Boolean(shouldLinksUseModal && hasRoom);
 
     // Convert object[] to an array of ArtObjects wrapped in Links.
-    const uncutMasonryElements = isLocationResult
+    const uncutMasonryElements = isRoomResult
       ? Object.entries(
           liveObjects.reduce((acc, object) => ({ // Put liveObjects into bucket according to ensemble index.
               ...acc,
@@ -155,7 +156,7 @@ class ArtObjectGrid extends Component {
             key={`${ensembleIndexes[key].roomTitle}, ${ensembleIndexes[key].wallTitle}`}
           >
             <h3 className='font-delta location-results__header'>
-              {ensembleIndexes[key].roomTitle} {ensembleIndexes[key].wallTitle ? `, ${ensembleIndexes[key].wallTitle}`: ''}
+              {ensembleIndexes[key].roomTitle}{ensembleIndexes[key].wallTitle ? `, ${ensembleIndexes[key].wallTitle}`: ''}
             </h3>
             <div className='search-results-grid'>
               {value.map((object) => (
@@ -185,15 +186,15 @@ class ArtObjectGrid extends Component {
 
     // If this is a 'View More' Grid, truncate results.
     // This will always be false if location filter is applied.
-    const masonryElements = (hasMoreResults  && !isLocationResult)
+    const masonryElements = (hasMoreResults  && !isRoomResult)
       ? uncutMasonryElements.slice(0, this.state.truncateThreshold)
       : uncutMasonryElements;
 
     // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
     // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
-    const displayGrid = (isFilterResult || isLocationResult)
+    const displayGrid = (isFilterResult || isRoomResult)
       ? (
-      <SearchResultsGrid isLocationResult={isLocationResult}>
+      <SearchResultsGrid isRoomResult={isRoomResult}>
         {masonryElements}
       </SearchResultsGrid>
       ) : (
@@ -210,7 +211,7 @@ class ArtObjectGrid extends Component {
           {Boolean(
             hasMoreResults
               && uncutMasonryElements.length !== masonryElements.length
-              && !isLocationResult
+              && !isRoomResult
             ) &&
             <ViewMoreButton onClick={this.incrementTruncateThreshold}
           />}
@@ -253,9 +254,9 @@ const mapStateToProps = state => ({
   ),
 
   // If this is specifically a location search.
-  hasLocation: Boolean(
+  hasRoom: Boolean(
     state.filters.advancedFilters.Location &&
-    Object.keys(state.filters.advancedFilters.Location).length)
+    Object.keys(state.filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length)
   });
 const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
 

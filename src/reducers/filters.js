@@ -14,7 +14,7 @@ const initialState = {
   advancedFilters: {
     Artist: {},
     Copyright: {},
-    Location: {},
+    Room: {},
     Medium: {},
     Year: {},
     Culture: {},
