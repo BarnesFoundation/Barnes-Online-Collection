@@ -92,19 +92,35 @@ class DropdownMenu extends Component {
     constructor(props) {
         super(props);
 
-        this.ref = null;
+        // This ref and subsequent state are to calculate the height of the dropdown__content.
+        // This is because on iOS, when you dynamically add content to a div with -webkit-overflow-scrolling: touch; that exceeds
+        // the div in height, it becomes broken and unscrollable.
+        this.heightRef = null;
         this.state = { refHeight: 1 };
+
+        // Outer ref that is actually scrolled for quickscroll.
+        this.scrollRef = null;
     }
 
-    // Ref will not be set on 1st render, this method sets up event listener for the parent ref.
-    setRef = (ref) => {
-        if (!this.ref) {
-            this.ref = ref;
+    /**
+     * Set up ref to calculate dropdown__content height.
+     */
+    setHeightRef = (ref) => {
+        if (!this.heightRef) {
+            this.heightRef = ref;
 
-            // Force re-render after ref has been set.
-            this.setState({
-                refHeight: ref.children[0].offsetHeight + 10
-            });
+            // For re-render after ref has been set.
+            this.setState({ refHeight: ref.children[0].offsetHeight + 10 });
+        }
+    }
+
+    /** Set up scroll ref. */
+    setScrollRef = (ref) => {
+        if (!this.scrollRef) {
+            this.scrollRef = ref;
+
+            // Force re-render as ref may not be set on first render.
+            this.forceUpdate();
         }
     }
 
@@ -130,12 +146,12 @@ class DropdownMenu extends Component {
                     e.stopPropagation();
                 }}
             >
+                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
                 <div
                     className='dropdown__header'
                     onClick={clear}
                 >
-                {/** Both icons function the same, the first is an arrow for mobile, the second is an x for desktop. */}
-                <Icon
+                    <Icon
                         svgId='-icon_arrow_down'
                         classes='dropdown__icon dropdown__icon--back'
                     />
@@ -145,36 +161,38 @@ class DropdownMenu extends Component {
                         classes='dropdown__icon dropdown__icon--x'
                     />
                 </div>
-
-                <div className='dropdown__body-wrapper'>
+                {hasQuickScroll &&
+                    <div className='dropdown__quick-scroll quick-scroll'>
+                        <Icon
+                            svgId='-icon_arrow_down'
+                            classes='quick-scroll__icon quick-scroll__icon--up'
+                            onClick={() => {
+                                if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop - 500);
+                            }}
+                        />
+                        <Icon
+                            svgId='-icon_arrow_down'
+                            classes='quick-scroll__icon quick-scroll__icon--down'
+                            onClick={() => {
+                                if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop + 500);
+                            }}
+                        />
+                    </div>
+                }
+                <div
+                    className='dropdown__body-wrapper'
+                    ref={this.setScrollRef}
+                >
                     <div
                         className='dropdown__content'
-                        ref={this.setRef}
+                        ref={this.setHeightRef}
                         style={{
                             minHeight: `calc(100% + 1px)`,
-                            height: `calc(100% + ${refHeight}px - 50vh + 60px)`
+                            height: `calc(100% + ${refHeight}px - 50vh + 60px)`,
                         }}
                     >
                         {children}
                     </div>
-                    {hasQuickScroll &&
-                        <div className='dropdown__quick-scroll quick-scroll'>
-                            <Icon
-                                svgId='-icon_arrow_down'
-                                classes='quick-scroll__icon quick-scroll__icon--up'
-                                onClick={() => {
-                                    if (this.ref) this.ref.scrollTo(0, this.ref.scrollTop - 500);
-                                }}
-                            />
-                            <Icon
-                                svgId='-icon_arrow_down'
-                                classes='quick-scroll__icon quick-scroll__icon--down'
-                                onClick={() => {
-                                    if (this.ref) this.ref.scrollTo(0, this.ref.scrollTop + 500);
-                                }}
-                            />
-                        </div>
-                    }
                 </div>
             </div>
         );
@@ -440,6 +458,7 @@ class DropdownSection extends Component {
                             </button>
                             
                             {isActiveItem && this.getDropdownContent(term)}
+                            {/** TODO => Set up animations for mobile. */}
                             {/** Have transition for tablet devices. */}
                             {/* <MediaQuery
                                 maxDeviceWidth={BREAKPOINTS.tablet_max}
