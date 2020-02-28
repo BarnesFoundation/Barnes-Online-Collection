@@ -43,6 +43,7 @@ class LandingPageHeader extends Component {
     }
   }
 
+  /** Reset the height of the hero image. */
   resize = () => {
     if (this.ref) {
       const { height } = this.ref.getBoundingClientRect();
