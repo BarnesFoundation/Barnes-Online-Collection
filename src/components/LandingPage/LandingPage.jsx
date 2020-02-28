@@ -39,6 +39,7 @@ class LandingPageHeader extends Component {
     if (!this.ref) {
       this.ref = ref;
 
+      ref.play(); // Play video.
       this.resize(); // This will re-render the component.
     }
   }

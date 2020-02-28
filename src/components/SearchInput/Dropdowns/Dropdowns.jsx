@@ -168,6 +168,7 @@ class DropdownMenu extends Component {
                             classes='quick-scroll__icon quick-scroll__icon--up'
                             onClick={() => {
                                 if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop - 500);
+                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop - 500);
                             }}
                         />
                         <Icon
@@ -175,6 +176,7 @@ class DropdownMenu extends Component {
                             classes='quick-scroll__icon quick-scroll__icon--down'
                             onClick={() => {
                                 if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop + 500);
+                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop + 500);
                             }}
                         />
                     </div>
