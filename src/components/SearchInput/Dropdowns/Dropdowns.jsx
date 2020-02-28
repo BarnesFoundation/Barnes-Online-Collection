@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { CSSTransitionGroup } from 'react-transition-group';
+// import { CSSTransitionGroup } from 'react-transition-group';
 import Icon from '../../Icon';
 import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
 import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
-import { toggleArtistMenu } from '../../../actions/filterSets';
+import { toggleArtistMenu, closeFilterSet } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import searchAssets from '../../../searchAssets.json';
 import './dropdowns.css';
@@ -300,13 +300,14 @@ class DropdownSection extends Component {
      * This is only for mobile devices.
      */
     applyPendingTerms = () => {
-        const { updatePendingTerms, setAdvancedFilters } = this.props;
+        const { updatePendingTerms, setAdvancedFilters, closeFilterSet } = this.props;
 
         // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
         const newActiveTerms = this.getNewTerms()
 
         updatePendingTerms([]); // Reset parent state.
         setAdvancedFilters(newActiveTerms); // Update redux state for advanced filters.
+        closeFilterSet(); // Close search menu.
     }
 
     /**
@@ -513,7 +514,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) => (
     bindActionCreators(
         Object.assign(
-            {}, { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters, toggleArtistMenu }), dispatch
+            {},
+            {
+                addAdvancedFilter,
+                removeAdvancedFilter,
+                setAdvancedFilters,
+                toggleArtistMenu,
+                closeFilterSet
+            }),
+            dispatch,
         )
 );
 const ConnectedDropdownSection = connect(mapStateToProps, mapDispatchToProps)(DropdownSection);
