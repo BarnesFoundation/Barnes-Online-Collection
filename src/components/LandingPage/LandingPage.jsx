@@ -43,6 +43,7 @@ class LandingPageHeader extends Component {
     }
   }
 
+  /** Reset the height of the hero image. */
   resize = () => {
     if (this.ref) {
       const { height } = this.ref.getBoundingClientRect();
@@ -65,6 +66,26 @@ class LandingPageHeader extends Component {
             </div>
           </div>
         </div>
+        {/* <div
+            ref={this.setRef}
+            className='o-hero__video-wrapper'
+            style={{ height }}
+            dangerouslySetInnerHTML={{
+              __html: `
+                <video
+                  style={{ opacity: 1 }}
+                  className='o-hero__video'
+                  src={heroVideo}
+                  autoPlay
+                  loop
+                  playsInline
+                  muted="true"
+                />
+              `
+            }}
+          >
+            
+          </div> */}
         <div
           className='o-hero__video-wrapper'
           style={{ height }}
@@ -76,8 +97,8 @@ class LandingPageHeader extends Component {
             src={heroVideo}
             autoPlay
             loop
-            muted={true}
             playsInline
+            muted={true}
           />
         </div>
       </div>

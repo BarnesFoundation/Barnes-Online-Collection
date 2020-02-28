@@ -18,7 +18,7 @@ export const DROPDOWN_TERMS = {
     CULTURE: 'Culture',
     YEAR: 'Year',
     MEDIUM: 'Medium',
-    LOCATION: 'Location',
+    ROOM: 'Room',
     COPYRIGHT: 'Copyright',
     ARTIST: 'Artist',
 };
@@ -27,7 +27,7 @@ const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.CULTURE,
     DROPDOWN_TERMS.YEAR,
     DROPDOWN_TERMS.MEDIUM,
-    DROPDOWN_TERMS.LOCATION,
+    DROPDOWN_TERMS.ROOM,
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
 ];
@@ -36,7 +36,7 @@ const DROPDOWN_TERMS_MAP = {
     [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
     [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
     [DROPDOWN_TERMS.MEDIUM]: searchAssets.mediums, // TODO => populate this.
-    [DROPDOWN_TERMS.LOCATION]: Object.keys(searchAssets.locations).map(key => ({ key })), 
+    [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
     [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
     [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
 };
@@ -168,6 +168,7 @@ class DropdownMenu extends Component {
                             classes='quick-scroll__icon quick-scroll__icon--up'
                             onClick={() => {
                                 if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop - 500);
+                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop - 500);
                             }}
                         />
                         <Icon
@@ -175,6 +176,7 @@ class DropdownMenu extends Component {
                             classes='quick-scroll__icon quick-scroll__icon--down'
                             onClick={() => {
                                 if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop + 500);
+                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop + 500);
                             }}
                         />
                     </div>
