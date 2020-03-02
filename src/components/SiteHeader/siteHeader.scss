@@ -144,7 +144,7 @@ html:not([class=""]) {
   width: 100%;
 
   padding-top: 20px;
-  overflow-y: auto;
+  overflow-y: inherit;
 
   @include breakpoint('medium+') {
     padding-top: 35px;
@@ -152,7 +152,7 @@ html:not([class=""]) {
 
   @include breakpoint('large+') {
     padding-top: 10px;
-    overflow-y: hidden;
+    overflow-y: inherit;
   }
 
   &__buttons-area {

@@ -168,11 +168,13 @@ class SiteHeader extends Component {
           <MobileLinks />
           {isGlobalSearchHeader &&
             <div className='global-search'>
-              <SearchBar
-			  	autoSuggest={true}
-                className='container search__searchbar'
-                submit={() => console.error('This is not set up yet.')}
-              />
+              {isGlobalSearchActive &&
+                <SearchBar
+                  autoSuggest={true}
+                  className='container search__searchbar'
+                  submit={() => console.error('This is not set up yet.')}
+                />
+              }
               <div className='container global-search__buttons-area'>
                 <span className='global-search__buttons-term'>Suggested terms</span>
                 <div className='global-search__buttons-group'>

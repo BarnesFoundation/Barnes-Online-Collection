@@ -163,3 +163,70 @@ $button-margin: 15px;
     margin-top: 0;
   }
 }
+
+
+/***
+search-suggestion
+======
+* Class name: `-m-search-suggestion`
+* Modifier classes: `-m-search-suggestion--`
+* Tags used on: `<div>`
+***/
+
+.m-search-suggestion {
+  background: $color__white;
+  border-top: 1px solid $color__border;
+  border-left: 1px solid $color__border;
+  border-right: 1px solid $color__border;
+
+  box-shadow: none;
+  color: $color__copy--light;
+  // font-family: $sans-serif--loaded;
+  font-size: 16px;
+  display: block;
+  padding: 10px 10px 15px;
+
+  text-decoration: none;
+  position: relative;
+  width: 100%;
+
+  &:last-of-type {
+      background: $color__red--barnes;
+      color: $color__white;
+  }
+
+  & strong {
+      color: $color__black;
+      font-weight: normal;
+  }
+
+  @include breakpoint('medium+') {
+      font-size: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 20px;
+  }
+}
+
+.m-search-suggestion:hover {
+background: #f7f7f7;
+// color: $color__copy--light !important;
+
+  &.last {
+      background: $color__red--barnes-dark
+  }
+}
+
+#suggestions {
+  position: absolute;
+  z-index: #{map-get($zIndexes, 'header')};
+  left: 0;
+
+  margin-top: 15px;
+  
+  width: calc(100% - 25px);
+
+  @include breakpoint('small-') {
+    width: 100%;
+  }
+}
