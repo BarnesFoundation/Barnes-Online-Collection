@@ -29,7 +29,9 @@ class ModalArtObjectPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.modalHide();
+    if (this.props.history.action === 'POP') {
+      this.props.modalHide();
+    } 
   }
 
   componentWillUpdate(nextProps) {
