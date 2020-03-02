@@ -2,6 +2,102 @@ import React, { Component } from 'react';
 import Icon from '../Icon';
 import axios from 'axios';
 
+class Suggestions extends Component {
+	constructor(props) {
+		super(props);
+
+		this.ref = null;
+
+		this.state = {
+			resultsLength: 0, // Falsy if the autosuggest has not been truncated.
+		}
+	}
+
+	/** Check if query has updated. */
+	componentDidUpdate(prevProps) {
+		// TODO => Fix this comparison of two objects.
+		if (JSON.stringify(prevProps.autoSuggestResults) !== JSON.stringify(this.props.autoSuggestResults)) {
+			this.setSuggestionCount();
+		}
+	}
+
+	/**
+	 * Set up ref for measuring results length.
+	 * @param {React.ref} ref - ref to be set.
+	 */
+	setRef = (ref) => {
+		// If this ref has not been set.
+		if (!this.ref) {
+			this.ref = ref; // Set ref.
+
+			// Call method to set number of suggestions.
+			this.setSuggestionCount();
+		}
+	};
+
+	/**
+	 * Get number of suggestions according to window height.
+	 */
+	setSuggestionCount = () => {
+		if (this.ref) {
+			// Calculate max size of suggestions dropdown.
+			const { top } = this.ref.getBoundingClientRect();
+			const maxHeight = window.innerHeight - top;
+
+			// Get count of how many items should be rendered.
+			const { resultsLength } = [...this.ref.children] // Convert HTMLCollection to iterable array.
+				.slice(0, this.ref.children.length - 1) // Cut off "All search results" child.
+				.reduce(({ resultsLength, maxHeight }, child) => {
+					const { height } = child.getBoundingClientRect();
+
+					// If this can fit on screen, increment counter and decrease maxHeight measurement.
+					if (maxHeight - height > 0) {
+						return ({
+							resultsLength: resultsLength + 1,
+							maxHeight: maxHeight - height,
+						});
+					} else {
+						// Otherwise, return unaltered accumulator.
+						return { resultsLength, maxHeight: maxHeight - height };
+					}
+
+				}, { resultsLength: 0, maxHeight });
+
+			this.setState({ resultsLength });
+		}
+	}
+
+	render() {
+		const { resultsLength } = this.state; // Will always be 1+.
+		const { autoSuggestResults } = this.props;
+
+		const results = [
+			...autoSuggestResults.slice(0, resultsLength ? resultsLength - 1 : autoSuggestResults.length),
+			...autoSuggestResults.slice(-1),
+		];
+
+		return (
+			<div
+				id='suggestions'
+				style={{ left: resultsLength ? 0 : 9999 }}
+				ref={this.setRef}
+			>
+				{results.map(({ suggestionText, href }, i) => {
+					return (
+						<a
+							key={`${suggestionText}${href}${i}`}
+							className='m-search-suggestion'
+							href={href}
+							dangerouslySetInnerHTML={{ __html: suggestionText }}
+						>
+						</a>
+					);
+				})}
+			</div>
+		)
+	}
+}
+
 /**
  * Controlled input component w/ search on enter.
  */
@@ -12,9 +108,11 @@ export class SearchBar extends Component {
 		this.ref = null;
 		
         this.state = {
+			// For controlled input component
             value: '',
 			isFocused: true,
 			
+			// For autosuggest
 			autoSuggestResults: [],
 		};
     }
@@ -48,7 +146,7 @@ export class SearchBar extends Component {
 		if (this.props.autoSuggest) {
 			this.autoSuggest();
 		}
-	 } 
+	} 
 
 	searchedQuery = '';
 	minimumWait = 1000;
@@ -97,34 +195,28 @@ export class SearchBar extends Component {
 			const results = (await axios(`api/suggest?q=${query}`)).data;
 
 			// Only append results that we're launced for the current query
-			if (this.searchedQuery === query && this.ref) {
+			if (this.searchedQuery === query) {
 				const { entryResults, collectionResults } = results;
-
-				// Calculate how many suggestions should appear on screen.
-				const { top, height } = this.ref.getBoundingClientRect();
-				const maxSuggestions = (window.innerHeight - (top + height))/100; // TODO => This is a rough figure and should be calculated.
 
 				this.setState({
 					autoSuggestResults: [
-						...[
-							// For artists.
-							...collectionResults.people.map((result) => {
-								const artist = result.key;
-								const artCount = result.doc_count;
-								const suggestionText = `See all artworks by ${artist} (${artCount})`;
-								const href = `${result.url}${JSON.stringify(result.query)}`;
+						// For artists.
+						...collectionResults.people.map((result) => {
+							const artist = result.key;
+							const artCount = result.doc_count;
+							const suggestionText = `See all artworks by ${artist} (${artCount})`;
+							const href = `${result.url}${JSON.stringify(result.query)}`;
 
-								return { suggestionText, href };
-							}),
+							return { suggestionText, href };
+						}),
 
-							// For entries.
-							...entryResults.map((entry) => {
-								const suggestionText = `${entry.title} (${entry.type})`;
-								const href = entry.url;
+						// For entries.
+						...entryResults.map((entry) => {
+							const suggestionText = `${entry.title} (${entry.type})`;
+							const href = entry.url;
 
-								return { suggestionText, href };
-							}),
-						].slice(0, maxSuggestions),
+							return { suggestionText, href };
+						}),
 
 						// Display the "All search results for" item.
 						{
@@ -151,16 +243,13 @@ export class SearchBar extends Component {
 
     render() {
         const { autoSuggest, hasTooltip, className, placeholder, onFocus } = this.props;
-		const { autoSuggestResults } = this.state;
+		const { autoSuggestResults, value } = this.state;
 
         let searchClassName = 'search__searchbar';
         if (className) searchClassName = `search__searchbar ${className}`;
 
         return (
-			<div
-				className={searchClassName}
-				ref={ref => this.ref = ref}
-			>
+			<div className={searchClassName}>
                 <div className='search__input-group'>
                     <div className='font-zeta search__header'>SEARCH COLLECTION</div>
                     <input
@@ -189,22 +278,10 @@ export class SearchBar extends Component {
                         </div>
                     }
 					{Boolean(autoSuggest && autoSuggestResults.length) &&
-						<div
-							id='suggestions'
-						>
-							{autoSuggestResults.map(({ suggestionText, href }) => {
-
-								return (
-									<a
-										key={`${suggestionText}${href}`}
-										className='m-search-suggestion'
-										href={href}
-										dangerouslySetInnerHTML={{ __html: suggestionText }}
-									>
-									</a>
-								);
-							})}
-						</div>
+						<Suggestions
+							autoSuggestResults={autoSuggestResults}
+							value={value}
+						/>
 					}
                 </div>
                 <button

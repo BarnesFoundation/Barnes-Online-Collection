@@ -211,6 +211,11 @@ search-suggestion
     position: absolute;
     bottom: 18px;
 
+    // Overflow is ellipsis.
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     @include breakpoint('medium+') {
       bottom: 22px;
     }
