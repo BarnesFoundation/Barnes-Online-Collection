@@ -59,12 +59,23 @@ const getEntries = (() => {
 export class MoreFromCollection extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.ref = { current: null };
+
 		this.state = {};
 	}
 
-	async componentDidMount() {
-		const entries = await getEntries();
-		this.setState({ entries });
+	/** Set ref after 1st render and check ref after async action.  This prevents setState on unmounted component. */
+	setRef = async (ref) => {
+		this.ref = ref;
+
+		try {
+			const entries = await getEntries();
+
+			if (this.ref) this.setState({ entries });
+		} catch (e) {
+			this.setState({ entries: [] });
+		}
 	}
 
 	// TODO => The details for this will eventually be passed.
@@ -72,19 +83,22 @@ export class MoreFromCollection extends React.Component {
 
 		const { entries } = this.state;
 
-		if (entries) {
-			return (
-				<div className='container'>
+		return (
+			<div
+				ref={this.setRef}
+				className='container'
+			>
+				{Boolean (entries && entries.length) &&
 					<div className='m-block'>
 						<h2 className='font-beta m-block__title'>More from the collection</h2>
 						<div className='m-card-event-list'>
 							{(entries).map((entry, i) => <MoreFromCollectionCard key={i} moreFromDetail={entry} />)}
 						</div>
 					</div>
-				</div>
-			);
-		}
-		return <div></div>
+				}
+			</div>
+		);
+
 	}
 }
 
