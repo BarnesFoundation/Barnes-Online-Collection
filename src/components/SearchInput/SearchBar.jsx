@@ -10,13 +10,24 @@ class Suggestions extends Component {
 
 		this.state = {
 			resultsLength: 0, // Falsy if the autosuggest has not been truncated.
+			isMeasured: false,
 		}
 	}
 
-	/** Check if query has updated. */
+	/**
+	 * Check if autoSuggestResults has updated.
+	 * This needs to act in the following order:
+	 * 1) state.isMeasured is false, this moves the rendered content off screen.
+	 * 2) After checking that isMeasured has been set to false, retrigger ref action.
+	 * */
 	componentDidUpdate(prevProps) {
-		// TODO => Fix this comparison of two objects.
+		// 1) Move content off screen and rerender.
 		if (JSON.stringify(prevProps.autoSuggestResults) !== JSON.stringify(this.props.autoSuggestResults)) {
+			this.setState({ isMeasured: false });
+		}
+
+		// 2) Retrigger ref action after rerender from 1.
+		if (this.state.isMeasured === false) {
 			this.setSuggestionCount();
 		}
 	}
@@ -42,7 +53,7 @@ class Suggestions extends Component {
 		if (this.ref) {
 			// Calculate max size of suggestions dropdown.
 			const { top } = this.ref.getBoundingClientRect();
-			const maxHeight = window.innerHeight - top;
+			const maxHeight = window.innerHeight - (top + 60); // 60px additional padding, just to prevent any overflow.
 
 			// Get count of how many items should be rendered.
 			const { resultsLength } = [...this.ref.children] // Convert HTMLCollection to iterable array.
@@ -60,26 +71,28 @@ class Suggestions extends Component {
 						// Otherwise, return unaltered accumulator.
 						return { resultsLength, maxHeight: maxHeight - height };
 					}
-
 				}, { resultsLength: 0, maxHeight });
 
-			this.setState({ resultsLength });
+			this.setState({
+				resultsLength,
+				isMeasured: true,
+			});
 		}
 	}
 
 	render() {
-		const { resultsLength } = this.state; // Will always be 1+.
+		const { resultsLength, isMeasured } = this.state; // Will always be 1+.
 		const { autoSuggestResults } = this.props;
 
 		const results = [
-			...autoSuggestResults.slice(0, resultsLength ? resultsLength - 1 : autoSuggestResults.length),
+			...autoSuggestResults.slice(0, isMeasured ? resultsLength - 1 : autoSuggestResults.length),
 			...autoSuggestResults.slice(-1),
 		];
 
 		return (
 			<div
 				id='suggestions'
-				style={{ left: resultsLength ? 0 : 9999 }}
+				style={{ left: isMeasured ? 0 : 9999 }}
 				ref={this.setRef}
 			>
 				{results.map(({ suggestionText, href }, i) => {
