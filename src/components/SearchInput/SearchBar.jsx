@@ -9,6 +9,8 @@ export class SearchBar extends Component {
     constructor(props) {
         super(props);
 
+		this.ref = null;
+		
         this.state = {
             value: '',
 			isFocused: true,
@@ -95,74 +97,43 @@ export class SearchBar extends Component {
 			const results = (await axios(`api/suggest?q=${query}`)).data;
 
 			// Only append results that we're launced for the current query
-			if (this.searchedQuery === query) {
+			if (this.searchedQuery === query && this.ref) {
 				const { entryResults, collectionResults } = results;
+
+				// Calculate how many suggestions should appear on screen.
+				const { top, height } = this.ref.getBoundingClientRect();
+				const maxSuggestions = (window.innerHeight - (top + height))/100; // TODO => This is a rough figure and should be calculated.
 
 				this.setState({
 					autoSuggestResults: [
-						// For artists.
-						...collectionResults.people.map((result) => {
-							const artist = result.key;
-							const artCount = result.doc_count;
-							const suggestionText = `See all artworks by ${artist} (${artCount})`;
-							const href = `${result.url}${JSON.stringify(result.query)}`;
+						...[
+							// For artists.
+							...collectionResults.people.map((result) => {
+								const artist = result.key;
+								const artCount = result.doc_count;
+								const suggestionText = `See all artworks by ${artist} (${artCount})`;
+								const href = `${result.url}${JSON.stringify(result.query)}`;
 
-							return { suggestionText, href };
-						}),
+								return { suggestionText, href };
+							}),
 
-						// For entries.
-						...entryResults.map((entry) => {
-							const suggestionText = `${entry.title} (${entry.type})`;
-							const href = entry.url;
+							// For entries.
+							...entryResults.map((entry) => {
+								const suggestionText = `${entry.title} (${entry.type})`;
+								const href = entry.url;
 
-							return { suggestionText, href };
-						}),
+								return { suggestionText, href };
+							}),
+						].slice(0, maxSuggestions),
 
 						// Display the "All search results for" item.
 						{
-							suggestionText: `<svg width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg>All search results for "${query}"`,
+							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
 							href: `/search?q=${query}`,
 							isLast: true,
 						},
 					]
-				})
-
-				// Display the artists
-				// for (let i = 0; i < collectionResults.people.length; i++) {
-				// 	const artist = collectionResults.people[i].key;
-				// 	const artCount = collectionResults.people[i].doc_count;
-				// 	const suggestionText = `See all artworks by ${artist} (${artCount})`;
-
-				// 	// const aNode = document.createElement('a');
-				// 	// aNode.classList.add('m-search-suggestion');
-				// 	// aNode.innerHTML = suggestionText;
-				// 	const href = collectionResults.people[i].url + JSON.stringify(collectionResults.people[i].query);
-				// 	// suggestionArea.appendChild(aNode);
-
-				// 	// console.log(`${suggestionText} ${href}`);
-				// }
-
-				// Display the entry results
-				// for (let j = 0; j < entryResults.length; j++) {
-				// 	const entry = entryResults[j];
-				// 	const suggestionText = `${entry.title} (${entry.type})`;
-
-				// 	//const aNode = document.createElement('a');
-				// 	//aNode.classList.add(...['m-search-suggestion']);
-				// 	//aNode.innerHTML = suggestionText;
-				// 	const href = `${entry.url}`;
-				// 	// suggestionArea.appendChild(aNode);
-
-				// 	console.log(`${suggestionText} ${href}`);
-				// }
-
-				// Display the "All search results for" item
-				//const aNode = document.createElement('a');
-				//aNode.classList.add(...['m-search-suggestion', 'last']);
-				//aNode.innerHTML =
-				//`<svg width='26' height='26'><use xlink:href='#icon--icon_search'></use>s</svg>All search results for '${query}'`;
-				//aNode.href = `/search?q=${query}`;
-				//suggestionArea.appendChild(aNode);
+				});
 			}
 		}
 	}
@@ -186,7 +157,10 @@ export class SearchBar extends Component {
         if (className) searchClassName = `search__searchbar ${className}`;
 
         return (
-            <div className={searchClassName}>
+			<div
+				className={searchClassName}
+				ref={ref => this.ref = ref}
+			>
                 <div className='search__input-group'>
                     <div className='font-zeta search__header'>SEARCH COLLECTION</div>
                     <input
@@ -215,7 +189,9 @@ export class SearchBar extends Component {
                         </div>
                     }
 					{Boolean(autoSuggest && autoSuggestResults.length) &&
-						<div id='suggestions'>
+						<div
+							id='suggestions'
+						>
 							{autoSuggestResults.map(({ suggestionText, href }) => {
 
 								return (
@@ -242,3 +218,41 @@ export class SearchBar extends Component {
         )
     }
 }
+
+
+// Display the artists
+// for (let i = 0; i < collectionResults.people.length; i++) {
+// 	const artist = collectionResults.people[i].key;
+// 	const artCount = collectionResults.people[i].doc_count;
+// 	const suggestionText = `See all artworks by ${artist} (${artCount})`;
+
+// 	// const aNode = document.createElement('a');
+// 	// aNode.classList.add('m-search-suggestion');
+// 	// aNode.innerHTML = suggestionText;
+// 	const href = collectionResults.people[i].url + JSON.stringify(collectionResults.people[i].query);
+// 	// suggestionArea.appendChild(aNode);
+
+// 	// console.log(`${suggestionText} ${href}`);
+// }
+
+// Display the entry results
+// for (let j = 0; j < entryResults.length; j++) {
+// 	const entry = entryResults[j];
+// 	const suggestionText = `${entry.title} (${entry.type})`;
+
+// 	//const aNode = document.createElement('a');
+// 	//aNode.classList.add(...['m-search-suggestion']);
+// 	//aNode.innerHTML = suggestionText;
+// 	const href = `${entry.url}`;
+// 	// suggestionArea.appendChild(aNode);
+
+// 	console.log(`${suggestionText} ${href}`);
+// }
+
+// Display the "All search results for" item
+//const aNode = document.createElement('a');
+//aNode.classList.add(...['m-search-suggestion', 'last']);
+//aNode.innerHTML =
+//`<svg width='26' height='26'><use xlink:href='#icon--icon_search'></use>s</svg>All search results for '${query}'`;
+//aNode.href = `/search?q=${query}`;
+//suggestionArea.appendChild(aNode);

@@ -174,6 +174,8 @@ search-suggestion
 ***/
 
 .m-search-suggestion {
+  position: relative;
+
   background: $color__white;
   border-top: 1px solid $color__border;
   border-left: 1px solid $color__border;
@@ -181,18 +183,37 @@ search-suggestion
 
   box-shadow: none;
   color: $color__copy--light;
-  // font-family: $sans-serif--loaded;
   font-size: 16px;
   display: block;
-  padding: 10px 10px 15px;
+  padding: 10px 15px;
 
   text-decoration: none;
   position: relative;
   width: 100%;
 
+  // Hide border for top element so it sits flush w/ search box.
+  &:first-of-type {
+    border-top: none;
+  }
+
+  // Last item will be search all.
   &:last-of-type {
       background: $color__red--barnes;
       color: $color__white;
+  }
+
+  &__icon {
+    margin-top: 5px;
+    margin-right: 15px;
+  }
+
+  &__search-all {
+    position: absolute;
+    bottom: 18px;
+
+    @include breakpoint('medium+') {
+      bottom: 22px;
+    }
   }
 
   & strong {
@@ -202,19 +223,17 @@ search-suggestion
 
   @include breakpoint('medium+') {
       font-size: 20px;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 20px;
+      padding: 15px 20px;
   }
-}
 
-.m-search-suggestion:hover {
-background: #f7f7f7;
-// color: $color__copy--light !important;
-
-  &.last {
+  &:hover {
+    background: #f7f7f7;
+  
+    &:last-of-type {
       background: $color__red--barnes-dark
+    }
   }
+
 }
 
 #suggestions {
@@ -222,8 +241,8 @@ background: #f7f7f7;
   z-index: #{map-get($zIndexes, 'header')};
   left: 0;
 
-  margin-top: 15px;
-  
+  box-shadow: $box-shadow-style;
+
   width: calc(100% - 25px);
 
   @include breakpoint('small-') {
