@@ -53,7 +53,7 @@ class YearInputTextBox extends Component {
             // A. If the next index is the max possible value or past the value. 
             if (
                 (nextYearIndex > max || nextYearIndex === -1) &&
-                value > years[max]
+                yearValue > years[max]
             ) {
                 updateInput(max, years[max]);
             // B. If the value is below our designated floor, min.
@@ -64,8 +64,8 @@ class YearInputTextBox extends Component {
             // to difference between two closest indexes.
             // e.g. 1913 has a nextIndex value of 1915 which has a lower bound of 1910. (1915-1913)/(1915-1910) = 0.4.
             } else {
-                const indexDifference = 1 - ((years[nextYearIndex] - value)/(years[nextYearIndex] - years[nextYearIndex - 1]));
-                updateInput(nextYearIndex - 1 + indexDifference, value);
+                const indexDifference = 1 - ((years[nextYearIndex] - yearValue)/(years[nextYearIndex] - years[nextYearIndex - 1]));
+                updateInput(nextYearIndex - 1 + indexDifference, yearValue);
             }
             
 
@@ -204,10 +204,10 @@ class YearInput extends Component {
             }
         };
 
-        if ((beginDateIndex || beginDateIndex === 0) && (beginDate || beginDate === 0) && beginDate < this.state.endDate) {
+        if ((beginDateIndex || beginDateIndex === 0) && (beginDate || beginDate === 0) && beginDate <= this.state.endDate) {
             this.setState({ beginDateIndex, beginDate }, callback);
         }
-        if ((endDateIndex || endDateIndex === 0) && (endDate || endDate === 0) && endDate > this.state.beginDate) {
+        if ((endDateIndex || endDateIndex === 0) && (endDate || endDate === 0) && endDate >= this.state.beginDate) {
             this.setState({ endDate, endDateIndex }, callback);
         }
     }
