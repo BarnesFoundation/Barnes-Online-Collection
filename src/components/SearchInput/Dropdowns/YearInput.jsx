@@ -24,6 +24,13 @@ class YearInputTextBox extends Component {
         }
     }
 
+    /**
+     * Set reset function for parent so that this is a controlled component.
+     * On moving a slider, this will reset this specific input from an array of reset functions.
+     * @see YearInput.updateSlider for seeing .forEach where reset array is called.
+     */
+    componentDidMount() { this.props.setReset(() => this.setState({ value: '' })); }
+
     /** Clean up STO on unmount, if exists. */
     componentWillUnmount() {
         const { willCheck } = this.state;
@@ -38,7 +45,7 @@ class YearInputTextBox extends Component {
      * @param {string} value - value from text input.
      */
     validateInput = (value) => {
-        const { updateInput, setError, min, max } = this.props;
+        const { updateInput, setError, min, max, reset } = this.props;
 
         // Check if inputted text is a valid (-)YYYY(BC) matching string.
         if (value && value.match(/^-?[0-9]*([\s]?BC)?$/)) {
@@ -67,8 +74,9 @@ class YearInputTextBox extends Component {
                 const indexDifference = 1 - ((years[nextYearIndex] - yearValue)/(years[nextYearIndex] - years[nextYearIndex - 1]));
                 updateInput(nextYearIndex - 1 + indexDifference, yearValue);
             }
-            
-
+        } else if (!value) {
+            // If there is no value, reset to default value.
+            reset();
         } else {
             // If the inputted text is not a valid date, set up callback to check state in a few MS.
             // This prevents bombarding a user with errors immediately.
@@ -85,15 +93,19 @@ class YearInputTextBox extends Component {
 
         }
 
+        // Update controlled input component unconditionally.
         this.setState({ value })
     };
 
     render() {
+        const { value } = this.state;
+
         return (
             <input
                 type='text'
                 className='year-input__text-input'
                 onChange={({ target: { value }}) => this.validateInput(value)}
+                value={value}
             />
         )
     }
@@ -113,6 +125,9 @@ class YearInput extends Component {
             
             // For alerts about bad inputs.
             isError: false,
+
+             // For array of callbacks for resetting child inputs.
+            resetInputs: [],
         };
     }
 
@@ -158,7 +173,11 @@ class YearInput extends Component {
      * @param {beginDateIndex: number, endDateIndex: number} - indexes of years array to be sent to parent.
      */
     updateSlider = ({ beginDateIndex, endDateIndex }) => {
+        const { resetInputs } = this.state;
         const { setActiveTerm, isDropdown } = this.props;
+
+        // Call reset function for child inputs.
+        resetInputs.forEach(reset => reset());
 
         if (!isDropdown) {
             // Update parent state.
@@ -280,16 +299,18 @@ class YearInput extends Component {
                         <YearInputTextBox
                             min={MIN}
                             max={endDateIndex}
-                            updateSlider={beginDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
                             updateInput={(beginDateIndex, beginDate) => this.updateInput({ beginDateIndex, beginDate })}
+                            reset={() => this.updateInput({ beginDateIndex: MIN, beginDate: years[MIN] })}
+                            setReset={fn =>this.setState(({ resetInputs }) => ({ resetInputs: [...resetInputs, fn] }))}
                             setError={this.setError}
                             value={beginDate}
                         />
                         <YearInputTextBox
                             min={beginDateIndex}
                             max={MAX}
-                            updateSlider={endDateIndex => this.updateSlider({ beginDateIndex, endDateIndex })}
                             updateInput={(endDateIndex, endDate) => this.updateInput({ endDateIndex, endDate })}
+                            reset={() => this.updateInput({ endDateIndex: MAX, endDate: years[MAX] })}
+                            setReset={fn => this.setState(({ resetInputs }) => ({ resetInputs: [...resetInputs, fn] }))}
                             setError={this.setError}
                             value={endDate}
                         />
