@@ -11,19 +11,44 @@ export class ClickTracker extends Component {
         this.state = { resetFunction: this.props.resetFunction || null };
     }
 
-    // Listen to clicks outside of div and cleanup on unmount.
-    componentDidMount() { document.addEventListener('mousedown', this.handleClick) }
-    componentWillUnmount() { document.removeEventListener('mousedown', this.handleClick) }
+    /** Listen to clicks outside of div and cleanup on unmount. */
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClick);
+        document.addEventListener('keydown', this.handleEsc);
+    }
 
-    // On click outside of dropdown.
-    handleClick = (event) => {
+    /** Cleanup event listeners. */
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClick);
+        document.removeEventListener('keydown', this.handleEsc);
+    }
+
+    /**
+     * Invoke reset on click outside of ref.
+     * @param {MouseEvent} - mouse press.
+     */
+    handleClick = ({ target }) => {
         const { resetFunction } = this.state;
 
         // If the ref is set up, the event is outside of the ref, and resetFunction was set in cDM.
-        if (this.ref && !this.ref.contains(event.target) && resetFunction) {
+        if (this.ref && !this.ref.contains(target) && resetFunction) {
             resetFunction(); // Reset on click out
         }
     };
+
+
+    /**
+     * Invoke reset on click outside of escape press.
+     * @param {KeyboardEvent} - key press.
+     */
+    handleEsc = ({ key }) => {
+        const { resetFunction } = this.state;
+
+        // Invoke reset function if this key is escape and reset function is set.
+        if (key === 'Escape' && resetFunction) {
+            resetFunction();
+        }
+    }
 
     // Set reset function.
     setResetFunction = resetFunction => this.setState({ resetFunction });
