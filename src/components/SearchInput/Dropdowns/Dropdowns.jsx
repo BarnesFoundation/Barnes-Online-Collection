@@ -8,7 +8,7 @@ import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
 import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
-import { toggleArtistMenu, closeFilterSet } from '../../../actions/filterSets';
+import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import searchAssets from '../../../searchAssets.json';
 import './dropdowns.css';
@@ -302,14 +302,13 @@ class DropdownSection extends Component {
      * This is only for mobile devices.
      */
     applyPendingTerms = () => {
-        const { updatePendingTerms, setAdvancedFilters, closeFilterSet } = this.props;
+        const { updatePendingTerms, setAdvancedFilters } = this.props;
 
         // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
         const newActiveTerms = this.getNewTerms()
 
         updatePendingTerms([]); // Reset parent state.
         setAdvancedFilters(newActiveTerms); // Update redux state for advanced filters.
-        closeFilterSet(); // Close search menu.
     }
 
     /**
@@ -522,7 +521,6 @@ const mapDispatchToProps = (dispatch) => (
                 removeAdvancedFilter,
                 setAdvancedFilters,
                 toggleArtistMenu,
-                closeFilterSet
             }),
             dispatch,
         )

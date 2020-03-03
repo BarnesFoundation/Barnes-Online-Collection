@@ -153,11 +153,17 @@ export class SearchBar extends Component {
 
 	// For controlled component.
 	onChange = ({ target: { value } }) => {
+		const { autoSuggest, updateFilters } = this.props;
+
 		this.setState({ value });
 
 		// For auto-suggest functionality
-		if (this.props.autoSuggest) {
+		if (autoSuggest) {
 			this.autoSuggest();
+		}
+
+		if (updateFilters) {
+			updateFilters(value);
 		}
 	} 
 
@@ -248,9 +254,12 @@ export class SearchBar extends Component {
      * @param {SyntheticEvent?} - optional event, depending if this was from button or from enter press.
      */
     enter = (e) => {
+		const { submit } = this.props;
+
+		// Prevent default onClick.
         if (e) e.preventDefault();
 
-        this.props.submit(this.state.value); // Submit from parent.
+        submit(this.state.value); // Submit from parent.
         this.setState({ value: '' });
     }
 

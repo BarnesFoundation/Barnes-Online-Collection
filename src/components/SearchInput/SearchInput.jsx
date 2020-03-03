@@ -6,6 +6,7 @@ import { SearchBar } from './SearchBar';
 import { Dropdowns } from './Dropdowns/Dropdowns';
 import { DropdownApply } from './Dropdowns/DropdownsApply';
 import { addFilter } from '../../actions/filters';
+import { closeFilterSet } from '../../actions/filterSets';
 import { BREAKPOINTS } from '../../constants';
 import './searchInput.css';
 
@@ -25,6 +26,7 @@ class SearchInput extends Component {
       pendingTerms: [], // For mobile, filters are actioned on apply.
       hasOverlay: false, // If a dropdown has been selected.
       topOffset: 0, // Offset for overlay.
+      searchValue: '', // For search term apply.
     };
 
     this.ref = null;
@@ -34,17 +36,11 @@ class SearchInput extends Component {
   setApplyPendingTerms = applyPendingTerms => this.setState({ applyPendingTerms });
 
   render() {
-    const { addFilter } = this.props;
-    const { applyPendingTerms, pendingTerms, hasOverlay, topOffset } = this.state;
-
-    // Spread these props in search bar regardless of device size.
-    const searchBarProps = {
-      hasTooltip: true,
-      submit: value => addFilter({ filterType: 'search', value }),
-    };
+    const { addFilter, closeFilterSet } = this.props;
+    const { applyPendingTerms, pendingTerms, hasOverlay, topOffset, searchValue } = this.state;
 
     let searchClassName = 'search';
-    if (hasOverlay) searchClassName = `${searchClassName} search--active`
+    if (hasOverlay) searchClassName = `${searchClassName} search--active`;
 
     return (
       <div>
@@ -53,16 +49,41 @@ class SearchInput extends Component {
           ref={ref => this.ref = ref}
         >
           <div className='search__content'>
+            {/** Mobile */}
             <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
               <SearchBar
-                {...searchBarProps}
+                hasTooltip
+                submit={(value) => {
+                  addFilter({ filterType: 'search', value });
+                  closeFilterSet()
+                }}
+                updateFilters={searchValue => this.setState({ searchValue })}
                 placeholder='Search collection'
               />
               
             </MediaQuery>
-            <MediaQuery minDeviceWidth={BREAKPOINTS.mobile_max + 1}>
+
+            {/** Tablet */}
+            <MediaQuery
+              minDeviceWidth={BREAKPOINTS.mobile_max + 1}
+              maxDeviceWidth={BREAKPOINTS.tablet_max}
+            >
               <SearchBar
-                {...searchBarProps}
+                hasTooltip
+                submit={(value) => {
+                  addFilter({ filterType: 'search', value });
+                  closeFilterSet()
+                }}
+                updateFilters={searchValue => this.setState({ searchValue })}
+                placeholder='Search a keyword, artist, room number, and more'
+              />
+            </MediaQuery>
+
+            {/** Desktop */}
+            <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+              <SearchBar
+                hasTooltip
+                submit={value => addFilter({ filterType: 'search', value })}
                 placeholder='Search a keyword, artist, room number, and more'
               />
             </MediaQuery>
@@ -92,8 +113,13 @@ class SearchInput extends Component {
           </div>
         </div>
         <DropdownApply
-          isApply={Boolean(pendingTerms && pendingTerms.length)}
-          apply={applyPendingTerms}
+          isApply={Boolean((pendingTerms && pendingTerms.length) || searchValue)}
+          apply={() => {
+            // If apply is pressed, check for filters and search term.
+            if (applyPendingTerms) applyPendingTerms();
+            if (searchValue) addFilter({ filterType: 'search', value: searchValue });
+            closeFilterSet(); // Close out filters on apply.
+          }}
         />
       </div>
     )
@@ -101,12 +127,7 @@ class SearchInput extends Component {
 }
 
 const mapStateToProps = state => ({ search: state.search });
-const mapDispatchToProps = (dispatch) => (
-  bindActionCreators(
-    Object.assign({}, { addFilter }),
-    dispatch
-  )
-);
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addFilter, closeFilterSet }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchInput);
 
