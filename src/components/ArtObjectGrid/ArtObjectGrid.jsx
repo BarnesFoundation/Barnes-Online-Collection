@@ -226,7 +226,7 @@ class ArtObjectGrid extends Component {
 
     return (
       <div className='m-block m-block--shallow m-block--no-border m-block--flush-top component-art-object-grid__wrapper'>
-        <CollectionFiltersApplied />
+        {shouldLinksUseModal && <CollectionFiltersApplied />}
         <div
           className={`
             component-art-object-grid
