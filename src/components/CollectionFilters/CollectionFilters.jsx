@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { CLASSNAME_MOBILE_PANEL_OPEN } from '../../constants';
+import { CLASSNAME_MOBILE_PANEL_OPEN, BREAKPOINTS } from '../../constants';
 import CollectionFiltersMenu from './CollectionFiltersMenu';
 import CollectionFiltersSet from './CollectionFiltersSet';
 import SearchInput from '../SearchInput/SearchInput';
@@ -13,12 +13,13 @@ import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as MobileSearchActions from '../../actions/mobileSearch';
 import * as ObjectsActions from '../../actions/objects';
 import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
-// import MediaQuery from 'react-responsive';
+import MediaQuery from 'react-responsive';
 // import MobileFiltersMenu from './MobileFiltersMenu';
 // import MobileSearchMenu from './MobileSearchMenu';
 // import MobileFiltersOpener from './MobileFiltersOpener';
 // import MobilePanelCloser from './MobilePanelCloser';
 import './collectionFilters.css';
+import { ClickTracker } from '../SearchInput/Dropdowns/ClickTracker';
 
 class CollectionFilters extends Component {
   constructor(props) {
@@ -138,7 +139,7 @@ class CollectionFilters extends Component {
   }
 
   render() {
-    const { visibleFilterSet } = this.props.filterSets;
+    const { filterSets: { visibleFilterSet }, selectFilterSet} = this.props;
 
     // const mobileFiltersVisible = this.props.mobileFilters.visible;
     // const mobileSearchVisible = this.props.mobileSearch.visible;
@@ -172,11 +173,22 @@ class CollectionFilters extends Component {
         {/* <MediaQuery> */}
         <CollectionFiltersMenu parentContainer={this.ref}/>
         {/* </MediaQuery> */}
-        <div className="m-block m-block--flush applied-filters">
-          {visibleFilterSet === 'search'
-            ? <SearchInput />
-            : <CollectionFiltersSet />}
-        </div>
+        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+          <ClickTracker resetFunction={() => selectFilterSet(null)}>
+            <div className="m-block m-block--flush applied-filters">
+              {visibleFilterSet === 'search'
+                ? <SearchInput />
+                : <CollectionFiltersSet />}
+            </div>
+          </ClickTracker>
+        </MediaQuery>
+        <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+          <div className="m-block m-block--flush applied-filters">
+            {visibleFilterSet === 'search'
+              ? <SearchInput />
+              : <CollectionFiltersSet />}
+          </div>
+        </MediaQuery>
       </div>
     );
   }
