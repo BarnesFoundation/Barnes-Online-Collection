@@ -134,7 +134,9 @@ export class SearchBar extends Component {
      * If enter key is pressed and search is focused, execute search.
      */
     searchOnEnter = (e) => {
-        if (e.key === 'Enter' && this.state.isFocused) this.enter();
+		const { isFocused, value } = this.state;
+
+        if (e.key === 'Enter' && isFocused && value) this.enter();
     };
 
     /**
