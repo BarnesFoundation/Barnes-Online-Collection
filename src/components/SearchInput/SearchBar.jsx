@@ -205,6 +205,8 @@ export class SearchBar extends Component {
 		const query = this.state.value
 		this.searchedQuery = query;
 
+		console.log(query);
+
 		// If the query becomes blank, remove the suggestions and reset firstInputOcurred
 		if (query.trim().length === 0) {
 			this.firstInputOcurred = null;
@@ -213,8 +215,8 @@ export class SearchBar extends Component {
 
 		// Otherwise, do suggestion logic
 		else if (query.trim().length > 0) {
-			const results = (await axios(`api/suggest?q=${query}`)).data;
-
+			const results = (await axios(`/api/suggest?q=${query}`)).data;
+			
 			// Only append results that we're launced for the current query
 			if (this.searchedQuery === query) {
 				const { entryResults, collectionResults } = results;
