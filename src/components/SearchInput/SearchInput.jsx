@@ -55,7 +55,7 @@ class SearchInput extends Component {
                 hasTooltip
                 submit={(value) => {
                   addFilter({ filterType: 'search', value });
-                  closeFilterSet()
+                  closeFilterSet();
                 }}
                 updateFilters={searchValue => this.setState({ searchValue })}
                 placeholder='Search collection'
@@ -72,7 +72,7 @@ class SearchInput extends Component {
                 hasTooltip
                 submit={(value) => {
                   addFilter({ filterType: 'search', value });
-                  closeFilterSet()
+                  closeFilterSet();
                 }}
                 updateFilters={searchValue => this.setState({ searchValue })}
                 placeholder='Search a keyword, artist, room number, and more'
