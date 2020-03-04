@@ -172,7 +172,7 @@ class SiteHeader extends Component {
                 <SearchBar
                   autoSuggest={true}
                   className='container search__searchbar'
-                  submit={(query) => window.open(`${MAIN_WEBSITE_DOMAIN}/search?q=${query}`)}
+                  submit={(query) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`}
                 />
               }
               <div className='container global-search__buttons-area'>
