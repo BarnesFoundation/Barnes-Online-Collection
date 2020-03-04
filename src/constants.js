@@ -75,7 +75,7 @@ export const MODAL_HIDE = 'MODAL_HIDE';
 export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 
 // urls
-export const MAIN_WEBSITE_DOMAIN = '//www.barnesfoundation.org';
+export const MAIN_WEBSITE_DOMAIN = process.env.REACT_APP_WWW_URL || '//www.barnesfoundation.org';
 export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
 
 // meta tag content

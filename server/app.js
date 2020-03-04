@@ -38,7 +38,7 @@ const oneDay = 60 * 60 * 24 * oneSecond
 const buildSearchAssets = require('../scripts/build-search-assets');
 
 let config = {
-	baseURL: process.env.WWW_URL,
+	baseURL: process.env.REACT_APP_WWW_URL,
 	method: 'get'
 };
 
