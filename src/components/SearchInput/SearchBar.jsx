@@ -171,7 +171,7 @@ export class SearchBar extends Component {
 
 	searchedQuery = '';
 	minimumWait = 1000;
-	// maximumWait = 8000;
+	maximumWait = 8000;
 
 	minimumTimeout;
 	maximumTimeout;
@@ -204,8 +204,6 @@ export class SearchBar extends Component {
 		// Get the query, suggestion area, and search current query
 		const query = this.state.value
 		this.searchedQuery = query;
-
-		console.log(query);
 
 		// If the query becomes blank, remove the suggestions and reset firstInputOcurred
 		if (query.trim().length === 0) {
