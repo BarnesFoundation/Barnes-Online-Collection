@@ -178,7 +178,7 @@ class SiteHeader extends Component {
               <div className='container global-search__buttons-area'>
                 <span className='global-search__buttons-term'>Suggested terms</span>
                 <div className='global-search__buttons-group'>
-                  {SUGGESTED_TERMS.map(term => <button key={term} className='btn font-zeta global-search__button '>{term}</button>)}
+                  {SUGGESTED_TERMS.map(term => <button key={term} className='btn font-zeta global-search__button ' onClick={(e) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${term.toLowerCase()}`} >{term}</button>)}
                 </div>
               </div>
             </div>
