@@ -29,7 +29,7 @@ class Share extends React.Component {
 		const { id, people, title } = this.props.object;
 		const shareLink = createShareForPlatform(people, title, id, platform, this.props.object.imageUrlLarge);
 
-		if (platform === sharePlatforms.COPY_URL) {
+		if (platform === sharePlatforms.COPY_URL && this.copy) {
 			this.copy.select();
 			document.execCommand('copy');
 		}
