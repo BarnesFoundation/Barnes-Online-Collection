@@ -122,6 +122,7 @@ const generateAssets = async () => {
 		artists: await getUniqueSearchValues('uniq_peoples', 'people.text'),
 		cultures: await getUniqueSearchValues('uniq_cultures', 'culture.keyword'),
 		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
+		classifications: await getUniqueSearchValues('uniq_classifications', 'classification'),
 		locations: generateLocations(),
 		copyrights,
 		years
