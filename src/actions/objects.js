@@ -365,9 +365,9 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
             .query('range', 'endDate', { 'lte': endDate });
           break;
         }
-        case DROPDOWN_TERMS.MEDIUM: {
+        case DROPDOWN_TERMS.CLASSIFICATION: {
           // Map over terms, place into single array like ["Charcoal on brown wove paper", "Pen and brown ink on brown wove paper"].
-          body.query('terms', { 'medium.keyword': Object.values(appliedFilters).map(({ term }) => term) });
+          body.query('terms', { 'classification': Object.values(appliedFilters).map(({ term }) => term) });
           break;
         }
         case DROPDOWN_TERMS.ROOM: {

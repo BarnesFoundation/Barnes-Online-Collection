@@ -48,19 +48,25 @@ const DefaultSideMenu = () => (
       className='g-nav__link'
       href={MAIN_WEBSITE_DOMAIN + '/support'}
     >
-      <span>Join</span>
+      <span>Support</span>
     </a>
-    <a
+    {/* <a
       className='g-nav__link'
       href={MAIN_WEBSITE_DOMAIN + '/support/individual-giving'}
     >
       <span>Give</span>
-    </a>
+    </a> */}
     <a
       className='g-nav__link'
       href={MAIN_WEBSITE_DOMAIN + '/teachers'}
     >
       <span>Teachers</span>
+    </a>
+    <a
+      className='g-nav__link'
+      href={MAIN_WEBSITE_DOMAIN + '/about/careers-and-volunteering'}
+    >
+      <span>Careers</span>
     </a>
     <a
       className='g-nav__link'
@@ -78,7 +84,7 @@ const DefaultSideMenu = () => (
       className='g-nav__link'
       href={MAIN_WEBSITE_DOMAIN + '/host-an-event'}
     >
-      <span>Facility Rental</span>
+      <span>Host an Event</span>
     </a>
     <a
       className='g-nav__link'
@@ -105,6 +111,15 @@ const SideMenu = ({ closeMenu, isOpen, children }) => {
   if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`
   if (isOpen) gNavClassNames = `${gNavClassNames} g-nav--active`
 
+  // Prevent cancellation from propagating in Dropdowns.jsx.
+  const additionalProps = {};
+  if (children) {
+    additionalProps.onClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  }
+
   return (
     <div className={sideMenuClassNames}>
       <div
@@ -114,11 +129,7 @@ const SideMenu = ({ closeMenu, isOpen, children }) => {
       >
         <div
           className='g-nav__inner'
-          onClick={(e) => {
-            // Prevent cancellation from propagating in Dropdowns.jsx.
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+          {...additionalProps}
         >
           <button
             onClick={handleNavCloseBtnClick}
