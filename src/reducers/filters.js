@@ -15,7 +15,7 @@ const initialState = {
     Artist: {},
     Copyright: {},
     Room: {},
-    Medium: {},
+    Classification: {},
     Year: {},
     Culture: {},
   },

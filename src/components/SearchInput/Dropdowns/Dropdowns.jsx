@@ -17,7 +17,7 @@ import './dropdowns.css';
 export const DROPDOWN_TERMS = {
     CULTURE: 'Culture',
     YEAR: 'Year',
-    MEDIUM: 'Medium',
+    CLASSIFICATION: 'Classification',
     ROOM: 'Room',
     COPYRIGHT: 'Copyright',
     ARTIST: 'Artist',
@@ -26,7 +26,7 @@ export const DROPDOWN_TERMS = {
 const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.CULTURE,
     DROPDOWN_TERMS.YEAR,
-    DROPDOWN_TERMS.MEDIUM,
+    DROPDOWN_TERMS.CLASSIFICATION,
     DROPDOWN_TERMS.ROOM,
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
@@ -34,8 +34,7 @@ const DROPDOWN_TERMS_ARRAY = [
 
 const DROPDOWN_TERMS_MAP = {
     [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
-    [DROPDOWN_TERMS.YEAR]: 'Lorem Ipsum', // TODO => populate this.
-    [DROPDOWN_TERMS.MEDIUM]: searchAssets.mediums, // TODO => populate this.
+    [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.classifications,
     [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
     [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
     [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
