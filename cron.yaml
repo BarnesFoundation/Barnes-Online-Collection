@@ -1,8 +1,0 @@
-version: 1
-cron:
-    - name: "build search assets"
-      url: "/api/build-search-assets"
-      schedule: "0 9 * * *"
-    - name: "build search assets - test"
-      url: "/api/build-search-assets"
-      schedule: "*/5 * * * *"
