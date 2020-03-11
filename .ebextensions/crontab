@@ -1,1 +1,1 @@
-*/2 * * * * curl http://127.0.0.1:$PORT/api/build-search-assets
+0 9 * * * curl http://127.0.0.1:$PORT/api/build-search-assets
