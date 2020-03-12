@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Range } from 'rc-slider';
-import { years as rawYears } from '../../../searchAssets.json';
+// import { years as rawYears } from '../../../searchAssets.json';
 import 'rc-slider/assets/index.css';
 import './yearInput.css';
 
-const years = rawYears
-    .map(year => parseInt(year))
-    .sort(); // Should be sorted, but sort anyways in case of any change to searchAssets.
-
-// Min and max values to determine number of increments on slider.
-const MIN = 0;
-const MAX = years.length - 1;
 
 // For input text box that controls sliders.
 class YearInputTextBox extends Component {
@@ -45,7 +38,7 @@ class YearInputTextBox extends Component {
      * @param {string} value - value from text input.
      */
     validateInput = (value) => {
-        const { updateInput, setError, min, max, reset } = this.props;
+        const { updateInput, setError, min, max, reset, years } = this.props;
 
         // Check if inputted text is a valid (-)YYYY(BC) matching string.
         if (value && value.match(/^-?[0-9]*([\s]?BC)?$/)) {
@@ -115,7 +108,17 @@ class YearInput extends Component {
     constructor(props) {
         super(props);
 
+        const { years } = this.props;
+
+        // Min and max values to determine number of increments on slider.
+        const MIN = 0;
+        const MAX = years.length - 1;
+
+
         this.state = {
+            MIN,
+            MAX,
+
             // For input range.
             beginDateIndex: MIN,
             endDateIndex: MAX,
@@ -133,7 +136,8 @@ class YearInput extends Component {
 
     /** Set up initial slider values. */
     componentDidMount() {
-        const { appliedYears } = this.props;
+        const { appliedYears, years } = this.props;
+        const { MIN, MAX } = this.state;
 
         if (appliedYears && appliedYears.dateRange && appliedYears.dateRange.term) {
             // If for whatever reason property does not exist, default to constant.
@@ -174,7 +178,7 @@ class YearInput extends Component {
      */
     updateSlider = ({ beginDateIndex, endDateIndex }) => {
         const { resetInputs } = this.state;
-        const { setActiveTerm, isDropdown } = this.props;
+        const { setActiveTerm, isDropdown, years } = this.props;
 
         // Call reset function for child inputs.
         resetInputs.forEach(reset => reset());
@@ -254,8 +258,8 @@ class YearInput extends Component {
     }
 
     render() {
-        const { beginDateIndex, beginDate, endDate, endDateIndex, isError } = this.state;
-        const { isDropdown, appliedYears } = this.props;
+        const { beginDateIndex, beginDate, endDate, endDateIndex, isError, MIN, MAX } = this.state;
+        const { isDropdown, appliedYears, years } = this.props;
 
         let useApplyCallback = true; // Boolean indicating if callback should execute application.
 
@@ -304,6 +308,7 @@ class YearInput extends Component {
                             setReset={fn =>this.setState(({ resetInputs }) => ({ resetInputs: [...resetInputs, fn] }))}
                             setError={this.setError}
                             value={beginDate}
+                            years={years}
                         />
                         <YearInputTextBox
                             min={beginDateIndex}
@@ -313,6 +318,7 @@ class YearInput extends Component {
                             setReset={fn => this.setState(({ resetInputs }) => ({ resetInputs: [...resetInputs, fn] }))}
                             setError={this.setError}
                             value={endDate}
+                            years={years}
                         />
                     </div>
                     {/** We only need manual application for large screens w/ traditional dropdowns. */}
