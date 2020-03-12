@@ -321,11 +321,13 @@
         &--artist {
             position: relative;
             margin-bottom: 2px;
+            margin-left: 5px;
 
             @include breakpoint('medium-') {
                 position: absolute;
                 right: 10px;
                 top: 13px;
+                margin-left: 0px;
             }
 
             @include breakpoint('small-') {
