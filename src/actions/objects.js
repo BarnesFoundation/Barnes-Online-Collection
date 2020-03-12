@@ -4,7 +4,6 @@ import * as ActionTypes from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
-import searchAssets from '../searchAssets.json';
 
 const uniqBy = require('lodash/uniqBy');
 
@@ -374,10 +373,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Flatmap over all locations then parseInt flattened Array, placing all ensembleIndexes into single array like [77, 78, 79, 80, 81...].
           body.query(
             'terms',
-            { ensembleIndex : Object.values(appliedFilters)
-                .flatMap(({ term }) => searchAssets.locations[term])
-                .map(number => parseInt(number))
-            }
+            { ensembleIndex: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
           );
           break;
         }
@@ -385,10 +381,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Map over terms, place into single array like ["copyrightA", "copyRightB"].
           body.query(
             'terms',
-            { 'objRightsTypeId': Object.values(appliedFilters)
-                .flatMap(({ term }) => searchAssets.copyrights[term])
-                .map(number => parseInt(number))
-            }
+            { objRightsTypeId: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
           );
           break;
         }

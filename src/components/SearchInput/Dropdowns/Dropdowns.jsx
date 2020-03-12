@@ -10,7 +10,7 @@ import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
 import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
-import searchAssets from '../../../searchAssets.json';
+// import searchAssets from '../../../searchAssets.json';
 import './dropdowns.css';
 
 // Setting up advanced filter names and dropdown menu items.
@@ -31,14 +31,6 @@ const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
 ];
-
-const DROPDOWN_TERMS_MAP = {
-    [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
-    [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.classifications,
-    [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
-    [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
-    [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
-};
 
 /**
  * Formatted listed content for child of DropdownMenu or ArtistSideMenu.
@@ -207,6 +199,7 @@ class DropdownSection extends Component {
         
         this.state = {
             activeItem: null, // What dropdown is selected.
+            dropdownTermsMap: null,
         };
     };
 
@@ -239,17 +232,36 @@ class DropdownSection extends Component {
      * @param {boolean} mobile - if this is an apply filter manual or auto.
      */
     setActiveTerm = (term, isManualApply) => {
-        const { activeItem } = this.state;
+        const { activeItem, dropdownTermsMap } = this.state;
         const { pendingTerms, updatePendingTerms, activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
 
-        // Create a filter to dispatch to redux store, this will be for the "Applied Filters" section.
-        const filter = activeItem !== DROPDOWN_TERMS.YEAR
-            ? { filterType: activeItem, value: term, term }
-            : {
-                filterType: DROPDOWN_TERMS.YEAR,
-                value: term.formattedYearsString,
-                term
+        
+        let filter;
+        switch(activeItem) {
+        
+            case DROPDOWN_TERMS.YEAR: {
+                filter = {
+                    filterType: DROPDOWN_TERMS.YEAR,
+                    value: term.formattedYearsString,
+                    term
+                };
+                break;
             };
+
+            case DROPDOWN_TERMS.COPYRIGHT:
+            case DROPDOWN_TERMS.ROOM: {
+                filter = {
+                    filterType: activeItem,
+                    value: term,
+                    indexes: dropdownTermsMap.raw[activeItem][term],
+                    term
+                };
+
+                break;
+            };
+
+            default: filter = { filterType: activeItem, value: term, term };
+        }
 
         // If this is for a manual application process, i.e. mobile.
         if (isManualApply) {
@@ -317,9 +329,9 @@ class DropdownSection extends Component {
      * @returns {JSX.Element} JSX to be rendered inside of Dropdown.
      */
     getDropdownContent = (term) => {
-        const { activeItem } = this.state;
+        const { activeItem, dropdownTermsMap } = this.state;
         const { pendingTerms, activeTerms, topOffset } = this.props;
-        const data = DROPDOWN_TERMS_MAP[activeItem];
+        const data = dropdownTermsMap[activeItem];
         
         // Props that are spread regardless of MediaQuery outcome.
         const listedContentSpreadProps = {
@@ -342,7 +354,7 @@ class DropdownSection extends Component {
                             {/** This will always behave in the manual application process. */}
                             <ArtistSideMenuContent
                                 hasScroll
-                                data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                                data={dropdownTermsMap[DROPDOWN_TERMS.ARTIST]}
                                 // Sort data inside of artistMenu component.
                                 render={sortedData => (
                                     <ListedContent
@@ -370,12 +382,14 @@ class DropdownSection extends Component {
                         <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
                             <YearInput
                                 setActiveTerm={term => this.setActiveTerm(term, true)}
+                                years={dropdownTermsMap[DROPDOWN_TERMS.YEAR]}
                             />
                         </MediaQuery>
                         <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
                             <YearInput
                                 isDropdown
                                 setActiveTerm={term => this.setActiveTerm(term, false)}
+                                years={dropdownTermsMap[DROPDOWN_TERMS.YEAR]}
                             />
                         </MediaQuery>
                     </DropdownMenu>
@@ -413,14 +427,37 @@ class DropdownSection extends Component {
      * 1) Set up reset function for HOC that keeps track of clicking out of dropdown. @see ClickTracker.jsx
      * 2) Set up function to apply pending terms in parent component. @see SearchInput.jsx
      * */
-    componentDidMount() {
+    async componentDidMount() {
         const { setResetFunction, setApplyPendingTerms } = this.props;
         setResetFunction(() => this.setActiveItem(null));
-        setApplyPendingTerms(this.applyPendingTerms)
+        setApplyPendingTerms(this.applyPendingTerms);
+
+        // Async import of searchAssets.
+        const res = await fetch('/resources/searchAssets.json');
+        const searchAssets = await res.json();
+    
+        this.setState({
+            dropdownTermsMap: {
+                [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
+                [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.classifications,
+                [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
+                [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
+                [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
+                [DROPDOWN_TERMS.YEAR]: searchAssets.years
+                    .map(year => parseInt(year))
+                    .sort(), // Should be sorted, but sort anyways in case of any change to searchAssets.
+
+                // For avoiding dynamic import in redux.
+                raw: {
+                    [DROPDOWN_TERMS.ROOM]: searchAssets.locations,
+                    [DROPDOWN_TERMS.COPYRIGHT]: searchAssets.copyrights,
+                },
+            }
+        }); 
     }
 
     render() {
-        const { activeItem } = this.state;
+        const { activeItem, dropdownTermsMap } = this.state;
         const { activeTerms } = this.props;
 
         // Get count of each type of filter about to be appplied for superscript in dropdown button.
@@ -430,7 +467,7 @@ class DropdownSection extends Component {
             }), {});
         
         return (
-            <div className='dropdowns-menu'>
+            dropdownTermsMap && <div className='dropdowns-menu'>
                 {DROPDOWN_TERMS_ARRAY.map((term, i) => {
                     const isLastDropdown = i === DROPDOWN_TERMS_ARRAY.length - 1;
                     const isActiveItem = activeItem === term;
@@ -487,7 +524,7 @@ class DropdownSection extends Component {
                         closeMenu={() => this.setActiveItem(null)}
                     >
                         <ArtistSideMenuContent
-                            data={DROPDOWN_TERMS_MAP[DROPDOWN_TERMS.ARTIST]}
+                            data={dropdownTermsMap[DROPDOWN_TERMS.ARTIST]}
                             // Sort data inside of artistMenu component.
                             render={sortedData => (
                                 <ListedContent

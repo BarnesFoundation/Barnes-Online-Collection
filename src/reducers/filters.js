@@ -115,6 +115,11 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
 
+      // We are going to want to add indexes if they are present.
+      // This will allow for us to load searchAssets asynchronously.
+      let indexes = {};
+      if (filter.indexes) indexes = { indexes: filter.indexes };
+
       return {
         // Take a deep breath.
         ...state, // Deep copy existing state via spread.
@@ -123,7 +128,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
             // Quick hack to fix dates as object.
-            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
+            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index, ...indexes }, // Add filter into advanced filter type.
           }
         }
       };
