@@ -395,7 +395,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
         case DROPDOWN_TERMS.ARTIST: {
           // Map over terms, place into single array like ["Pablo Picasso", "Amedeo Modigliani"].
           body.query('terms', { 'people.text': Object.values(appliedFilters).map(({ term }) => term) });
-          body.sort('endDate', 'desc')
+          body.sort('endDate', 'desc');
           break;
         }
         default: {
@@ -414,6 +414,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   ]);
 
   body = body.build();
+  
 
   body.highlight = { 'fields': {} };
 	body.highlight.fields = {
@@ -444,6 +445,11 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     } else {
       body.query.bool['must'] = [query];
     }
+  }
+
+  if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length) {
+    // Replace sort.
+    body.sort = [{ endDate: { order: 'desc' }}, '_score'];
   }
 
   return (dispatch) => {
