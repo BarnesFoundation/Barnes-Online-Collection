@@ -32,3 +32,4 @@ yarn-error.log*
 dist.zip
 
 src/searchAssets.json
+public/resources/searchAssets.json

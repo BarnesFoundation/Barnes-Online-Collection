@@ -5,7 +5,7 @@ const esClient = require('../server/utils/esClient');
 
 const ensemblesList = require('../src/ensembleIndexes');
 const index = process.env.ELASTICSEARCH_INDEX;
-const constantsDirectory = path.resolve(__dirname, '../src/');
+const constantsDirectory = path.resolve(__dirname, '../public/resources');
 
 // Static copyrights list
 const copyrights = {
