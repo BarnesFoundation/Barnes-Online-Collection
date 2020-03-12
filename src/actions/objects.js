@@ -403,6 +403,15 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       }
   });
 
+  body.rawOption('_source', [
+    "id",
+    "title",
+    "people",
+    "medium",
+    "imageOriginalSecret",
+    "imageSecret",
+  ]);
+
   body = body.build();
 
   body.highlight = { 'fields': {} };
