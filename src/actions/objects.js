@@ -396,7 +396,6 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Map over terms, place into single array like ["Pablo Picasso", "Amedeo Modigliani"].
           body.query('terms', { 'people.text': Object.values(appliedFilters).map(({ term }) => term) });
           body.sort('endDate', 'desc')
-          console.log(body);
           break;
         }
         default: {
@@ -415,7 +414,6 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   ]);
 
   body = body.build();
-  console.log(body);
 
   body.highlight = { 'fields': {} };
 	body.highlight.fields = {
