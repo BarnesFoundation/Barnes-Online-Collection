@@ -74,7 +74,7 @@ class Newsletter extends Component {
     if (isSubmitted !== SUBMISSION_STATUS.COMPLETE) successClass = `hidden ${successClass}`;
 
     let formClass = 'm-newsletter__signup';
-    if (isSubmitted === SUBMISSION_STATUS.COMPLETE || isSubmitted === SUBMISSION_STATUS.LOADING) formClass = `hidden ${formClass}`;
+    if (isSubmitted === SUBMISSION_STATUS.COMPLETE) formClass = `hidden ${formClass}`;
 
     let emailErrorClass = 'form-field__error';
     if (isError !== ERROR_STATUS.USER) emailErrorClass = `hidden ${emailErrorClass}`;
@@ -87,25 +87,6 @@ class Newsletter extends Component {
         <h2 className='font-zeta'>Newsletter</h2>
         <div className='m-newsletter'>
           <div className={formClass} aria-hidden={isSubmitted === SUBMISSION_STATUS.COMPLETE}>
-
-            {/** Form errors, either user input or server error. */}
-            <div
-              aria-hidden={isError === ERROR_STATUS.USER}
-              className={emailErrorClass}
-              role='alert'
-              tabIndex='-1'
-              id='emailerror1'>
-                Enter a valid email address.
-            </div>
-
-            <div
-              aria-hidden={isError === ERROR_STATUS.SERVER}
-              className={serverErrorClass}
-              role='alert'
-              tabIndex='-1'
-              id='emailerror2'>
-                Error processing request, please try again later.
-            </div>
 
             <form className='form-field m-newsletter__field'>
               <label className='visuallyhidden' htmlFor='subscribe'>Enter your email address</label>
@@ -137,6 +118,25 @@ class Newsletter extends Component {
               <input name='formSourceName' value='StandardForm' type='hidden' />
               <input type='hidden' name='sp_exp' value='yes' />
             </form>
+          </div>
+
+          {/** Form errors, either user input or server error. */}
+          <div
+            aria-hidden={isError === ERROR_STATUS.USER}
+            className={emailErrorClass}
+            role='alert'
+            tabIndex='-1'
+            id='emailerror1'>
+              Enter a valid email address.
+          </div>
+
+          <div
+            aria-hidden={isError === ERROR_STATUS.SERVER}
+            className={serverErrorClass}
+            role='alert'
+            tabIndex='-1'
+            id='emailerror2'>
+              Error processing request, please try again later.
           </div>
 
           {/** Show submission status after submission. */}
