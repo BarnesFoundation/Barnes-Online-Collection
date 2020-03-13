@@ -28,6 +28,18 @@
     }
   }
 
+  &__social-container {
+    justify-content: normal;
+  }
+
+  &__nav__link {
+    margin-bottom: 0px;
+  }
+
+  &__social__link {
+    margin-bottom: 2px;
+  }
+
   // Take some padding from the col wrapper
   // to give each stacked col some padding of its own.
   @include breakpoint('small-') {
