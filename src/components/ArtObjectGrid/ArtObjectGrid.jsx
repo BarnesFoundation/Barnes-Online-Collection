@@ -184,8 +184,6 @@ class ArtObjectGrid extends Component {
         />
       ));
 
-    console.log(uncutMasonryElements);
-
     // If this is a 'View More' Grid, truncate results.
     // This will always be false if location filter is applied.
     const masonryElements = (hasMoreResults  && !isRoomResult)
