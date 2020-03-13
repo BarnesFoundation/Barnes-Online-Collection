@@ -267,7 +267,7 @@ export class SearchBar extends Component {
     }
 
     render() {
-        const { autoSuggest, hasTooltip, className, placeholder, onFocus } = this.props;
+        const { autoSuggest, className, placeholder, onFocus } = this.props;
 		const { autoSuggestResults, value } = this.state;
 
         let searchClassName = 'search__searchbar';
@@ -290,18 +290,6 @@ export class SearchBar extends Component {
                         }}
                         onBlur={() => this.setFocus(false)}
                     />
-                    {hasTooltip &&
-                        <div className='search-information'>
-                            <Icon svgId='-icon-information' classes='search-information__icon' />
-                            <div className='font-chapo search-information__tooltip'>
-                                <Icon
-                                    svgId='-icon_close'
-                                    classes='search-information__icon search-information__icon--x'
-                                />
-                                <span>Find exactly what you're looking for in our collection by searching for artist, accession number, object description, bibliography, provenance, exhibitions, or history</span>
-                            </div>
-                        </div>
-                    }
 					{Boolean(autoSuggest && autoSuggestResults.length) &&
 						<Suggestions
 							autoSuggestResults={autoSuggestResults}

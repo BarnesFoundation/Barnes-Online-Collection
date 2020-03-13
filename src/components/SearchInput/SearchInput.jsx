@@ -52,7 +52,6 @@ class SearchInput extends Component {
             {/** Mobile */}
             <MediaQuery maxDeviceWidth={BREAKPOINTS.mobile_max}>
               <SearchBar
-                hasTooltip
                 submit={(value) => {
                   addFilter({ filterType: 'search', value });
                   closeFilterSet();
@@ -69,7 +68,6 @@ class SearchInput extends Component {
               maxDeviceWidth={BREAKPOINTS.tablet_max}
             >
               <SearchBar
-                hasTooltip
                 submit={(value) => {
                   addFilter({ filterType: 'search', value });
                   closeFilterSet();
@@ -82,7 +80,6 @@ class SearchInput extends Component {
             {/** Desktop */}
             <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
               <SearchBar
-                hasTooltip
                 submit={value => addFilter({ filterType: 'search', value })}
                 placeholder='Search a keyword, artist, room number, and more'
               />
