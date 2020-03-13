@@ -54,9 +54,10 @@ const MobileLinks = () => (
 class SiteHeader extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isSideMenuOpen: false,
-      isHeaderHidden: false,
+      isHeaderHidden: HEADER_HIDDEN.DEFAULT,
     };
   }
 
