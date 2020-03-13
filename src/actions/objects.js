@@ -308,6 +308,7 @@ export const getAllObjects = (fromIndex=0) => {
       "medium",
       "imageOriginalSecret",
       "imageSecret",
+      "ensembleIndex",
     ])
     .build();
 
@@ -404,6 +405,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     "medium",
     "imageOriginalSecret",
     "imageSecret",
+    "ensembleIndex",
   ]);
 
   body = body.build();

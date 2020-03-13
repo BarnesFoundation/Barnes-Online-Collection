@@ -184,6 +184,8 @@ class ArtObjectGrid extends Component {
         />
       ));
 
+    console.log(uncutMasonryElements);
+
     // If this is a 'View More' Grid, truncate results.
     // This will always be false if location filter is applied.
     const masonryElements = (hasMoreResults  && !isRoomResult)
@@ -255,9 +257,10 @@ const mapStateToProps = state => ({
 
   // If this is specifically a location search.
   hasRoom: Boolean(
-    state.filters.advancedFilters.Location &&
-    Object.keys(state.filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length)
-  });
+    state.filters.advancedFilters[DROPDOWN_TERMS.ROOM] &&
+    Object.keys(state.filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length
+  )
+});
 const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);
