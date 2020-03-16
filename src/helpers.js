@@ -42,7 +42,7 @@ export const getObjectRequestBody = (object) => {
   return body;
 }
 
-export const getObjectsRequestBody = (fromIndex=0) => {
+export const getObjectsRequestBody = (fromIndex = 0) => {
   let body = bodybuilder()
     .sort('_score', 'desc')
     .filter('exists', 'imageSecret')
