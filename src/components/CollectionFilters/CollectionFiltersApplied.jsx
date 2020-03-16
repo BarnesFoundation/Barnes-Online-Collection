@@ -31,7 +31,7 @@ const mapStateToProps = (state) => ({
   ordered: state.filters.ordered,
   orderedAdvanced: Object.values(state.filters.advancedFilters)
     .flatMap(value => Object.values(value)),
-  objectsCount: state.objects.length,
+  objectsCount: state.objectsQuery.lastIndex,
 });
 
 export default connect(mapStateToProps)(CollectionFiltersApplied);

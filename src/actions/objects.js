@@ -58,27 +58,19 @@ const mapObjects = (objects) => {
   return mappedObjects.map(object => Object.assign({}, object._source, { highlight: object.highlight } , { id: object._id }));
 }
 
-const fetchResults = (body, dispatch, options = {}) => {
-  DEV_LOG('Fetching results...');
-
+const fetchResults = async (body, dispatch, options = {}) => {
   dispatch(setIsPending(true));
 
-  axios.get('/api/search', { params: { body: body } })
-  .then((response) => {
-    let objects = [];
-    let maxHits = 0;
+  try {
+    const response = await axios.get('/api/search', { params: { body: body } });
+
     // Note: confirm that we don't need this 25 default. The front end logic was using it before
     // let lastIndex = (body.from + body.size) || 25;
-    let lastIndex = body.from + body.size;
-    let hasMoreResults = false;
-
-    if (response.data.hits) {
-      objects = mapObjects(response.data.hits.hits);
-      maxHits = response.data.hits.total;
-      hasMoreResults = maxHits > lastIndex;
-    }
-
-    DEV_LOG('Retrieved '+objects.length+' objects.' );
+    console.log(body);
+    const lastIndex = (response.data.hits && response.data.hits.total) ? response.data.hits.total.value : 0;
+    const objects = response.data.hits ? mapObjects(response.data.hits.hits) : [];
+    const maxHits = response.data.hits ? response.data.hits.total : 0;
+    const hasMoreResults = maxHits > lastIndex;
 
     dispatch(setLastIndex(lastIndex));
     dispatch(setHasMoreResults(hasMoreResults));
@@ -93,7 +85,10 @@ const fetchResults = (body, dispatch, options = {}) => {
       dispatch(setIsPending(false));
       dispatch(resetMobileFilters());
     }
-  });
+
+  } catch (e) {
+    console.error('Error fetching results.');
+  }
 }
 
 const resetMobileFilters = () => {
