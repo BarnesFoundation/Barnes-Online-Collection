@@ -42,11 +42,12 @@ export const getObjectRequestBody = (object) => {
   return body;
 }
 
-export const getObjectsRequestBody = (fromIndex = 0) => {
+export const getObjectsRequestBody = (fromIndex = 0, isLocation = false) => {
   let body = bodybuilder()
     .sort('_score', 'desc')
     .filter('exists', 'imageSecret')
-    .from(fromIndex).size(BARNES_SETTINGS.size);
+    .from(fromIndex)
+    .size(isLocation ? 10000 :BARNES_SETTINGS.size);
   return body;
 }
 

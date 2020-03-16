@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { getObjectsRequestBody } from '../helpers';
 import {
-  // Action types
   RESET_MOBILE_FILTERS,
   SET_OBJECTS,
   APPEND_OBJECTS,
@@ -9,7 +8,6 @@ import {
   OBJECTS_QUERY_SET_IS_PENDING,
   OBJECTS_QUERY_SET_LAST_INDEX,
   OBJECTS_QUERY_CURRENT_INDEX,
-
 } from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
@@ -283,7 +281,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     append: Boolean(fromIndex)
   };
 
-  let body = getObjectsRequestBody(fromIndex);
+  let body = getObjectsRequestBody(fromIndex, Boolean(Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length));
 
   if (filters.ordered.filter(filter => filter.filterType !== 'search').length) {
     body = assembleDisMaxQuery(body, queries);
