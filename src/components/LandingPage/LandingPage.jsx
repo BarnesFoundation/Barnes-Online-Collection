@@ -109,6 +109,10 @@ class LandingPageHeader extends Component {
 class LandingPage extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      resetTruncateThreshold: null,
+    };
   }
 
   /**
@@ -145,15 +149,19 @@ class LandingPage extends Component {
    * On props update.
    * TODO => This is convoluted and fires on either search, filters, or history changing.  Rewrite this in a more declarative way.
    */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {
       search,
       filters,
       history: { location: { state: newState }} // For detecting if a modal is open.
     } = this.props;
+    const { resetTruncateThreshold } = this.state;
 
     // Detect if we just opened a modal. If so, just return.
     if (newState && newState.isModal) return;
+    if (JSON.stringify(prevProps.filters) === JSON.stringify(filters)) return;
+
+    if (resetTruncateThreshold) resetTruncateThreshold();
 
     const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
 
@@ -226,6 +234,7 @@ class LandingPage extends Component {
                   liveObjects={liveObjects}
                   pageType={pageType}
                   hasMoreResults
+                  setResetTruncateThreshold={resetTruncateThreshold => this.setState({ resetTruncateThreshold })}
                 />
               </div>
               <Footer hasHours/>
