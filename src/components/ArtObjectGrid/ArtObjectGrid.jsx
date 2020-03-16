@@ -186,7 +186,7 @@ class ArtObjectGrid extends Component {
                   modalPreviousLocation={modalPreviousLocation}
                   clearObject={clearObject}
                   isFilterResult={true}
-                  isSearchResult={false}
+                  isSearchResult={isSearchResult}
                 />))}
             </div>
           </div>
