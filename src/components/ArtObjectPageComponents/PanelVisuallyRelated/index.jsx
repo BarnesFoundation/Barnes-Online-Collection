@@ -147,9 +147,9 @@ class PanelVisuallyRelated extends Component {
               <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
               <div className="art-object__image-information">
                 {getObjectMetaDataHtml(object)}
-				<div className="share share--center">
-					<ShareDialog/>
-				</div>
+              <div className="share share--center">
+                <ShareDialog object={object}/>
+              </div>
               </div>
               { filterTags &&
                 <div className="art-object__search-tags">

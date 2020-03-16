@@ -60,6 +60,7 @@ class Share extends React.Component {
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
 						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
 						<input
+							readOnly
 							style={{ position: 'absolute', height: 0, opacity: '.01' }}
 							ref={this.setRef}
 							value={createShareForPlatform(people, title, id, sharePlatforms.COPY_URL, this.props.object.imageUrlLarge)}
