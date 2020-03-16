@@ -7,7 +7,7 @@ import { MoreFromCollection } from '../../components/Footer/MoreFromCollection'
 import { MAIN_WEBSITE_DOMAIN, BREAKPOINTS } from '../../constants';
 import './footer.css';
 
-
+const NEWSLETTER_ENDPOINT = 'https://xco0loehme.execute-api.us-east-1.amazonaws.com/test/subscribeToNewsletter';
 const NEWSLETTER_SESSION_STORAGE_KEY = 'isNewsletterSubscribed';
 const EMAIL_REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 const LEAD_SOURCE = 'www-collection-form';
@@ -50,7 +50,7 @@ class Newsletter extends Component {
 
       // Post request to server.
       try {
-        await axios.post('https://fchxkoyta7.execute-api.us-east-1.amazonaws.com/dev/subscribetonewsletter', { email: value, leadSource: LEAD_SOURCE });
+        await axios.post(NEWSLETTER_ENDPOINT, { email: value, leadSource: LEAD_SOURCE });
         sessionStorage.setItem(NEWSLETTER_SESSION_STORAGE_KEY, true); // Set session storage in case of page refresh.
         this.setState({ isSubmitted: SUBMISSION_STATUS.COMPLETE });
 
