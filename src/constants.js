@@ -78,6 +78,7 @@ export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 // urls
 export const MAIN_WEBSITE_DOMAIN = process.env.REACT_APP_WWW_URL || '//www.barnesfoundation.org';
 export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
+export const NEWSLETTER_URL = process.env.REACT_APP_NEWSLETTER_URL;
 
 // meta tag content
 export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
