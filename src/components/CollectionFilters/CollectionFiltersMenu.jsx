@@ -2,14 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
 
-const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
+let hasBeenScrolled = false; // Only scroll down once.
+
+const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer } ) => (
   <div
     className='container collection-filters-container'
     // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
     // This is wrapped in a RAF to prevent no scroll on clicking Search button.
     onClick={() => {
       requestAnimationFrame(() => {
-        if (parentContainer) parentContainer.scrollIntoView({ behavior: 'smooth' });
+        if (parentContainer && !visibleFilterSet && !hasBeenScrolled) {
+          hasBeenScrolled = true;
+          parentContainer.scrollIntoView({ behavior: 'smooth' });
+        }
       })
     }}
   >
@@ -28,5 +33,5 @@ const CollectionFiltersMenu = ({ sets, parentContainer } ) => (
   </div>
 );
 
-const mapStateToProps = state => ({ sets: state.filterSets.sets });
+const mapStateToProps = state => ({ sets: state.filterSets.sets, visibleFilterSet: state.filterSets.visibleFilterSet });
 export default connect(mapStateToProps)(CollectionFiltersMenu);
