@@ -15,7 +15,7 @@ const generateObjectImageUrls = (object) => {
   }
 
   const canonicalRoot = (process.env.REACT_APP_CANONICAL_ROOT || '')
-  const canonicalRootNoProt = canonicalRoot.replace(/^https?\:\/\//i, '')
+  const canonicalRootNoProt = canonicalRoot.replace(/^https?:\/\//i, '')
   const newObject = Object.assign({}, object)
   const imageTrackBaseUrl = `/track/image-download/`
   const imageIdReg = `${object.id}_${object.imageSecret}`
