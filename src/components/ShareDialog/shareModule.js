@@ -78,6 +78,8 @@ const generateSharePlatformLink = (platform, { url, title, companyName, hashtags
 		case sharePlatforms.PINTEREST: {
 			return `http://pinterest.com/pin/create/link/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}&media=${encodeURIComponent(imageUrl)}`
 		}
+
+		default: return null;
 	}
 }
 //&media={URI-encoded URL of the image to pin}
