@@ -193,14 +193,14 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { object, objectsQuery, objects: liveObjects, isFilterActive, closeFilterSet } = this.props;
+    const { object, objectsQuery, objects: liveObjects } = this.props;
     const metaTags = getMetaTagsFromObject(object);
     const isSearchPending = Boolean(objectsQuery && objectsQuery.isPending);
     const pageType = 'landing';
 
     // If filters are active, apply 50% opacity on search results.
-    let isBackgroundActiveClasses = 'shaded-background__tint';
-    if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
+    // let isBackgroundActiveClasses = 'shaded-background__tint';
+    // if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
 
     return (
       <div className='app app-landing-page'>

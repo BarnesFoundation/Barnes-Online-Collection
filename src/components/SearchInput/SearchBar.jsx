@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Icon from '../Icon';
 import axios from 'axios';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 

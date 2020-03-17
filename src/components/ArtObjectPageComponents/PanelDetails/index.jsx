@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { MediaQuery } from 'react-responsive';
 import SummaryTable from './SummaryTable';
 import AccordionMenu from '../../AccordionMenu';
 import ArtObjectOverlay from '../../ArtObject/ArtObjectOverlay';
