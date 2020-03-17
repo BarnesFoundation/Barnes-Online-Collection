@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router-dom';
 import { setSearchAssets } from './searchAssets';
-import axios from 'axios';
 import history from './history';
 import RouteSwitcher from './routeSwitcher';
 import routeWrapper from './routeWrapper';
