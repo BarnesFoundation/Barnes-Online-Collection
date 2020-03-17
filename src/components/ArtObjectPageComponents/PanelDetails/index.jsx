@@ -156,14 +156,14 @@ class Image extends Component {
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
-          {isLoaded && <div className='image-art-object__button-group'>
+          {/** Uncomment this once we have thumbnail data. */}
+          {/* {isLoaded && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
             </button>
-            {/* TODO => This will eventually be dynamic data. */}
             <span className='image-art-object__counter'>{activeImageIndex + 1} / {STATIC_IMAGE_COUNT}</span>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
@@ -171,7 +171,7 @@ class Image extends Component {
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
             </button>
-          </div>}
+          </div>} */}
         </div>
         <div className='image-caption'>
           <div
@@ -243,7 +243,8 @@ class PanelDetails extends Component {
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
           />
-          {Boolean(imageLoaded || isZoomed) &&
+          {/** Uncomment this once we have thumbnail data. */}
+          {/* {Boolean(imageLoaded || isZoomed) &&
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
@@ -251,7 +252,7 @@ class PanelDetails extends Component {
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
             />
-          }
+          } */}
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
           <div className='container-inner-narrow'>
