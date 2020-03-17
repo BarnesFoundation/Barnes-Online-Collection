@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router-dom';
-import { searchAssets } from './searchAssets';
+import { setSearchAssets } from './searchAssets';
 import axios from 'axios';
 import history from './history';
 import RouteSwitcher from './routeSwitcher';
@@ -20,9 +20,8 @@ class App extends Component {
   /**
    * Async method to fetch searchAssets file.
    */
-  async componentDidMount() {
-    const res = await axios('/resources/searchAssets.json'); // Async import of searchAssets.
-    searchAssets.data = res.data; // Set global singleton.
+  componentDidMount() {
+    setSearchAssets();
   }
 
   render() {
