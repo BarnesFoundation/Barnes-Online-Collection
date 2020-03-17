@@ -239,17 +239,16 @@ class DropdownSection extends Component {
         let filter;
         switch(activeItem) {
         
-            case DROPDOWN_TERMS.YEAR: {
+            case DROPDOWN_TERMS.YEAR: 
                 filter = {
                     filterType: DROPDOWN_TERMS.YEAR,
                     value: term.formattedYearsString,
                     term
                 };
                 break;
-            };
 
             case DROPDOWN_TERMS.COPYRIGHT:
-            case DROPDOWN_TERMS.ROOM: {
+            case DROPDOWN_TERMS.ROOM: 
                 filter = {
                     filterType: activeItem,
                     value: term,
@@ -258,7 +257,6 @@ class DropdownSection extends Component {
                 };
 
                 break;
-            };
 
             default: filter = { filterType: activeItem, value: term, term };
         }
@@ -341,7 +339,7 @@ class DropdownSection extends Component {
         };
 
         switch (activeItem) {
-            case (DROPDOWN_TERMS.ARTIST): {
+            case (DROPDOWN_TERMS.ARTIST): 
                 // Dropdown for artist should only be rendered for desktop devices.
                 return (
                     <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
@@ -370,8 +368,8 @@ class DropdownSection extends Component {
                         </DropdownMenu>
                     </MediaQuery>
                 );
-            };
-            case (DROPDOWN_TERMS.YEAR): {
+
+            case (DROPDOWN_TERMS.YEAR): 
                 return (
                     <DropdownMenu
                         headerText={term}
@@ -394,8 +392,8 @@ class DropdownSection extends Component {
                         </MediaQuery>
                     </DropdownMenu>
                 );
-            };
-            default: {
+
+            default:
                 return (
                     <DropdownMenu
                         headerText={term}
@@ -418,7 +416,7 @@ class DropdownSection extends Component {
                         </MediaQuery>
                     </DropdownMenu>
                 );
-            }
+
         }
     };
 
