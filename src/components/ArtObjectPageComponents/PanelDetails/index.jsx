@@ -65,7 +65,7 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
         <div className={gridListElClassName}>
           <div className='art-object-fade__in'>
             <div className='thumbnails__thumbnail-wrapper'>
-              <img className='thumbnails__thumbnail' src={object.imageUrlSmall} />
+              <img className='thumbnails__thumbnail' src={object.imageUrlSmall} alt={object.title}/>
             </div>
             <div className='thumbnails__inner-border'></div>
           </div>
