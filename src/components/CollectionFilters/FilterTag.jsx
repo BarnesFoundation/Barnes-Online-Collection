@@ -5,10 +5,6 @@ import Icon from '../Icon.jsx';
 import * as FiltersActions from '../../actions/filters';
 
 class FilterTag extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   getFilterIcon() {
     if (this.props.filter.filterType === 'colors') {
       return <span className='color-filter-icon' style={{ background: this.props.filter.color }}></span>;
