@@ -98,7 +98,7 @@ const DefaultSideMenu = () => (
 /**
  * Side menu component.
  */
-const SideMenu = ({ closeMenu, isOpen, children }) => {
+const SideMenu = ({ closeMenu, isOpen, children, setRef }) => {
   const handleNavCloseBtnClick = (e) => {
     e.preventDefault();
     closeMenu();
@@ -118,6 +118,10 @@ const SideMenu = ({ closeMenu, isOpen, children }) => {
       e.preventDefault();
       e.stopPropagation();
     };
+  }
+
+  if (setRef) {
+    additionalProps.ref = setRef;
   }
 
   return (

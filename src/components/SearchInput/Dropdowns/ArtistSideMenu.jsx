@@ -81,8 +81,22 @@ export class ArtistSideMenuContent extends Component {
 
 /** HOC to wrap artist menu in side menu. */
 class ArtistSideMenu extends Component {
-    /** Dispatch to redux store on unmount. */
-    componentWillUnmount() { this.props.toggleArtistMenu(false); }
+    constructor(props){
+        super(props);
+
+        this.state = {
+            sto: null, // STO set in setRef.
+        };
+        this.ref = null;
+    }
+
+    /** Cleanup any sTO and dispatch to redux store on unmount. */
+    componentWillUnmount() {
+        const { sto } = this.state;
+
+        this.props.toggleArtistMenu(false);
+        if (sto) clearTimeout(sto);
+    }
 
     render() {
         const { isOpen, closeMenu, children } = this.props;
@@ -90,7 +104,24 @@ class ArtistSideMenu extends Component {
         return (
             <SideMenu
                 isOpen={isOpen}
-                closeMenu={closeMenu}
+                closeMenu={() => {
+                    // Tack on method to scroll ref to top.
+                    if (this.ref) {
+                        // Wait for animation to finish.
+                        this.setState({
+                            sto: setTimeout(() => {
+                                if (this.ref) this.ref.scrollTo(0, 0);
+                            }, 500)
+                        })
+                    }
+                    closeMenu();
+                }}
+                setRef={(ref) => {
+                    if (!this.ref) {
+                        this.ref = ref;
+                        this.forceUpdate();
+                    }
+                }}
             >
                 <div className='side-menu__header'>Artists</div>
                 {children}
