@@ -271,7 +271,7 @@ class PanelDetails extends Component {
                 </a>}
 
               <div className="share share--right">
-                <ShareDialog object={this.props.object} />
+                <ShareDialog object={object} />
               </div>
             </div>
 
