@@ -62,7 +62,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
   ) + 1; // Add 1 to max number.
 
   switch (type) {
-    case ActionTypes.ADD_FILTER: {
+    case ActionTypes.ADD_FILTER: 
       return ({
         ...state, // Deep copy state.
 
@@ -72,7 +72,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         // The 'all types' works differently -- it acts as a clear
         [filterType]: !(filterType === 'lines_linearity' && filter.name === 'all types') ? filter : null,
       });
-    };
+
     case ActionTypes.REMOVE_FILTER: {
       
       return ({
@@ -101,6 +101,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           } else if (filterType === 'search') {
             return ({ filterType: 'search', value: filterVal.value || filterVal });
           }
+
+          return null; // Default return value.
         })
         .map((obj, index) => ({ ...obj, index })) // Add index to all filter sets.
         .filter(Boolean); // Filter out nulls
