@@ -10,7 +10,7 @@ import { YearInput } from './YearInput';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
 import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
-// import searchAssets from '../../../searchAssets.json';
+import { searchAssets } from '../../../searchAssets';
 import './dropdowns.css';
 
 // Setting up advanced filter names and dropdown menu items.
@@ -425,30 +425,26 @@ class DropdownSection extends Component {
      * 1) Set up reset function for HOC that keeps track of clicking out of dropdown. @see ClickTracker.jsx
      * 2) Set up function to apply pending terms in parent component. @see SearchInput.jsx
      * */
-    async componentDidMount() {
+    componentDidMount() {
         const { setResetFunction, setApplyPendingTerms } = this.props;
         setResetFunction(() => this.setActiveItem(null));
         setApplyPendingTerms(this.applyPendingTerms);
-
-        // Async import of searchAssets.
-        const res = await fetch('/resources/searchAssets.json');
-        const searchAssets = await res.json();
     
         this.setState({
             dropdownTermsMap: {
-                [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
-                [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.classifications,
-                [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
-                [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
-                [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
-                [DROPDOWN_TERMS.YEAR]: searchAssets.years
+                [DROPDOWN_TERMS.CULTURE]: searchAssets.data.cultures,
+                [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.data.classifications,
+                [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.data.locations).map(key => ({ key })), 
+                [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.data.copyrights).map(key => ({ key })),
+                [DROPDOWN_TERMS.ARTIST]: searchAssets.data.artists,
+                [DROPDOWN_TERMS.YEAR]: searchAssets.data.years
                     .map(year => parseInt(year))
                     .sort(), // Should be sorted, but sort anyways in case of any change to searchAssets.
 
                 // For avoiding dynamic import in redux.
                 raw: {
-                    [DROPDOWN_TERMS.ROOM]: searchAssets.locations,
-                    [DROPDOWN_TERMS.COPYRIGHT]: searchAssets.copyrights,
+                    [DROPDOWN_TERMS.ROOM]: searchAssets.data.locations,
+                    [DROPDOWN_TERMS.COPYRIGHT]: searchAssets.data.copyrights,
                 },
             }
         }); 
