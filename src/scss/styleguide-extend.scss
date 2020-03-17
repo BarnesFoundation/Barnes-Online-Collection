@@ -12,9 +12,17 @@ html {
   &.mobile-panel-open {
     &,
     body {
-      height: 100%;
-      width: 100%;
-      overflow: auto;
+      // height: 100%;
+      // width: 100vw;
+      overflow-y: hidden;
+    }
+
+    // This adds a scrollbar to the grid results section on the landing page, which will keep width uniform across OS.
+    // This prevents masonry elements from shifting on modal close. 
+    .component-art-object-grid-results {
+      &--landing-page {
+        overflow-y: scroll;
+      }
     }
   }
 

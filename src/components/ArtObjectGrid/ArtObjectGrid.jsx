@@ -222,10 +222,13 @@ class ArtObjectGrid extends Component {
         </MasonryGrid>
       );
     
+    let bodyClass = 'component-art-object-grid-results';
+    if (shouldLinksUseModal) bodyClass = `${bodyClass} component-art-object-grid-results--landing-page`;
+
     // Body is only rendered if searching is falsy.
     const body = (masonryElements && masonryElements.length)
       ? (<div>
-        <div className='component-art-object-grid-results'>
+        <div className={bodyClass}>
           {displayGrid}
           {Boolean(
             hasMoreResults
