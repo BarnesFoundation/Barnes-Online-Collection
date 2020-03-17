@@ -138,10 +138,8 @@ class Image extends Component {
       setActiveImageIndex
     } = this.props;
     
-    let className = 'art-object__image';
     let additionalStyle = {};
     if (isZoomed) {
-      className = `${className} art-object__image-hidden`;
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
 
