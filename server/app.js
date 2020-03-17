@@ -647,10 +647,48 @@ app.get('/api/entries', entryCache);
 
 /** Endpoint for auto-suggest functionality from the www Craft site */
 app.get('/api/suggest', async (request, response) => {
-	const { q } = request.query;
+  const { q } = request.query;
 	const aConfig = { ...config, url: `/api/suggest?q=${q}`  };
 	response.json((await axios(aConfig)).data);
 });
+
+/** Get autosuggest functionality for artists in advaned filters. */
+app.get('/api/advancedSearchSuggest', async (request, response) => {
+  const { query } = request.query;
+
+  const searchResults = await esClient.search({
+    body: {
+      "size": 0,
+      "query": {
+          "bool" : {
+              "filter" : {
+                "exists" : {
+                  "field" : "imageSecret"
+                }
+              },
+              "must": {
+                "multi_match": {
+                  "query" : query,
+                  "type" : "bool_prefix",
+                  "fields": ["people", "people.text", "people.suggest"]
+                }
+              }
+          }
+      },
+      "_source" : ["id", "title", "people"],
+      "aggregations": {
+        "people": {
+          "terms" : {
+            "field" : "people.text",
+            "size" : 200
+          }
+        }
+      }
+    }
+  });
+
+  response.json({ searchResults });
+})
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')

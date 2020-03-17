@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { ClickTracker } from './Dropdowns/ClickTracker';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 
 class Suggestions extends Component {
@@ -91,7 +92,7 @@ class Suggestions extends Component {
 
 		return (
 			<div
-				id='suggestions'
+				className='suggestions'
 				style={{ left: isMeasured ? 0 : 9999 }}
 				ref={this.setRef}
 			>
@@ -111,6 +112,8 @@ class Suggestions extends Component {
 	}
 }
 
+const MINIMUM_WAIT = 1000;
+
 /**
  * Controlled input component w/ search on enter.
  */
@@ -119,7 +122,7 @@ export class SearchBar extends Component {
         super(props);
 
 		this.ref = null;
-		
+
         this.state = {
 			// For controlled input component
             value: '',
@@ -128,6 +131,14 @@ export class SearchBar extends Component {
 			// For autosuggest
 			autoSuggestResults: [],
 		};
+
+		// None of these variables need to necessarily be state properties as they do not trigger rendering of the component or any children.
+		this.searchedQuery = '';
+		
+		this.minimumTimeout = null; // For timeouts that are cleared in cDU.
+		this.maximumTimeout = null;
+
+		this.firstInputOcurred = false;
     }
 
     /**
@@ -140,10 +151,15 @@ export class SearchBar extends Component {
     };
 
     /**
-     * Add event listener for pressing enter on mount and cleanup event listener on unmount.
+     * Add event listener for pressing enter on mount.
      */
-    componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
+	componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
+	
+	/**
+	 * Cleanup event listener and remove any standing stos on unmount.
+	 */
     componentWillUnmount() {
+		const { } = this.state;
 		window.removeEventListener('keydown', this.searchOnEnter);
 
 		// Clean up timeouts from suggestion.
@@ -151,9 +167,16 @@ export class SearchBar extends Component {
 		if (this.maximumTimeout) clearTimeout(this.maximumTimeout);
 	}
 
+	/**
+	 * Set focus of input.
+	 * @param {boolean} isFocused - If input is currently focused.
+	 */
 	setFocus = isFocused => this.setState({ isFocused }); // Set focus
 
-	// For controlled component.
+	/**
+	 * onChange Handler for controlled input.
+	 * @param {SyntheticEvent} - event passed from input onChange.
+	 */
 	onChange = ({ target: { value } }) => {
 		const { autoSuggest, updateFilters } = this.props;
 
@@ -168,17 +191,11 @@ export class SearchBar extends Component {
 			updateFilters(value);
 		}
 	} 
-
-	searchedQuery = '';
-	minimumWait = 1000;
-	maximumWait = 8000;
-
-	minimumTimeout;
-	maximumTimeout;
-	firstInputOcurred = null;
-		
+	
+	/**
+	 * 
+	 */
 	autoSuggest = () => {
-
 		// Clear the previous timeout
 		clearTimeout(this.minimumTimeout);
 
@@ -186,19 +203,22 @@ export class SearchBar extends Component {
 		this.minimumTimeout = setTimeout(() => {
 			// console.log('I'll execute the min suggest now');
 			this.execAutoSuggest();
-		}, this.minimumWait);
+		}, MINIMUM_WAIT);
 
 		// Set delay for suggestion to occur maximumWait from out
-		if (this.firstInputOcurred == null) {
+		if (this.firstInputOcurred === false) {
 			this.firstInputOcurred = true;
 
 			this.maximumTimeout = setTimeout(() => {
 				// console.log('I'll execute the max suggest now');
 				this.execAutoSuggest();
-			}, this.minimumWait);
+			}, MINIMUM_WAIT);
 		}
 	}
 
+	/**
+	 * Send autosuggest query to server and setState with results + "All search results for tail".
+	 */
 	execAutoSuggest = async () => {
 		
 		// Get the query, suggestion area, and search current query
@@ -207,7 +227,7 @@ export class SearchBar extends Component {
 
 		// If the query becomes blank, remove the suggestions and reset firstInputOcurred
 		if (query.trim().length === 0) {
-			this.firstInputOcurred = null;
+			this.firstInputOcurred = false;
 			this.setState({ autoSuggestResults: [] });
 		}
 
@@ -267,7 +287,7 @@ export class SearchBar extends Component {
 
     render() {
         const { autoSuggest, className, placeholder, onFocus } = this.props;
-		const { autoSuggestResults, value } = this.state;
+		const { autoSuggestResults, value, isFocused } = this.state;
 
         let searchClassName = 'search__searchbar';
         if (className) searchClassName = `search__searchbar ${className}`;
@@ -287,13 +307,16 @@ export class SearchBar extends Component {
 
                             if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
                         }}
-                        onBlur={() => this.setFocus(false)}
                     />
-					{Boolean(autoSuggest && autoSuggestResults.length) &&
-						<Suggestions
-							autoSuggestResults={autoSuggestResults}
-							value={value}
-						/>
+					{Boolean(autoSuggest && autoSuggestResults.length && isFocused) &&
+						<ClickTracker
+							resetFunction={() => this.setFocus(false)}
+						>
+							<Suggestions
+								autoSuggestResults={autoSuggestResults}
+								value={value}
+							/>
+						</ClickTracker>
 					}
                 </div>
                 <button

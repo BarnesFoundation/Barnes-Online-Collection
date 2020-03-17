@@ -189,7 +189,7 @@ search-suggestion
 
 }
 
-#suggestions {
+.suggestions {
   position: absolute;
   z-index: #{map-get($zIndexes, 'header')};
   left: 0;
@@ -201,4 +201,6 @@ search-suggestion
   @include breakpoint('small-') {
     width: 100%;
   }
+
+  text-align: left;
 }
