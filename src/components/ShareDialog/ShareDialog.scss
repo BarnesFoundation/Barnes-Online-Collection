@@ -41,8 +41,15 @@
     &__link {
         text-decoration: none;
         display: block;
+        background: transparent;
+        border: none;
+        margin: 0;
+        padding: 0;
+        color: $color__copy--light;
+        font: inherit;
 
         &:hover {
+            color: $color__copy--dark;
             cursor: pointer;
         }
     }
