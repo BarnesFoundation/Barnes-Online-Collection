@@ -648,15 +648,15 @@ app.get('/api/entries', entryCache);
 /** Endpoint for auto-suggest functionality from the www Craft site */
 app.get('/api/suggest', async (request, response) => {
   const { q } = request.query;
-	const aConfig = { ...config, url: `/api/suggest?q=${q}`  };
+  const aConfig = { ...config, url: `/api/suggest?q=${q}`  };
 	response.json((await axios(aConfig)).data);
 });
 
 /** Get autosuggest functionality for artists in advaned filters. */
 app.get('/api/advancedSearchSuggest', async (request, response) => {
-  const { query } = request.query;
+  const { q: query } = request.query;
 
-  const searchResults = await esClient.search({
+  const { aggregations: { people: { buckets }}} = await esClient.search({
     body: {
       "size": 0,
       "query": {
@@ -687,7 +687,23 @@ app.get('/api/advancedSearchSuggest', async (request, response) => {
     }
   });
 
-  response.json({ searchResults });
+
+  // Wrap return results in <strong> tags.
+  const highlighted = buckets.map(({ key, doc_count }) => {
+    const queryIndex = key.toLowerCase().indexOf(query.toLowerCase()); // In case query is LikE thIS.
+
+    const start = key.slice(0, queryIndex);
+    const middle = key.slice(queryIndex, queryIndex + query.length);
+    const end = key.slice(queryIndex + query.length);
+
+    return ({
+      key: `${start}<strong>${middle}</strong>${end}`,
+      doc_count: doc_count/2, // TODO => This is returning 2x what it should.
+      raw: key, // For when filter is applied.
+    });
+  });
+
+  response.json({ collectionAdvancedSearch: highlighted });
 })
 
 app.use(function (req, res) {

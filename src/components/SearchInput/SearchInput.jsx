@@ -29,7 +29,7 @@ class SearchInput extends Component {
   setApplyPendingTerms = applyPendingTerms => this.setState({ applyPendingTerms });
 
   render() {
-    const { addFilter, closeFilterSet } = this.props;
+    const { addFilter, closeFilterSet, isCollectionAdvancedSearch } = this.props;
     const { applyPendingTerms, pendingTerms, hasOverlay, topOffset, searchValue } = this.state;
 
     let searchClassName = 'search';
@@ -51,6 +51,7 @@ class SearchInput extends Component {
                 }}
                 updateFilters={searchValue => this.setState({ searchValue })}
                 placeholder='Search collection'
+                isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
               
             </MediaQuery>
@@ -67,6 +68,7 @@ class SearchInput extends Component {
                 }}
                 updateFilters={searchValue => this.setState({ searchValue })}
                 placeholder='Search a keyword, artist, room number, and more'
+                isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
             </MediaQuery>
 
@@ -76,6 +78,7 @@ class SearchInput extends Component {
                 autoSuggest
                 submit={value => addFilter({ filterType: 'search', value })}
                 placeholder='Search a keyword, artist, room number, and more'
+                isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
             </MediaQuery>
             <div className='search__dropdowns'>

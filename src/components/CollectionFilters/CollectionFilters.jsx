@@ -177,7 +177,7 @@ class CollectionFilters extends Component {
           <ClickTracker resetFunction={() => selectFilterSet(null)}>
             <div className="m-block m-block--flush applied-filters">
               {visibleFilterSet === 'search'
-                ? <SearchInput />
+                ? <SearchInput isCollectionAdvancedSearch/>
                 : <CollectionFiltersSet />}
             </div>
           </ClickTracker>
@@ -185,7 +185,7 @@ class CollectionFilters extends Component {
         <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
           <div className="m-block m-block--flush applied-filters">
             {visibleFilterSet === 'search'
-              ? <SearchInput />
+              ? <SearchInput isCollectionAdvancedSearch/>
               : <CollectionFiltersSet />}
           </div>
         </MediaQuery>

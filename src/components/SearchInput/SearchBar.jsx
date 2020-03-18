@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import { ClickTracker } from './Dropdowns/ClickTracker';
+import { DROPDOWN_TERMS } from './Dropdowns/Dropdowns';
+import { addAdvancedFilter } from '../../actions/filters';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 
 class Suggestions extends Component {
@@ -96,12 +100,13 @@ class Suggestions extends Component {
 				style={{ left: isMeasured ? 0 : 9999 }}
 				ref={this.setRef}
 			>
-				{results.map(({ suggestionText, href }, i) => {
+				{results.map(({ suggestionText, href, onClick }, i) => {
 					return (
 						<a
 							key={`${suggestionText}${href}${i}`}
 							className='m-search-suggestion'
 							href={href}
+							onClick={onClick}
 							dangerouslySetInnerHTML={{ __html: suggestionText }}
 						>
 						</a>
@@ -117,7 +122,7 @@ const MINIMUM_WAIT = 1000;
 /**
  * Controlled input component w/ search on enter.
  */
-export class SearchBar extends Component {
+class SearchBar extends Component {
     constructor(props) {
         super(props);
 
@@ -159,7 +164,6 @@ export class SearchBar extends Component {
 	 * Cleanup event listener and remove any standing stos on unmount.
 	 */
     componentWillUnmount() {
-		const { } = this.state;
 		window.removeEventListener('keydown', this.searchOnEnter);
 
 		// Clean up timeouts from suggestion.
@@ -220,7 +224,8 @@ export class SearchBar extends Component {
 	 * Send autosuggest query to server and setState with results + "All search results for tail".
 	 */
 	execAutoSuggest = async () => {
-		
+		const { isCollectionAdvancedSearch, addAdvancedFilter } = this.props;
+
 		// Get the query, suggestion area, and search current query
 		const query = this.state.value
 		this.searchedQuery = query;
@@ -233,15 +238,44 @@ export class SearchBar extends Component {
 
 		// Otherwise, do suggestion logic
 		else if (query.trim().length > 0) {
-			const results = (await axios(`/api/suggest?q=${query}`)).data;
+			const results = (await axios(
+				isCollectionAdvancedSearch
+					? `/api/advancedSearchSuggest?q=${query}`
+					: `/api/suggest?q=${query}`
+			)).data;
 			
+			const searchAll = {
+				suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
+				href: `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`,
+				isLast: true,
+			};
+
 			// Only append results that we're launced for the current query
 			if (this.searchedQuery === query) {
-				const { entryResults, collectionResults } = results;
+				// If this is for the advanced collection search.
 
-				this.setState({
-					autoSuggestResults: [
-						// For artists.
+				let suggestionItems; // Array which will hold our suggestion items.
+				// If this is a collection advanced search
+				if (isCollectionAdvancedSearch) {
+					const { collectionAdvancedSearch } = results;
+
+					// For people from advanced search.
+					suggestionItems = collectionAdvancedSearch.map((result) => {
+						const artist = result.key;
+						const artCount = result.doc_count;
+						const suggestionText = `See all artworks by ${artist} (${artCount})`;
+						const onClick = () => {
+							addAdvancedFilter({ filterType: DROPDOWN_TERMS.ARTIST, value: result.raw, term: result.raw });
+							this.setFocus(false);
+						};
+
+						return { suggestionText, onClick };
+					});
+				} else {
+					const { entryResults, collectionResults } = results;
+
+					suggestionItems = [
+						// For people.
 						...collectionResults.people.map((result) => {
 							const artist = result.key;
 							const artCount = result.doc_count;
@@ -258,13 +292,13 @@ export class SearchBar extends Component {
 
 							return { suggestionText, href };
 						}),
+					]
+				}
 
-						// Display the "All search results for" item.
-						{
-							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
-							href: `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`,
-							isLast: true,
-						},
+				this.setState({
+					autoSuggestResults: [
+						...suggestionItems,
+						searchAll,
 					]
 				});
 			}
@@ -296,28 +330,28 @@ export class SearchBar extends Component {
 			<div className={searchClassName}>
                 <div className='search__input-group'>
                     <div className='font-zeta search__header'>SEARCH COLLECTION</div>
-                    <input
-                        className='search__input'
-                        type='text'
-                        value={this.state.value}
-                        placeholder={placeholder || 'Search'}
-                        onChange={this.onChange}
-                        onFocus={() => {
-                            this.setFocus(true); // Set focus state for this component.
+					<ClickTracker
+						resetFunction={() => this.setFocus(false)}
+					>
+						<input
+							className='search__input'
+							type='text'
+							value={this.state.value}
+							placeholder={placeholder || 'Search'}
+							onChange={this.onChange}
+							onFocus={() => {
+								this.setFocus(true); // Set focus state for this component.
 
-                            if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
-                        }}
-                    />
-					{Boolean(autoSuggest && autoSuggestResults.length && isFocused) &&
-						<ClickTracker
-							resetFunction={() => this.setFocus(false)}
-						>
+								if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
+							}}
+						/>
+						{Boolean(autoSuggest && autoSuggestResults.length && isFocused) &&
 							<Suggestions
 								autoSuggestResults={autoSuggestResults}
 								value={value}
 							/>
-						</ClickTracker>
-					}
+						}
+					</ClickTracker>
                 </div>
                 <button
                     className='btn btn--primary search__button'
@@ -330,3 +364,7 @@ export class SearchBar extends Component {
         )
     }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter }), dispatch);
+const ConnectedSearchBar = connect(null, mapDispatchToProps)(SearchBar);
+export { ConnectedSearchBar as SearchBar };
