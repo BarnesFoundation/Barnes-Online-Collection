@@ -325,8 +325,8 @@ class SearchBar extends Component {
         if (e) e.preventDefault();
 
 		if (value) {
-			submit(value); // Submit from parent.
 			this.setState({ value: '' });
+			submit(value); // Submit from parent.
 		}
     }
 
