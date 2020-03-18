@@ -319,12 +319,15 @@ class SearchBar extends Component {
      */
     enter = (e) => {
 		const { submit } = this.props;
+		const { value } = this.state;
 
 		// Prevent default onClick.
         if (e) e.preventDefault();
 
-        submit(this.state.value); // Submit from parent.
-        this.setState({ value: '' });
+		if (value) {
+			submit(value); // Submit from parent.
+			this.setState({ value: '' });
+		}
     }
 
     render() {
