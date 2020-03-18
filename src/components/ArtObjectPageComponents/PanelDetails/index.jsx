@@ -176,7 +176,7 @@ class Image extends Component {
         <div className='image-caption'>
           <div
             className='font-smallprint color-medium image-caption__content'
-            style={{ width: this.ref ? this.ref.width : 'auto' }}
+            style={{ width: (this.ref && this.ref.width > 100) ? this.ref.width : '100%' }}
           >
             {object.people}. {object.title}, {object.displayDate}. {object.invno}. {object.creditLine}
           </div>
