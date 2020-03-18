@@ -78,6 +78,10 @@ $button-margin: 15px;
     @include breakpoint('small-') {
       display: none;
     }
+
+    &:focus {
+      color: $color__white;
+    }
   }
 
   &__header {
