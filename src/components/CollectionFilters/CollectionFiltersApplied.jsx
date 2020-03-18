@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import FilterTag from './FilterTag';
 
-const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount }) => {
+const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount, isSearchPending }) => {
   const mergedOrders = [
     ...ordered,
     ...orderedAdvanced.map(order => ({ ...order, isAdvanced: true })), // So we know that this is an advanced filter.
@@ -21,7 +21,7 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount }) =>
           )}
         </div>
         <div className='applied-filter-tags-container-wrap__count'>
-          {Boolean(objectsCount) && `${objectsCount} Results`}
+          {Boolean(objectsCount && !isSearchPending) && `${objectsCount} Results`}
         </div>
       </div>
   );
@@ -32,6 +32,7 @@ const mapStateToProps = (state) => ({
   orderedAdvanced: Object.values(state.filters.advancedFilters)
     .flatMap(value => Object.values(value)),
   objectsCount: state.objectsQuery.lastIndex,
+  isSearchPending: state.objectsQuery.isPending,
 });
 
 export default connect(mapStateToProps)(CollectionFiltersApplied);
