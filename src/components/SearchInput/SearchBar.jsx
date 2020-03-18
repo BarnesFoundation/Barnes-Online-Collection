@@ -158,7 +158,9 @@ class SearchBar extends Component {
     /**
      * Add event listener for pressing enter on mount.
      */
-	componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
+	componentDidMount() {
+		window.addEventListener('keydown', this.searchOnEnter);
+	}
 	
 	/**
 	 * Cleanup event listener and remove any standing stos on unmount.
@@ -224,7 +226,7 @@ class SearchBar extends Component {
 	 * Send autosuggest query to server and setState with results + "All search results for tail".
 	 */
 	execAutoSuggest = async () => {
-		const { isCollectionAdvancedSearch, addAdvancedFilter } = this.props;
+		const { isCollectionAdvancedSearch, addAdvancedFilter, submit } = this.props;
 
 		// Get the query, suggestion area, and search current query
 		const query = this.state.value
@@ -244,37 +246,43 @@ class SearchBar extends Component {
 					: `/api/suggest?q=${query}`
 			)).data;
 			
-			const searchAll = {
-				suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
-				href: `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`,
-				isLast: true,
-			};
-
 			// Only append results that we're launced for the current query
 			if (this.searchedQuery === query) {
 				// If this is for the advanced collection search.
 
-				let suggestionItems; // Array which will hold our suggestion items.
+				let autoSuggestResults; // Array which will hold our suggestion items.
 				// If this is a collection advanced search
 				if (isCollectionAdvancedSearch) {
 					const { collectionAdvancedSearch } = results;
 
 					// For people from advanced search.
-					suggestionItems = collectionAdvancedSearch.map((result) => {
-						const artist = result.key;
-						const artCount = result.doc_count;
-						const suggestionText = `See all artworks by ${artist} (${artCount})`;
-						const onClick = () => {
-							addAdvancedFilter({ filterType: DROPDOWN_TERMS.ARTIST, value: result.raw, term: result.raw });
-							this.setFocus(false);
-						};
+					// This will only dispatch actions rather than provide an href.
+					autoSuggestResults = [
+						...collectionAdvancedSearch.map((result) => {
+							const artist = result.key;
+							const artCount = result.doc_count;
+							const suggestionText = `See all artworks by ${artist} (${artCount})`;
+							const onClick = () => {
+								// Dispatch to redux and unfocus to close dropdown.
+								addAdvancedFilter({ filterType: DROPDOWN_TERMS.ARTIST, value: result.raw, term: result.raw });
+								this.setFocus(false);
+							};
 
-						return { suggestionText, onClick };
-					});
+							return { suggestionText, onClick };
+						}),
+
+						{
+							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
+							onClick: () => {
+								submit(query);
+								this.setFocus(false);
+							}
+						},
+					]
 				} else {
 					const { entryResults, collectionResults } = results;
 
-					suggestionItems = [
+					autoSuggestResults = [
 						// For people.
 						...collectionResults.people.map((result) => {
 							const artist = result.key;
@@ -292,15 +300,15 @@ class SearchBar extends Component {
 
 							return { suggestionText, href };
 						}),
+
+						{
+							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
+							href: `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`,
+						},
 					]
 				}
 
-				this.setState({
-					autoSuggestResults: [
-						...suggestionItems,
-						searchAll,
-					]
-				});
+				this.setState({ autoSuggestResults });
 			}
 		}
 	}
@@ -330,9 +338,7 @@ class SearchBar extends Component {
 			<div className={searchClassName}>
                 <div className='search__input-group'>
                     <div className='font-zeta search__header'>SEARCH COLLECTION</div>
-					<ClickTracker
-						resetFunction={() => this.setFocus(false)}
-					>
+					<ClickTracker resetFunction={() => this.setFocus(false)}>
 						<input
 							className='search__input'
 							type='text'
