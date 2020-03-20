@@ -20,11 +20,12 @@ const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
   return (
     <div className={captionClassName}>
       <h2 className="h2 font-simple-heading">
-        {title}
+        {people}
       </h2>
       {people &&
         <h3 className="h3 color-light">
-          {people}
+          
+          {title}
         </h3>
       }
       {highlight &&
