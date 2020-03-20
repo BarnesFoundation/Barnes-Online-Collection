@@ -23,7 +23,7 @@ const DefaultSideMenu = () => (
         className='g-nav__link g-nav__link--important'
         href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}
       >
-        <span>Plan your Visit</span>
+        <span>Plan Your Visit</span>
       </a>
       <a
         className='g-nav__link g-nav__link--important' aria-current='true'
