@@ -604,7 +604,7 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
 })
 
 /** Endpoint for generating the assets file for the frontend */
-app.get('/api/build-search-assets', async (req, res) => {
+app.use('/api/build-search-assets', async (req, res) => {
 	const result = await buildSearchAssets.generateAssets();
 	res.json(result);
 });
