@@ -33,3 +33,4 @@ dist.zip
 
 src/searchAssets.json
 public/resources/searchAssets.json
+.elasticbeanstalk
