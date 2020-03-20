@@ -256,7 +256,7 @@ export const getAllObjects = (fromIndex = 0) => {
     barnesify: true,
     highlights: true,
     append: Boolean(fromIndex),
-  }
+  };
   
 
   body = body
@@ -313,8 +313,8 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       switch(filterType) {
         case DROPDOWN_TERMS.CULTURE: {
           // Map over terms, place into single array like ["American", "French"].
-          // body.query('terms', { 'culture.keyword': Object.values(appliedFilters).map(({ term }) => term) });
-          body.query('query_string', { 'query': Object.values(appliedFilters).map(({ term }) => `(culture: *${term}*)`).join(' OR ') });
+          Object.values(appliedFilters).forEach(({ term }) => body.orQuery('query_string', { 'query': `culture: *${term}*` }));
+          body.queryMinimumShouldMatch(1, true); // Override minimium_should_match for should.
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
@@ -359,7 +359,6 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   });
 
   body.rawOption('_source', RAW_OPTION);
-
   body = body.build();
   
 
