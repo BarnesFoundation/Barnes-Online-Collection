@@ -234,7 +234,6 @@ class DropdownSection extends Component {
     setActiveTerm = (term, isManualApply) => {
         const { activeItem, dropdownTermsMap } = this.state;
         const { pendingTerms, updatePendingTerms, activeTerms, addAdvancedFilter, removeAdvancedFilter } = this.props;
-
         
         let filter;
         switch(activeItem) {
@@ -263,10 +262,23 @@ class DropdownSection extends Component {
 
         // If this is for a manual application process, i.e. mobile.
         if (isManualApply) {
-            if (pendingTerms.map(({ term: pTerm }) => pTerm).includes(term)) {
-                updatePendingTerms(pendingTerms.filter(pendingTerm => pendingTerm.term !== term))
+            // Years are handled separately as their terms are representative of a shifting bounds.
+            if (activeItem !== DROPDOWN_TERMS.YEAR) {
+                if (pendingTerms.map(({ term: pTerm }) => pTerm).includes(term)) {
+                    updatePendingTerms(pendingTerms.filter(pendingTerm => pendingTerm.term !== term));
+                } else {
+                    updatePendingTerms([...pendingTerms, filter]);
+                }
+
+            // To handle year filters
             } else {
-                updatePendingTerms([...pendingTerms, filter]);
+                // Find if there is an existing year filter.
+                const yearPendingIndex = pendingTerms.findIndex(pendingTerm => pendingTerm.filterType === DROPDOWN_TERMS.YEAR);
+                if (Number.isInteger(yearPendingIndex)) {
+                    updatePendingTerms([...pendingTerms.slice(0, yearPendingIndex), ...pendingTerms.slice(yearPendingIndex + 1), filter]);
+                } else {
+                    updatePendingTerms([...pendingTerms, filter]);
+                }
             }
         // If this is an automatic filter application process, i.e. desktop.
         } else {
@@ -290,14 +302,13 @@ class DropdownSection extends Component {
         const flattenedAdvancedFilters = Object.values(advancedFilters)
             .flatMap((advancedFilter) => Object.values(advancedFilter));
 
-
         // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
         return pendingTerms.reduce((acc, pendingTerm) => {
             const index = acc.findIndex(({ term }) => term === pendingTerm.term);
 
             // If index is located, remove item from array.
             if (index >= 0) {
-                return [...acc.splice(0, index), ...acc.splice(index + 1, acc.length)];
+                return [...acc.slice(0, index), ...acc.slice(index + 1, acc.length)];
 
             // If no index is found, append to array.
             } else {
@@ -314,7 +325,7 @@ class DropdownSection extends Component {
         const { updatePendingTerms, setAdvancedFilters } = this.props;
 
         // If a pending term is already in active terms, remove. Otherwise, it needs to be added to global state and active terms.
-        const newActiveTerms = this.getNewTerms()
+        const newActiveTerms = this.getNewTerms();
 
         updatePendingTerms([]); // Reset parent state.
         setAdvancedFilters(newActiveTerms); // Update redux state for advanced filters.
@@ -458,10 +469,17 @@ class DropdownSection extends Component {
 
         // Get count of each type of filter about to be appplied for superscript in dropdown button.
         const advancedFilterObject = this.getNewTerms()
-            .reduce((acc, advancedFilter) => ({
-                ...acc, [advancedFilter.filterType]: acc[advancedFilter.filterType] ? acc[advancedFilter.filterType] + 1 : 1
-            }), {});
-        
+            .reduce((acc, advancedFilter) => {
+                // For all filters other than year, get a count.
+                if (advancedFilter.filterType !== DROPDOWN_TERMS.YEAR) {
+                    return { ...acc, [advancedFilter.filterType]: acc[advancedFilter.filterType] ? acc[advancedFilter.filterType] + 1 : 1 }
+
+                // For year filter, max it out at one.
+                } else {
+                    return { ...acc, [advancedFilter.filterType]: 1 }
+                }
+            }, {});
+
         return (
             dropdownTermsMap && <div className='dropdowns-menu'>
                 {DROPDOWN_TERMS_ARRAY.map((term, i) => {
@@ -486,7 +504,9 @@ class DropdownSection extends Component {
                             >
                                 <span className='dropdowns-menu__button-content'>
                                     {term}
-                                    <sup className='dropdowns-menu__button-sup'>&nbsp;{advancedFilterObject[term]}</sup>
+                                    <sup className='dropdowns-menu__button-sup'>&nbsp;
+                                        {advancedFilterObject[term]
+                                    }</sup>
                                 </span>
                                 <Icon svgId='-icon_arrow_down' classes={iconClassName} />
                             </button>

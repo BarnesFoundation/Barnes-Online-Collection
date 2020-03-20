@@ -154,7 +154,6 @@ class ArtObjectGrid extends Component {
 
     // Searching is rendered on default, on false body will render.
     const searching = isSearchPending && <SpinnerLoader />;
-
     const isSearchResult = Boolean(shouldLinksUseModal && hasSearch);
     const isFilterResult = Boolean(shouldLinksUseModal && hasFilter);
     const isRoomResult = Boolean(shouldLinksUseModal && hasRoom);

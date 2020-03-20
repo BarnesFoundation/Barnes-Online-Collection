@@ -47,7 +47,7 @@ export const getObjectsRequestBody = (fromIndex = 0, isLocation = false) => {
     .sort('_score', 'desc')
     .filter('exists', 'imageSecret')
     .from(fromIndex)
-    .size(isLocation ? 10000 :BARNES_SETTINGS.size);
+    .size(isLocation ? 10000 : BARNES_SETTINGS.size);
   return body;
 }
 

@@ -14,6 +14,16 @@ import { DEV_LOG } from '../devLogging';
 import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
 import { uniqBy } from 'lodash';
 
+const RAW_OPTION = [
+  "id",
+  "title",
+  "people",
+  "medium",
+  "imageOriginalSecret",
+  "imageSecret",
+  "ensembleIndex",
+];
+
 const resetMobileFilters = () => ({ type: RESET_MOBILE_FILTERS });
 const setObjects = objects => ({ type: SET_OBJECTS, payload: objects });
 const appendObjects = objects => ({ type: APPEND_OBJECTS, payload: objects });
@@ -21,6 +31,8 @@ const setHasMoreResults = hasMoreResults => ({ type: OBJECTS_QUERY_SET_HAS_MORE_
 const setIsPending = isPending => ({ type: OBJECTS_QUERY_SET_IS_PENDING, isPending });
 const setLastIndex = lastIndex => ({ type: OBJECTS_QUERY_SET_LAST_INDEX, lastIndex });
 const setCurrentIndex = currentIndex => ({ type: OBJECTS_QUERY_CURRENT_INDEX, currentIndex });
+
+
 
 const addHighlightsFilter = (body) => {
   const highlightFilter = {
@@ -81,7 +93,7 @@ const fetchResults = async (body, dispatch, options = {}) => {
     dispatch(setHasMoreResults(hasMoreResults));
 
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
-        await barnesifyObjects(objects, dispatch, options); // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
+      await barnesifyObjects(objects, dispatch, options); // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
       dispatch(resetMobileFilters());
@@ -234,28 +246,24 @@ export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) 
   }
 });
 
-export const getAllObjects = () => {
-  let body = getObjectsRequestBody();
-  let options = {};
+export const getAllObjects = (fromIndex = 0) => {
+  let body = getObjectsRequestBody(fromIndex);
 
   body = addHighlightsFilter(body);
-  options.barnesify = true;
-  options.highlights = true;
+
+  const options = {
+    barnesify: true,
+    highlights: true,
+    append: Boolean(fromIndex),
+  }
+  
 
   body = body
-    .rawOption('_source', [
-      "id",
-      "title",
-      "people",
-      "medium",
-      "imageOriginalSecret",
-      "imageSecret",
-      "ensembleIndex",
-    ])
+    .rawOption('_source', RAW_OPTION)
     .build();
 
   return (dispatch) => {
-    dispatch(setCurrentIndex(0));
+    dispatch(setCurrentIndex(fromIndex));
     fetchResults(body, dispatch, options);
   };
 };
@@ -270,7 +278,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       ) && 
       !Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // If there is any advanced filter
     ) {
-    return dispatch => getAllObjects()(dispatch);
+    return dispatch => getAllObjects(fromIndex)(dispatch);
   }
 
   const queries = buildQueriesFromFilters(filters.ordered);
@@ -281,7 +289,13 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     append: Boolean(fromIndex)
   };
 
-  let body = getObjectsRequestBody(fromIndex, Boolean(Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length));
+  let body = getObjectsRequestBody(
+    fromIndex,
+    Boolean(
+      filters.advancedFilters[DROPDOWN_TERMS.ROOM] &&
+      Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length
+    )
+  );
 
   if (filters.ordered.filter(filter => filter.filterType !== 'search').length) {
     body = assembleDisMaxQuery(body, queries);
@@ -342,15 +356,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       }
   });
 
-  body.rawOption('_source', [
-    "id",
-    "title",
-    "people",
-    "medium",
-    "imageOriginalSecret",
-    "imageSecret",
-    "ensembleIndex",
-  ]);
+  body.rawOption('_source', RAW_OPTION);
 
   body = body.build();
   
@@ -386,7 +392,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     }
   }
 
-  if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length) {
+  if (filters.advancedFilters[DROPDOWN_TERMS.ARTIST] && Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length) {
     // Replace sort.
     body.sort = [{ endDate: { order: 'desc' }}, '_score'];
   }
