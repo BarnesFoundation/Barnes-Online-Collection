@@ -313,7 +313,8 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       switch(filterType) {
         case DROPDOWN_TERMS.CULTURE: {
           // Map over terms, place into single array like ["American", "French"].
-          body.query('terms', { 'culture.keyword': Object.values(appliedFilters).map(({ term }) => term) });
+          // body.query('terms', { 'culture.keyword': Object.values(appliedFilters).map(({ term }) => term) });
+          body.query('query_string', { 'query': Object.values(appliedFilters).map(({ term }) => `(culture: *${term}*)`).join(' OR ') });
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
