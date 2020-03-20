@@ -7,11 +7,13 @@ import ArtObject from '../ArtObject/ArtObject';
 import SpinnerLoader from './SpinnerLoader';
 import CollectionFiltersApplied from '../CollectionFilters/CollectionFiltersApplied';
 import { clearObject } from '../../actions/object';
+import { getNextObjects } from '../../actions/objects';
 import { getArtObjectUrlFromId } from '../../helpers';
 import ensembleIndexes from '../../ensembleIndexes';
+import { ART_OBJECT_GRID_INCREMENT } from '../../constants';
+import { DROPDOWN_TERMS } from '../SearchInput/Dropdowns/Dropdowns';
 import './searchResultsGrid.css';
 import './artObjectGrid.css';
-import { DROPDOWN_TERMS } from '../SearchInput/Dropdowns/Dropdowns';
 
 /** View more button component. */
 const ViewMoreButton = ({ onClick }) => (
@@ -104,13 +106,30 @@ class ArtObjectGrid extends Component {
 
     // For 'View More' results.
     this.state = {
-      truncateThreshold: 12,
+      truncateThreshold: ART_OBJECT_GRID_INCREMENT,
     };
   };
 
+  /**
+   * Set reset truncate if prop exists.
+   */
+  componentDidMount() {
+    const { setResetTruncateThreshold } = this.props;
+
+    if (setResetTruncateThreshold) {
+      setResetTruncateThreshold(() => this.setState({ truncateThreshold: ART_OBJECT_GRID_INCREMENT }));
+    }
+  }
+
+  /**
+   * Increase number of art objects shown in grid.
+   */
   incrementTruncateThreshold = () => {
+    const { getNextObjects } = this.props;
     const { truncateThreshold } = this.state;
-    this.setState({ ...this.state, truncateThreshold: truncateThreshold + 12 });
+
+    getNextObjects(truncateThreshold + ART_OBJECT_GRID_INCREMENT);
+    this.setState({ ...this.state, truncateThreshold: truncateThreshold + ART_OBJECT_GRID_INCREMENT });
   };
 
   render() {
@@ -167,7 +186,7 @@ class ArtObjectGrid extends Component {
                   modalPreviousLocation={modalPreviousLocation}
                   clearObject={clearObject}
                   isFilterResult={true}
-                  isSearchResult={false}
+                  isSearchResult={isSearchResult}
                 />))}
             </div>
           </div>
@@ -203,10 +222,13 @@ class ArtObjectGrid extends Component {
         </MasonryGrid>
       );
     
+    let bodyClass = 'component-art-object-grid-results';
+    if (shouldLinksUseModal) bodyClass = `${bodyClass} component-art-object-grid-results--landing-page`;
+
     // Body is only rendered if searching is falsy.
     const body = (masonryElements && masonryElements.length)
       ? (<div>
-        <div className='component-art-object-grid-results'>
+        <div className={bodyClass}>
           {displayGrid}
           {Boolean(
             hasMoreResults
@@ -255,9 +277,10 @@ const mapStateToProps = state => ({
 
   // If this is specifically a location search.
   hasRoom: Boolean(
-    state.filters.advancedFilters.Location &&
-    Object.keys(state.filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length)
-  });
-const mapDispatchToProps = (dispatch) => bindActionCreators(Object.assign({}, { clearObject }), dispatch);
+    state.filters.advancedFilters[DROPDOWN_TERMS.ROOM] &&
+    Object.keys(state.filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length
+  )
+});
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { clearObject, getNextObjects }), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArtObjectGrid);

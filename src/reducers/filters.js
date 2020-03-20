@@ -62,7 +62,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
   ) + 1; // Add 1 to max number.
 
   switch (type) {
-    case ActionTypes.ADD_FILTER: {
+    case ActionTypes.ADD_FILTER: 
       return ({
         ...state, // Deep copy state.
 
@@ -72,7 +72,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         // The 'all types' works differently -- it acts as a clear
         [filterType]: !(filterType === 'lines_linearity' && filter.name === 'all types') ? filter : null,
       });
-    };
+
     case ActionTypes.REMOVE_FILTER: {
       
       return ({
@@ -101,6 +101,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           } else if (filterType === 'search') {
             return ({ filterType: 'search', value: filterVal.value || filterVal });
           }
+
+          return null; // Default return value.
         })
         .map((obj, index) => ({ ...obj, index })) // Add index to all filter sets.
         .filter(Boolean); // Filter out nulls
@@ -115,6 +117,11 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
     case ActionTypes.ADD_ADVANCED_FILTER: {
       const { advancedFilters } = state;
 
+      // We are going to want to add indexes if they are present.
+      // This will allow for us to load searchAssets asynchronously.
+      let indexes = {};
+      if (filter.indexes) indexes = { indexes: filter.indexes };
+
       return {
         // Take a deep breath.
         ...state, // Deep copy existing state via spread.
@@ -123,7 +130,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
             // Quick hack to fix dates as object.
-            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index }, // Add filter into advanced filter type.
+            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index, ...indexes }, // Add filter into advanced filter type.
           }
         }
       };

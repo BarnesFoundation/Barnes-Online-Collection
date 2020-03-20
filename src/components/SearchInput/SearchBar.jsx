@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import Icon from '../Icon';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import axios from 'axios';
+import { ClickTracker } from './Dropdowns/ClickTracker';
+import { DROPDOWN_TERMS } from './Dropdowns/Dropdowns';
+import { addAdvancedFilter } from '../../actions/filters';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 
 class Suggestions extends Component {
@@ -92,16 +96,17 @@ class Suggestions extends Component {
 
 		return (
 			<div
-				id='suggestions'
+				className='suggestions'
 				style={{ left: isMeasured ? 0 : 9999 }}
 				ref={this.setRef}
 			>
-				{results.map(({ suggestionText, href }, i) => {
+				{results.map(({ suggestionText, href, onClick }, i) => {
 					return (
 						<a
 							key={`${suggestionText}${href}${i}`}
 							className='m-search-suggestion'
 							href={href}
+							onClick={onClick}
 							dangerouslySetInnerHTML={{ __html: suggestionText }}
 						>
 						</a>
@@ -112,15 +117,17 @@ class Suggestions extends Component {
 	}
 }
 
+const MINIMUM_WAIT = 1000;
+
 /**
  * Controlled input component w/ search on enter.
  */
-export class SearchBar extends Component {
+class SearchBar extends Component {
     constructor(props) {
         super(props);
 
 		this.ref = null;
-		
+
         this.state = {
 			// For controlled input component
             value: '',
@@ -129,6 +136,14 @@ export class SearchBar extends Component {
 			// For autosuggest
 			autoSuggestResults: [],
 		};
+
+		// None of these variables need to necessarily be state properties as they do not trigger rendering of the component or any children.
+		this.searchedQuery = '';
+		
+		this.minimumTimeout = null; // For timeouts that are cleared in cDU.
+		this.maximumTimeout = null;
+
+		this.firstInputOcurred = false;
     }
 
     /**
@@ -141,9 +156,15 @@ export class SearchBar extends Component {
     };
 
     /**
-     * Add event listener for pressing enter on mount and cleanup event listener on unmount.
+     * Add event listener for pressing enter on mount.
      */
-    componentDidMount() { window.addEventListener('keydown', this.searchOnEnter); }
+	componentDidMount() {
+		window.addEventListener('keydown', this.searchOnEnter);
+	}
+	
+	/**
+	 * Cleanup event listener and remove any standing stos on unmount.
+	 */
     componentWillUnmount() {
 		window.removeEventListener('keydown', this.searchOnEnter);
 
@@ -152,9 +173,16 @@ export class SearchBar extends Component {
 		if (this.maximumTimeout) clearTimeout(this.maximumTimeout);
 	}
 
+	/**
+	 * Set focus of input.
+	 * @param {boolean} isFocused - If input is currently focused.
+	 */
 	setFocus = isFocused => this.setState({ isFocused }); // Set focus
 
-	// For controlled component.
+	/**
+	 * onChange Handler for controlled input.
+	 * @param {SyntheticEvent} - event passed from input onChange.
+	 */
 	onChange = ({ target: { value } }) => {
 		const { autoSuggest, updateFilters } = this.props;
 
@@ -169,17 +197,11 @@ export class SearchBar extends Component {
 			updateFilters(value);
 		}
 	} 
-
-	searchedQuery = '';
-	minimumWait = 1000;
-	maximumWait = 8000;
-
-	minimumTimeout;
-	maximumTimeout;
-	firstInputOcurred = null;
-		
+	
+	/**
+	 * 
+	 */
 	autoSuggest = () => {
-
 		// Clear the previous timeout
 		clearTimeout(this.minimumTimeout);
 
@@ -187,42 +209,81 @@ export class SearchBar extends Component {
 		this.minimumTimeout = setTimeout(() => {
 			// console.log('I'll execute the min suggest now');
 			this.execAutoSuggest();
-		}, this.minimumWait);
+		}, MINIMUM_WAIT);
 
 		// Set delay for suggestion to occur maximumWait from out
-		if (this.firstInputOcurred == null) {
+		if (this.firstInputOcurred === false) {
 			this.firstInputOcurred = true;
 
 			this.maximumTimeout = setTimeout(() => {
 				// console.log('I'll execute the max suggest now');
 				this.execAutoSuggest();
-			}, this.minimumWait);
+			}, MINIMUM_WAIT);
 		}
 	}
 
+	/**
+	 * Send autosuggest query to server and setState with results + "All search results for tail".
+	 */
 	execAutoSuggest = async () => {
-		
+		const { isCollectionAdvancedSearch, addAdvancedFilter, submit } = this.props;
+
 		// Get the query, suggestion area, and search current query
 		const query = this.state.value
 		this.searchedQuery = query;
 
 		// If the query becomes blank, remove the suggestions and reset firstInputOcurred
 		if (query.trim().length === 0) {
-			this.firstInputOcurred = null;
+			this.firstInputOcurred = false;
 			this.setState({ autoSuggestResults: [] });
 		}
 
 		// Otherwise, do suggestion logic
 		else if (query.trim().length > 0) {
-			const results = (await axios(`/api/suggest?q=${query}`)).data;
+			const results = (await axios(
+				isCollectionAdvancedSearch
+					? `/api/advancedSearchSuggest?q=${query}`
+					: `/api/suggest?q=${query}`
+			)).data;
 			
 			// Only append results that we're launced for the current query
 			if (this.searchedQuery === query) {
-				const { entryResults, collectionResults } = results;
+				// If this is for the advanced collection search.
 
-				this.setState({
-					autoSuggestResults: [
-						// For artists.
+				let autoSuggestResults; // Array which will hold our suggestion items.
+				// If this is a collection advanced search
+				if (isCollectionAdvancedSearch) {
+					const { collectionAdvancedSearch } = results;
+
+					// For people from advanced search.
+					// This will only dispatch actions rather than provide an href.
+					autoSuggestResults = [
+						...collectionAdvancedSearch.map((result) => {
+							const artist = result.key;
+							const artCount = result.doc_count;
+							const suggestionText = `See all artworks by ${artist} (${artCount})`;
+							const onClick = () => {
+								// Dispatch to redux and unfocus to close dropdown.
+								addAdvancedFilter({ filterType: DROPDOWN_TERMS.ARTIST, value: result.raw, term: result.raw });
+								this.setFocus(false);
+							};
+
+							return { suggestionText, onClick };
+						}),
+
+						{
+							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
+							onClick: () => {
+								submit(query);
+								this.setFocus(false);
+							}
+						},
+					]
+				} else {
+					const { entryResults, collectionResults } = results;
+
+					autoSuggestResults = [
+						// For people.
 						...collectionResults.people.map((result) => {
 							const artist = result.key;
 							const artCount = result.doc_count;
@@ -240,14 +301,14 @@ export class SearchBar extends Component {
 							return { suggestionText, href };
 						}),
 
-						// Display the "All search results for" item.
 						{
 							suggestionText: `<svg class="m-search-suggestion__icon" width="26" height="26"><use xlink:href="#icon--icon_search"></use>s</svg><span class="m-search-suggestion__search-all">All search results for "${query}"</span>`,
 							href: `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`,
-							isLast: true,
 						},
 					]
-				});
+				}
+
+				this.setState({ autoSuggestResults });
 			}
 		}
 	}
@@ -258,17 +319,20 @@ export class SearchBar extends Component {
      */
     enter = (e) => {
 		const { submit } = this.props;
+		const { value } = this.state;
 
 		// Prevent default onClick.
         if (e) e.preventDefault();
 
-        submit(this.state.value); // Submit from parent.
-        this.setState({ value: '' });
+		if (value) {
+			this.setState({ value: '' });
+			submit(value); // Submit from parent.
+		}
     }
 
     render() {
-        const { autoSuggest, hasTooltip, className, placeholder, onFocus } = this.props;
-		const { autoSuggestResults, value } = this.state;
+        const { autoSuggest, className, placeholder, onFocus } = this.props;
+		const { autoSuggestResults, value, isFocused } = this.state;
 
         let searchClassName = 'search__searchbar';
         if (className) searchClassName = `search__searchbar ${className}`;
@@ -277,37 +341,26 @@ export class SearchBar extends Component {
 			<div className={searchClassName}>
                 <div className='search__input-group'>
                     <div className='font-zeta search__header'>SEARCH COLLECTION</div>
-                    <input
-                        className='search__input'
-                        type='text'
-                        value={this.state.value}
-                        placeholder={placeholder || 'Search'}
-                        onChange={this.onChange}
-                        onFocus={() => {
-                            this.setFocus(true); // Set focus state for this component.
+					<ClickTracker resetFunction={() => this.setFocus(false)}>
+						<input
+							className='search__input'
+							type='text'
+							value={this.state.value}
+							placeholder={placeholder || 'Search'}
+							onChange={this.onChange}
+							onFocus={() => {
+								this.setFocus(true); // Set focus state for this component.
 
-                            if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
-                        }}
-                        onBlur={() => this.setFocus(false)}
-                    />
-                    {hasTooltip &&
-                        <div className='search-information'>
-                            <Icon svgId='-icon-information' classes='search-information__icon' />
-                            <div className='font-chapo search-information__tooltip'>
-                                <Icon
-                                    svgId='-icon_close'
-                                    classes='search-information__icon search-information__icon--x'
-                                />
-                                <span>Find exactly what you're looking for in our collection by searching for artist, accession number, object description, bibliography, provenance, exhibitions, or history</span>
-                            </div>
-                        </div>
-                    }
-					{Boolean(autoSuggest && autoSuggestResults.length) &&
-						<Suggestions
-							autoSuggestResults={autoSuggestResults}
-							value={value}
+								if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
+							}}
 						/>
-					}
+						{Boolean(autoSuggest && autoSuggestResults.length && isFocused) &&
+							<Suggestions
+								autoSuggestResults={autoSuggestResults}
+								value={value}
+							/>
+						}
+					</ClickTracker>
                 </div>
                 <button
                     className='btn btn--primary search__button'
@@ -320,3 +373,7 @@ export class SearchBar extends Component {
         )
     }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, { addAdvancedFilter }), dispatch);
+const ConnectedSearchBar = connect(null, mapDispatchToProps)(SearchBar);
+export { ConnectedSearchBar as SearchBar };

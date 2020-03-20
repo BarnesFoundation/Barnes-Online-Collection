@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { LockScroll } from '../LockScroll';
@@ -76,7 +76,7 @@ const DefaultSideMenu = () => (
     </a>
     <a
       className='g-nav__link'
-      href={'https://shop.barnesfoundation.org' + '/'}
+      href={'https://shop.barnesfoundation.org/'}
     >
       <span>Shop</span>
     </a>
@@ -95,65 +95,122 @@ const DefaultSideMenu = () => (
   </nav>
 );
 
+// Representations of the different states possible for the overlay.
+// The additional state of TRANSITION in necessary to keep the width of the overlay for the opacity animation to complete.
+const OVERLAY_STATES = {
+  ACTIVE: 'ACTIVE',
+  TRANSITION: 'TRANSITION',
+  INACTIVE: 'INACTIVE',
+}
+
 /**
  * Side menu component.
  */
-const SideMenu = ({ closeMenu, isOpen, children }) => {
-  const handleNavCloseBtnClick = (e) => {
-    e.preventDefault();
-    closeMenu();
-  };
+class SideMenu extends Component {
+  constructor(props) {
+    super(props);
 
-  let sideMenuClassNames = 'side-menu';
-  if (isOpen) sideMenuClassNames = `${sideMenuClassNames} side-menu--active`;
-
-  let gNavClassNames = 'g-nav';
-  if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`
-  if (isOpen) gNavClassNames = `${gNavClassNames} g-nav--active`
-
-  // Prevent cancellation from propagating in Dropdowns.jsx.
-  const additionalProps = {};
-  if (children) {
-    additionalProps.onClick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    this.state = {
+      isOverlayActive: OVERLAY_STATES.INACTIVE,
     };
+
+    this.sto = null; 
   }
 
-  return (
-    <div className={sideMenuClassNames}>
-      <div
-        className={gNavClassNames}
-        data-behavior='nav'
-        tabIndex={-1}
-      >
+  /**
+   * Check if isOpen has changed, if it has then alter the transition state for the overlay.
+   * @param {React.Props} prevProps 
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.isOpen !== this.props.isOpen) {
+      if (this.props.isOpen) {
+        this.setState({ isOverlayActive: OVERLAY_STATES.ACTIVE });
+      } else {
+        // Set to transition state if menu has been closed.
+        this.setState({ isOverlayActive: OVERLAY_STATES.TRANSITION });
+
+        this.sto = setTimeout(() => {
+          this.setState({ isOverlayActive: OVERLAY_STATES.INACTIVE });
+        }, 500); // This is the animation time.
+      }
+    }
+  }
+
+  /**
+   * On unmount: if setTimeout exists, clear it.
+   */
+  componentWillUnmount() {
+    if (this.sto) clearTimeout(this.sto);
+  }
+
+  render() {
+    const { closeMenu, isOpen, children, setRef } = this.props;
+    const { isOverlayActive } = this.state;
+    
+    const handleNavCloseBtnClick = (e) => {
+      e.preventDefault();
+      closeMenu();
+    };
+
+    let sideMenuClassNames = 'side-menu';
+    if (isOpen) sideMenuClassNames = `${sideMenuClassNames} side-menu--active`;
+
+    let gNavClassNames = 'g-nav';
+    if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`;
+    if (isOpen) gNavClassNames = `${gNavClassNames} g-nav--active`;
+
+    let gNavOverlayClassNames = 'g-nav-overlay';
+    if (isOverlayActive === OVERLAY_STATES.ACTIVE || isOverlayActive === OVERLAY_STATES.TRANSITION) gNavOverlayClassNames = `${gNavOverlayClassNames} g-nav-overlay--transition`;
+    if (isOverlayActive === OVERLAY_STATES.ACTIVE) gNavOverlayClassNames = `${gNavOverlayClassNames} g-nav-overlay--active`;
+
+    // Prevent cancellation from propagating in Dropdowns.jsx.
+    const additionalProps = {};
+    if (children) {
+      additionalProps.onClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+    }
+
+    if (setRef) {
+      additionalProps.ref = setRef;
+    }
+
+    return (
+      <div className={sideMenuClassNames}>
         <div
-          className='g-nav__inner'
-          {...additionalProps}
+          className={gNavClassNames}
+          data-behavior='nav'
+          tabIndex={-1}
         >
-          <button
-            onClick={handleNavCloseBtnClick}
-            className='g-nav__close btn btn--icon-only html4-hidden'
-            type='button'
-            aria-labelledby='nav-close-title'
-            data-nav-hide
+          <div
+            className='g-nav__inner'
+            {...additionalProps}
           >
-            <svg className='icon--close' width={20} height={20}>
-              <title id='nav-close-title'>Close menu</title>
-              <use xlinkHref='#icon--icon_close' />
-            </svg>
-          </button>
-          <h2 className='visuallyhidden' id='g-nav__title'>Main menu</h2>
-          {children || <DefaultSideMenu />}
+            <button
+              onClick={handleNavCloseBtnClick}
+              className='g-nav__close btn btn--icon-only html4-hidden'
+              type='button'
+              aria-labelledby='nav-close-title'
+              data-nav-hide
+            >
+              <svg className='icon--close' width={20} height={20}>
+                <title id='nav-close-title'>Close menu</title>
+                <use xlinkHref='#icon--icon_close' />
+              </svg>
+            </button>
+            <h2 className='visuallyhidden' id='g-nav__title'>Main menu</h2>
+            {children || <DefaultSideMenu />}
+          </div>
         </div>
+        <div
+          onClick={handleNavCloseBtnClick}
+          className={gNavOverlayClassNames}
+          data-nav-overlay
+        ></div>
       </div>
-      <div
-        onClick={handleNavCloseBtnClick}
-        className='g-nav-overlay'
-        data-nav-overlay
-      ></div>
-    </div>
-  );
+    );
+  }
 };
 
 const mapStateToProps = state => ({ htmlClassManager: state.htmlClassManager });

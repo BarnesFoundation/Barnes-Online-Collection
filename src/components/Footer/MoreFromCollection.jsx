@@ -15,6 +15,7 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
 			<div className='m-card-event__header'>
 				<a className='m-card-event__media-link' href={entryUrl}>
 					<img
+						alt={title}
 						className='m-card-event__media'
 						src={backgroundImage}
 					/>

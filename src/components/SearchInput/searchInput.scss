@@ -78,6 +78,10 @@ $button-margin: 15px;
     @include breakpoint('small-') {
       display: none;
     }
+
+    &:focus {
+      color: $color__white;
+    }
   }
 
   &__header {
@@ -87,58 +91,6 @@ $button-margin: 15px;
     @include breakpoint('medium+') {
       display: none;
     }
-  }
-}
-
-.search-information {
-  $self: &;
-
-  &:hover {
-    #{ $self }__tooltip{
-      display: block;
-    }
-  }
-
-  &__icon {
-    // Hide icon for smaller viewports.
-    @include breakpoint('medium-') {
-      display: none;
-    }
-
-    position: absolute;
-    top: 22px;
-    right: 45px;
-
-    color: $color-grey-light;
-
-    &--x {
-      color: $color-black;
-      font-size: 9px;
-      top: 16px;
-      right: 15px;
-    }
-  }
-
-  &__tooltip {
-    z-index: 5;
-    text-align: left;
-    display: none; // On .search-information hover, change to display: block.
-
-    position: absolute;
-    top: 5px;
-    right: 30px;
-
-    max-width: 300px;
-
-    background-color: $color-white;
-    border: 2px solid $color-border;
-    box-shadow: 1px 1px 10px $color-grey-light;
-
-    padding: 10px 40px 10px 10px;
-
-    font-size: 16px;
-    line-height: 28px;
-    font-weight: bold;
   }
 }
 
@@ -241,7 +193,7 @@ search-suggestion
 
 }
 
-#suggestions {
+.suggestions {
   position: absolute;
   z-index: #{map-get($zIndexes, 'header')};
   left: 0;
@@ -253,4 +205,6 @@ search-suggestion
   @include breakpoint('small-') {
     width: 100%;
   }
+
+  text-align: left;
 }

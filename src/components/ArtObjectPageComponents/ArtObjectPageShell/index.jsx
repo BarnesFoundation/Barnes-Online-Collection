@@ -38,12 +38,14 @@ class ArtObjectPageShell extends Component {
   }
 
   render() {
+    const { object } = this.props;
+
     return (
       <div className="component-art-object-page-shell">
         <div className="container">
-          <h1 className="art-object__title art-object__title--main font-gamma">{this.props.object.people}</h1>
-          <h1 className="art-object__title art-object__title--main font-gamma color-light">{this.props.object.title}</h1>
-          <h1 className="art-object__title art-object__title--date font-epsilon">{this.props.object.displayDate}. {this.props.object.medium}</h1>
+          <h1 className="art-object__title art-object__title--main font-gamma">{object.people}</h1>
+          <h1 className="art-object__title art-object__title--main font-gamma color-light">{object.title}</h1>
+          <h1 className="art-object__title art-object__title--date font-epsilon">{object.displayDate && `${object.displayDate}.`} {this.props.object.medium}</h1>
         </div>
         <TabbedSubMenu
           slug={this.props.slug}

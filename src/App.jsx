@@ -9,12 +9,20 @@ import 'babel-polyfill';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
+import { setSearchAssets } from './searchAssets';
 import history from './history';
 import RouteSwitcher from './routeSwitcher';
 import routeWrapper from './routeWrapper';
 
 class App extends Component {
+  /**
+   * Async method to fetch searchAssets file.
+   */
+  componentDidMount() {
+    setSearchAssets();
+  }
+
   render() {
     return (
       <Provider store={this.props.store}>

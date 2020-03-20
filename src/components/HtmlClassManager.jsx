@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { CLASSNAME_MODAL_OPEN } from '../constants';
@@ -18,10 +18,6 @@ const getLiveClassList = () => {
 var origClasslist = null;
 
 class HtmlClassManager extends Component {
-  static propTypes = {
-    classNameList: React.PropTypes.array,
-  };
-
   static defaultProps = {
     classNameList: [],
   }
@@ -57,6 +53,10 @@ class HtmlClassManager extends Component {
     return <div className="component-html-class-manager" />
   }
 }
+
+HtmlClassManager.propTypes = {
+  classNameList: PropTypes.array.isRequired,
+};
 
 const mapStateToProps = state => {
   return {

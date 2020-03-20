@@ -109,6 +109,10 @@ class LandingPageHeader extends Component {
 class LandingPage extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      resetTruncateThreshold: null,
+    };
   }
 
   /**
@@ -145,15 +149,19 @@ class LandingPage extends Component {
    * On props update.
    * TODO => This is convoluted and fires on either search, filters, or history changing.  Rewrite this in a more declarative way.
    */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {
       search,
       filters,
       history: { location: { state: newState }} // For detecting if a modal is open.
     } = this.props;
+    const { resetTruncateThreshold } = this.state;
 
     // Detect if we just opened a modal. If so, just return.
     if (newState && newState.isModal) return;
+    if (JSON.stringify(prevProps.filters) === JSON.stringify(filters)) return;
+
+    if (resetTruncateThreshold) resetTruncateThreshold();
 
     const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
 
@@ -185,14 +193,14 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { object, objectsQuery, objects: liveObjects, isFilterActive, closeFilterSet } = this.props;
+    const { object, objectsQuery, objects: liveObjects } = this.props;
     const metaTags = getMetaTagsFromObject(object);
     const isSearchPending = Boolean(objectsQuery && objectsQuery.isPending);
     const pageType = 'landing';
 
     // If filters are active, apply 50% opacity on search results.
-    let isBackgroundActiveClasses = 'shaded-background__tint';
-    if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
+    // let isBackgroundActiveClasses = 'shaded-background__tint';
+    // if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
 
     return (
       <div className='app app-landing-page'>
@@ -226,6 +234,7 @@ class LandingPage extends Component {
                   liveObjects={liveObjects}
                   pageType={pageType}
                   hasMoreResults
+                  setResetTruncateThreshold={resetTruncateThreshold => this.setState({ resetTruncateThreshold })}
                 />
               </div>
               <Footer hasHours/>

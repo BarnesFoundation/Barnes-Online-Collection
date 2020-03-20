@@ -49,6 +49,7 @@ export const CLEAR_SEARCH_TERM = 'CLEAR_SEARCH_TERM';
 export const OBJECTS_QUERY_SET_IS_PENDING = 'OBJECTS_QUERY_SET_IS_PENDING';
 export const OBJECTS_QUERY_SET_HAS_MORE_RESULTS = 'OBJECTS_QUERY_SET_HAS_MORE_RESULTS';
 export const OBJECTS_QUERY_SET_LAST_INDEX = 'OBJECTS_QUERY_SET_LAST_INDEX';
+export const OBJECTS_QUERY_CURRENT_INDEX = 'OBJECTS_QUERY_CURRENT_INDEX';
 
 // ensembleObjectsQuery
 export const ENSEMBLE_OBJECTS_QUERY_SET_IS_PENDING = 'ENSEMBLE_OBJECTS_QUERY_SET_IS_PENDING';
@@ -77,6 +78,7 @@ export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 // urls
 export const MAIN_WEBSITE_DOMAIN = process.env.REACT_APP_WWW_URL || '//www.barnesfoundation.org';
 export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
+export const NEWSLETTER_URL = process.env.REACT_APP_NEWSLETTER_URL;
 
 // meta tag content
 export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
@@ -90,3 +92,5 @@ export const BREAKPOINTS = {
   tablet_max: 990,
   mobile_max: 425
 };
+
+export const ART_OBJECT_GRID_INCREMENT = 12;

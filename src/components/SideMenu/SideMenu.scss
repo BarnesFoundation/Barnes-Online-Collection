@@ -13,6 +13,32 @@
     border-radius: 11px;
 }
 
+.g-nav-overlay {
+    background-color: black;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+
+    &--transition {
+        width: 100%;
+    }
+
+    &--active {
+        cursor: default; // This is to prevent pointer for artists.
+        
+        overflow: hidden;
+        height: 100vh;
+        left: 0;
+        opacity: 0.2;
+        position: fixed;
+        top: 0;
+        z-index: 6;
+        
+        @media print {
+            display: none;
+        }
+    }
+}
+
 .side-menu {
     font-weight: normal;
 
@@ -21,32 +47,11 @@
     * Overwrite how .g-nav class behaves from components-barnes-toolkit/scss/state/_nav-active.scss;
     */
     &--active {
-        
-
         .g-nav {
             // transform: translate3d(-100%, 0, 0) !important;
             &__inner {
                 // Style scrollbar
                 @include scrollbar();
-            }
-        }
-    
-        .g-nav-overlay {
-            cursor: default; // This is to prevent pointer for artists.
-            
-            overflow: hidden;
-            background: rgb(0, 0, 0);
-            height: 100vh;
-            left: 0;
-            opacity: 0.2;
-            position: fixed;
-            top: 0;
-            transition: opacity 350ms ease 0;
-            width: 100%;
-            z-index: 6;
-            
-            @media print {
-                display: none;
             }
         }
     }

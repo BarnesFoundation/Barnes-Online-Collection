@@ -54,9 +54,10 @@ const MobileLinks = () => (
 class SiteHeader extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isSideMenuOpen: false,
-      isHeaderHidden: false,
+      isHeaderHidden: HEADER_HIDDEN.DEFAULT,
     };
   }
 
@@ -79,7 +80,7 @@ class SiteHeader extends Component {
 
     return () => {
       // Only perform update if this has not already been fired.
-      const { isArtistMenuToggled } = this.props;
+      const { isArtistMenuToggled, isGlobalSearchActive } = this.props;
 
       if (!scrollState.isScrolling) {
         scrollState.isScrolling = true; // Set firing status to true.
@@ -89,7 +90,7 @@ class SiteHeader extends Component {
           const currentScrollHeight = window.pageYOffset;
 
           let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
-          if ((currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) || isArtistMenuToggled) {
+          if ((currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) || isArtistMenuToggled || isGlobalSearchActive) {
             isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
           } else if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) {
             isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
@@ -230,6 +231,7 @@ class SiteHeaderGlobalSearch extends Component {
       <div>
         <ConnectedSiteHeader
           isArtObject={Boolean(isArtObject)}
+          isGlobalSearchActive={isGlobalSearchActive}
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
         />
         <ConnectedSiteHeader

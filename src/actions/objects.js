@@ -1,12 +1,26 @@
 import axios from 'axios';
 import { getObjectsRequestBody } from '../helpers';
-import * as ActionTypes from '../constants';
+import {
+  RESET_MOBILE_FILTERS,
+  SET_OBJECTS,
+  APPEND_OBJECTS,
+  OBJECTS_QUERY_SET_HAS_MORE_RESULTS,
+  OBJECTS_QUERY_SET_IS_PENDING,
+  OBJECTS_QUERY_SET_LAST_INDEX,
+  OBJECTS_QUERY_CURRENT_INDEX,
+} from '../constants';
 import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
 import { DEV_LOG } from '../devLogging';
 import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
-import searchAssets from '../searchAssets.json';
+import { uniqBy } from 'lodash';
 
-const uniqBy = require('lodash/uniqBy');
+const resetMobileFilters = () => ({ type: RESET_MOBILE_FILTERS });
+const setObjects = objects => ({ type: SET_OBJECTS, payload: objects });
+const appendObjects = objects => ({ type: APPEND_OBJECTS, payload: objects });
+const setHasMoreResults = hasMoreResults => ({ type: OBJECTS_QUERY_SET_HAS_MORE_RESULTS, hasMoreResults });
+const setIsPending = isPending => ({ type: OBJECTS_QUERY_SET_IS_PENDING, isPending });
+const setLastIndex = lastIndex => ({ type: OBJECTS_QUERY_SET_LAST_INDEX, lastIndex });
+const setCurrentIndex = currentIndex => ({ type: OBJECTS_QUERY_CURRENT_INDEX, currentIndex });
 
 const addHighlightsFilter = (body) => {
   const highlightFilter = {
@@ -45,63 +59,42 @@ const addHighlightsFilter = (body) => {
       "score_mode": "max",
       "boost_mode": "multiply"
     });
-}
+};
 
-// todo: refactor to consolidate these helper functions
-const mapObjects = (objects) => {
-  let mappedObjects = uniqBy(objects, '_id');
-  const dedupedObjectLen = objects.length - mappedObjects.length;
+const mapObjects = (objects) => (
+  uniqBy(objects, '_id').map(object => Object.assign({}, object._source, { highlight: object.highlight } , { id: object._id }))
+);
 
-  if(dedupedObjectLen > 0) {
-    DEV_LOG(`Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`);
-  }
+const fetchResults = async (body, dispatch, options = {}) => {
+  if (!options.append) dispatch(setIsPending(true));
 
-  return mappedObjects.map(object => Object.assign({}, object._source, { highlight: object.highlight } , { id: object._id }));
-}
+  try {
+    const res = await axios.get('/api/search', { params: { body: body } });
 
-const fetchResults = (body, dispatch, options = {}) => {
-  DEV_LOG('Fetching results...');
-
-  dispatch(setIsPending(true));
-
-  axios.get('/api/search', { params: { body: body } })
-  .then((response) => {
-    let objects = [];
-    let maxHits = 0;
-    // Note: confirm that we don't need this 25 default. The front end logic was using it before
-    // let lastIndex = (body.from + body.size) || 25;
-    let lastIndex = body.from + body.size;
-    let hasMoreResults = false;
-
-    if (response.data.hits) {
-      objects = mapObjects(response.data.hits.hits);
-      maxHits = response.data.hits.total;
-      hasMoreResults = maxHits > lastIndex;
-    }
-
-    DEV_LOG('Retrieved '+objects.length+' objects.' );
+    const lastIndex = (res.data.hits && res.data.hits.total) ? res.data.hits.total.value : 0;
+    const objects = res.data.hits ? mapObjects(res.data.hits.hits) : [];
+    const maxHits = res.data.hits ? res.data.hits.total : 0;
+    const hasMoreResults = maxHits > lastIndex;
 
     dispatch(setLastIndex(lastIndex));
+    // dispatch(setCurrentIndex(getState().objectsQuery.currentIndex + 50))
     dispatch(setHasMoreResults(hasMoreResults));
 
     if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
-        barnesifyObjects(objects, dispatch, options).then(() => {
-          // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
-          dispatch(setIsPending(false));
-        });
+        await barnesifyObjects(objects, dispatch, options); // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
     } else {
       options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
-      dispatch(setIsPending(false));
       dispatch(resetMobileFilters());
     }
-  });
-}
+    
+  } catch (e) {
+    console.error(e);
+    console.error('Error fetching results.');
+  } finally {
+    if (!options.append) dispatch(setIsPending(false));
+  }
+};
 
-const resetMobileFilters = () => {
-  return {
-    type: ActionTypes.RESET_MOBILE_FILTERS,
-  };
-}
 
 const shuffleObjects = (objects) => {
   let i = 0;
@@ -197,21 +190,10 @@ const barnesifyObjects = (objects, dispatch, options) => {
     }
   }
 
-  const get2DObjects = () => {
-    return axios.get('/api/search', params(BARNES_SETTINGS.terms2D));
-  }
-
-  const getMetalworks = () => {
-    return axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks));
-  }
-
-  const get3DObjects = () => {
-    return axios.get('/api/search', params(BARNES_SETTINGS.terms3D));
-  }
-
-  const getKnickKnacks = () => {
-    return axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
-  }
+  const get2DObjects = () => axios.get('/api/search', params(BARNES_SETTINGS.terms2D));
+  const getMetalworks = () => axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks));
+  const get3DObjects = () => axios.get('/api/search', params(BARNES_SETTINGS.terms3D));
+  const getKnickKnacks = () => axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
 
   return axios.all([
     get2DObjects(),
@@ -237,69 +219,28 @@ const barnesifyObjects = (objects, dispatch, options) => {
 
     dispatch(setObjects(retObjects));
   }));
-}
+};
 
-const setObjects = (objects) => {
-  DEV_LOG('Setting objects...');
-  return {
-    type: ActionTypes.SET_OBJECTS,
-    payload: objects
-  };
-}
 
-const appendObjects = (objects) => {
-  DEV_LOG('Appending objects...');
-  return {
-    type: ActionTypes.APPEND_OBJECTS,
-    payload: objects
-  };
-}
+export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) => {
+  const state = getState();
 
-const setHasMoreResults = (hasMoreResults) => {
-  return {
-    type: ActionTypes.OBJECTS_QUERY_SET_HAS_MORE_RESULTS,
-    hasMoreResults: hasMoreResults
-  };
-}
+  const { currentIndex } = state.objectsQuery;
+  const filters = state.filters;
 
-const setIsPending = (isPending) => {
-  return {
-    type: ActionTypes.OBJECTS_QUERY_SET_IS_PENDING,
-    isPending: isPending
-  };
-}
-
-const setLastIndex = (lastIndex) => {
-  return {
-    type: ActionTypes.OBJECTS_QUERY_SET_LAST_INDEX,
-    lastIndex: lastIndex
-  };
-}
-
-export const getNextObjects = (fromIndex, query=null) => {
-  return (dispatch) => {
-    if (!query) {
-      return getAllObjects(fromIndex)(dispatch);
-    } else if (typeof query === 'string') {
-      return searchObjects(query, fromIndex)(dispatch);
-    } else if (typeof query === 'object') {
-      return findFilteredObjects(query, fromIndex)(dispatch);
-    }
+  if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
+    findFilteredObjects(filters, currentIndex + BARNES_SETTINGS.size)(dispatch);
+    dispatch(setCurrentIndex(currentIndex + BARNES_SETTINGS.size));
   }
-}
+});
 
-export const getAllObjects = (fromIndex=0) => {
-  let body = getObjectsRequestBody(fromIndex);
+export const getAllObjects = () => {
+  let body = getObjectsRequestBody();
   let options = {};
 
-  if (!fromIndex) {
-    body = addHighlightsFilter(body);
-    options.barnesify = true;
-    options.highlights = true;
-  } else {
-    options.append = true;
-    options.barnesify = false;
-  }
+  body = addHighlightsFilter(body);
+  options.barnesify = true;
+  options.highlights = true;
 
   body = body
     .rawOption('_source', [
@@ -309,15 +250,18 @@ export const getAllObjects = (fromIndex=0) => {
       "medium",
       "imageOriginalSecret",
       "imageSecret",
+      "ensembleIndex",
     ])
     .build();
 
   return (dispatch) => {
+    dispatch(setCurrentIndex(0));
     fetchResults(body, dispatch, options);
-  }
+  };
 };
 
 export const findFilteredObjects = (filters, fromIndex = 0) => {
+  // If there is now no filter.
   if (
       (
         !filters.ordered ||
@@ -326,7 +270,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       ) && 
       !Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // If there is any advanced filter
     ) {
-    return (dispatch) => { getAllObjects()(dispatch); }
+    return dispatch => getAllObjects()(dispatch);
   }
 
   const queries = buildQueriesFromFilters(filters.ordered);
@@ -334,10 +278,10 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   const options = {
     queries: queries,
     barnesify: !fromIndex,
-    append: !!fromIndex
+    append: Boolean(fromIndex)
   };
 
-  let body = getObjectsRequestBody(fromIndex);
+  let body = getObjectsRequestBody(fromIndex, Boolean(Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length));
 
   if (filters.ordered.filter(filter => filter.filterType !== 'search').length) {
     body = assembleDisMaxQuery(body, queries);
@@ -374,10 +318,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Flatmap over all locations then parseInt flattened Array, placing all ensembleIndexes into single array like [77, 78, 79, 80, 81...].
           body.query(
             'terms',
-            { ensembleIndex : Object.values(appliedFilters)
-                .flatMap(({ term }) => searchAssets.locations[term])
-                .map(number => parseInt(number))
-            }
+            { ensembleIndex: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
           );
           break;
         }
@@ -385,16 +326,14 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Map over terms, place into single array like ["copyrightA", "copyRightB"].
           body.query(
             'terms',
-            { 'objRightsTypeId': Object.values(appliedFilters)
-                .flatMap(({ term }) => searchAssets.copyrights[term])
-                .map(number => parseInt(number))
-            }
+            { objRightsTypeId: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
           );
           break;
         }
         case DROPDOWN_TERMS.ARTIST: {
           // Map over terms, place into single array like ["Pablo Picasso", "Amedeo Modigliani"].
           body.query('terms', { 'people.text': Object.values(appliedFilters).map(({ term }) => term) });
+          body.sort('endDate', 'desc');
           break;
         }
         default: {
@@ -403,7 +342,18 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
       }
   });
 
+  body.rawOption('_source', [
+    "id",
+    "title",
+    "people",
+    "medium",
+    "imageOriginalSecret",
+    "imageSecret",
+    "ensembleIndex",
+  ]);
+
   body = body.build();
+  
 
   body.highlight = { 'fields': {} };
 	body.highlight.fields = {
@@ -436,9 +386,12 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     }
   }
 
-  return (dispatch) => {
-    fetchResults(body, dispatch, options);
+  if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length) {
+    // Replace sort.
+    body.sort = [{ endDate: { order: 'desc' }}, '_score'];
   }
+
+  return dispatch => fetchResults(body, dispatch, options);
 }
 
 const buildQueriesFromFilters = (filters) => {
@@ -511,7 +464,7 @@ const assembleDisMaxQuery = (body, queries) => {
     });
 }
 
-export const searchObjects = (term, fromIndex=0) => {
+export const searchObjects = (term, fromIndex = 0) => {
   return (dispatch) => {
     let options = {};
 
@@ -521,26 +474,21 @@ export const searchObjects = (term, fromIndex=0) => {
 
     let body = getObjectsRequestBody(fromIndex).build();
 
-	const query = {
+    const query = {
       'query': term,
-	  'fields': SEARCH_FIELDS
-	};
-	
-	// Add the search fields to the highlight -- so we know what field caused an object to show up on search
-	body.highlight = { 'fields': {} };
-	body.highlight.fields = {
-		...(SEARCH_FIELDS.reduce((acc, sf) => {
-			acc[sf] = {}
-			return acc;
-		}, {}))
-	}
-	
-    body.query.bool['must'] = [
-      { 'multi_match': query }
-	];
-
-    DEV_LOG(body);
-
+      'fields': SEARCH_FIELDS
+    };
+    
+    // Add the search fields to the highlight -- so we know what field caused an object to show up on search
+    body.highlight = { 'fields': {} };
+    body.highlight.fields = {
+      ...(SEARCH_FIELDS.reduce((acc, sf) => {
+        acc[sf] = {}
+        return acc;
+      }, {}))
+    }
+    
+    body.query.bool['must'] = [{ 'multi_match': query }];
     if (fromIndex >= 50) options.append = true;
 
     fetchResults(body, dispatch, options);

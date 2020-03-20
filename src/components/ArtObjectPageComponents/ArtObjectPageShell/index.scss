@@ -5,6 +5,14 @@
 @import '../../../components/ArtObjectPageComponents/PanelEnsemble/index.scss';
 @import '../../../components/ArtObjectPageComponents/PanelVisuallyRelated/index.scss';
 
+.modal-open {
+  .component-art-object-page-shell {
+    @include breakpoint('small-') {
+      margin-top: 0px;
+    }
+  }
+}
+
 .component-art-object-page-shell {
   @include breakpoint('small-') {
     margin-top: 65px; // Increase top margin for Buy Tickets section.

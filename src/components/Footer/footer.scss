@@ -28,9 +28,23 @@
     }
   }
 
+  &__social-container {
+    justify-content: normal;
+  }
+
+  &__nav__link {
+    margin-bottom: 0px;
+  }
+
+  &__social__link {
+    margin-bottom: 2px;
+  }
+
   // Take some padding from the col wrapper
   // to give each stacked col some padding of its own.
   @include breakpoint('small-') {
+    margin-bottom: 100px;
+
     .m-block.m-block__columns {
       padding-bottom: 0;
 
@@ -38,6 +52,10 @@
         padding-bottom: 30px;
       }
     }
+  }
+
+  @include breakpoint('medium') {
+    margin-bottom: 80px;
   }
 
   @include stacking-btn-margin-fix();

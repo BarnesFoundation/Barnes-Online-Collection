@@ -54,12 +54,13 @@ class Share extends React.Component {
 			<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
 				{showShareDialog &&
 					<div className="share-dialog">
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</a>
-						<a className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</a>
+						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</button>
+						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</button>
+						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</button>
+						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.EMAIL) }}>Email</button>
+						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.COPY_URL) }}>Copy Link</button>
 						<input
+							readOnly
 							style={{ position: 'absolute', height: 0, opacity: '.01' }}
 							ref={this.setRef}
 							value={createShareForPlatform(people, title, id, sharePlatforms.COPY_URL, this.props.object.imageUrlLarge)}

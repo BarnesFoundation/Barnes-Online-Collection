@@ -32,6 +32,11 @@ for them.
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: 0; /* 1 */
+  min-height: 60px;
+
+  &:after {
+    content: ''
+  }
 }
 
 /**
