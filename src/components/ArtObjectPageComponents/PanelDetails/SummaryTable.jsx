@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { getRoomAndTitleText } from '../../../ensembleIndex';
-import { getArtObjectUrlFromId, getQueryKeywordUrl } from '../../../helpers';
+import { getArtObjectUrlFromId } from '../../../helpers';
 import '../../../components/SummaryTable/index.css';
+
+const getArtistLink = artistName => `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{%22${artistName}%22:{%22filterType%22:%22Artist%22,%22value%22:%22${artistName}%22,%22term%22:%22${artistName}%22,%22index%22:1}}}}`
+const getCultureLink = cultureName => `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{},%22Culture%22:{%22${cultureName}%22:{%22filterType%22:%22Culture%22,%22value%22:%22${cultureName}%22,%22term%22:%22${cultureName}%22,%22index%22:1}}}}`
 
 class SummaryTable extends Component {
 
@@ -54,7 +57,7 @@ class SummaryTable extends Component {
           <div className="table-row">
             <div className="text">Artist</div>
             <div className="text color-light">
-              <a href={getQueryKeywordUrl(this.props.people)}>{this.generateArtist()}</a>
+              <a href={getArtistLink(this.props.people)}>{this.generateArtist()}</a>
             </div>
           </div>
         }
@@ -62,7 +65,7 @@ class SummaryTable extends Component {
           <div className="table-row">
             <div className="text">Culture</div>
             <div className="text color-light">
-              <a href={getQueryKeywordUrl(this.props.culture)}>
+              <a href={getCultureLink(this.props.culture)}>
                 {this.props.culture}
               </a>
             </div>
