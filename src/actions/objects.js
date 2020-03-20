@@ -15,13 +15,14 @@ import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
 import { uniqBy } from 'lodash';
 
 const RAW_OPTION = [
-  "id",
-  "title",
-  "people",
-  "medium",
-  "imageOriginalSecret",
-  "imageSecret",
-  "ensembleIndex",
+  'id',
+  'title',
+  'people',
+  'medium',
+  'imageOriginalSecret',
+  'imageSecret',
+  'ensembleIndex',
+  'visualDescription',
 ];
 
 const resetMobileFilters = () => ({ type: RESET_MOBILE_FILTERS });
@@ -323,7 +324,7 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
             .query('range', 'endDate', { 'lte': endDate });
           break;
         }
-        case DROPDOWN_TERMS.CLASSIFICATION: {
+        case DROPDOWN_TERMS.CATEGORY: {
           // Map over terms, place into single array like ["Charcoal on brown wove paper", "Pen and brown ink on brown wove paper"].
           body.query('terms', { 'classification': Object.values(appliedFilters).map(({ term }) => term) });
           break;

@@ -17,7 +17,7 @@ import './dropdowns.css';
 export const DROPDOWN_TERMS = {
     CULTURE: 'Culture',
     YEAR: 'Year',
-    CLASSIFICATION: 'Classification',
+    CATEGORY: 'Category',
     ROOM: 'Room',
     COPYRIGHT: 'Copyright',
     ARTIST: 'Artist',
@@ -26,7 +26,7 @@ export const DROPDOWN_TERMS = {
 const DROPDOWN_TERMS_ARRAY = [
     DROPDOWN_TERMS.CULTURE,
     DROPDOWN_TERMS.YEAR,
-    DROPDOWN_TERMS.CLASSIFICATION,
+    DROPDOWN_TERMS.CATEGORY,
     DROPDOWN_TERMS.ROOM,
     DROPDOWN_TERMS.COPYRIGHT,
     DROPDOWN_TERMS.ARTIST,
@@ -446,7 +446,7 @@ class DropdownSection extends Component {
         this.setState({
             dropdownTermsMap: {
                 [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
-                [DROPDOWN_TERMS.CLASSIFICATION]: searchAssets.classifications,
+                [DROPDOWN_TERMS.CATEGORY]: searchAssets.classifications,
                 [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
                 [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
                 [DROPDOWN_TERMS.ARTIST]: searchAssets.artists,
