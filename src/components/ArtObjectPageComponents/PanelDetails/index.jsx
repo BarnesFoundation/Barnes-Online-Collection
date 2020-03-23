@@ -157,7 +157,7 @@ class Image extends Component {
             ref={ref => this.ref = ref}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {/* {isLoaded && <div className='image-art-object__button-group'>
+          {isLoaded && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
@@ -171,7 +171,7 @@ class Image extends Component {
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
             </button>
-          </div>} */}
+          </div>}
         </div>
         <div className='image-caption'>
           <div
@@ -244,7 +244,7 @@ class PanelDetails extends Component {
             setActiveImageIndex={this.setActiveImageIndex}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {/* {Boolean(imageLoaded || isZoomed) &&
+          {Boolean(imageLoaded || isZoomed) &&
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
@@ -252,7 +252,7 @@ class PanelDetails extends Component {
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
             />
-          } */}
+          }
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
           <div className='container-inner-narrow'>
