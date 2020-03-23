@@ -445,7 +445,7 @@ class DropdownSection extends Component {
     
         this.setState({
             dropdownTermsMap: {
-                [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures,
+                [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures.map(key => ({ key })),
                 [DROPDOWN_TERMS.CATEGORY]: searchAssets.classifications,
                 [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
                 [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
