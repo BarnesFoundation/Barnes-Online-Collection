@@ -14,7 +14,8 @@ import HtmlClassManager from '../HtmlClassManager';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
-import heroVideo from './barnesCollectionEnsemble.mp4'
+// import heroVideo from './barnesCollectionEnsemble.mp4'
+import src from './HeroImages/88.jpg'
 import './landingPage.css';
 
 /**
@@ -25,11 +26,18 @@ class LandingPageHeader extends Component {
     super(props);
 
     this.ref = null; // For getting height.
-    this.state = { height: 'auto' };
+    this.state = {
+      height: 'auto',
+      heroImageSrc: `https://barnesfoundation-collection.imgix.net/ensembles/${Math.floor(Math.random() * 99)}.jpg`,
+    };
   }
 
-  // Set up event listener and cleanup.
-  componentDidMount() { window.addEventListener('resize', this.resize); }
+  // Set up event listener.
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  // Cleanup event listener on unmount
   componentWillUnmount() { window.removeEventListener('resize', this.resize); }
 
   /**
@@ -52,7 +60,7 @@ class LandingPageHeader extends Component {
   }
 
   render() {
-    const { height } = this.state;
+    const { height, heroImageSrc } = this.state;
 
     return (
       <div 
@@ -67,26 +75,6 @@ class LandingPageHeader extends Component {
           </div>
         </div>
         {/* <div
-            ref={this.setRef}
-            className='o-hero__video-wrapper'
-            style={{ height }}
-            dangerouslySetInnerHTML={{
-              __html: `
-                <video
-                  style={{ opacity: 1 }}
-                  className='o-hero__video'
-                  src={heroVideo}
-                  autoPlay
-                  loop
-                  playsInline
-                  muted="true"
-                />
-              `
-            }}
-          >
-            
-          </div> */}
-        <div
           className='o-hero__video-wrapper'
           style={{ height }}
         >
@@ -99,6 +87,12 @@ class LandingPageHeader extends Component {
             loop
             playsInline
             muted={true}
+          />
+        </div> */}
+        <div className='o-hero__image-wrapper'>
+          <img
+            className='o-hero__image'
+            src={src}
           />
         </div>
       </div>
