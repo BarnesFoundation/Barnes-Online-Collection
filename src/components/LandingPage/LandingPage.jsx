@@ -15,8 +15,18 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 // import heroVideo from './barnesCollectionEnsemble.mp4'
-import src from './HeroImages/88.jpg'
+import { heroImages } from './HeroImages' 
 import './landingPage.css';
+
+const getTranslation = () => {
+  const getRandomNumber = () => Math.floor(Math.random() * 50);
+
+  const scale = 1 + Math.round(5 * Math.random())/10;
+  const translateX = -1 * getRandomNumber();
+  const translateY = -1 * getRandomNumber();
+
+  return `scale3d(${scale}, ${scale}, ${scale}) translate3d(${translateX}px, ${translateY}px, 0px)`;
+}
 
 /**
  * Header JSX for landing page.
@@ -26,19 +36,59 @@ class LandingPageHeader extends Component {
     super(props);
 
     this.ref = null; // For getting height.
+
+    this.sto = null;
+    this.si = null;
+
     this.state = {
       height: 'auto',
-      heroImageSrc: `https://barnesfoundation-collection.imgix.net/ensembles/${Math.floor(Math.random() * 99)}.jpg`,
+
+      imageIndex: 0,
+      isInit: false, // If the animation has been triggered at least once.
+
+      styles: {
+        opacity: 1,
+      }
     };
+  }
+
+  /** Start running animation. */
+  triggerImageTranslation = () => {
+    this.setState({
+      isInit: true,
+
+      styles: {
+        transform: getTranslation(),
+        opacity: 0,
+      }
+    });
   }
 
   // Set up event listener.
   componentDidMount() {
     window.addEventListener('resize', this.resize);
+
+    this.sto = setTimeout(() => {
+      this.triggerImageTranslation();
+    }, 100);
+
+    this.si = setInterval(() => {
+      this.setState(
+        ({ imageIndex }) => ({
+          imageIndex: (imageIndex + 1) % heroImages.length
+        }),
+      () => this.triggerImageTranslation())
+    }, 21000);
   }
 
-  // Cleanup event listener on unmount
-  componentWillUnmount() { window.removeEventListener('resize', this.resize); }
+  // Cleanup event listener, sto, and interval on unmount.
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+
+    if (this.sto) clearTimeout(this.sto);
+    if (this.si) clearTimeout(this.si);
+
+  }
 
   /**
    * Set up ref.
@@ -60,7 +110,7 @@ class LandingPageHeader extends Component {
   }
 
   render() {
-    const { height, heroImageSrc } = this.state;
+    const { height, styles, imageIndex, isInit } = this.state;
 
     return (
       <div 
@@ -90,10 +140,24 @@ class LandingPageHeader extends Component {
           />
         </div> */}
         <div className='o-hero__image-wrapper'>
-          <img
-            className='o-hero__image'
-            src={src}
-          />
+          {heroImages.map((heroImage, index) => {
+            const style = index === imageIndex
+              ? { ...styles }
+              : {
+                  opacity: isInit ? 1 : 0,
+                  transform: 'scale3d(1, 1, 1) translate3d(0px, 0px, 0px)',
+                };
+
+            return (
+              <img
+                key={index}
+                className='o-hero__image'
+                src={heroImage}
+                style={{ ...style }}
+                alt='Barnes Museum Ensemble.'
+              />
+            );
+          })}
         </div>
       </div>
     )
