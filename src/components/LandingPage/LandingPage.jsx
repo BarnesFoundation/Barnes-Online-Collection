@@ -19,9 +19,9 @@ import { heroImages } from './HeroImages'
 import './landingPage.css';
 
 const getTranslation = () => {
-  const getRandomNumber = () => Math.floor(Math.random() * 50);
+  const getRandomNumber = () => Math.floor(Math.random() * 20);
 
-  const scale = 1 + Math.round(5 * Math.random())/10;
+  const scale = 1 + Math.round(4 * Math.random())/10;
   const translateX = -1 * getRandomNumber();
   const translateY = -1 * getRandomNumber();
 
@@ -64,9 +64,39 @@ class LandingPageHeader extends Component {
     });
   }
 
-  // Set up event listener.
+  /**
+   * Reset animation state on focus out.
+   * Some browsers will stop running JS on focus out, this method and the event emitters it is tied to will prevent animations from
+   * becoming out of phase with out setInterval.
+   * */
+  handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      this.setState(
+        ({ imageIndex }) => ({ imageIndex }),
+        () => this.triggerImageTranslation()
+      );
+
+      // Reset interval.
+      this.si = setInterval(() => {
+        this.setState(
+          ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
+          () => this.triggerImageTranslation()
+        )
+      }, 21000);
+
+    } else {
+      this.setState({ styles: { opacity: 1, transition: 'none' }, isInit: false });
+
+      if (this.sto) clearTimeout(this.sto);
+      if (this.si) clearTimeout(this.si);
+    }
+  }
+
+  // Set up event listeners and intervals..
   componentDidMount() {
     window.addEventListener('resize', this.resize);
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    document.addEventListener('onpageshow', () => this.handleVisibilityChange);
 
     this.sto = setTimeout(() => {
       this.triggerImageTranslation();
@@ -74,20 +104,20 @@ class LandingPageHeader extends Component {
 
     this.si = setInterval(() => {
       this.setState(
-        ({ imageIndex }) => ({
-          imageIndex: (imageIndex + 1) % heroImages.length
-        }),
-      () => this.triggerImageTranslation())
+        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
+        () => this.triggerImageTranslation()
+      )
     }, 21000);
   }
 
   // Cleanup event listener, sto, and interval on unmount.
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    document.addEventListener('onpagehide', () => this.handleVisibilityChange);
 
     if (this.sto) clearTimeout(this.sto);
     if (this.si) clearTimeout(this.si);
-
   }
 
   /**
@@ -141,19 +171,34 @@ class LandingPageHeader extends Component {
         </div> */}
         <div className='o-hero__image-wrapper'>
           {heroImages.map((heroImage, index) => {
-            const style = index === imageIndex
+            const isActiveImage = index === imageIndex;
+
+            let style = isActiveImage
               ? { ...styles }
               : {
                   opacity: isInit ? 1 : 0,
                   transform: 'scale3d(1, 1, 1) translate3d(0px, 0px, 0px)',
                 };
 
+
+            // Make sure next image appears beneath active image.
+            if (isActiveImage) {
+              style = { ...style, zIndex: 1 };
+            } else if (index === (imageIndex + 1) % heroImages.length) {
+              style = { ...style, zIndex: 0 };
+            } else {
+              style = { ...style, zIndex: -1 };
+            }
+
             return (
               <img
                 key={index}
                 className='o-hero__image'
                 src={heroImage}
-                style={{ ...style }}
+                style={{
+                  ...style,
+                  
+                }}
                 alt='Barnes Museum Ensemble.'
               />
             );
