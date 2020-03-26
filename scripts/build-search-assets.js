@@ -135,8 +135,12 @@ const cultures = [
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
  * @param {string} aggregationField - The name of the field to conduct an aggregation for
+ * @param {any} subAggregation - The a sub-aggregation to be applied to the results of the top-level aggregation
  */
-const getUniqueSearchValues = async (aggregationName, aggregationField) => {
+const getUniqueSearchValues = async (aggregationName, aggregationField, subAggregation) => {
+
+	// Add the sub-aggregation query if subAggregation defined
+	const nest = (subAggregation) ? (a) => a.aggregation('top_hits', { size: 1, _source: [subAggregation] }, subAggregation) : null;
 
 	// Build query for unique artists
 	const body = bodybuilder()
@@ -144,7 +148,7 @@ const getUniqueSearchValues = async (aggregationName, aggregationField) => {
 		.aggregation('terms', aggregationName, {
 			"field": aggregationField,
 			"size": "200"
-		})
+		}, nest)
 		.build();
 
 	return await new Promise((resolve) => {
@@ -157,9 +161,23 @@ const getUniqueSearchValues = async (aggregationName, aggregationField) => {
 			}
 
 			// Grab the unique buckets
-			let results = response.aggregations[`agg_terms_${aggregationName}`].buckets;
+			let { buckets } = response.aggregations[`agg_terms_${aggregationName}`];
 
-			resolve(results);
+			// Reduce the buckets if subAggregation was defined, will need to be expanded upon if we end up using more subAggregations
+			if (subAggregation) {
+				buckets = buckets.reduce((acc, cv) => {
+					const { key, doc_count } = cv;
+
+					// Name the field the same as the sub aggregation field
+					const field = cv[subAggregation]['hits']['hits'][0]._source[subAggregation];
+
+					// Add to the object list
+					acc.push({ key, doc_count, [subAggregation]: field });
+					return acc;
+				}, []);
+			}
+			
+			resolve(buckets);
 		});
 	});
 }
@@ -208,7 +226,7 @@ const generateLocations = () => {
 const generateAssets = async () => {
 
 	const searchAssetsObject = {
-		artists: await getUniqueSearchValues('uniq_peoples', 'people.text'),
+		artists: await getUniqueSearchValues('uniq_peoples', 'people.text', 'sortedName'),
 		cultures: cultures /* await getUniqueSearchValues('uniq_cultures', 'culture.keyword') */,
 		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
 		classifications: await getUniqueSearchValues('uniq_classifications', 'classification'),

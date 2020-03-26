@@ -28,8 +28,8 @@ export class ArtistSideMenuContent extends Component {
             artistRadio,
             data: artistRadio === ARTISTS_RADIOS.ALPHABETICAL
                 ? data.sort((a, b) => {
-                    if (a.key < b.key) return -1;
-                    if (a.key > b.key) return 1;
+                    if (a.sortedName < b.sortedName) return -1;
+                    if (a.sortedName > b.sortedName) return 1;
                     return 0;
                 })
                 : data.sort((a, b) => {
