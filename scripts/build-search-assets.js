@@ -135,7 +135,7 @@ const cultures = [
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
  * @param {string} aggregationField - The name of the field to conduct an aggregation for
- * @param {any} subAggregation - The a sub-aggregation to be applied to the results of the top-level aggregation
+ * @param {any} subAggregation - The a sub-aggregation to be applied to the results of the top-level aggregation (optional)
  */
 const getUniqueSearchValues = async (aggregationName, aggregationField, subAggregation) => {
 
