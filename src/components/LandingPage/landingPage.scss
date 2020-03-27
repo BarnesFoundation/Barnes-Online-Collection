@@ -163,8 +163,19 @@
   }
 
   &__supporting {
+    position: absolute;
+    bottom: 0;
+
     @include breakpoint('medium-') {
       line-height: 1.2;
+    }
+
+    opacity: 1;
+
+    transition: opacity 1s ease;
+
+    &--hidden {
+      opacity: 0;
     }
   }
 

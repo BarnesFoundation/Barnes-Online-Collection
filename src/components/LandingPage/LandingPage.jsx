@@ -15,7 +15,7 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 // import heroVideo from './barnesCollectionEnsemble.mp4'
-import { heroImages } from './HeroImages' 
+import { heroes } from './HeroImages' 
 import './landingPage.css';
 
 const getTranslation = () => {
@@ -39,6 +39,7 @@ class LandingPageHeader extends Component {
 
     this.sto = null;
     this.si = null;
+    this.textSto = null;
 
     this.state = {
       height: 'auto',
@@ -56,12 +57,35 @@ class LandingPageHeader extends Component {
   triggerImageTranslation = () => {
     this.setState({
       isInit: true,
+      textShowing: true,
 
       styles: {
         transform: getTranslation(),
         opacity: 0,
       }
     });
+  }
+
+  /** Set up image interval and text STO inside of interval. */
+  setIntervalsAndTimeouts = () => {
+    const TEXT_TIMEOUT = 19000;
+    const INTERVAL_TIMEOUT = TEXT_TIMEOUT + 2000;
+
+    this.textSto = setTimeout(() => {
+      this.setState({ textShowing: false });
+    }, TEXT_TIMEOUT)
+
+    // Reset interval.
+    this.si = setInterval(() => {
+      this.textSto = setTimeout(() => {
+        this.setState({ textShowing: false });
+      }, TEXT_TIMEOUT);
+
+      this.setState(
+        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroes.length, textShowing: true }),
+        () => this.triggerImageTranslation()
+      )
+    }, INTERVAL_TIMEOUT);
   }
 
   /**
@@ -76,19 +100,14 @@ class LandingPageHeader extends Component {
         () => this.triggerImageTranslation()
       );
 
-      // Reset interval.
-      this.si = setInterval(() => {
-        this.setState(
-          ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
-          () => this.triggerImageTranslation()
-        )
-      }, 21000);
+      this.setIntervalsAndTimeouts();
 
     } else {
       this.setState({ styles: { opacity: 1, transition: 'none' }, isInit: false });
 
       if (this.sto) clearTimeout(this.sto);
-      if (this.si) clearTimeout(this.si);
+      if (this.si) clearInterval(this.si);
+      if (this.textSto) clearTimeout(this.textSto);
     }
   }
 
@@ -102,12 +121,7 @@ class LandingPageHeader extends Component {
       this.triggerImageTranslation();
     }, 100);
 
-    this.si = setInterval(() => {
-      this.setState(
-        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
-        () => this.triggerImageTranslation()
-      )
-    }, 21000);
+    this.setIntervalsAndTimeouts();
   }
 
   // Cleanup event listener, sto, and interval on unmount.
@@ -140,7 +154,7 @@ class LandingPageHeader extends Component {
   }
 
   render() {
-    const { height, styles, imageIndex, isInit } = this.state;
+    const { height, styles, imageIndex, isInit, textShowing } = this.state;
 
     return (
       <div 
@@ -150,7 +164,14 @@ class LandingPageHeader extends Component {
         <div className='o-hero__inner'>
           <div className='container o-hero__container'>
             <div className='o-hero__copy'>
-              <p className='o-hero__supporting'>The Barnes Foundation houses the world's largest collections of Renoir and Cezanne, and important works by Matisse, Picasso and Modigliani.</p>
+              {heroes.map(({ text }, index) => {
+                const isActiveImage = index === imageIndex;
+
+                let supportingClassNames = 'o-hero__supporting';
+                if (!isActiveImage || !textShowing) supportingClassNames = `${supportingClassNames} o-hero__supporting--hidden`;
+
+                return <p key={text} className={supportingClassNames}>{text}</p>;
+              })}
             </div>
           </div>
         </div>
@@ -170,7 +191,7 @@ class LandingPageHeader extends Component {
           />
         </div> */}
         <div className='o-hero__image-wrapper'>
-          {heroImages.map((heroImage, index) => {
+          {heroes.map(({ src, start, end }, index) => {
             const isActiveImage = index === imageIndex;
 
             let style = isActiveImage
@@ -183,9 +204,9 @@ class LandingPageHeader extends Component {
 
             // Make sure next image appears beneath active image.
             if (isActiveImage) {
-              style = { ...style, zIndex: 1 };
-            } else if (index === (imageIndex + 1) % heroImages.length) {
-              style = { ...style, zIndex: 0 };
+              style = { ...style, zIndex: 1, transform: end };
+            } else if (index === (imageIndex + 1) % heroes.length) {
+              style = { ...style, zIndex: 0, transform: start };
             } else {
               style = { ...style, zIndex: -1 };
             }
@@ -194,7 +215,7 @@ class LandingPageHeader extends Component {
               <img
                 key={index}
                 className='o-hero__image'
-                src={heroImage}
+                src={src}
                 style={{
                   ...style,
                   
