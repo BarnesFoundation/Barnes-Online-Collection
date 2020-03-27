@@ -126,7 +126,7 @@ const cultures = [
 const culturesMap = {
     'Native American': [
         'Acoma Pueblo',
-        'Acoma Pueblo/Laguna Pueblo',
+        // 'Acoma Pueblo/Laguna Pueblo',
         'Navajo',
         'Probably Zuni Pueblo',
         'San Ildefonso Pueblo',
@@ -140,8 +140,8 @@ const culturesMap = {
         'Central Indian',
         'Chinese',
         'Indian',
-        'Indian (Andhra Pradesh?)',
-        'Indian (Mathura)',
+        // 'Indian (Andhra Pradesh?)',
+        // 'Indian (Mathura)',
         'Japanese',
         'Korean',
         'Thai'
@@ -178,7 +178,7 @@ const culturesMap = {
         'Lagoon',
         'Lagoon, Baule, or Anyi',
         'Lega',
-        'Luba/Songye',
+        // 'Luba/Songye',
         'Luluwa',
         'Mande, possibly Malinké',
         'Merina',
