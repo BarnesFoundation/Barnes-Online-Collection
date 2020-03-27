@@ -256,7 +256,15 @@ class DropdownSection extends Component {
                 };
 
                 break;
+            case DROPDOWN_TERMS.CULTURE:
+                filter = {
+                    filterType: activeItem,
+                    value: term,
+                    term,
+                    culturesMap: dropdownTermsMap.raw.culturesMap[term]
+                };
 
+                break;
             default: filter = { filterType: activeItem, value: term, term };
         }
 
@@ -445,7 +453,12 @@ class DropdownSection extends Component {
     
         this.setState({
             dropdownTermsMap: {
-                [DROPDOWN_TERMS.CULTURE]: searchAssets.cultures.map(key => ({ key })),
+                [DROPDOWN_TERMS.CULTURE]: [
+                    ...searchAssets.cultures, // Individual cultures.
+                    ...Object.keys(searchAssets.culturesMap) // Meta cultures
+                ]
+                    .sort() // Sort all cultures alphabetically.
+                    .map(key => ({ key })),
                 [DROPDOWN_TERMS.CATEGORY]: searchAssets.classifications,
                 [DROPDOWN_TERMS.ROOM]: Object.keys(searchAssets.locations).map(key => ({ key })), 
                 [DROPDOWN_TERMS.COPYRIGHT]: Object.keys(searchAssets.copyrights).map(key => ({ key })),
@@ -458,6 +471,7 @@ class DropdownSection extends Component {
                 raw: {
                     [DROPDOWN_TERMS.ROOM]: searchAssets.locations,
                     [DROPDOWN_TERMS.COPYRIGHT]: searchAssets.copyrights,
+                    culturesMap: searchAssets.culturesMap,
                 },
             }
         }); 
