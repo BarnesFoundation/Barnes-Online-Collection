@@ -122,9 +122,14 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
       let indexes = {};
       if (filter.indexes) indexes = { indexes: filter.indexes };
 
-      let multipleCultures = {};
+      // let multipleCultures = {};
+      // if (filter.culturesMap) {
+      //   multipleCultures = filter.culturesMap.reduce((acc, culture, i) => ({ ...acc, [culture]: { filterType, value: culture, term: culture, index: index + i, isHiddenTag: true }}), {})
+      // }
+
+      let culturesMap = {};
       if (filter.culturesMap) {
-        multipleCultures = filter.culturesMap.reduce((acc, culture, i) => ({ ...acc, [culture]: { filterType, value: culture, term: culture, index: index + i, isHiddenTag: true }}), {})
+        culturesMap = { culturesMap: filter.culturesMap };
       }
 
       return {
@@ -135,8 +140,8 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
             // Quick hack to fix dates as object.
-            ...multipleCultures,
-            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index, ...indexes }, // Add filter into advanced filter type.
+            // ...multipleCultures,
+            [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index, ...indexes, ...culturesMap }, // Add filter into advanced filter type.
           }
         }
       };
@@ -149,10 +154,10 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
         [filter.term]: filterTerm, ...rest // Drop the current term, we will use ...rest to fill in filter type w/o removed key.
       }} = advancedFilters;
 
-      if (filter.culturesMap) {
-        // rest = rest.filter((value) => !filter.culturesMap.includes(value))
-        filter.culturesMap.forEach(culture => delete rest[culture]);
-      }
+      // if (filter.culturesMap) {
+      //   // rest = rest.filter((value) => !filter.culturesMap.includes(value))
+      //   filter.culturesMap.forEach(culture => delete rest[culture]);
+      // }
 
       return {
         ...state, // Deep copy existing state via spread.
