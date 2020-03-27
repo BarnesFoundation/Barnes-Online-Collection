@@ -2,135 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const bodybuilder = require('bodybuilder');
 const esClient = require('../server/utils/esClient');
-
 const ensemblesList = require('../src/ensembleIndexes');
-const index = process.env.ELASTICSEARCH_INDEX;
 const constantsDirectory = path.resolve(__dirname, '../public/resources');
+const { copyrights, years, cultures, culturesMap } = require('./staticLists');
 
-// Static copyrights list
-const copyrights = {
-	'In Copyright': [1, 3],
-	'Copyright Undetermined': [2, 6],
-	'Public Domain': [4, 7, 8, 10],
-};
-
-// Static years list
-const years = [
-	'-4000',
-	'1',
-	'1000',
-	'1500',
-	'1600',
-	'1700',
-	'1800',
-	'1810',
-	'1820',
-	'1830',
-	'1840',
-	'1850',
-	'1860',
-	'1870',
-	'1880',
-	'1890',
-	'1900',
-	'1905',
-	'1910',
-	'1915',
-	'1920',
-	'1930',
-	'1940',
-	'1950',
-	'1960'
-];
-
-// Static cultures list
-const cultures = [
-	'Acoma Pueblo',
-	'Akan',
-	'Akye',
-	'American',
-	'Anyi',
-	'Austrian',
-	'Baluch',
-	'Bamana',
-	'Bamileke',
-	'Baule',
-	'Beembe',
-	'Chinese',
-	'Continental',
-	'Cretan',
-	'Cypriot',
-	'Dan',
-	'Dogon peoples',
-	'Dutch',
-	'Edo',
-	'Egyptian',
-	'English',
-	'Etruscan',
-	'European',
-	'Fang',
-	'Flemish',
-	'French',
-	'German',
-	'Greek',
-	'Guro',
-	'Indian',
-	'Iranian',
-	'Italian',
-	'Japanese',
-	'Jula',
-	'Kanyok',
-	'Kissa',
-	'Kongo',
-	'Korean',
-	'Kota',
-	'Kuba',
-	'Kulango',
-	'Kyaman',
-	'Lagoon',
-	'Lega',
-	'Luba',
-	'Luluwa',
-	'Mande',
-	'Marka',
-	'Merina',
-	'Mesopotamian',
-	'Mexican',
-	'Middle Eastern',
-	'Mossi',
-	'Navajo',
-	'Ndengese',
-	'Netherlandish',
-	'New Mexican',
-	'Nsapo',
-	'Oceanian',
-	'Pende',
-	'Persian',
-	'Punu',
-	'Roman',
-	'San Ildefonso Pueblo',
-	'Santa Ana Pueblo',
-	'Santo Domingo Pueblo',
-	'Sapi',
-	'Scottish',
-	'Senufo',
-	'Sherbro',
-	'Songye',
-	'Spanish',
-	'Sri Lankan',
-	'Suku',
-	'Syrian',
-	'Swedish',
-	'Teke',
-	'Tesuque Pueblo',
-	'Thai',
-	'Tsogho',
-	'Turkish',
-	'Vili',
-	'Yaka',
-	'Zia Pueblo',
-	'Zuni Pueblo',
-];
+const index = process.env.ELASTICSEARCH_INDEX;
 
 /** Returns the unique bucket values that is eventually used to populate the front-end collection filters and dropdowns
  * @param {string} aggregationName - The name to provide for this aggregation
@@ -232,7 +108,8 @@ const generateAssets = async () => {
 		classifications: await getUniqueSearchValues('uniq_classifications', 'classification'),
 		locations: generateLocations(),
 		copyrights,
-		years
+		years,
+		culturesMap
 	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
