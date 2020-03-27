@@ -122,6 +122,11 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
       let indexes = {};
       if (filter.indexes) indexes = { indexes: filter.indexes };
 
+      let multipleCultures = {};
+      if (filter.culturesMap) {
+        multipleCultures = filter.culturesMap.reduce((acc, culture, i) => ({ ...acc, [culture]: { filterType, value: culture, term: culture, index: index + i, isHiddenTag: true }}), {})
+      }
+
       return {
         // Take a deep breath.
         ...state, // Deep copy existing state via spread.
@@ -130,6 +135,7 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
           [filterType]: { // Append attribute of filter type.
             ...advancedFilters[filterType], // Spread existing advanced filter type.
             // Quick hack to fix dates as object.
+            ...multipleCultures,
             [typeof filter.term === 'string' ? filter.term : 'dateRange']: { filterType, value: filter.value, term: filter.term, index, ...indexes }, // Add filter into advanced filter type.
           }
         }
@@ -139,9 +145,14 @@ const filtersReducer = (state = initialState, { type, advancedFilters, filter, f
       const { advancedFilters } = state;
 
       // For immediate properties of advancedFilters, e.g. artist, culture, etc.
-      const { [filterType]: { 
+      let { [filterType]: { 
         [filter.term]: filterTerm, ...rest // Drop the current term, we will use ...rest to fill in filter type w/o removed key.
       }} = advancedFilters;
+
+      if (filter.culturesMap) {
+        // rest = rest.filter((value) => !filter.culturesMap.includes(value))
+        filter.culturesMap.forEach(culture => delete rest[culture]);
+      }
 
       return {
         ...state, // Deep copy existing state via spread.

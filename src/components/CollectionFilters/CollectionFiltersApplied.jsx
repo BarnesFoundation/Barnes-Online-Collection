@@ -30,7 +30,8 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount, isSe
 const mapStateToProps = (state) => ({
   ordered: state.filters.ordered,
   orderedAdvanced: Object.values(state.filters.advancedFilters)
-    .flatMap(value => Object.values(value)),
+    .flatMap(value => Object.values(value))
+    .filter(value => !value.isHiddenTag),
   objectsCount: state.objectsQuery.lastIndex,
   isSearchPending: state.objectsQuery.isPending,
 });
