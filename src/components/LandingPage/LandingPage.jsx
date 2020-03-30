@@ -24,8 +24,6 @@ class LandingPageHeader extends Component {
   constructor(props) {
     super(props);
 
-    this.ref = null; // For getting height.
-
     this.sto = null;
     this.si = null;
     this.textSto = null;
