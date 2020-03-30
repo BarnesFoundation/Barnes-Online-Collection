@@ -15,7 +15,6 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
-// import heroVideo from './barnesCollectionEnsemble.mp4';
 import './landingPage.css';
 
 /**
@@ -32,14 +31,10 @@ class LandingPageHeader extends Component {
     this.textSto = null;
 
     this.state = {
-      height: 'auto',
-
       imageIndex: 0,
       isInit: false, // If the animation has been triggered at least once.
 
-      styles: {
-        opacity: 1,
-      }
+      styles: { opacity: 1 },
     };
   }
 
@@ -100,7 +95,6 @@ class LandingPageHeader extends Component {
 
   // Set up event listeners and intervals..
   componentDidMount() {
-    window.addEventListener('resize', this.resize);
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', () => this.handleVisibilityChange);
 
@@ -114,7 +108,6 @@ class LandingPageHeader extends Component {
 
   // Cleanup event listener, sto, and interval on unmount.
   componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpagehide', () => this.handleVisibilityChange);
 
@@ -123,33 +116,11 @@ class LandingPageHeader extends Component {
     if (this.textSto) clearTimeout(this.textSto);
   }
 
-  /**
-   * Set up ref.
-   */
-  setRef = (ref) => {
-    if (!this.ref) {
-      this.ref = ref;
-
-      this.resize(); // This will re-render the component.
-    }
-  }
-
-  /** Reset the height of the hero image. */
-  resize = () => {
-    if (this.ref) {
-      const { height } = this.ref.getBoundingClientRect();
-      this.setState({ height });
-    }
-  }
-
   render() {
-    const { height, styles, imageIndex, isInit, textShowing } = this.state;
+    const { styles, imageIndex, isInit, textShowing } = this.state;
 
     return (
-      <div 
-        className='o-hero o-hero--landing-page'
-        style={{ height }}
-      >
+      <div className='o-hero o-hero--landing-page'>
         <div className='o-hero__inner'>
           <div className='container o-hero__container'>
             <div className='o-hero__copy'>
@@ -164,21 +135,6 @@ class LandingPageHeader extends Component {
             </div>
           </div>
         </div>
-        {/* <div
-          className='o-hero__video-wrapper'
-          style={{ height }}
-        >
-          <video
-            ref={this.setRef}
-            style={{ opacity: 1 }}
-            className='o-hero__video'
-            src={heroVideo}
-            autoPlay
-            loop
-            playsInline
-            muted={true}
-          />
-        </div> */}
         <div className='o-hero__image-wrapper'>
           {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
