@@ -315,9 +315,23 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           // Map over terms, place into single array like ["American", "French"].
           Object.values(appliedFilters).forEach(({ term, culturesMap }) => {
             if (culturesMap) {
-              culturesMap.forEach(term => body.orQuery('query_string', { 'query': `culture: *${term}*` }));
+              culturesMap.forEach(term => {
+                body.orQuery('match', {
+                  culture: {
+                    query: term,
+                    operator: 'and',
+                  }
+                });
+              });
             } else {
-              body.orQuery('query_string', { 'query': `culture: *${term}*` });
+              // body.orQuery('query_string', { 'query': `culture: *${term}*`, operator: 'and' });
+              // body.orQuery('query_string', { 'query': `culture: *${term}*` });
+              body.orQuery('match', {
+                  culture: {
+                    query: term,
+                    operator: 'and',
+                  }
+              });
             }
           });
           body.queryMinimumShouldMatch(1, true); // Override minimium_should_match for should.
