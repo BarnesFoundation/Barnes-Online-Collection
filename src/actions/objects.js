@@ -82,7 +82,7 @@ const fetchResults = async (body, dispatch, options = {}) => {
   if (!options.append) dispatch(setIsPending(true));
 
   try {
-    const res = await axios.get('/api/search', { params: { body: body } });
+    const res = await axios.post('/api/search', { body: body });
 
     const lastIndex = (res.data.hits && res.data.hits.total) ? res.data.hits.total.value : 0;
     const objects = res.data.hits ? mapObjects(res.data.hits.hits) : [];

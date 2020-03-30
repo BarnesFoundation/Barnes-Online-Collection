@@ -242,11 +242,15 @@ app.get('/api/objects/:object_id', (req, res) => {
     });
 });
 
-app.get('/api/search', (req, res) => {
+app.use('/api/search', (req, res) => {
+
+  // Get the body from a get or post request
+  const body = (req.method === 'GET') ? req.query.body : req.body.body;
+
   esClient.search(
     {
       index: esIndex,
-      body: req.query.body,
+      body: body,
       // _source: 
     },
     (error, esRes) => {
