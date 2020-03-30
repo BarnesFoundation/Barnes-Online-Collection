@@ -163,8 +163,19 @@
   }
 
   &__supporting {
+    position: absolute;
+    bottom: 0;
+
     @include breakpoint('medium-') {
       line-height: 1.2;
+    }
+
+    opacity: 1;
+
+    transition: opacity 1s ease;
+
+    &--hidden {
+      opacity: 0;
     }
   }
 
@@ -199,15 +210,70 @@
     left: 0;
 
     opacity: 0;
-    // transition: transform 5s ease, opacity 500ms ease-in 4500ms;
     transition: transform 20s ease, opacity 500ms ease-in 19500ms;
-    // -webkit-transition: transform 20s ease, opacity 500ms ease-in 19500ms;
-    // -moz-transition: transform 20s ease, opacity 500ms ease-in 19500ms;
-    // -o-transition: transform 20s ease, opacity 500ms ease-in 19500ms;
     
+    z-index: -1;
+
+    &--start {
+      z-index: 0;
+    }
 
     &--active {
-      transform: scale3d(1.5, 1.5, 1.5) translate3d(-200px, -200px, 0px);
+      z-index: 1;
+    }
+
+    &--0 {
+      &--start {
+        transform: translate3d(28px, -150px, 0px) scale(1.6);
+
+        @include breakpoint('large+') {
+          transform: translate3d(55px, -200px, 0px) scale(1.4);
+        }
+      }
+
+      &--active {
+        transform: translate3d(-28px, -150px, 0px) scale(1.6);
+
+        @include breakpoint('large+') {
+          transform: translate3d(-55px, -200px, 0px) scale(1.4);
+        }
+      }
+    }
+
+    &--1 {      
+      &--start {
+        z-index: 0;
+        transform: translate3d(-25px, -80px, 0px) scale(1.5);
+      }
+
+      &--active {
+        z-index: 1;
+        transform: translate3d(-105px, -110px, 0px) scale(1.7);
+      }
+    }
+
+    &--2 {      
+      &--start {
+        z-index: 0;
+        transform: translate3d(70px, 0px, 0px) scale(1.4);
+      }
+
+      &--active {
+        z-index: 1;
+        transform: translate3d(-50px, 0px, 0px) scale(1.3);
+      }
+    }
+
+    &--3 {      
+      &--start {
+        z-index: 0;
+        transform: translate3d(70px, -50px, 0px) scale(1.2);
+      }
+
+      &--active {
+        z-index: 1;
+        transform: translate3d(-50px, 10px, 0px) scale(1.3);
+      }
     }
   }
 

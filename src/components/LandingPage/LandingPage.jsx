@@ -14,19 +14,9 @@ import HtmlClassManager from '../HtmlClassManager';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
-// import heroVideo from './barnesCollectionEnsemble.mp4'
-import { heroImages } from './HeroImages' 
+import { heroes } from './HeroImages';
+// import heroVideo from './barnesCollectionEnsemble.mp4';
 import './landingPage.css';
-
-const getTranslation = () => {
-  const getRandomNumber = () => Math.floor(Math.random() * 20);
-
-  const scale = 1 + Math.round(4 * Math.random())/10;
-  const translateX = -1 * getRandomNumber();
-  const translateY = -1 * getRandomNumber();
-
-  return `scale3d(${scale}, ${scale}, ${scale}) translate3d(${translateX}px, ${translateY}px, 0px)`;
-}
 
 /**
  * Header JSX for landing page.
@@ -39,6 +29,7 @@ class LandingPageHeader extends Component {
 
     this.sto = null;
     this.si = null;
+    this.textSto = null;
 
     this.state = {
       height: 'auto',
@@ -56,12 +47,32 @@ class LandingPageHeader extends Component {
   triggerImageTranslation = () => {
     this.setState({
       isInit: true,
+      textShowing: true,
 
-      styles: {
-        transform: getTranslation(),
-        opacity: 0,
-      }
+      styles: { opacity: 0 },
     });
+  }
+
+  /** Set up image interval and text STO inside of interval. */
+  setIntervalsAndTimeouts = () => {
+    const TEXT_TIMEOUT = 19000;
+    const INTERVAL_TIMEOUT = TEXT_TIMEOUT + 2000;
+
+    this.textSto = setTimeout(() => {
+      this.setState({ textShowing: false });
+    }, TEXT_TIMEOUT)
+
+    // Reset interval.
+    this.si = setInterval(() => {
+      this.textSto = setTimeout(() => {
+        this.setState({ textShowing: false });
+      }, TEXT_TIMEOUT);
+
+      this.setState(
+        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroes.length, textShowing: true }),
+        () => this.triggerImageTranslation()
+      )
+    }, INTERVAL_TIMEOUT);
   }
 
   /**
@@ -76,19 +87,14 @@ class LandingPageHeader extends Component {
         () => this.triggerImageTranslation()
       );
 
-      // Reset interval.
-      this.si = setInterval(() => {
-        this.setState(
-          ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
-          () => this.triggerImageTranslation()
-        )
-      }, 21000);
+      this.setIntervalsAndTimeouts();
 
     } else {
       this.setState({ styles: { opacity: 1, transition: 'none' }, isInit: false });
 
       if (this.sto) clearTimeout(this.sto);
-      if (this.si) clearTimeout(this.si);
+      if (this.si) clearInterval(this.si);
+      if (this.textSto) clearTimeout(this.textSto);
     }
   }
 
@@ -98,16 +104,12 @@ class LandingPageHeader extends Component {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', () => this.handleVisibilityChange);
 
+    // Trigger is init after mount, this will cause animation to play.
     this.sto = setTimeout(() => {
       this.triggerImageTranslation();
     }, 100);
 
-    this.si = setInterval(() => {
-      this.setState(
-        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroImages.length }),
-        () => this.triggerImageTranslation()
-      )
-    }, 21000);
+    this.setIntervalsAndTimeouts();
   }
 
   // Cleanup event listener, sto, and interval on unmount.
@@ -118,6 +120,7 @@ class LandingPageHeader extends Component {
 
     if (this.sto) clearTimeout(this.sto);
     if (this.si) clearTimeout(this.si);
+    if (this.textSto) clearTimeout(this.textSto);
   }
 
   /**
@@ -140,7 +143,7 @@ class LandingPageHeader extends Component {
   }
 
   render() {
-    const { height, styles, imageIndex, isInit } = this.state;
+    const { height, styles, imageIndex, isInit, textShowing } = this.state;
 
     return (
       <div 
@@ -150,7 +153,14 @@ class LandingPageHeader extends Component {
         <div className='o-hero__inner'>
           <div className='container o-hero__container'>
             <div className='o-hero__copy'>
-              <p className='o-hero__supporting'>The Barnes Foundation houses the world's largest collections of Renoir and Cezanne, and important works by Matisse, Picasso and Modigliani.</p>
+              {heroes.map(({ text }, index) => {
+                const isActiveImage = index === imageIndex;
+
+                let supportingClassNames = 'o-hero__supporting';
+                if (!isActiveImage || !textShowing) supportingClassNames = `${supportingClassNames} o-hero__supporting--hidden`;
+
+                return <p key={text} className={supportingClassNames}>{text}</p>;
+              })}
             </div>
           </div>
         </div>
@@ -170,31 +180,27 @@ class LandingPageHeader extends Component {
           />
         </div> */}
         <div className='o-hero__image-wrapper'>
-          {heroImages.map((heroImage, index) => {
+          {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
 
+            let imageClassName = `o-hero__image o-hero__image--${index}`;
             let style = isActiveImage
               ? { ...styles }
-              : {
-                  opacity: isInit ? 1 : 0,
-                  transform: 'scale3d(1, 1, 1) translate3d(0px, 0px, 0px)',
-                };
+              : { opacity: isInit ? 1 : 0 };
 
 
             // Make sure next image appears beneath active image.
-            if (isActiveImage) {
-              style = { ...style, zIndex: 1 };
-            } else if (index === (imageIndex + 1) % heroImages.length) {
-              style = { ...style, zIndex: 0 };
-            } else {
-              style = { ...style, zIndex: -1 };
+            if (isActiveImage && isInit) {
+              imageClassName = `${imageClassName} o-hero__image--active o-hero__image--${index}--active`;
+            } else if (index === (imageIndex + 1) % heroes.length || isActiveImage && !isInit) {
+              imageClassName = `${imageClassName} o-hero__image--start o-hero__image--${index}--start`;
             }
 
             return (
               <img
                 key={index}
-                className='o-hero__image'
-                src={heroImage}
+                className={imageClassName}
+                src={src}
                 style={{
                   ...style,
                   

@@ -168,7 +168,7 @@ const culturesMap = {
         'Kongo',
         'Kongo or Vili',
         'Kongo-Vili',
-        'Kota ',
+        'Kota',
         'Kota, Mbamba group',
         'Kota, Ndassa or Wumbu group',
         'Kuba',
