@@ -14,19 +14,9 @@ import HtmlClassManager from '../HtmlClassManager';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
-// import heroVideo from './barnesCollectionEnsemble.mp4'
-import { heroes } from './HeroImages' 
+import { heroes } from './HeroImages';
+// import heroVideo from './barnesCollectionEnsemble.mp4';
 import './landingPage.css';
-
-const getTranslation = () => {
-  const getRandomNumber = () => Math.floor(Math.random() * 20);
-
-  const scale = 1 + Math.round(4 * Math.random())/10;
-  const translateX = -1 * getRandomNumber();
-  const translateY = -1 * getRandomNumber();
-
-  return `scale3d(${scale}, ${scale}, ${scale}) translate3d(${translateX}px, ${translateY}px, 0px)`;
-}
 
 /**
  * Header JSX for landing page.
@@ -59,10 +49,7 @@ class LandingPageHeader extends Component {
       isInit: true,
       textShowing: true,
 
-      styles: {
-        transform: getTranslation(),
-        opacity: 0,
-      }
+      styles: { opacity: 0 },
     });
   }
 
@@ -117,6 +104,7 @@ class LandingPageHeader extends Component {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', () => this.handleVisibilityChange);
 
+    // Trigger is init after mount, this will cause animation to play.
     this.sto = setTimeout(() => {
       this.triggerImageTranslation();
     }, 100);
@@ -132,6 +120,7 @@ class LandingPageHeader extends Component {
 
     if (this.sto) clearTimeout(this.sto);
     if (this.si) clearTimeout(this.si);
+    if (this.textSto) clearTimeout(this.textSto);
   }
 
   /**
@@ -191,30 +180,26 @@ class LandingPageHeader extends Component {
           />
         </div> */}
         <div className='o-hero__image-wrapper'>
-          {heroes.map(({ src, start, end }, index) => {
+          {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
 
+            let imageClassName = `o-hero__image o-hero__image--${index}`;
             let style = isActiveImage
               ? { ...styles }
-              : {
-                  opacity: isInit ? 1 : 0,
-                  transform: 'scale3d(1, 1, 1) translate3d(0px, 0px, 0px)',
-                };
+              : { opacity: isInit ? 1 : 0 };
 
 
             // Make sure next image appears beneath active image.
-            if (isActiveImage) {
-              style = { ...style, zIndex: 1, transform: end };
-            } else if (index === (imageIndex + 1) % heroes.length) {
-              style = { ...style, zIndex: 0, transform: start };
-            } else {
-              style = { ...style, zIndex: -1 };
+            if (isActiveImage && isInit) {
+              imageClassName = `${imageClassName} o-hero__image--active o-hero__image--${index}--active`;
+            } else if (index === (imageIndex + 1) % heroes.length || isActiveImage && !isInit) {
+              imageClassName = `${imageClassName} o-hero__image--start o-hero__image--${index}--start`;
             }
 
             return (
               <img
                 key={index}
-                className='o-hero__image'
+                className={imageClassName}
                 src={src}
                 style={{
                   ...style,
