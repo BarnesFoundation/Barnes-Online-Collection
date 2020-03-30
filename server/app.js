@@ -288,7 +288,6 @@ function getRelatedObjects (objectID) {
         'like': [
           {
             '_index': esIndex,
-            '_type': 'object',
             '_id': objectID
           }
         ],
