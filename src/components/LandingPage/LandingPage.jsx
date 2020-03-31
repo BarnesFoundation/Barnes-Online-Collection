@@ -55,7 +55,7 @@ class LandingPageHeader extends Component {
 
     this.textSto = setTimeout(() => {
       this.setState({ textShowing: false });
-    }, TEXT_TIMEOUT)
+    }, TEXT_TIMEOUT);
 
     // Reset interval.
     this.si = setInterval(() => {
@@ -76,16 +76,22 @@ class LandingPageHeader extends Component {
    * becoming out of phase with out setInterval.
    * */
   handleVisibilityChange = () => {
+    const { imageIndex } = this.state;
+
     if (document.visibilityState === 'visible') {
       this.setState(
-        { styles: { opacity: 1 }},
-        () => this.triggerImageTranslation()
+        {
+          styles: { opacity: 1, transition: 'none' },
+          isInit: false,
+          imageIndex: (imageIndex + 1) % heroes.length,
+        },
+        () => setTimeout(() => this.triggerImageTranslation(), 100)
       );
 
       this.setIntervalsAndTimeouts();
 
     } else {
-      this.setState({ styles: { opacity: 1, transition: 'none' }, isInit: false });
+      this.setState({ styles: { opacity: 1, transition: 'none' }});
 
       if (this.sto) clearTimeout(this.sto);
       if (this.si) clearInterval(this.si);
