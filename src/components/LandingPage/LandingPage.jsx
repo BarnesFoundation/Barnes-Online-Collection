@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
+import MediaQuery from 'react-responsive';
 import queryString from 'query-string';
 import { getAllObjects } from '../../actions/objects';
 import { addSearchTerm } from '../../actions/search';
@@ -16,6 +17,7 @@ import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
 import './landingPage.css';
+import { BREAKPOINTS } from '../../constants';
 
 /**
  * Header JSX for landing page.
@@ -48,7 +50,7 @@ class LandingPageHeader extends Component {
 
   /** Set up image interval and text STO inside of interval. */
   setIntervalsAndTimeouts = () => {
-    const TEXT_TIMEOUT = 19000;
+    const TEXT_TIMEOUT = 29000;
     const INTERVAL_TIMEOUT = TEXT_TIMEOUT + 2000;
 
     this.textSto = setTimeout(() => {
@@ -76,7 +78,7 @@ class LandingPageHeader extends Component {
   handleVisibilityChange = () => {
     if (document.visibilityState === 'visible') {
       this.setState(
-        ({ imageIndex }) => ({ imageIndex }),
+        { styles: { opacity: 1 }},
         () => this.triggerImageTranslation()
       );
 
@@ -134,7 +136,7 @@ class LandingPageHeader extends Component {
           </div>
         </div>
         <div className='o-hero__image-wrapper'>
-          {heroes.map(({ src }, index) => {
+          {heroes.map(({ srcDesktop, srcMobile }, index) => {
             const isActiveImage = index === imageIndex;
 
             let imageClassName = `o-hero__image o-hero__image--${index}`;
@@ -146,21 +148,37 @@ class LandingPageHeader extends Component {
             // Make sure next image appears beneath active image.
             if (isActiveImage && isInit) {
               imageClassName = `${imageClassName} o-hero__image--active o-hero__image--${index}--active`;
-            } else if (index === (imageIndex + 1) % heroes.length || isActiveImage && !isInit) {
+            } else if ((index === (imageIndex + 1) % heroes.length) || (isActiveImage && !isInit)) {
               imageClassName = `${imageClassName} o-hero__image--start o-hero__image--${index}--start`;
             }
 
             return (
-              <img
-                key={index}
-                className={imageClassName}
-                src={src}
-                style={{
-                  ...style,
-                  
-                }}
-                alt='Barnes Museum Ensemble.'
-              />
+              <div>
+                <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                  <img
+                    key={index}
+                    className={imageClassName}
+                    src={srcMobile}
+                    style={{
+                      ...style,
+                      
+                    }}
+                    alt='Barnes Museum Ensemble.'
+                  />
+                </MediaQuery>
+                <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                  <img
+                    key={index}
+                    className={imageClassName}
+                    src={srcDesktop}
+                    style={{
+                      ...style,
+                      
+                    }}
+                    alt='Barnes Museum Ensemble.'
+                  />
+                </MediaQuery>
+              </div>
             );
           })}
         </div>

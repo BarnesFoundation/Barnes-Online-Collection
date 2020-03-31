@@ -210,7 +210,7 @@
     left: 0;
 
     opacity: 0;
-    transition: transform 20s ease, opacity 500ms ease-in 19500ms;
+    transition: transform 30s ease, opacity 500ms ease-in 29500ms;
     
     z-index: -1;
 
@@ -224,18 +224,18 @@
 
     &--0 {
       &--start {
-        transform: translate3d(28px, -150px, 0px) scale(1.6);
+        transform: translate3d(28px, -75px, 0px) scale(1.6);
 
         @include breakpoint('large+') {
-          transform: translate3d(55px, -200px, 0px) scale(1.4);
+          transform: translate3d(55px, -300px, 0px) scale(1.4);
         }
       }
 
       &--active {
-        transform: translate3d(-28px, -150px, 0px) scale(1.6);
+        transform: translate3d(-28px, -75px, 0px) scale(1.6);
 
         @include breakpoint('large+') {
-          transform: translate3d(-55px, -200px, 0px) scale(1.4);
+          transform: translate3d(-55px, -300px, 0px) scale(1.4);
         }
       }
     }
@@ -262,21 +262,45 @@
 
     &--3 {      
       &--start {
-        transform: translate3d(20px, -50px, 0px) scale(1.2);
+        transform: translate3d(20px, -40px, 0px) scale(1.3);
+
+        @include breakpoint('large+') {
+          transform: translate3d(20px, -100px, 0px) scale(1.2);
+        }
       }
 
       &--active {
-        transform: translate3d(-50px, 25px, 0px) scale(1.4);
+        transform: translate3d(-20px, -40px, 0px) scale(1.5);
+
+        @include breakpoint('large+') {
+          transform: translate3d(-20px, -50px, 0px) scale(1.5);
+        }
       }
     }
 
     &--4 {      
       &--start {
-        transform: translate3d(20px, -150px, 0px) scale(1.3);
+        transform: translate3d(0px, -20px, 0px) scale(1.3);
+
+        @include breakpoint('medium+') {
+          transform: translate3d(0px, -150px, 0px) scale(1.4);
+        }
+
+        @include breakpoint('large+') {
+          transform: translate3d(0px, -250px, 0px) scale(1.3);
+        }
       }
 
       &--active {
-        transform: translate3d(0px, -250px, 0px) scale(1.1);
+        transform: translate3d(0px, -60px, 0px) scale(1.25);
+
+        @include breakpoint('large+') {
+          transform: translate3d(0px, -250px, 0px) scale(1.25);
+        }
+
+        @include breakpoint('large+') {
+          transform: translate3d(0px, -350px, 0px) scale(1.1);
+        }
       }
     }
   }
