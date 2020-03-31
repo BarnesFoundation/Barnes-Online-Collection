@@ -299,7 +299,7 @@
         }
 
         @include breakpoint('large+') {
-          transform: translate3d(0px, -350px, 0px) scale(1.1);
+          transform: translate3d(0px, -350px, 0px) scale(1.2);
         }
       }
     }
