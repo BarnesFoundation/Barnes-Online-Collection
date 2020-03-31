@@ -29,15 +29,26 @@ class Zoom extends Component {
     const map = leaflet.map('map', {
       center: [0, 0],
       crs: leaflet.CRS.Simple,
-      zoom: 2,
-      minZoom: 2,
-      fitBounds: true,
+      zoom: 1,
+      // maxZoom: 0.8,
+      // minZoom: 0,
     });
 
     const info = `${IMAGE_BASE_URL}/tiles/${this.props.id}/info.json`;
-    const opts = { quality: 'color', tileFormat: 'jpg' };
+    const opts = { quality: 'color', tileFormat: 'jpg', fitBounds: true, setMaxBounds: true };
 
     const iiifLayer = leaflet.tileLayer.iiif(info, opts);
+
+    // Add event handler to increase zoom if tile is not found.
+    iiifLayer.on('tileerror', () => {
+      const currentZoom = map.getZoom(); // Calculate current zoom.
+
+      // If missing a layer, zoom in and set min zoom to next level, preventing zoom out.
+      if (currentZoom !== map.getMaxZoom()) {
+        map.setMinZoom(currentZoom + 1);
+        map.setZoom(currentZoom + 1);
+      }
+    });
 
     map.addLayer(iiifLayer);
     map.scrollWheelZoom.disable();
