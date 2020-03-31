@@ -153,28 +153,20 @@ class LandingPageHeader extends Component {
             }
 
             return (
-              <div>
+              <div key={index}>
                 <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
                   <img
-                    key={index}
                     className={imageClassName}
                     src={srcMobile}
-                    style={{
-                      ...style,
-                      
-                    }}
+                    style={{ ...style }}
                     alt='Barnes Museum Ensemble.'
                   />
                 </MediaQuery>
                 <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
                   <img
-                    key={index}
                     className={imageClassName}
                     src={srcDesktop}
-                    style={{
-                      ...style,
-                      
-                    }}
+                    style={{ ...style }}
                     alt='Barnes Museum Ensemble.'
                   />
                 </MediaQuery>
