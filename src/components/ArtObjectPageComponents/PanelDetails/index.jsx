@@ -140,7 +140,6 @@ class Image extends Component {
 
   render() {
     const {
-      isZoomed,
       onLoad,
       isLoaded,
       object,
@@ -150,18 +149,19 @@ class Image extends Component {
     const { didCatchFailure } = this.state;
     
     let additionalStyle = {};
-    if (isZoomed && !didCatchFailure) {
+    if (!didCatchFailure) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
 
     return (
       <div>
         <div className='image-art-object'>
-          {(isZoomed && !didCatchFailure) &&
+          {(!didCatchFailure && object.id) &&
             <Zoom
               id={object.id}
               catchFailureInViewer={this.catchFailureInViewer}
-            />}
+            />
+          }
           <img
             aria-hidden='true'
             className='image-art-object__img'
@@ -245,8 +245,6 @@ class PanelDetails extends Component {
     const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
 
-    const isZoomed = Boolean(objectCopyrightDetails.type === 'large' && isZoomEnabled);
-
     return (
       <div className='art-object-page__panel-details'>
         <div className='art-object__header m-block'>
@@ -254,12 +252,11 @@ class PanelDetails extends Component {
             onLoad={this.onLoad}
             isLoaded={imageLoaded}
             object={object}
-            isZoomed={isZoomed}
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {Boolean(imageLoaded || isZoomed) &&
+          {Boolean(imageLoaded) &&
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
