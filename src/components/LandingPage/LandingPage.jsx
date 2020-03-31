@@ -79,6 +79,7 @@ class LandingPageHeader extends Component {
     const { imageIndex } = this.state;
 
     if (document.visibilityState === 'visible') {
+      // This will effectively reset the image montage with the next index on re-viewing a page.
       this.setState(
         {
           styles: { opacity: 1, transition: 'none' },
@@ -91,8 +92,6 @@ class LandingPageHeader extends Component {
       this.setIntervalsAndTimeouts();
 
     } else {
-      this.setState({ styles: { opacity: 1, transition: 'none' }});
-
       if (this.sto) clearTimeout(this.sto);
       if (this.si) clearInterval(this.si);
       if (this.textSto) clearTimeout(this.textSto);
@@ -149,7 +148,6 @@ class LandingPageHeader extends Component {
             let style = isActiveImage
               ? { ...styles }
               : { opacity: isInit ? 1 : 0 };
-
 
             // Make sure next image appears beneath active image.
             if (isActiveImage && isInit) {
