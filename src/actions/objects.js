@@ -82,7 +82,7 @@ const fetchResults = async (body, dispatch, options = {}) => {
   if (!options.append) dispatch(setIsPending(true));
 
   try {
-    const res = await axios.get('/api/search', { params: { body: body } });
+    const res = await axios.post('/api/search', { body: body });
 
     const lastIndex = (res.data.hits && res.data.hits.total) ? res.data.hits.total.value : 0;
     const objects = res.data.hits ? mapObjects(res.data.hits.hits) : [];
@@ -316,22 +316,20 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
           Object.values(appliedFilters).forEach(({ term, culturesMap }) => {
             if (culturesMap) {
               culturesMap.forEach(term => {
-                body.orQuery('match', {
-                  culture: {
+                body.orQuery('multi_match', {
+					fields: ['culture', 'nationality^10'],
                     query: term,
                     operator: 'and',
-                  }
                 });
               });
             } else {
               // body.orQuery('query_string', { 'query': `culture: *${term}*`, operator: 'and' });
               // body.orQuery('query_string', { 'query': `culture: *${term}*` });
-              body.orQuery('match', {
-                  culture: {
-                    query: term,
-                    operator: 'and',
-                  }
-              });
+              body.orQuery('multi_match', {
+				fields: ['culture', 'nationality^10'],
+				query: term,
+				operator: 'and',
+			});
             }
           });
           body.queryMinimumShouldMatch(1, true); // Override minimium_should_match for should.
