@@ -15,7 +15,7 @@
 
 .component-art-object-page-shell {
   @include breakpoint('small-') {
-    margin-top: 65px; // Increase top margin for Buy Tickets section.
+    margin-top: 50px; // Increase top margin for Buy Tickets section.
 
     // fix style of how columns stack
     // todo: this needs to be more targeted.
@@ -52,6 +52,14 @@
       @include breakpoint('medium+') {
         font-size: 38px;
         line-height: 45px;
+      }
+    }
+
+    &--top {
+      margin-top: 10px;
+
+      @include breakpoint('medium+') {
+        margin-top: 0;
       }
     }
 
@@ -184,5 +192,34 @@
     .zoom {
       display: none;
     }
+  }
+}
+
+.art-object__back {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font: inherit;
+  font-size: 18px;
+
+  color: $color__copy--light;
+  text-decoration: underline;
+
+  &:hover {
+    cursor: pointer;
+    color: $color-black;
+  }
+
+  @include breakpoint('small-') {
+    display: none;
+  }
+}
+
+.art-object__back-link {
+  font-size: 14px;
+  text-align: right;
+  
+  @include breakpoint('medium+') {
+    font-size: inherit;
   }
 }

@@ -48,6 +48,24 @@
   }
 }
 
+.btn-tag-line {
+  float: left;
+  font: inherit;
+  font-size: 14px;
+  color: $color__copy--light;
+  text-decoration: underline;
+
+  padding-top: 2px;
+
+  &:hover {
+    color: $color-black;
+  }
+
+  @include breakpoint('medium+') {
+    display: none;
+  }
+}
+
 @media print {
   .component-modal {
     position: absolute;
