@@ -126,6 +126,16 @@ class Image extends Component {
     super(props);
 
     this.ref = null;
+
+    this.state = { didCatchFailure: false };
+  }
+
+  /**
+   * Catch exception inside of zoom component.
+   * @see Zoom.jsx cDM method.
+   */
+  catchFailureInViewer = () => {
+    this.setState({ didCatchFailure: true });
   }
 
   render() {
@@ -137,16 +147,21 @@ class Image extends Component {
       activeImageIndex,
       setActiveImageIndex
     } = this.props;
+    const { didCatchFailure } = this.state;
     
     let additionalStyle = {};
-    if (isZoomed) {
+    if (isZoomed && !didCatchFailure) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
 
     return (
       <div>
         <div className='image-art-object'>
-          {isZoomed && <Zoom id={object.id} />}
+          {(isZoomed && !didCatchFailure) &&
+            <Zoom
+              id={object.id}
+              catchFailureInViewer={this.catchFailureInViewer}
+            />}
           <img
             aria-hidden='true'
             className='image-art-object__img'
