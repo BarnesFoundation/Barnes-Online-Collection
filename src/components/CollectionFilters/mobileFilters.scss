@@ -111,18 +111,23 @@
   text-align: left;
   clear: both;
 
+  &--scrollable {
+    padding-top: 15px;
+    overflow-x: scroll;
+  }
+
   form {
     margin-top: 0;
   }
 
   .color-filters-container {
-    flex-wrap: wrap;
-    height: 140px;
+    // flex-wrap: wrap;
+    // height: 140px;
 
-    .btn-filter {
-      height: calc(100%/4);
-      width: calc(100%/5);
-    }
+    // .btn-filter {
+    //   height: calc(100%/4);
+    //   width: calc(100%/5);
+    // }
   }
 
   .line-filters-container {
@@ -201,4 +206,11 @@
   margin-bottom: 10px;
   width: 100%;
   text-align: left;
+
+  &--scrollable {
+    padding: $mobile-filters-section-padding;
+
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
 }

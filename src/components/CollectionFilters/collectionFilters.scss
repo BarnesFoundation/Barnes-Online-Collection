@@ -256,6 +256,13 @@
   justify-content: center;
   height: 50px;
 
+  @include breakpoint('medium-') {
+    width: 500%;
+    height: 75px;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+  }
+
   .btn-filter {
     flex-grow: 1;
     height: 100%;
@@ -268,6 +275,12 @@
     &:hover,
     &.is-applied {
       border-color: black;
+    }
+
+    &:last-of-type {
+      @include breakpoint('medium-') {
+        margin-right: 25px; // visual cue that color scroll has ended.
+      }
     }
   }
 }
