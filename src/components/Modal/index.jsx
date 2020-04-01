@@ -55,7 +55,7 @@ class Modal extends Component {
               onClick={this.handleClickBtnClose}
             >
               <span className="btn-tag-line">Continue exploring the collection</span>
-              <Icon svgId='cross_page' classes='icon-cross-page btn-close__icon'/>
+              <Icon svgId='-icon_close' classes='icon-cross-page btn-close__icon'/>
             </button>
           </div>
         </div>
