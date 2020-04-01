@@ -146,7 +146,13 @@ html:not([class=""]) {
   padding-top: 20px;
   overflow-y: inherit;
 
+  @include breakpoint('small-') {
+    max-height: calc(100vh - 100px); // 100 = g-header height + this elements 20px padding + 10 for padding.
+    overflow-y: scroll;
+  }
+
   @include breakpoint('medium+') {
+    max-height: none;
     padding-top: 35px;
   }
 
