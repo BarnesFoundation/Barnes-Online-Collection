@@ -41,31 +41,63 @@ const getTabList = (artObjectProps) => (
 // For modulo
 const STATIC_IMAGE_COUNT = 7;
 
-const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen }) => {
+class Thumbnail extends Component {
+  constructor(props) {
+    super(props);
 
-  // TODO => This will eventually be dynamic data.
-  const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => {
+    this.ref = null;
+
+    this.state = {
+      isLandscapeThumbnail: false,
+    }
+  }
+
+  /** Set image ref to detect if image is portrait. */
+  setRef = (ref) => {
+    if (!this.ref) {
+      this.ref = ref;
+
+      console.log(ref);
+      console.log(ref.naturalWidth);
+      console.log(ref.naturalHeight);
+
+      if (ref.naturalWidth > ref.naturalHeight) {
+        console.log('nice');
+        this.setState({ isLandscapeThumbnail: true });
+      }
+    }
+  }
+
+  render() {
+    const { isLandscapeThumbnail } = this.state;
+    const { onClick, isActive, src, alt } = this.props;
+    
     // Set up classNames, if selected add BEM modifier.
     let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
     let gridListElClassName = 'grid-list-el';
+    let thumbnailClassName = 'thumbnails__thumbnail';
 
-    if (activeImageIndex === i) {
+    if (isActive) {
       gridImageClassName = `${gridImageClassName} thumbnails__grid-image--active`;
 
       // Uncomment this to keep caption open onClick.
       // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
     }
 
+    if (isLandscapeThumbnail) thumbnailClassName = `${thumbnailClassName} thumbnails__thumbnail--wide`;
+
     return (
       <li
-        onClick={() => setActiveImageIndex(i)}
+        onClick={onClick}
         className={gridImageClassName}
-        key={i}
       >
         <div className={gridListElClassName}>
           <div className='art-object-fade__in'>
             <div className='thumbnails__thumbnail-wrapper'>
-              <img className='thumbnails__thumbnail' src={object.imageUrlSmall} alt={object.title}/>
+              <img
+                className={thumbnailClassName} src={src} alt={alt}
+                ref={this.setRef}
+              />
             </div>
             <div className='thumbnails__inner-border'></div>
           </div>
@@ -75,8 +107,21 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
           />
         </div>
       </li>
+    );
+  }
+}
+
+const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen }) => {
+  const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => (
+      <Thumbnail
+        key={i}
+        onClick={() => setActiveImageIndex(i)}
+        isActive={activeImageIndex === i}
+        src={object.imageUrlSmall}
+        alt={object.title}
+      />
     )
-  });
+  );
 
   const defaultImages = images.slice(0, DEFAULT_THUMBNAIL_COUNT);
   const hiddenImages = images.slice(DEFAULT_THUMBNAIL_COUNT);

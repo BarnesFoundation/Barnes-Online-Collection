@@ -73,6 +73,7 @@
 		"redux": "^3.6.0",
 		"redux-thunk": "^2.2.0",
 		"leaflet": "^1.0.3",
+		"leaflet.fullscreen": "^1.6.0",
 		"leaflet-iiif": "git+https://github.com/mejackreed/Leaflet-IIIF.git",
 		"jquery": "^3.4.0",
 		"change-case": "^4.1.1",
