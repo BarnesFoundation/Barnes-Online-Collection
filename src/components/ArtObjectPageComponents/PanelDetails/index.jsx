@@ -57,12 +57,7 @@ class Thumbnail extends Component {
     if (!this.ref) {
       this.ref = ref;
 
-      console.log(ref);
-      console.log(ref.naturalWidth);
-      console.log(ref.naturalHeight);
-
       if (ref.naturalWidth > ref.naturalHeight) {
-        console.log('nice');
         this.setState({ isLandscapeThumbnail: true });
       }
     }
