@@ -76,6 +76,10 @@ class Zoom extends Component {
         }
       });
 
+      // Set up scroll wheel when full screen.
+      this.map.on('enterFullscreen', () => this.map.scrollWheelZoom.enable());
+      this.map.on('exitFullscreen', () => this.map.scrollWheelZoom.disable());
+
       this.map.addLayer(iiifLayer);
       this.map.scrollWheelZoom.disable();
 
