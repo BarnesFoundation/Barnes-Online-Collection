@@ -200,10 +200,9 @@
   outline: none;
   background-color: transparent;
   font: inherit;
-  font-size: 18px;
+  font-size: 20px;
 
   color: $color__copy--light;
-  text-decoration: underline;
 
   &:hover {
     cursor: pointer;
@@ -213,13 +212,22 @@
   @include breakpoint('small-') {
     display: none;
   }
+
+  @include breakpoint('large+') {
+    font-size: 24px;
+  }
 }
 
 .art-object__back-link {
-  font-size: 14px;
+  font-size: 16px;
   text-align: right;
   
   @include breakpoint('medium+') {
+    font-size: 20px;
     font-size: inherit;
+  }
+
+  @include breakpoint('large+') {
+    font-size: 24px;
   }
 }
