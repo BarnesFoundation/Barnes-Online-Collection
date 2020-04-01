@@ -45,10 +45,11 @@
       left: 50%;
       transform: translateX(-50%);
       margin: 0;
-      opacity: .8;
+      opacity: 0.8;
+      
 
       a {
-        position: absolute;
+        // position: absolute;
         border-radius: 0;
         border: $mapbox-controls-border;
         margin: 0 6px;
@@ -56,19 +57,10 @@
         width: auto;
         height: $mapbox-controls-size;
         width: $mapbox-controls-size;
-        bottom: $mapbox-controls-size;
-        // looks more vert centered if slightly off
-        line-height: $mapbox-controls-size * .95;
-        box-sizing: content-box;
-        background: $color-grey-light;
+        
+        background-color: $color-grey-light;
 
-        &.leaflet-control-zoom-in {
-          left: -100%;
-        }
-
-        &.leaflet-control-zoom-out {
-          right: -100%;
-        }
+        
 
         &.leaflet-disabled {
           color: $color-grey-medium;
@@ -79,6 +71,13 @@
     .leaflet-control-zoom {
       margin: 0;
       border: none;
+      box-shadow: none;
+      display: flex;
     }
   }
+}
+
+.leaflet-control-zoom-fullscreen {
+  height: 2.6em !important;
+  width: 2.6em !important;
 }

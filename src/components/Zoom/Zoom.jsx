@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import leaflet from 'leaflet';
 import 'leaflet-iiif';
+import 'leaflet.fullscreen';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.fullscreen/Control.FullScreen.css';
 import './zoom.css';
 
 const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
@@ -52,6 +54,10 @@ class Zoom extends Component {
         center: [0, 0],
         crs: leaflet.CRS.Simple,
         zoom: 1,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+          position: 'topleft'
+        }
       });
 
       const info = `${IMAGE_BASE_URL}/tiles/${id}/info.json`;
@@ -79,17 +85,17 @@ class Zoom extends Component {
 
   render() {
     return (
-      <section className="zoom">
-        <div className="map-container">
-          <div ref={(ref) => {
-            if (!this.ref) {
-              this.ref = ref;
-              this.mountLeaflet();
-            }
-          }}>
+        <section className="zoom">
+          <div className="map-container">
+            <div ref={(ref) => {
+              if (!this.ref) {
+                this.ref = ref;
+                this.mountLeaflet();
+              }
+            }}>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
     )
   }
 }
