@@ -416,6 +416,23 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     body.sort = [{ endDate: { order: 'desc' }}, '_score'];
   }
 
+  // If not filtering on artists, let's apply a random sort to our query. We'll need to generate that salt and persist it elsewhere. 
+  // The salt should be "renewed" when the filter parameters of your search change at all -- even if you select for example "American" from culture, view some artworks, unselect "American", and then reselect "American".
+  // The results should differ upon each new search.
+  /* if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length == 0) {
+	body.sort = [{
+		_script: {
+		  type: 'number',
+		  script: {
+			lang: 'painless',
+			source: "(doc['_id'].value + params.salt).hashCode()",
+			params: { salt:  Math.random().toString(36).substring(2, 15) }
+		  },
+		  'order': 'desc'
+		}
+	  }]
+  } */
+
   return dispatch => fetchResults(body, dispatch, options);
 }
 
