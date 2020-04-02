@@ -71,7 +71,7 @@
         // Font
         color: $color-grey-dark;
         font-weight: bold;
-        font-size: 17px;
+        font-size: 21px;
 
         // Spacing
         position: relative;
@@ -109,6 +109,7 @@
     }
 
     &__button-content {
+        font-family: $font-family;
         margin-right: 5px;
     }
 
@@ -123,7 +124,7 @@
 
     &__icon {
         position: absolute;
-        top: 29px; // TODO => Fix this magic string.
+        top: 33px; // TODO => Fix this magic string.
         font-size: 21px;
 
         &--active {

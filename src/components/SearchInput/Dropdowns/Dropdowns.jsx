@@ -501,7 +501,7 @@ class DropdownSection extends Component {
                     const isActiveItem = activeItem === term;
 
                     // If this is the last item, we want to remove the chevron and add a | before the item.
-                    let buttonClassName = 'dropdowns-menu__button';
+                    let buttonClassName = 'font-delta dropdowns-menu__button';
                     if (isLastDropdown) buttonClassName = `${buttonClassName} dropdowns-menu__button--last`;
 
                     // If this is the active item, we want to flip the chevron.
