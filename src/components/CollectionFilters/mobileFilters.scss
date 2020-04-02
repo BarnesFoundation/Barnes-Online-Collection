@@ -112,8 +112,10 @@
   clear: both;
 
   &--scrollable {
-    padding-top: 15px;
-    overflow-x: scroll;
+    @include breakpoint('small-') {
+      padding-top: 15px;
+      overflow-x: scroll;
+    }  
   }
 
   form {
@@ -206,6 +208,10 @@
   margin-bottom: 10px;
   width: 100%;
   text-align: left;
+
+  @include breakpoint('medium+') {
+    display: none;
+  }
 
   &--scrollable {
     padding: $mobile-filters-section-padding;

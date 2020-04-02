@@ -18,6 +18,7 @@
 
 .collection-filters-wrap {
   @include breakpoint('medium-') {
+    border-top: none;
     padding-bottom: 0;
     position: fixed;
     bottom: 0;
@@ -254,11 +255,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
 
-  @include breakpoint('medium-') {
-    width: 500%;
-    height: 75px;
+  @include breakpoint('small-') {
+    width: 400%;
+    height: 55px;
     overflow-x: scroll;
     flex-wrap: nowrap;
   }
@@ -275,6 +275,14 @@
     &:hover,
     &.is-applied {
       border-color: black;
+    }
+
+    @include breakpoint('medium+') {
+      height: calc(100vw/20);
+    }
+
+    @include breakpoint('large+') {
+      height: 55px;
     }
 
     &:last-of-type {

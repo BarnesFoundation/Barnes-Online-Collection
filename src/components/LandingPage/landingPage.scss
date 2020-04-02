@@ -82,7 +82,7 @@
     width: 100%;
     background-color: $color-white;
 
-    border-top: 1px $color-grey-super-light solid;
+    
 
     .btn-no-style {
       // the styleguide size for btn is too big
@@ -92,6 +92,8 @@
     }
 
     @include breakpoint('large+') {
+      border-top: 1px $color-grey-super-light solid;
+      
       // stay below the header
       // @include set-top-header-height();
 
