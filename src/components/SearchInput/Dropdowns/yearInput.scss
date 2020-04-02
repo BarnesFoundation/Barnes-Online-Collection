@@ -77,7 +77,10 @@
         color: $color-grey-medium;
         display: block;
         font-size: 18px;
-        line-height: 46px;
+
+        @include breakpoint('medium-') {
+            line-height: 46px;
+        }
 
         padding: 0 22px;
 
