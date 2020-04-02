@@ -251,6 +251,14 @@
   }
 }
 
+.lines_linearity-filter,
+.lines_composition-filter {
+  svg {
+    margin-right: 8px;
+    margin-bottom: 3px;
+  }
+}
+
 .color-filters-container {
   display: flex;
   align-items: center;
