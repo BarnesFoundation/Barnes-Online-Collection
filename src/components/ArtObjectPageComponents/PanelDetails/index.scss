@@ -191,9 +191,8 @@
   position: relative;
 
   &__img {
-
     @include breakpoint('medium+') {
-      max-width: 70%;
+      max-width: 85%;
     }
   }
 

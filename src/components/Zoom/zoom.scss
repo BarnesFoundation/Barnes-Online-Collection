@@ -1,8 +1,8 @@
 @import '../../scss/variables.scss';
+@import '../../scss/_mixins.scss';
 
 .zoom {
   position: relative;
-  width: 100%;
 
   &:before {
     display: block;
@@ -13,8 +13,16 @@
   }
 
   display: block;
-  top: 0;
-  left: 0;
+
+  width: 100%;
+
+  @include breakpoint('medium+') {
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+    width: 85%;
+  }
+  
+
   z-index: 1;
   background-color: $color-grey-dark;
 
