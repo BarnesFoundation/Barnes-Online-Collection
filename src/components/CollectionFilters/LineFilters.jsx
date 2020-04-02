@@ -43,8 +43,8 @@ class LineFilters extends Component {
           {this.getLineFilters()}
         </MediaQuery>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-          <div className="mobile-filters-section">
-            <h6 className="mobile-filters-header font-zeta">Lines</h6>
+          <h6 className="font-zeta mobile-filters-header mobile-filters-header--scrollable">Lines</h6>
+          <div className="mobile-filters-section mobile-filters-section--scrollable">
             {this.getLineFilters()}
           </div>
         </MediaQuery>

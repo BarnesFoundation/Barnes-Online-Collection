@@ -114,6 +114,9 @@
   &--scrollable {
     @include breakpoint('small-') {
       padding-top: 15px;
+    }
+
+    @include breakpoint('medium-') {
       overflow-x: scroll;
     }  
   }
@@ -133,13 +136,29 @@
   }
 
   .line-filters-container {
-    flex-direction: column;
-    width: 100%;
+    flex-direction: row;
+
+    @include breakpoint('large+') {
+      flex-direction: column;
+    }
+
+    width: 300%;
+
+    @include breakpoint('medium+') {
+      width: 120%;
+    }
+
+    @include breakpoint('large+') {
+      width: 100%;
+    }
 
     .line-filters-group {
       display: flex;
       flex-direction: row;
-      width: 100%;
+
+      @include breakpoint('large+') {
+        width: 100%;
+      }
 
       .btn-filter {
         height: auto;
@@ -157,14 +176,20 @@
 
       &:first-of-type {
         margin-bottom: $mobile-filters-pill-padding;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+
+        @include breakpoint('large+') {
+          flex-wrap: wrap;
+        }
 
         .btn-filter {
           width: calc(50% - 5px);
           margin: 0 $mobile-filters-pill-padding $mobile-filters-pill-padding 0;
 
           &:nth-of-type(2n) {
-            margin-right: 0;
+            @include breakpoint('large+') {
+              margin-right: 0;
+            }
           }
         }
       }

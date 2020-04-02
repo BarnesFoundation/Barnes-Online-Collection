@@ -261,6 +261,7 @@
     height: 55px;
     overflow-x: scroll;
     flex-wrap: nowrap;
+    margin-bottom: 20px;
   }
 
   .btn-filter {
@@ -323,6 +324,10 @@
       &:last-child {
         // reset just the last child
         border-right-width: $collection-filter-border-size;
+        
+        @include breakpoint('medium-') {
+          margin-right: 25px !important; // visual cue that color scroll has ended.
+        }
       }
 
       &:first-child {
