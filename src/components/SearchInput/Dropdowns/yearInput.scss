@@ -72,21 +72,22 @@
     }
 
     &__text-input {
+        font-family: inherit;
         width: 100%;
         border: 2px solid $color-border;
         color: $color-grey-medium;
         display: block;
-        font-size: 18px;
+        font-size: 20px;
 
         @include breakpoint('medium-') {
             line-height: 46px;
         }
 
-        padding: 0 22px;
+        padding: 0 22px 2px 22px;
 
         @include breakpoint('large+') {
             height: 36px;
-            padding: 0 11px;
+            padding: 0 11px 2px 11px;
         }
 
         &::placeholder {
