@@ -134,8 +134,7 @@
     }
 
     // Add inner border on hover, keeping image size.
-    &--active,
-    &:hover {
+    &--active {
       #{ $self }__inner-border {
         box-shadow: inset 0 0 0 5px $color-red-barnes;
       }
