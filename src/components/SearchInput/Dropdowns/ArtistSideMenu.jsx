@@ -14,7 +14,13 @@ export class ArtistSideMenuContent extends Component {
 
         this.state = {
             artistRadio: ARTISTS_RADIOS.ABUNDANCE,
-            data: this.props.data,
+            data: this.props.data.map((artist) => {
+                if (artist.key === "Kristján Daví�sson") {
+                    artist.key = "Kristján Davídsson"
+                }
+
+                return artist;
+            }),
         }
     }
 
