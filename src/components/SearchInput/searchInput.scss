@@ -71,7 +71,7 @@ $button-margin: 15px;
   }
 
   &__button {
-    font-weight: normal;
+    // font-weight: normal;
     font-size: 18px;
     width: $button-width;
 
@@ -81,6 +81,7 @@ $button-margin: 15px;
 
     &:focus {
       color: $color__white;
+      border: 1px solid $color__red--barnes-dark;
     }
   }
 
