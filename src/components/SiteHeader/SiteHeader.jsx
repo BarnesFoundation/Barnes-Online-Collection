@@ -88,16 +88,19 @@ class SiteHeader extends Component {
         setTimeout(() => {
           const { height: previousScrollHeight } = scrollState;
           const currentScrollHeight = window.pageYOffset;
+          const { isSideMenuOpen } = this.state;
 
-          let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
-          if ((currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) || isArtistMenuToggled || isGlobalSearchActive) {
-            isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
-          } else if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) {
-            isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+          if (!isSideMenuOpen && !isArtistMenuToggled) {
+            let isHeaderHidden = HEADER_HIDDEN.DEFAULT; // Default is fixed position at top 0.
+            if ((currentScrollHeight > 50 && previousScrollHeight < currentScrollHeight) || isGlobalSearchActive) {
+              isHeaderHidden = HEADER_HIDDEN.UNLOCKED; // Translate off screen.
+            } else if (currentScrollHeight < previousScrollHeight && currentScrollHeight > 250) {
+              isHeaderHidden = HEADER_HIDDEN.LOCKED; // Translate on screen.
+            }
+
+            // Update React component state.
+            this.setState({ isHeaderHidden });
           }
-
-          // Update React component state.
-          this.setState({ isHeaderHidden });
 
           // Update closure state.
           scrollState.height = currentScrollHeight; // Update scrollState height variable.
