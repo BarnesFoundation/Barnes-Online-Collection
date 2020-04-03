@@ -209,6 +209,20 @@
     left: 0;
     height: 23px;
   }
+
+  &:hover {
+    &:after {
+      content: ' ';
+      text-align: right;
+      width: calc(100% + 5px);
+
+      position: absolute;
+      border-bottom: 1px solid $color-black;
+      bottom: 2px;
+      left: 0;
+      height: 23px;
+    }
+  }
 }
 
 .art-object__back {

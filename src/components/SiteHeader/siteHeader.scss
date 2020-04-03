@@ -22,16 +22,6 @@ html:not([class=""]) {
   position: fixed;
   top: 0;
 
-  @include breakpoint('medium+') {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    
-    transition: background-color 250ms ease, transform 300ms ease;
-    transition-property: background-color, transform;
-    transition-duration: 250ms, 300ms;
-    transition-timing-function: ease, ease;
-    transition-delay: 0s, 0s;
-  }
-
   &__nav {
     &__link {
       &--active {
