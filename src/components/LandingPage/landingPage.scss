@@ -241,7 +241,7 @@
         transform: translate3d(28px, -75px, 0px) scale(1.6);
 
         @include breakpoint('large+') {
-          transform: translate3d(55px, -300px, 0px) scale(1.4);
+          transform: translate3d(55px, -250px, 0px) scale(1.5);
         }
       }
 
@@ -249,7 +249,7 @@
         transform: translate3d(-28px, -75px, 0px) scale(1.6);
 
         @include breakpoint('large+') {
-          transform: translate3d(-55px, -300px, 0px) scale(1.4);
+          transform: translate3d(-55px, -250px, 0px) scale(1.6);
         }
       }
     }
