@@ -112,7 +112,7 @@
 
   .g-header {
     @include breakpoint('medium+') {
-      background-color: rgba(0, 0, 0, 0.2) !important;
+      background-color: rgba(0, 0, 0, 0.2);
       
       transition: background-color 250ms ease, transform 300ms ease;
       transition-property: background-color, transform;
