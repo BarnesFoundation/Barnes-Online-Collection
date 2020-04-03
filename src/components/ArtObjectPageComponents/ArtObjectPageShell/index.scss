@@ -195,6 +195,22 @@
   }
 }
 
+@mixin underline-spacing() {
+  position: relative;
+
+  &:after {
+    content: ' ';
+    text-align: right;
+    width: calc(100% + 5px);
+
+    position: absolute;
+    border-bottom: 1px solid $color__copy--light;
+    bottom: 2px;
+    left: 0;
+    height: 23px;
+  }
+}
+
 .art-object__back {
   border: none;
   outline: none;
@@ -204,11 +220,6 @@
 
   color: $color__copy--light;
 
-  &:hover {
-    cursor: pointer;
-    color: $color-black;
-  }
-
   @include breakpoint('small-') {
     display: none;
   }
@@ -216,6 +227,13 @@
   @include breakpoint('large+') {
     font-size: 24px;
   }
+
+  &:hover {
+    cursor: pointer;
+    color: $color-black;
+  }
+
+  @include underline-spacing();
 }
 
 .art-object__back-link {
@@ -225,10 +243,54 @@
   
   @include breakpoint('medium+') {
     font-size: 20px;
-    font-size: inherit;
   }
 
   @include breakpoint('large+') {
     font-size: 24px;
+  }
+
+  @include underline-spacing();
+}
+
+.art-object__back-content {
+  position: relative;
+  width: calc(100% + 15px);
+  overflow: hidden;
+
+  &:after {
+    content: '◣';
+    font-size: 16px;
+    text-align: right;
+
+    position: absolute;
+    top: 7.5px;
+    right: -19px;
+
+    @include breakpoint('large+') {
+      right: -19px;
+      top: 12.5px;
+    }
+  }
+
+  &--link {
+    &:after {
+      content: '◣';
+      font-size: 16px;
+      text-align: right;
+
+      position: absolute;
+      top: -2px;
+      right: -15px;
+
+      @include breakpoint('medium+') {
+        top: 3px;
+        right: -17px;
+      }
+
+      @include breakpoint('large+') {
+        top: 7px;
+        right: -16px;
+      }
+    }
   }
 }
