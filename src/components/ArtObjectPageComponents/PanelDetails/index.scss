@@ -253,3 +253,10 @@
     }
   }
 }
+
+// Adjust text up three pixels.
+.btn {
+  &--vertically-center {
+    line-height: 54px
+  }
+}

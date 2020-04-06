@@ -312,7 +312,7 @@ class PanelDetails extends Component {
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
               {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
               <a
-                className='btn btn--primary btn--100'
+                className='btn btn--primary btn--100 btn--vertically-center'
                 href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl : requestImageUrl}
                 target='_blank' >
                 {objectCopyrightDetails.type === 'large' ? 'Download Image' : 'Request Image'}
