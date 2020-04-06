@@ -85,6 +85,13 @@
   }
 }
 
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  line-height: 1.9em !important;
+  width: 2.15em !important;
+  height: 2.15em !important;
+}
+
 .leaflet-control-zoom-fullscreen {
   height: 3.2em !important;
   width: 3.2em !important;
