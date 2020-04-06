@@ -241,6 +241,8 @@ export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) 
   const { currentIndex } = state.objectsQuery;
   const filters = state.filters;
 
+  
+
   if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
     findFilteredObjects(filters, currentIndex + BARNES_SETTINGS.size)(dispatch);
     dispatch(setCurrentIndex(currentIndex + BARNES_SETTINGS.size));
@@ -268,6 +270,35 @@ export const getAllObjects = (fromIndex = 0) => {
     fetchResults(body, dispatch, options);
   };
 };
+
+
+/** Closure to keep track of if a new salt is to be generated. */
+const getSalt = (() => {
+  // Method for generating new salt.
+  const calcSalt = () => Math.random().toString(36).substring(2, 15);
+
+  let filters = {}; // Cached filters.
+  let salt = calcSalt(); // Cached salt.
+
+  /**
+   * Function to get salt, 
+   * @param {@see filters.js} newFilters - filters to compare against variables in outer scope.
+   */
+  return (newFilters) => {
+    
+    // If the filters match our cache filters, just return same salt.
+    if (JSON.stringify(newFilters) === JSON.stringify(filters)) {
+      return salt;
+
+    // If filters are different then what we currently have in cache,
+    // return new salt and update closure variables.
+    } else {
+      filters = newFilters;
+      salt = calcSalt();
+      return salt;
+    }
+  }
+})();
 
 export const findFilteredObjects = (filters, fromIndex = 0) => {
   // If there is now no filter.
@@ -416,22 +447,25 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     body.sort = [{ endDate: { order: 'desc' }}, '_score'];
   }
 
+  
+
   // If not filtering on artists, let's apply a random sort to our query. We'll need to generate that salt and persist it elsewhere. 
   // The salt should be "renewed" when the filter parameters of your search change at all -- even if you select for example "American" from culture, view some artworks, unselect "American", and then reselect "American".
   // The results should differ upon each new search.
-  /* if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length == 0) {
-	body.sort = [{
-		_script: {
-		  type: 'number',
-		  script: {
-			lang: 'painless',
-			source: "(doc['_id'].value + params.salt).hashCode()",
-			params: { salt:  Math.random().toString(36).substring(2, 15) }
-		  },
-		  'order': 'desc'
-		}
-	  }]
-  } */
+  if (Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length === 0) {
+    body.sort = [{
+      _script: {
+        type: 'number',
+        script: {
+          lang: 'painless',
+          source: "(doc['_id'].value + params.salt).hashCode()",
+          params: { salt: getSalt(filters) },
+          // params: { salt:  Math.random().toString(36).substring(2, 15) }
+        },
+        'order': 'desc'
+      }
+    }];
+  }
 
   return dispatch => fetchResults(body, dispatch, options);
 }
