@@ -33,8 +33,6 @@ const setIsPending = isPending => ({ type: OBJECTS_QUERY_SET_IS_PENDING, isPendi
 const setLastIndex = lastIndex => ({ type: OBJECTS_QUERY_SET_LAST_INDEX, lastIndex });
 const setCurrentIndex = currentIndex => ({ type: OBJECTS_QUERY_CURRENT_INDEX, currentIndex });
 
-
-
 const addHighlightsFilter = (body) => {
   const highlightFilter = {
     "bool": {
@@ -234,14 +232,13 @@ const barnesifyObjects = (objects, dispatch, options) => {
   }));
 };
 
-
 export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) => {
   const state = getState();
 
   const { currentIndex } = state.objectsQuery;
   const filters = state.filters;
 
-  
+  // console.log(resetIndex(filters) ? BARNES_SETTINGS.size : currentIndex + BARNES_SETTINGS.size);
 
   if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
     findFilteredObjects(filters, currentIndex + BARNES_SETTINGS.size)(dispatch);
@@ -283,6 +280,7 @@ const getSalt = (() => {
   /**
    * Function to get salt, 
    * @param {@see filters.js} newFilters - filters to compare against variables in outer scope.
+   * @return {string} salt to be passed to elasticsearch.
    */
   return (newFilters) => {
     
