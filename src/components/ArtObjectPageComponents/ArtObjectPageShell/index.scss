@@ -247,7 +247,7 @@
     color: $color-black;
   }
 
-  @include underline-spacing();
+  // @include underline-spacing();
 }
 
 .art-object__back-link {
@@ -263,7 +263,7 @@
     font-size: 24px;
   }
 
-  @include underline-spacing();
+  // @include underline-spacing();
 }
 
 .art-object__back-content {
@@ -271,20 +271,20 @@
   width: calc(100% + 15px);
   overflow: hidden;
 
-  &:after {
-    content: '◣';
-    font-size: 16px;
-    text-align: right;
+  // &:after {
+  //   content: '◣';
+  //   font-size: 16px;
+  //   text-align: right;
 
-    position: absolute;
-    top: 7.5px;
-    right: -19px;
+  //   position: absolute;
+  //   top: 7.5px;
+  //   right: -19px;
 
-    @include breakpoint('large+') {
-      right: -19px;
-      top: 13px;
-    }
-  }
+  //   @include breakpoint('large+') {
+  //     right: -19px;
+  //     top: 13px;
+  //   }
+  // }
 
   &--link {
     &:after {
