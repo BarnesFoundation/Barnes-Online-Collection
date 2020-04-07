@@ -127,6 +127,7 @@ class LandingPageHeader extends Component {
     return (
       <div className='o-hero o-hero--landing-page'>
         <div className='o-hero__inner'>
+          <div className='o-hero__overlay'></div>
           <div className='container o-hero__container'>
             <div className='o-hero__copy'>
               {heroes.map(({ text }, index) => {

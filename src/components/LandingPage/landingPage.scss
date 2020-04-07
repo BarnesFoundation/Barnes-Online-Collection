@@ -110,17 +110,17 @@
     }
   }
 
-  .g-header {
-    @include breakpoint('medium+') {
-      background-color: rgba(0, 0, 0, 0.2);
+  // .g-header {
+  //   @include breakpoint('medium+') {
+  //     background-color: rgba(0, 0, 0, 0.2);
       
-      transition: background-color 250ms ease, transform 300ms ease;
-      transition-property: background-color, transform;
-      transition-duration: 250ms, 300ms;
-      transition-timing-function: ease, ease;
-      transition-delay: 0s, 0s;
-    }
-  }
+  //     transition: background-color 250ms ease, transform 300ms ease;
+  //     transition-property: background-color, transform;
+  //     transition-duration: 250ms, 300ms;
+  //     transition-timing-function: ease, ease;
+  //     transition-delay: 0s, 0s;
+  //   }
+  // }
 
   @media print {
     .mobile-buttons-set {
@@ -378,5 +378,14 @@
     @include breakpoint('medium+') {
       font-size: 32px;
     }
+  }
+
+  &__overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
