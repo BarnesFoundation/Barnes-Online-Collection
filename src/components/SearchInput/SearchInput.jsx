@@ -106,15 +106,19 @@ class SearchInput extends Component {
             </div>
           </div>
         </div>
-        <DropdownApply
-          isApply={Boolean((pendingTerms && pendingTerms.length) || searchValue)}
-          apply={() => {
-            // If apply is pressed, check for filters and search term.
-            if (applyPendingTerms) applyPendingTerms();
-            if (searchValue) addFilter({ filterType: 'search', value: searchValue });
-            closeFilterSet(); // Close out filters on apply.
-          }}
-        />
+        <MediaQuery
+          maxDeviceWidth={BREAKPOINTS.tablet_max}
+        >
+          <DropdownApply
+            isApply={Boolean((pendingTerms && pendingTerms.length) || searchValue)}
+            apply={() => {
+              // If apply is pressed, check for filters and search term.
+              if (applyPendingTerms) applyPendingTerms();
+              if (searchValue) addFilter({ filterType: 'search', value: searchValue });
+              closeFilterSet(); // Close out filters on apply.
+            }}
+          />
+        </MediaQuery>
       </div>
     )
   }
