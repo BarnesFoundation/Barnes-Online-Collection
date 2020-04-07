@@ -4,7 +4,7 @@ import hero1Desktop from './Desktop/peasants.png';
 import hero2Desktop from './Desktop/room15NorthWall.jpg';
 import hero3Desktop from './Desktop/room10WestWall.png';
 // import hero3Desktop from './Desktop/87 - Room 22 South Wall.jpg';
-import hero4Desktop from './Desktop/room6SouthWall.png';
+import hero4Desktop from './Desktop/room22SouthWall.png';
 // import hero4Desktop from './Desktop/23 - Room 6 South Wall.jpg';
 import hero5Desktop from './Desktop/4 - Main Room West Wall.jpg';
 
