@@ -125,7 +125,7 @@ html:not([class=""]) {
   }
 
   // Hide mobile section on all larger sizes.
-  @include breakpoint('small+') {
+  @include breakpoint('medium+') {
     background-color: transparent;
     display: none;
     height: 0px !important;
