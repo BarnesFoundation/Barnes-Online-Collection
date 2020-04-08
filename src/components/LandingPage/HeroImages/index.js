@@ -1,9 +1,8 @@
-// import hero1Desktop from './Desktop/3 - Main Room South Wall.jpg';
 import hero1Desktop from './Desktop/peasants.png';
-import hero2Desktop from './Desktop/room15NorthWall.jpg';
-import hero3Desktop from './Desktop/room10WestWall.png';
-import hero4Desktop from './Desktop/room22SouthWall.png';
-import hero5Desktop from './Desktop/4 - Main Room West Wall.jpg';
+import hero2Desktop from './Desktop/room22SouthWall.png';
+import hero3Desktop from './Desktop/room15SouthWall.png';
+import hero4Desktop from './Desktop/room13NorthWall.png'; 
+import hero5Desktop from './Desktop/mainRoomWestWall.jpg';
 
 import hero1Mobile from './Mobile/3 - Main Room South Wall.jpg';
 import hero2Mobile from './Mobile/57 - Room 15 East Wall.jpg';
