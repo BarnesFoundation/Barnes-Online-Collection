@@ -19,7 +19,7 @@ import './artObjectGrid.css';
 const ViewMoreButton = ({ onClick }) => (
   <div className='view-more-button m-block m-block--no-border m-block--flush-bottom'>
     <button
-      className='btn'
+      className='btn btn--view-more'
       onClick={({ target }) => {
         onClick(); // Perform onClick prop.
         target.blur(); // Unfocus to remove styling.
