@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CollectionFiltersMenuItem from './CollectionFiltersMenuItem';
+import smoothscroll from 'smoothscroll-polyfill'; // For Safari, scroll-behavior CSS is not supported.
+
+smoothscroll.polyfill();
 
 let hasBeenScrolled = false; // Only scroll down once.
 
