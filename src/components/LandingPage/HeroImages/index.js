@@ -13,7 +13,7 @@ import hero5Mobile from './Mobile/4 - Main Room West Wall.jpg';
 const sceneOne = {
     srcDesktop: hero1Desktop,
     srcMobile: hero1Desktop,
-    text: 'The Barnes Foundation houses the world\'s largest collections of Renoir and Cezanne, and important works by Matisse, Picasso and Modigliani.',
+    text: 'The Barnes Foundation houses the world\'s largest collections of Renoir and Cézanne, and important works by Matisse, Picasso and Modigliani.',
 };
 
 const sceneTwo = {
@@ -25,19 +25,19 @@ const sceneTwo = {
 const sceneThree = {
     srcDesktop: hero3Desktop,
     srcMobile: hero3Desktop,
-    text: 'Albert C. Barnes collected these works between 1912 and 1951, arranging them in "ensembles" that include objects across history and around the globe.'
+    text: 'Albert C. Barnes collected these works between 1912 and 1951, arranging them in "ensembles" that include objects from across history and around the globe.'
 };
 
 const sceneFour = {
     srcDesktop: hero4Desktop,
     srcMobile: hero4Desktop,
-    text: 'The ensembles make visual connections between light, line, color and space.'
+    text: 'The ensembles make visual connections between light, line, color and space...'
 };
 
 const sceneFive = {
     srcDesktop: hero5Desktop,
     srcMobile: hero5Desktop,
-    text: 'Creating unique opportunities to look, talk and share.'
+    text: '...creating unique opportunities to look, talk and share.'
 }
 
 export const heroes = [sceneOne, sceneTwo, sceneThree, sceneFour, sceneFive];

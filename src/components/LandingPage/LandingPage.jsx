@@ -50,7 +50,7 @@ class LandingPageHeader extends Component {
 
   /** Set up image interval and text STO inside of interval. */
   setIntervalsAndTimeouts = () => {
-    const TEXT_TIMEOUT = 29000;
+    const TEXT_TIMEOUT = 9000;
     const INTERVAL_TIMEOUT = TEXT_TIMEOUT + 2000;
 
     this.textSto = setTimeout(() => {
