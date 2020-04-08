@@ -147,7 +147,13 @@ class CollectionFilters extends Component {
     return (
       <div
         className='container collection-filters-wrap__container'
-        ref={ref => this.ref = ref}
+        ref={ref => {
+            if (!this.ref) {
+              this.ref = ref;
+              this.forceUpdate();
+            }
+          }
+        }
       >
         {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           { mobileFiltersVisible &&
@@ -174,7 +180,10 @@ class CollectionFilters extends Component {
         <CollectionFiltersMenu parentContainer={this.ref}/>
         {/* </MediaQuery> */}
         <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
-          <ClickTracker resetFunction={() => selectFilterSet(null)}>
+          <ClickTracker
+            forwardedRef={this.ref}
+            resetFunction={() => selectFilterSet(null)}
+          >
             <div className="m-block m-block--flush applied-filters">
               {visibleFilterSet === 'search'
                 ? <SearchInput isCollectionAdvancedSearch/>

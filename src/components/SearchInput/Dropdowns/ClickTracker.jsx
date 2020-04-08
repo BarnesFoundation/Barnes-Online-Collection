@@ -28,10 +28,14 @@ export class ClickTracker extends Component {
      * @param {MouseEvent} - mouse press.
      */
     handleClick = ({ target }) => {
+        const { forwardedRef } = this.props;
         const { resetFunction } = this.state;
 
+        // Prefer forwarded ref over this ref.
+        const refToUse = forwardedRef || this.ref;
+
         // If the ref is set up, the event is outside of the ref, and resetFunction was set in cDM.
-        if (this.ref && !this.ref.contains(target) && resetFunction) {
+        if (refToUse && !refToUse.contains(target) && resetFunction) {
             resetFunction(); // Reset on click out
         }
     };
@@ -54,10 +58,15 @@ export class ClickTracker extends Component {
     setResetFunction = resetFunction => this.setState({ resetFunction });
     
     render() {
-        const { children, resetFunction } = this.props;
+        const { children, resetFunction, forwardedRef } = this.props;
 
         return (
-            <div ref={ref => this.ref = ref}>
+            <div ref={(ref) => {
+                if (!this.ref) {
+                    this.ref = ref;
+                }
+            }
+            }>
                 {resetFunction
                 ? children
                 : React.Children.map(children, (child) => (
