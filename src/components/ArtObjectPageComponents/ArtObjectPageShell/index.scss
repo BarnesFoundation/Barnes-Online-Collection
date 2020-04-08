@@ -257,6 +257,8 @@
   width: calc(100% + 15px);
   overflow: hidden;
 
+  font-weight: 700;
+
   font-size: 18px;
   
   @include breakpoint('medium+') {
