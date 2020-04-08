@@ -49,13 +49,13 @@ class ArtObjectPageShell extends Component {
                 className="art-object__back"
                 onClick={modalHide}
               >
-                <span className="art-object__back-content">Continue exploring the collection</span>
+                <span className="art-object__back-content">Continue Exploring The Collection</span>
               </button>
             : <a
                 className="art-object__back-link"
                 href="/"
               >
-                <span className="art-object__back-content art-object__back-content--link">Continue exploring the collection</span>
+                <span className="art-object__back-content art-object__back-content--link">Continue Exploring The Collection</span>
               </a>
           }
           <h1 className="art-object__title art-object__title--main art-object__title--top font-gamma">{object.people}</h1>

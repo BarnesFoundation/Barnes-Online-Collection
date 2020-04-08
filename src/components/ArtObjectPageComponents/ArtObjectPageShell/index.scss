@@ -56,10 +56,14 @@
     }
 
     &--top {
-      margin-top: 10px;
+      margin-top: 25px;
 
       @include breakpoint('medium+') {
-        margin-top: 15px;
+        margin-top: 30px;
+      }
+
+      @include breakpoint('large+') {
+        margin-top: 40px;
       }
     }
 
@@ -230,17 +234,8 @@
   outline: none;
   background-color: transparent;
   font: inherit;
-  font-size: 20px;
 
   color: $color__copy--light;
-
-  @include breakpoint('small-') {
-    display: none;
-  }
-
-  @include breakpoint('large+') {
-    font-size: 24px;
-  }
 
   &:hover {
     cursor: pointer;
@@ -251,17 +246,8 @@
 }
 
 .art-object__back-link {
-  font-size: 16px;
   text-align: right;
   text-decoration: none;
-  
-  @include breakpoint('medium+') {
-    font-size: 20px;
-  }
-
-  @include breakpoint('large+') {
-    font-size: 24px;
-  }
 
   // @include underline-spacing();
 }
@@ -270,6 +256,16 @@
   position: relative;
   width: calc(100% + 15px);
   overflow: hidden;
+
+  font-size: 18px;
+  
+  @include breakpoint('medium+') {
+    font-size: 20px;
+  }
+
+  @include breakpoint('large+') {
+    font-size: 24px;
+  }
 
   // &:after {
   //   content: '◣';
@@ -287,24 +283,24 @@
   // }
 
   &--link {
-    &:after {
-      content: '◣';
-      font-size: 16px;
-      text-align: right;
+    // &:after {
+    //   content: '◣';
+    //   font-size: 16px;
+    //   text-align: right;
 
-      position: absolute;
-      top: -2px;
-      right: -15px;
+    //   position: absolute;
+    //   top: -2px;
+    //   right: -15px;
 
-      @include breakpoint('medium+') {
-        top: 3px;
-        right: -17px;
-      }
+    //   @include breakpoint('medium+') {
+    //     top: 3px;
+    //     right: -17px;
+    //   }
 
-      @include breakpoint('large+') {
-        top: 7px;
-        right: -16px;
-      }
-    }
+    //   @include breakpoint('large+') {
+    //     top: 7px;
+    //     right: -16px;
+    //   }
+    // }
   }
 }

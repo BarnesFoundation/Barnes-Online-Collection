@@ -10,8 +10,18 @@
   z-index: $z-index-modal;
   overflow-y: scroll;
   background: $color-white;
-  padding-top: $block-margin-small;
+  // padding-top: $block-margin-small;
   -webkit-overflow-scrolling: touch;
+
+  padding-top: 21px;
+
+  @include breakpoint('medium+') {
+    padding-top: 41px;
+  }
+
+  @include breakpoint('medium+') {
+    padding-top: 51px;
+  }
 
   &[data-modal-is-open="false"] {
     display: none;
@@ -23,47 +33,55 @@
   }
 
   .btn-close {
-    position: absolute;
     z-index: $z-index-modal-x;
     border: none;
     background: none;
-    right: 0;
-    top: 0;
+    
     cursor: pointer;
 
     &__icon {
-      width: 0.6em;
-      height: 0.6em;
-    }
-  }
-
-  @include breakpoint('small-') {
-    .btn-close {
-      position: relative;
-      text-align: right;
-      width: 100%;
-      top: 0;
-      margin-bottom: $block-margin-small / 2
+      width: 0.9em;
+      height: 0.9em;
     }
   }
 }
 
-.btn-tag-line {
-  float: left;
-  font: inherit;
-  font-size: 16px;
-  color: $color__copy--light;
+.close-container {
+  position: absolute;
 
-  padding-top: 2px;
-
-  &:hover {
-    color: $color-black;
-  }
+  top: 26px;
+  width: 100%;
 
   @include breakpoint('medium+') {
-    display: none;
+    top: 48px;
+  }
+
+  @include breakpoint('large+') {
+    top: 60px;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: flex-end;
   }
 }
+
+// .btn-tag-line {
+//   float: left;
+//   font: inherit;
+//   font-size: 16px;
+//   color: $color__copy--light;
+
+//   padding-top: 2px;
+
+//   &:hover {
+//     color: $color-black;
+//   }
+
+//   @include breakpoint('medium+') {
+//     display: none;
+//   }
+// }
 
 @media print {
   .component-modal {

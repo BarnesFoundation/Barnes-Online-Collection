@@ -47,15 +47,13 @@ class Modal extends Component {
         className="component-modal"
         ref={(div) => { this.el = div; }}
       >
-        <div className="container">
-          <div className="btn-wrap">
-
+        <div className="close-container">
+          <div className="container close-container__content">
             <button
               className="btn-close"
               onClick={this.handleClickBtnClose}
             >
-              <span className="btn-tag-line">Continue exploring the collection</span>
-              <Icon svgId='-icon_close' classes='icon-cross-page btn-close__icon'/>
+              <Icon svgId='-icon_close' classes='icon-cross-page btn-close__icon' />
             </button>
           </div>
         </div>
