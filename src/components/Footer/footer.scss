@@ -88,6 +88,8 @@
 
 // This class is to keep input width at 100% for mobile.
 .input-width {
+  font-family: $font-family;
+  
   @include breakpoint('small-') {
     width: calc(100% - 60px);
   }
