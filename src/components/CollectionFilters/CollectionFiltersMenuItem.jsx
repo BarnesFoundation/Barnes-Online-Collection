@@ -3,6 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Icon from '../Icon';
 import { selectFilterSet } from '../../actions/filterSets';
+import MediaQuery from 'react-responsive';
+
+const LARGE_MOBILE_BREAKPOINT = 767;
 
 const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibleFilterSet, hasAdvancedFiltersOrSearch }) => {
   let filterClassNames = 'btn-collection-filter font-zeta color-light';
@@ -29,7 +32,16 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibl
       <div className='button-inner'>
         <div className='button-inner__content'>
           <Icon svgId={svgId} classes='collection-filter-icon' />
+          <MediaQuery
+            maxWidth={LARGE_MOBILE_BREAKPOINT}
+          >
+            <span className='button-inner__text'>{slug === 'search' ? 'Search' : title}</span>
+          </MediaQuery>
+          <MediaQuery
+            minWidth={LARGE_MOBILE_BREAKPOINT + 1}
+          >
             <span className='button-inner__text'>{title}</span>
+          </MediaQuery>
         </div>
       </div>
     </button>
