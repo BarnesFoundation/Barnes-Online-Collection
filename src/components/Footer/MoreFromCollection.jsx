@@ -63,19 +63,22 @@ export class MoreFromCollection extends React.Component {
 
 		this.ref = { current: null };
 
-		this.state = {};
+		this.state = {
+			entries: [],
+		};
 	}
 
 	/** Set ref after 1st render and check ref after async action.  This prevents setState on unmounted component. */
 	setRef = async (ref) => {
-		this.ref = ref;
+		if (this.ref) {
+			this.ref = ref;
 
-		try {
-			const entries = await getEntries();
-
-			if (this.ref) this.setState({ entries });
-		} catch (e) {
-			this.setState({ entries: [] });
+			try {
+				const entries = await getEntries();
+				this.setState({ entries });
+			} catch (e) {
+				this.setState({ entries: [] });
+			}
 		}
 	}
 
