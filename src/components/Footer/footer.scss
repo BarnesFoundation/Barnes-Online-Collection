@@ -73,11 +73,12 @@
 .brand-links {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
 
   margin-top: 20px;
 
   @include breakpoint('large+') {
+    flex-direction: row;
     margin-top: 0;
   }
 
