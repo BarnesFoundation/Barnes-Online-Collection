@@ -71,13 +71,18 @@
 }
 
 .brand-links {
-  display: grid;
-  grid-template: 1fr 1fr 1fr/ 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
   margin-top: 20px;
 
   @include breakpoint('large+') {
     margin-top: 0;
-    grid-template: 1fr/ 20% 20% 20%;
+  }
+
+  &__link {
+    margin-right: 30px;
   }
 }
 

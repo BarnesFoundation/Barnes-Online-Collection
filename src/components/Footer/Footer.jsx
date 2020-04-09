@@ -186,9 +186,9 @@ export const Footer = ({ hasHours }) => {
                 Ongoing work continues through the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
               </p>
               <div className='brand-links'>
-                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block' href='https://www.barnesfoundation.org/collection/credits'>Project Credits</a>
-                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block' href='https://www.barnesfoundation.org/collection/open-access-and-copyright'>Open Access</a>
-                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block' href='https://www.barnesfoundation.org/copyright-and-image-licensing'>Image Licensing</a>
+                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block brand-links__link' href='https://www.barnesfoundation.org/collection/credits'>Project Credits</a>
+                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block brand-links__link' href='https://www.barnesfoundation.org/collection/open-access-and-copyright'>Open Access</a>
+                <a className='a-brand-link a-brand-link-on-grey a-brand-link--block brand-links__link' href='https://www.barnesfoundation.org/copyright-and-image-licensing'>Image Licensing</a>
               </div>
             </div>
           </div>
