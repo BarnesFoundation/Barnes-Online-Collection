@@ -7,12 +7,12 @@ import Icon from '../../Icon';
 import { ArtistSideMenu, ArtistSideMenuContent } from './ArtistSideMenu';
 import { ClickTracker } from './ClickTracker';
 import { YearInput } from './YearInput';
+import { QuickScroll } from './QuickScroll';
 import { addAdvancedFilter, removeAdvancedFilter, setAdvancedFilters } from '../../../actions/filters';
 import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import { getSearchAssets } from '../../../searchAssets';
 import './dropdowns.css';
-import { QuickScroll } from './QuickScroll';
 
 // Setting up advanced filter names and dropdown menu items.
 export const DROPDOWN_TERMS = {
