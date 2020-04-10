@@ -126,6 +126,7 @@ class DropdownMenu extends Component {
 
         let dropdownClassNames = 'dropdown';
         if (!noScroll) dropdownClassNames = `${dropdownClassNames} dropdown--scroll`;
+        if (hasQuickScroll) dropdownClassNames = `${dropdownClassNames} dropdown--quick-scroll`;
 
         return (
             <div
