@@ -351,7 +351,7 @@ class DropdownSection extends Component {
             case (DROPDOWN_TERMS.ARTIST): 
                 // Dropdown for artist should only be rendered for desktop devices.
                 return (
-                    <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                    <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
                         <DropdownMenu
                             headerText={term}
                             clear={() => this.setActiveItem(null)}
@@ -386,13 +386,13 @@ class DropdownSection extends Component {
                         noScroll
                         topOffset={topOffset}
                     >
-                        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
                             <YearInput
                                 setActiveTerm={term => this.setActiveTerm(term, true)}
                                 years={dropdownTermsMap[DROPDOWN_TERMS.YEAR]}
                             />
                         </MediaQuery>
-                        <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
                             <YearInput
                                 isDropdown
                                 setActiveTerm={term => this.setActiveTerm(term, false)}
@@ -410,14 +410,14 @@ class DropdownSection extends Component {
                         topOffset={topOffset}
                     >
                         {/** Mobile devices */}
-                        <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+                        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
                             <ListedContent
                                 {...listedContentSpreadProps}
                                 setActiveTerm={term => this.setActiveTerm(term, true)}
                             />
                         </MediaQuery>
                         {/** Desktops */}
-                        <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
                             <ListedContent
                                 {...listedContentSpreadProps}
                                 setActiveTerm={term => this.setActiveTerm(term, false)}
@@ -538,7 +538,7 @@ class DropdownSection extends Component {
                     );
                 })}
                 
-                <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+                <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
                     <ArtistSideMenu
                         isOpen={activeItem === DROPDOWN_TERMS.ARTIST}
                         closeMenu={() => this.setActiveItem(null)}

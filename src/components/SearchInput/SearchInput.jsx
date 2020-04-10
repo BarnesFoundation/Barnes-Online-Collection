@@ -58,8 +58,8 @@ class SearchInput extends Component {
 
             {/** Tablet */}
             <MediaQuery
-              minDeviceWidth={BREAKPOINTS.mobile_max + 1}
-              maxDeviceWidth={BREAKPOINTS.tablet_max}
+              minWidth={BREAKPOINTS.mobile_max + 1}
+              maxWidth={BREAKPOINTS.tablet_max}
             >
               <SearchBar
                 submit={(value) => {
@@ -73,7 +73,7 @@ class SearchInput extends Component {
             </MediaQuery>
 
             {/** Desktop */}
-            <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+            <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
               <SearchBar
                 autoSuggest
                 submit={value => addFilter({ filterType: 'search', value })}
@@ -81,8 +81,9 @@ class SearchInput extends Component {
                 isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
             </MediaQuery>
+            
             <div className='search__dropdowns'>
-              <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
+              <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
                 <Dropdowns
                   pendingTerms={pendingTerms}
                   setApplyPendingTerms={this.setApplyPendingTerms}
@@ -96,7 +97,7 @@ class SearchInput extends Component {
                   }}
                 />
               </MediaQuery>
-              <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
+              <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
                 <Dropdowns
                   pendingTerms={pendingTerms}
                   setApplyPendingTerms={this.setApplyPendingTerms}
@@ -106,8 +107,9 @@ class SearchInput extends Component {
             </div>
           </div>
         </div>
+        
         <MediaQuery
-          maxDeviceWidth={BREAKPOINTS.tablet_max}
+          maxWidth={BREAKPOINTS.tablet_max}
         >
           <DropdownApply
             isApply={Boolean((pendingTerms && pendingTerms.length) || searchValue)}
