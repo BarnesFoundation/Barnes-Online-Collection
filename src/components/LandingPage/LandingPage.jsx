@@ -29,6 +29,7 @@ class LandingPageHeader extends Component {
     this.sto = null;
     this.si = null;
     this.textSto = null;
+    this.resizeSto = null;
 
     this.state = {
       imageIndex: 0,
@@ -98,10 +99,29 @@ class LandingPageHeader extends Component {
     }
   }
 
+  /**
+   * On resize, prevent any further animation.
+   */
+  resizeChange = () => {
+    if (this.resizeSto) {
+      clearTimeout(this.resizeSto);
+    }
+
+    if (this.sto) clearTimeout(this.sto);
+    if (this.si) clearInterval(this.si);
+    if (this.textSto) clearTimeout(this.textSto);
+
+    this.resizeSto = setTimeout(() => {
+      this.handleVisibilityChange();
+    }, 500);
+  }
+
   // Set up event listeners and intervals..
   componentDidMount() {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
-    document.addEventListener('onpageshow', () => this.handleVisibilityChange);
+    document.addEventListener('onpageshow', this.handleVisibilityChange);
+    window.addEventListener('resize', this.resizeChange);
+
 
     // Trigger is init after mount, this will cause animation to play.
     this.sto = setTimeout(() => {
@@ -114,11 +134,13 @@ class LandingPageHeader extends Component {
   // Cleanup event listener, sto, and interval on unmount.
   componentWillUnmount() {
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    document.addEventListener('onpagehide', () => this.handleVisibilityChange);
+    document.removeEventListener('onpageshow', this.handleVisibilityChange);
+    window.removeEventListener('resize', this.resizeChange);
 
     if (this.sto) clearTimeout(this.sto);
     if (this.si) clearTimeout(this.si);
     if (this.textSto) clearTimeout(this.textSto);
+    if (this.resizeSto) clearTimeout(this.resizeSto)
   }
 
   render() {
