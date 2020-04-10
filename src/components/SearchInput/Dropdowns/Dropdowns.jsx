@@ -12,6 +12,7 @@ import { toggleArtistMenu } from '../../../actions/filterSets';
 import { BREAKPOINTS } from '../../../constants';
 import { getSearchAssets } from '../../../searchAssets';
 import './dropdowns.css';
+import { QuickScroll } from './QuickScroll';
 
 // Setting up advanced filter names and dropdown menu items.
 export const DROPDOWN_TERMS = {
@@ -152,26 +153,14 @@ class DropdownMenu extends Component {
                         classes='dropdown__icon dropdown__icon--x'
                     />
                 </div>
-                {hasQuickScroll &&
-                    <div className='dropdown__quick-scroll quick-scroll'>
-                        <Icon
-                            svgId='-icon_arrow_down'
-                            classes='quick-scroll__icon quick-scroll__icon--up'
-                            onClick={() => {
-                                if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop - 500);
-                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop - 500);
-                            }}
-                        />
-                        <Icon
-                            svgId='-icon_arrow_down'
-                            classes='quick-scroll__icon quick-scroll__icon--down'
-                            onClick={() => {
-                                if (this.scrollRef) this.scrollRef.scrollTo(0, this.scrollRef.scrollTop + 500);
-                                if (this.heightRef) this.heightRef.scrollTo(0, this.heightRef.scrollTop + 500);
-                            }}
-                        />
-                    </div>
+
+                {hasQuickScroll && this.scrollRef && this.heightRef &&
+                    <QuickScroll
+                        scrollRef={this.scrollRef}
+                        heightRef={this.heightRef}
+                    />
                 }
+                
                 <div
                     className='dropdown__body-wrapper'
                     ref={this.setScrollRef}

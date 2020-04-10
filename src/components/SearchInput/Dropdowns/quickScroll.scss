@@ -1,0 +1,43 @@
+@import '../../../scss/variables.scss';
+
+.quick-scroll-wrapper {
+    width: 100%;
+    height: calc(98% - 60px);
+    position: absolute;
+    top: 60px;
+}
+
+.quick-scroll {
+    // Handle positioning in here, for internal styling see separate BEM in this file.
+    position: absolute;
+
+    right: 0;
+    top: 0px;
+    z-index: 2;
+    margin-top: -15px;
+
+    margin-top: 5px;
+    padding: 5px 15px 5px 15px;
+
+    border-radius: 50% 0 0 50%;
+
+    background-color: $color-white;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+    border: 2px solid $color-border;
+    border-right: 1px solid $color-border;
+    
+    &__icon {
+        font-size: 19px;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &--up {
+            transform: rotate(180deg);
+        }
+    }
+}
