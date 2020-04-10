@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+// Keep track of global locked state.
+let globalIsLocked = false;
+
 /** HOC to lock scroll in place. */
 export class LockScroll extends Component {
   constructor(props) {
@@ -8,6 +11,7 @@ export class LockScroll extends Component {
     this.state = {
       scrollY: 0,
       willUnlock: null,
+      isGlobalLock: false,
     };
   }
   
@@ -16,15 +20,32 @@ export class LockScroll extends Component {
    */
   componentDidUpdate(prevProps) {
     const { isLocked } = this.props;
+    const { isGlobalLock } = this.state;
+    
+    // If our props do not match.
     if (prevProps.isLocked !== isLocked) {
       if (isLocked) {
-        this.setUpScrollLock(isLocked);
+        // If this is not already locked.
+        if (!globalIsLocked) {
+          globalIsLocked = true // Update global state variable;
+
+          this.setUpScrollLock(isLocked);
+        } else {
+          this.setState({ isLocked: false });
+        }
+
       } else {
         
-        // Unlock after animation has performed.
-        this.setState({
-          willUnlock: setTimeout(() => this.setUpScrollLock(isLocked), 300),
-        });
+        if (isGlobalLock) {
+          // Unlock after animation has performed.
+          globalIsLocked = false; // Update global state variable.
+
+          this.setState({
+            willUnlock: setTimeout(() => this.setUpScrollLock(isLocked), 300),
+          });
+        } else {
+          this.setState({ isLocked: true });
+        }
       }
     }
   }
@@ -45,7 +66,10 @@ export class LockScroll extends Component {
     const windowScrollY = window.pageYOffset;
 
     if (isLock) { // On menu appearing, set up where the scroll was.
-      this.setState({ scrollY: window.pageYOffset });
+      this.setState({
+        scrollY: window.pageYOffset,
+        isGlobalLock: true,
+      });
     }
 
     document.getElementById('root').style.position = isLock ? 'absolute' : null;
@@ -56,6 +80,8 @@ export class LockScroll extends Component {
 
     if (!isLock) { // On menu disappearing, scroll down to where saved state is.
       window.scrollTo(0, this.state.scrollY);
+
+      this.setState({ isGlobalLock: false });
     }
   }
 
