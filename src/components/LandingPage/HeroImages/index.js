@@ -1,14 +1,14 @@
-import hero1Desktop from './Desktop/peasants.png';
-import hero2Desktop from './Desktop/room22SouthWall.png';
-import hero3Desktop from './Desktop/room15SouthWall.png';
-import hero4Desktop from './Desktop/room13NorthWall.png'; 
-import hero5Desktop from './Desktop/mainRoomWestWall.png';
+// import hero1Desktop from './Desktop/peasants.png';
+// import hero2Desktop from './Desktop/room22SouthWall.png';
+// import hero3Desktop from './Desktop/room15SouthWall.png';
+// import hero4Desktop from './Desktop/room13NorthWall.png'; 
+// import hero5Desktop from './Desktop/mainRoomWestWall.png';
 
-import hero1Mobile from './Mobile/3 - Main Room South Wall.jpg';
-import hero2Mobile from './Mobile/57 - Room 15 East Wall.jpg';
-import hero3Mobile from './Mobile/87 - Room 22 South Wall.jpg';
-import hero4Mobile from './Mobile/23 - Room 6 South Wall.jpg';
-import hero5Mobile from './Mobile/4 - Main Room West Wall.jpg';
+import hero1Desktop from './Compressed/peasants.png';
+import hero2Desktop from './Compressed/room22SouthWall.png';
+import hero3Desktop from './Compressed/room15SouthWall.png';
+import hero4Desktop from './Compressed/room13NorthWall.png'; 
+import hero5Desktop from './Compressed/mainRoomWestWall.png';
 
 const sceneOne = {
     srcDesktop: hero1Desktop,
