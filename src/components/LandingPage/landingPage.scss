@@ -318,7 +318,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(20px, -60px, 0px) scale(1);
+          transform: translate3d(20px, -60px, 0px) scale(1.1);
         }
       }
 
@@ -334,7 +334,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(20px, -70px, 0px) scale(1.05);
+          transform: translate3d(20px, -70px, 0px) scale(1.15);
         }
       }
     }
