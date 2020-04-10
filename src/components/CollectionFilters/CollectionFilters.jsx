@@ -155,30 +155,15 @@ class CollectionFilters extends Component {
           }
         }
       >
-        {/* <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-          { mobileFiltersVisible &&
-            <div>
-              <MobileFiltersMenu />
-              <MobilePanelCloser />
-            </div>
-          }
-          { mobileSearchVisible &&
-            <div>
-              <MobileSearchMenu />
-              <MobilePanelCloser />
-            </div>
-          }
-          { !(mobileFiltersVisible || mobileSearchVisible) &&
-            <div>
-              {filtersApplied}
-              <MobileFiltersOpener />
-            </div>
-          }
-        </MediaQuery> */}
-        {/* <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}> */}
-        {/* <MediaQuery> */}
-        <CollectionFiltersMenu parentContainer={this.ref}/>
-        {/* </MediaQuery> */}
+        <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
+          <CollectionFiltersMenu parentContainer={this.ref} />
+        </MediaQuery>
+        <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
+          <CollectionFiltersMenu
+            parentContainer={this.ref}
+            hasScroll
+          />
+        </MediaQuery>
         <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
           <ClickTracker
             forwardedRef={this.ref}
