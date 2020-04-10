@@ -89,7 +89,7 @@ export const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collec
 
 // breakpoints
 export const BREAKPOINTS = {
-  tablet_max: 990,
+  tablet_max: 989,
   mobile_max: 425
 };
 
