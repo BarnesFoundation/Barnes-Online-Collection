@@ -164,7 +164,7 @@ class LandingPageHeader extends Component {
           </div>
         </div>
         <div className='o-hero__image-wrapper'>
-          {heroes.map(({ srcDesktop, srcMobile }, index) => {
+          {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
 
             let imageClassName = `o-hero__image o-hero__image--${index}`;
@@ -180,24 +180,12 @@ class LandingPageHeader extends Component {
             }
 
             return (
-              <div key={index}>
-                <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
-                  <img
-                    className={imageClassName}
-                    src={srcMobile}
-                    style={{ ...style }}
-                    alt='Barnes Museum Ensemble.'
-                  />
-                </MediaQuery>
-                <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
-                  <img
-                    className={imageClassName}
-                    src={srcDesktop}
-                    style={{ ...style }}
-                    alt='Barnes Museum Ensemble.'
-                  />
-                </MediaQuery>
-              </div>
+              <img
+                className={imageClassName}
+                src={src}
+                style={{ ...style }}
+                alt='Barnes Museum Ensemble.'
+              />
             );
           })}
         </div>
