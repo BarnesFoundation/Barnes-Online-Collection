@@ -7,8 +7,6 @@ export class QuickScroll extends Component {
     constructor(props) {
         super(props);
 
-        this.ref = null;
-
         this.state = {
             scrollHeight: 0,
             isScroll: true,
@@ -21,24 +19,29 @@ export class QuickScroll extends Component {
     componentDidMount() {
         const { scrollRef } = this.props;
 
-        // Add event handler to handle scroll.
-        scrollRef.addEventListener('scroll', () => {
-            this.setState({
-                // 250 = px of apply section and footer.
-                scrollHeight: Math.max((scrollRef.scrollTop - (scrollRef.offsetTop + 250)), 0)/(scrollRef.scrollHeight - scrollRef.clientHeight),
-                isScroll: true,
-            });
-        });
+        scrollRef.addEventListener('scroll', this.scroll);
     }
 
     /**
-     * Set up ref for listening to if a drag event is happening.
+     * Cleanup event listeners.
      */
-    setRef = (ref) => {
-        if (!this.ref) {
-            this.ref = ref;
-            this.forceUpdate();
-        }
+    componentWillUnmount() {
+        const { scrollRef } = this.props;
+
+        scrollRef.removeEventListener('scroll', this.scroll);
+    }
+
+
+    /**
+     * Scroll event handler.
+     */
+    scroll = () => {
+        const { scrollRef } = this.props;
+
+        // 250 = px of apply section and footer.
+        this.setState({
+            scrollHeight: Math.max((scrollRef.scrollTop - (scrollRef.offsetTop + 250)), 0)/(scrollRef.scrollHeight - scrollRef.clientHeight) * (scrollRef.offsetHeight - 60),
+        });
     }
 
     /**
@@ -54,22 +57,12 @@ export class QuickScroll extends Component {
         const scrollToY = offsetHeight * (y/(scrollRef.offsetHeight - 60));
         scrollRef.scrollTo(0, scrollToY);
 
-        this.setState({
-            scrollHeight: y,
-            isScroll: false,
-        });
+        this.setState({ scrollHeight: y });
     }
 
 
     render() {
-        const { scrollRef } = this.props;
-        const { scrollHeight, isScroll } = this.state;
-
-        // If this is a scroll event as opposed to a manipulation of the quickscroll,
-        // perform additional calculation to find height of controlled draggable quickscroll element.
-        const translateCalcHeight = isScroll
-            ? Math.floor(scrollHeight * (scrollRef.offsetHeight - 60))
-            : scrollHeight;
+        const { scrollHeight } = this.state;
 
         return (
             <div className='quick-scroll-wrapper'>
@@ -77,7 +70,7 @@ export class QuickScroll extends Component {
                     axis='y'
                     bounds='parent'
                     onDrag={this.setHeight}
-                    position={{ x: 0, y: translateCalcHeight }}
+                    position={{ x: 0, y: scrollHeight }}
                 >
                     <div
                         className='quick-scroll'
