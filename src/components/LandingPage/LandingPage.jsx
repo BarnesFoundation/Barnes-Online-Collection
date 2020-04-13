@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router'
-import MediaQuery from 'react-responsive';
 import queryString from 'query-string';
 import { getAllObjects } from '../../actions/objects';
 import { addSearchTerm } from '../../actions/search';
@@ -17,7 +16,6 @@ import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
 import './landingPage.css';
-import { BREAKPOINTS } from '../../constants';
 
 /**
  * Header JSX for landing page.
@@ -34,6 +32,7 @@ class LandingPageHeader extends Component {
     this.state = {
       imageIndex: 0,
       isInit: false, // If the animation has been triggered at least once.
+      imageLoaded: false, // If first image has been loaded.
 
       styles: { opacity: 1 },
     };
@@ -144,7 +143,7 @@ class LandingPageHeader extends Component {
   }
 
   render() {
-    const { styles, imageIndex, isInit, textShowing } = this.state;
+    const { styles, imageIndex, isInit, textShowing, imageLoaded } = this.state;
 
     return (
       <div className='o-hero o-hero--landing-page'>
@@ -164,9 +163,17 @@ class LandingPageHeader extends Component {
           </div>
         </div>
         <div className='o-hero__image-wrapper'>
+          {/** Serve small image until first image is loaded */}
+          <img
+            className={`o-hero__image o-hero__image--lazy o-hero__image--0--${isInit ? 'active' : 'start'}`}
+            src={`https://barnesfoundation-collection.imgix.net/collection-storyboard-images/peasants-lazy-load.jpg`}
+            style={{
+              display: imageLoaded ? 'none' : 'block'
+            }}
+          />
           {heroes.map(({ srcName }, index) => {
             const isActiveImage = index === imageIndex;
-            const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.png`
+            const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
 
             let imageClassName = `o-hero__image o-hero__image--${index}`;
             let style = isActiveImage
@@ -187,6 +194,11 @@ class LandingPageHeader extends Component {
                 src={src}
                 style={{ ...style }}
                 alt='Barnes Museum Ensemble.'
+                onLoad={() => {
+                  if (index === 0) {
+                    setTimeout(() => this.setState({ imageLoaded: true }), 2000);
+                  }
+                }}
               />
             );
           })}

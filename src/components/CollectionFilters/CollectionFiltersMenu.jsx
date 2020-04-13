@@ -16,9 +16,11 @@ const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer, hasScr
       requestAnimationFrame(() => {
         if (parentContainer && !visibleFilterSet && !hasBeenScrolled) {
           hasBeenScrolled = true;
-          parentContainer.scrollIntoView({ behavior: 'smooth' });
+
+          // Only trigger scroll if user is in top 100px of page.
+          if (window.scrollY < 100) parentContainer.scrollIntoView({ behavior: 'smooth' });
         }
-      })
+      });
     }
   };
 
