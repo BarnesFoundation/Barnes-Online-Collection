@@ -181,6 +181,7 @@ class LandingPageHeader extends Component {
 
             return (
               <img
+                key={index}
                 className={imageClassName}
                 src={src}
                 style={{ ...style }}
