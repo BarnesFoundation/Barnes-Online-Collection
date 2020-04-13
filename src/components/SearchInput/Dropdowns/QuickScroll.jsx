@@ -10,7 +10,7 @@ export class QuickScroll extends Component {
         this.state = {
             scrollHeight: 0,
             isScroll: true,
-        }
+        };
     }
 
     /**
@@ -39,25 +39,36 @@ export class QuickScroll extends Component {
         const { scrollRef } = this.props;
 
         // 250 = px of apply section and footer.
+        // 120 = 60 padding for apply + 60 padding for header, @see setHeight
         this.setState({
-            scrollHeight: Math.max((scrollRef.scrollTop - (scrollRef.offsetTop + 250)), 0)/(scrollRef.scrollHeight - scrollRef.clientHeight) * (scrollRef.offsetHeight - 60),
+            scrollHeight: Math.max((scrollRef.scrollTop - (scrollRef.offsetTop + 250)), 0)/(scrollRef.scrollHeight - scrollRef.clientHeight) * (scrollRef.parentElement.offsetHeight - 120),
         });
     }
 
     /**
      * Handler to set height via manipulating the draggable element.
      * @param {DraggableEventHandler} e - draggable event.
-     * @param {DraggableData} - coordinate and node data from draggable.
+     * @param {DraggableData} data - coordinate and node data from draggable.
      */
-    setHeight = (_e, { y }) => {
-        const { scrollRef, heightRef: { offsetHeight }} = this.props;
+    setHeight = (e, { y }) => {
+        // Prevent text highlighting on drag.
+        e.preventDefault();
+        e.stopPropagation();
+
+        const { scrollRef, heightRef } = this.props;
+
+        const offsetHeight = scrollRef.parentElement.offsetHeight - 60 === heightRef.parentElement.offsetHeight
+            ? heightRef.offsetHeight
+            : heightRef.parentElement.offsetHeight;
 
         // To calculate scroll value, find percentage of scroll in scrollRef against 
         // the total height of the <ul>
-        const scrollToY = offsetHeight * (y/(scrollRef.offsetHeight - 60));
+        // 120 = 60 padding for apply + 60 padding for header.
+        // We must use parent div because of issues with iOS calculating height of scrollable divs.
+        const scrollToY = offsetHeight * (y/(scrollRef.parentElement.offsetHeight - 120));
         scrollRef.scrollTo(0, scrollToY);
 
-        this.setState({ scrollHeight: y });
+        this.setState({ scrollHeight: y, scrollToY, y });
     }
 
 

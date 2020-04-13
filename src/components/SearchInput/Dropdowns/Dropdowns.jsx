@@ -165,6 +165,7 @@ class DropdownMenu extends Component {
                 <div
                     className='dropdown__body-wrapper'
                     ref={this.setScrollRef}
+                    style={{ maxHeight: '100%' }}
                 >
                     <div
                         className='dropdown__content'
