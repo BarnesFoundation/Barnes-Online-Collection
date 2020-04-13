@@ -238,8 +238,6 @@ export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) 
   const { currentIndex } = state.objectsQuery;
   const filters = state.filters;
 
-  // console.log(resetIndex(filters) ? BARNES_SETTINGS.size : currentIndex + BARNES_SETTINGS.size);
-
   if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
     findFilteredObjects(filters, currentIndex + BARNES_SETTINGS.size)(dispatch);
     dispatch(setCurrentIndex(currentIndex + BARNES_SETTINGS.size));
@@ -261,6 +259,8 @@ export const getAllObjects = (fromIndex = 0) => {
   body = body
     .rawOption('_source', RAW_OPTION)
     .build();
+
+  getSalt({}); // Reset salt on getAllObjects.
 
   return (dispatch) => {
     dispatch(setCurrentIndex(fromIndex));
