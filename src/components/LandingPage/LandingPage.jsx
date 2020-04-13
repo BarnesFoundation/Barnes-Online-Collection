@@ -15,6 +15,7 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
+import peasants from './images/peasants-lazy.jpg'
 import './landingPage.css';
 
 /**
@@ -166,7 +167,7 @@ class LandingPageHeader extends Component {
           {/** Serve small image until first image is loaded */}
           <img
             className={`o-hero__image o-hero__image--lazy o-hero__image--0--${isInit ? 'active' : 'start'}`}
-            src={`https://barnesfoundation-collection.imgix.net/collection-storyboard-images/peasants-lazy-load.jpg`}
+            src={peasants}
             style={{
               display: imageLoaded ? 'none' : 'block'
             }}
