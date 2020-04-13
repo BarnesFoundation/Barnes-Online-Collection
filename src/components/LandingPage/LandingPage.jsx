@@ -242,13 +242,19 @@ class LandingPage extends Component {
     const {
       search,
       filters,
-      history: { location: { state: newState }} // For detecting if a modal is open.
+      history: { location: { state: newState }}, // For detecting if a modal is open.
+      modalIsOpen,
     } = this.props;
     const { resetTruncateThreshold } = this.state;
 
     // Detect if we just opened a modal. If so, just return.
     if (newState && newState.isModal) return;
-    if (JSON.stringify(prevProps.filters) === JSON.stringify(filters)) return;
+    if (
+      JSON.stringify(prevProps.filters) === JSON.stringify(filters)
+      && prevProps.isModal === modalIsOpen
+    ) {
+      return;
+    }
 
     if (resetTruncateThreshold) resetTruncateThreshold();
 
