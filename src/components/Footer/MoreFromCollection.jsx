@@ -2,6 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 
+const IMGIX_ROOT = 'http://barnesfoundation.imgix.net';
+const IMGIX_PARAMS = '?crop=faces&fit=crop&fm=pjpg&fp-x=0.5&fp-y=0.5&h=300&ixlib=php-2.1.1&w=406';
+
 /**
  * Convert object details to JSX card.
  * @param {object} param - Event/More from Collection detail.
@@ -9,7 +12,8 @@ import { MAIN_WEBSITE_DOMAIN } from '../../constants';
  */
 const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImage, date, description, customSlug } }) => {
 	const entryUrl = `${MAIN_WEBSITE_DOMAIN}/${customSlug}`;
-	
+	const imgixUrl = `${IMGIX_ROOT}${backgroundImage.substring(backgroundImage.indexOf('/assets'))}${IMGIX_PARAMS}`;
+
 	return (
 		<div className='m-card-event vevent'>
 			<div className='m-card-event__header'>
@@ -17,7 +21,7 @@ const MoreFromCollectionCard = ({ moreFromDetail: { title, label, backgroundImag
 					<img
 						alt={title}
 						className='m-card-event__media'
-						src={backgroundImage}
+						src={imgixUrl}
 					/>
 				</a>
 			</div>

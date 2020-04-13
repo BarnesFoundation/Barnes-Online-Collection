@@ -145,6 +145,10 @@
   &__media {
     @include getImageHeight();
 
+    min-width: 100%;
+    max-width: none;
+    width: auto;
+
     padding-bottom: 0;
 
     // Make empty size same as image image size.
