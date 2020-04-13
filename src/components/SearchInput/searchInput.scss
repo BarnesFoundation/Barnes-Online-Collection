@@ -60,7 +60,7 @@ $button-margin: 15px;
     margin-right: 20px;
     border: 2px solid $color-border;
     width: calc(100% - 25px);
-    color: $color-black;
+    color: $color-grey-medium;
     
     display: block;
 
@@ -72,6 +72,10 @@ $button-margin: 15px;
 
     &::placeholder {
       color: $color-grey-light;
+    }
+
+    &:focus {
+      color: $color-black;
     }
 
     @include breakpoint('small-') {
