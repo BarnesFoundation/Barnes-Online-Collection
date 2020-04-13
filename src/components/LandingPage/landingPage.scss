@@ -229,7 +229,7 @@
     left: 0;
 
     opacity: 0;
-    transition: transform 10s linear, opacity 500ms ease-in 9500ms;
+    transition: transform 10s ease-in-out, opacity 500ms linear 9500ms;
     
     z-index: -1;
 
