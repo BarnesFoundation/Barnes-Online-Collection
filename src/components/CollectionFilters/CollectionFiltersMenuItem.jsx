@@ -7,7 +7,15 @@ import MediaQuery from 'react-responsive';
 
 const LARGE_MOBILE_BREAKPOINT = 767;
 
-const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibleFilterSet, hasAdvancedFiltersOrSearch }) => {
+const CollectionFiltersMenuItem = ({
+  selectFilterSet,
+  slug,
+  svgId,
+  title,
+  visibleFilterSet,
+  hasAdvancedFiltersOrSearch,
+  scrollMenuIntoView,
+}) => {
   let filterClassNames = 'btn-collection-filter font-zeta color-light';
   if (slug === 'search') {
     filterClassNames = `${filterClassNames} btn-collection-filter--search`;
@@ -22,6 +30,8 @@ const CollectionFiltersMenuItem = ({ selectFilterSet, slug, svgId, title, visibl
     <button
       className={filterClassNames}
       onClick={() => {
+        scrollMenuIntoView();
+        
         if (slug !== visibleFilterSet) {
           selectFilterSet(slug);
         } else {
