@@ -105,22 +105,23 @@ class LandingPageHeader extends Component {
    * On resize, prevent any further animation.
    */
   resizeChange = () => {
-    // Only trigger if width is different.
-    // This is to prevent triggering on iOS every time there is a scroll.
-    if (window.innerWidth !== this.windowWidth) {
-      if (this.resizeSto) {
-        clearTimeout(this.resizeSto);
-      }
+    if (this.resizeSto) {
+      clearTimeout(this.resizeSto);
+    }
+    
 
-      if (this.sto) clearTimeout(this.sto);
-      if (this.si) clearInterval(this.si);
-      if (this.textSto) clearTimeout(this.textSto);
+    this.resizeSto = setTimeout(() => {
+      // Only trigger if width is different.
+      // This is to prevent triggering on iOS every time there is a scroll.
+      if (window.innerWidth !== this.windowWidth) {
+        if (this.sto) clearTimeout(this.sto);
+        if (this.si) clearInterval(this.si);
+        if (this.textSto) clearTimeout(this.textSto);
 
-      this.resizeSto = setTimeout(() => {
         this.windowWidth = window.innerWidth;
         this.handleVisibilityChange();
-      }, 500);
-    }
+      }
+    }, 500);
   }
 
   // Set up event listeners and intervals..
