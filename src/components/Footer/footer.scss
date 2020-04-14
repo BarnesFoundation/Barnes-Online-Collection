@@ -140,6 +140,8 @@
     @include getImageHeight();
 
     padding: 0;
+
+    position: relative;
   }
 
   &__media {
@@ -149,7 +151,11 @@
     max-width: none;
     width: auto;
 
+    text-align: center;
+
     padding-bottom: 0;
+
+    position: absolute;
 
     // Make empty size same as image image size.
     &:empty {
