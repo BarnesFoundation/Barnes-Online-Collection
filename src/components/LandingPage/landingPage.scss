@@ -293,7 +293,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(25px, -50px, 0px) scale(1.2);
+          transform: translate3d(25px, -70px, 0px) scale(1.15);
         }
       }
 
@@ -309,7 +309,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(-25px, -50px, 0px) scale(1.2);
+          transform: translate3d(-25px, -70px, 0px) scale(1.15);
         }
       }
     }
@@ -344,7 +344,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(20px, -70px, 0px) scale(1.15);
+          transform: translate3d(20px, -60px, 0px) scale(1.15);
         }
       }
     }
@@ -378,7 +378,7 @@
         }
 
         @include breakpoint('xlarge+') {
-          transform: translate3d(10px, -250px, 0px) scale(1.25);
+          transform: translate3d(10px, -230px, 0px) scale(1.25);
         }
       }
     }
