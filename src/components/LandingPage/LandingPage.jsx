@@ -15,7 +15,7 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
-import peasants from './images/peasants-lazy.jpg'
+import peasants from './images/peasants.jpg'
 import './landingPage.css';
 
 /**
