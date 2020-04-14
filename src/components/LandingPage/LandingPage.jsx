@@ -30,6 +30,8 @@ class LandingPageHeader extends Component {
     this.textSto = null;
     this.resizeSto = null;
 
+    this.windowWidth = window.innerWidth;
+
     this.state = {
       imageIndex: 0,
       isInit: false, // If the animation has been triggered at least once.
@@ -103,24 +105,32 @@ class LandingPageHeader extends Component {
    * On resize, prevent any further animation.
    */
   resizeChange = () => {
-    if (this.resizeSto) {
-      clearTimeout(this.resizeSto);
+    // Only trigger if width is different.
+    // This is to prevent triggering on iOS every time there is a scroll.
+    if (window.innerWidth !== this.windowWidth) {
+      if (this.resizeSto) {
+        clearTimeout(this.resizeSto);
+      }
+
+      if (this.sto) clearTimeout(this.sto);
+      if (this.si) clearInterval(this.si);
+      if (this.textSto) clearTimeout(this.textSto);
+
+      this.resizeSto = setTimeout(() => {
+        this.windowWidth = window.innerWidth;
+        this.handleVisibilityChange();
+      }, 500);
     }
-
-    if (this.sto) clearTimeout(this.sto);
-    if (this.si) clearInterval(this.si);
-    if (this.textSto) clearTimeout(this.textSto);
-
-    this.resizeSto = setTimeout(() => {
-      this.handleVisibilityChange();
-    }, 500);
   }
 
   // Set up event listeners and intervals..
   componentDidMount() {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', this.handleVisibilityChange);
-    window.addEventListener('resize', this.resizeChange);
+    window.addEventListener('resize', () => {
+      console.log('fff');
+      this.resizeChange();
+    });
 
 
     // Trigger is init after mount, this will cause animation to play.
