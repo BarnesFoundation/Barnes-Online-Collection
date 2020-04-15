@@ -138,7 +138,9 @@ export class MoreFromCollection extends React.Component {
 
 			try {
 				const entries = await getEntries();
-				this.setState({ entries });
+
+				// Prevent setState on unmounted component.
+				if (this.ref) this.setState({ entries });
 			} catch (e) {
 				this.setState({ entries: [] });
 			}
