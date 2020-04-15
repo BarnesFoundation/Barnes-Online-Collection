@@ -5,7 +5,7 @@ const sceneOne = {
 
 const sceneTwo = {
     srcName: 'room22SouthWall',
-    text: 'It also features African art, Native American ceramics, Greek antiquities, Pennsylvania German Furniture, and decorative ironwork.',
+    text: 'It also features African art, Native American ceramics, Greek antiquities, Pennsylvania German furniture, and decorative ironwork.',
 };
 
 const sceneThree = {
