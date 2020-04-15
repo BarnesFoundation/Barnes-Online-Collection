@@ -690,7 +690,6 @@ app.get('/api/advancedSearchSuggest', async (request, response) => {
     }
   });
 
-
   // Wrap return results in <strong> tags.
   const highlighted = buckets.map(({ key, doc_count }) => {
     const queryIndex = key.toLowerCase().indexOf(query.toLowerCase()); // In case query is LikE thIS.
@@ -701,7 +700,7 @@ app.get('/api/advancedSearchSuggest', async (request, response) => {
 
     return ({
       key: `${start}<strong>${middle}</strong>${end}`,
-      doc_count: doc_count/2, // TODO => This is returning 2x what it should.
+      doc_count: doc_count,
       raw: key, // For when filter is applied.
     });
   });
