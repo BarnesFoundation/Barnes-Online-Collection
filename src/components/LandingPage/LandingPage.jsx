@@ -128,10 +128,7 @@ class LandingPageHeader extends Component {
   componentDidMount() {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', this.handleVisibilityChange);
-    window.addEventListener('resize', () => {
-      console.log('fff');
-      this.resizeChange();
-    });
+    window.addEventListener('resize', this.resizeChange());
 
 
     // Trigger is init after mount, this will cause animation to play.
