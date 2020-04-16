@@ -173,8 +173,6 @@ class LandingPageHeader extends Component {
     if (!this.wrapperRef || isReset) {
       this.wrapperRef = ref;
 
-      console.log(this.wrapperRef);
-
       const {
         offsetWidth: wrapperWidth,
         offsetHeight: wrapperHeight
