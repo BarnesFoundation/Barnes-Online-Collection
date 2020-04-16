@@ -1,6 +1,6 @@
 const sceneOne = {
     srcName: 'peasants',
-    text: 'The Barnes Foundation houses the world\'s largest collections of Renoir and Cézanne, and important works by Matisse, Picasso and Modigliani.',
+    text: 'The Barnes Foundation houses one of the world\'s great collections of modern European paintings, with numerous works by Renoir, Cézanne, Matisse, Picasso, Van Gogh, and Modigliani.',
 };
 
 const sceneTwo = {
