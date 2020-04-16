@@ -231,10 +231,10 @@
 
 // This ensures same spacing for large screen devices.
 .collection-filters-set {
-  &--is-open {
-    border-bottom: 1px solid $color-grey-super-light; 
+  @include breakpoint('medium-') {
+    border-bottom: 1px solid $color-grey-super-light;
   }
-
+  
   @include breakpoint ('large+') {
     height: 0;
     padding: 0;
