@@ -173,6 +173,8 @@ class LandingPageHeader extends Component {
     if (!this.wrapperRef || isReset) {
       this.wrapperRef = ref;
 
+      console.log(this.wrapperRef);
+
       const {
         offsetWidth: wrapperWidth,
         offsetHeight: wrapperHeight
@@ -182,13 +184,17 @@ class LandingPageHeader extends Component {
         ...this.wrapperRef.children // Spread children to array
       ].map(({
         offsetWidth: childWidth,
-        offsetHeight: childHeight
+        offsetHeight: childHeight,
+        style: childStyle,
       }) => {
+        console.log(childStyle);
+
         // See if any of the children are smaller than parent according to width or height.
         // HEIGHT_SCALE_FACTOR is needed here for wider devices.
         if (
             childWidth < wrapperWidth ||
-            childHeight < wrapperHeight * HEIGHT_SCALE_FACTOR
+            childHeight < wrapperHeight * HEIGHT_SCALE_FACTOR ||
+            (childStyle.width || childStyle.height)
         ) {          
           const widthPercentageChange = wrapperWidth/childWidth;
           const heightPercentageChange = (wrapperHeight * HEIGHT_SCALE_FACTOR)/childHeight;
@@ -203,13 +209,15 @@ class LandingPageHeader extends Component {
             width: childWidth * scaleFactor,
             height: childHeight * scaleFactor,
           };
-        
+
         } else {
           // Return {} rather than undefined or null, as this allows destructuring and less logic in
           // the render method.
           return {};
         }
       });
+
+      console.log(imageDimensions);
 
       this.setState({ imageDimensions });
     }
