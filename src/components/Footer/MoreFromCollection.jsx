@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 
-const IMGIX_ROOT = 'http://barnesfoundation.imgix.net';
+const IMGIX_ROOT = 'https://barnesfoundation.imgix.net';
 const IMGIX_PARAMS = '?crop=faces&fit=crop&fm=pjpg&fp-x=0.5&fp-y=0.5&h=300&ixlib=php-2.1.1&w=406';
 
 /**
