@@ -34,6 +34,7 @@ class LandingPageHeader extends Component {
 
     // For determining if resize affects width of component.
     this.windowWidth = window.innerWidth;
+    this.windowHeight = window.innerHeight;
 
     // Ref for determining if images need to have height increased.
     this.wrapperRef = null;
@@ -123,12 +124,18 @@ class LandingPageHeader extends Component {
     this.resizeSto = setTimeout(() => {
       // Only trigger if width is different.
       // This is to prevent triggering on iOS every time there is a scroll.
-      if (window.innerWidth !== this.windowWidth) {
+      if (
+        window.innerWidth !== this.windowWidth ||
+        window.innerHeight !== this.windowHeight
+      ) {
         if (this.sto) clearTimeout(this.sto);
         if (this.si) clearInterval(this.si);
         if (this.textSto) clearTimeout(this.textSto);
 
+        // Update window state.
         this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
+
         this.handleVisibilityChange();
       }
     }, 500);
