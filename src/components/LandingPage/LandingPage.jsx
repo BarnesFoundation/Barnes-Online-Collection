@@ -187,9 +187,8 @@ class LandingPageHeader extends Component {
         offsetHeight: childHeight,
         style: childStyle,
       }) => {
-        console.log(childStyle);
-
-        // See if any of the children are smaller than parent according to width or height.
+        // See if any of the children are smaller than parent according to width or height
+        // or if style has already been applied to child.
         // HEIGHT_SCALE_FACTOR is needed here for wider devices.
         if (
             childWidth < wrapperWidth ||
@@ -216,8 +215,6 @@ class LandingPageHeader extends Component {
           return {};
         }
       });
-
-      console.log(imageDimensions);
 
       this.setState({ imageDimensions });
     }
