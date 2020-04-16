@@ -15,7 +15,6 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
 import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
-import peasants from './images/peasants.jpg'
 import './landingPage.css';
 
 /**
@@ -25,19 +24,27 @@ class LandingPageHeader extends Component {
   constructor(props) {
     super(props);
 
+    // Timeouts, for cleanup on unmount.
     this.sto = null;
     this.si = null;
     this.textSto = null;
     this.resizeSto = null;
 
+    // For determining if resize affects width of component.
     this.windowWidth = window.innerWidth;
+
+    // Ref for determining if images need to have height increased.
+    this.wrapperRef = null;
+
+    this.imageRefs = {};
 
     this.state = {
       imageIndex: 0,
       isInit: false, // If the animation has been triggered at least once.
-      imageLoaded: false, // If first image has been loaded.
 
       styles: { opacity: 1 },
+
+      imageDimensions: [],
     };
   }
 
@@ -93,6 +100,7 @@ class LandingPageHeader extends Component {
       );
 
       this.setIntervalsAndTimeouts();
+      this.setWrapperRef(this.wrapperRef, true);
 
     } else {
       if (this.sto) clearTimeout(this.sto);
@@ -128,7 +136,7 @@ class LandingPageHeader extends Component {
   componentDidMount() {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     document.addEventListener('onpageshow', this.handleVisibilityChange);
-    window.addEventListener('resize', this.resizeChange());
+    window.addEventListener('resize', this.resizeChange);
 
 
     // Trigger is init after mount, this will cause animation to play.
@@ -151,8 +159,55 @@ class LandingPageHeader extends Component {
     if (this.resizeSto) clearTimeout(this.resizeSto)
   }
 
+  /**
+   * Set up wrapper ref to calculate image height.
+   * Called on setting the ref, resize, and visibility events.
+   * @see LandingPageHeader.handleVisibilityChange for invocation outside of render.
+   * @param {React.Ref} ref - wrapper div around images.
+   * @param {boolean?} isReset - optional param for reset on doc/window event listeners.
+   */
+  setWrapperRef = (ref, isReset) => {
+    if (!this.wrapperRef || isReset) {
+      this.wrapperRef = ref;
+      const {
+        offsetWidth: wrapperWidth,
+        offsetHeight: wrapperHeight
+      } = this.wrapperRef;
+
+      const imageDimensions = [...this.wrapperRef.children].map(({ offsetWidth: childWidth, offsetHeight: childHeight }) => {
+        if (
+            childWidth < wrapperWidth ||
+            childHeight < wrapperHeight * 1.25
+        ) {          
+          const widthPercentageChange = wrapperWidth/childWidth;
+          const heightPercentageChange = (wrapperHeight * 1.25)/childHeight;
+
+          const scaleFactor = widthPercentageChange > heightPercentageChange
+            ? widthPercentageChange
+            : heightPercentageChange;
+          
+          return {
+            width: childWidth * scaleFactor,
+            height: childHeight * scaleFactor,
+          };
+        
+        } else {
+          return {};
+        }
+      });
+
+      this.setState({ imageDimensions });
+    }
+  }
+
   render() {
-    const { styles, imageIndex, isInit, textShowing, imageLoaded } = this.state;
+    const {
+      styles,
+      imageIndex,
+      isInit,
+      textShowing,
+      imageDimensions,
+    } = this.state;
 
     return (
       <div className='o-hero o-hero--landing-page'>
@@ -171,15 +226,10 @@ class LandingPageHeader extends Component {
             </div>
           </div>
         </div>
-        <div className='o-hero__image-wrapper'>
-          {/** Serve small image until first image is loaded */}
-          <img
-            className={`o-hero__image o-hero__image--lazy o-hero__image--0--${isInit ? 'active' : 'start'}`}
-            src={peasants}
-            style={{
-              display: imageLoaded ? 'none' : 'block'
-            }}
-          />
+        <div
+          className='o-hero__image-wrapper'
+          ref={this.setWrapperRef}
+        >
           {heroes.map(({ srcName }, index) => {
             const isActiveImage = index === imageIndex;
             const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
@@ -188,6 +238,15 @@ class LandingPageHeader extends Component {
             let style = isActiveImage
               ? { ...styles }
               : { opacity: isInit ? 1 : 0 };
+
+            if (imageDimensions[index]) {
+              // If imageDimensions[index] is {} for a particular index,
+              // the destructured values will be undefined and will subsequently
+              // not be applied in the spread style prop.
+              const { width, height } = imageDimensions[index]
+
+              style = { ...style, height, width };
+            }
 
             // Make sure next image appears beneath active image.
             if (isActiveImage && isInit) {
@@ -203,11 +262,6 @@ class LandingPageHeader extends Component {
                 src={src}
                 style={{ ...style }}
                 alt='Barnes Museum Ensemble.'
-                onLoad={() => {
-                  if (index === 0) {
-                    setTimeout(() => this.setState({ imageLoaded: true }), 2000);
-                  }
-                }}
               />
             );
           })}
