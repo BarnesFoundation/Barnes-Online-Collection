@@ -126,7 +126,10 @@ class LandingPageHeader extends Component {
       // This is to prevent triggering on iOS every time there is a scroll.
       if (
         window.innerWidth !== this.windowWidth ||
-        window.innerHeight !== this.windowHeight
+        (
+          window.innerHeight !== this.windowHeight &&
+          Math.abs(window.innerHeight - this.windowHeight) > 200
+        )
       ) {
         if (this.sto) clearTimeout(this.sto);
         if (this.si) clearInterval(this.si);
