@@ -17,6 +17,8 @@ import { Footer } from '../Footer/Footer';
 import { heroes } from './HeroImages';
 import './landingPage.css';
 
+const HEIGHT_SCALE_FACTOR = 1.25;
+
 /**
  * Header JSX for landing page.
  */
@@ -167,21 +169,32 @@ class LandingPageHeader extends Component {
    * @param {boolean?} isReset - optional param for reset on doc/window event listeners.
    */
   setWrapperRef = (ref, isReset) => {
+    // Call if this is a setup or this is a reset.
     if (!this.wrapperRef || isReset) {
       this.wrapperRef = ref;
+
       const {
         offsetWidth: wrapperWidth,
         offsetHeight: wrapperHeight
       } = this.wrapperRef;
 
-      const imageDimensions = [...this.wrapperRef.children].map(({ offsetWidth: childWidth, offsetHeight: childHeight }) => {
+      const imageDimensions = [
+        ...this.wrapperRef.children // Spread children to array
+      ].map(({
+        offsetWidth: childWidth,
+        offsetHeight: childHeight
+      }) => {
+        // See if any of the children are smaller than parent according to width or height.
+        // HEIGHT_SCALE_FACTOR is needed here for wider devices.
         if (
             childWidth < wrapperWidth ||
-            childHeight < wrapperHeight * 1.25
+            childHeight < wrapperHeight * HEIGHT_SCALE_FACTOR
         ) {          
           const widthPercentageChange = wrapperWidth/childWidth;
-          const heightPercentageChange = (wrapperHeight * 1.25)/childHeight;
+          const heightPercentageChange = (wrapperHeight * HEIGHT_SCALE_FACTOR)/childHeight;
 
+          // Scale according to whichever way will size the image proportionally to meet the boundaries
+          // of its parent.
           const scaleFactor = widthPercentageChange > heightPercentageChange
             ? widthPercentageChange
             : heightPercentageChange;
@@ -192,6 +205,8 @@ class LandingPageHeader extends Component {
           };
         
         } else {
+          // Return {} rather than undefined or null, as this allows destructuring and less logic in
+          // the render method.
           return {};
         }
       });
