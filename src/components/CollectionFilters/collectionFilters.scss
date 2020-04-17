@@ -98,6 +98,11 @@
     white-space: nowrap;
     padding: 0;
     margin-right: 35px;
+
+    // For iPhone 5, specifically.
+    @media screen and (max-width: 350px) {
+      margin-right: 30px;
+    }
     
 
     @include breakpoint('medium+') {
