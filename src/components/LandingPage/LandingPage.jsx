@@ -152,33 +152,6 @@ class LandingPageHeader extends Component {
     }, 500);
   }
 
-  // Set up event listeners and intervals..
-  componentDidMount() {
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
-    document.addEventListener('onpageshow', this.handleVisibilityChange);
-    window.addEventListener('resize', this.resizeChange);
-
-
-    // Trigger is init after mount, this will cause animation to play.
-    this.sto = setTimeout(() => {
-      this.triggerImageTranslation();
-    }, 100);
-
-    this.setIntervalsAndTimeouts();
-  }
-
-  // Cleanup event listener, sto, and interval on unmount.
-  componentWillUnmount() {
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    document.removeEventListener('onpageshow', this.handleVisibilityChange);
-    window.removeEventListener('resize', this.resizeChange);
-
-    if (this.sto) clearTimeout(this.sto);
-    if (this.si) clearTimeout(this.si);
-    if (this.textSto) clearTimeout(this.textSto);
-    if (this.resizeSto) clearTimeout(this.resizeSto)
-  }
-
   /**
    * Set up wrapper ref to calculate image height.
    * Called on setting the ref, resize, and visibility events.
@@ -278,6 +251,33 @@ class LandingPageHeader extends Component {
         this.setState({ fontSize: null });
       }
     }
+  }
+
+  // Set up event listeners and intervals..
+  componentDidMount() {
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    document.addEventListener('onpageshow', this.handleVisibilityChange);
+    window.addEventListener('resize', this.resizeChange);
+
+
+    // Trigger is init after mount, this will cause animation to play.
+    this.sto = setTimeout(() => {
+      this.triggerImageTranslation();
+    }, 100);
+
+    this.setIntervalsAndTimeouts();
+  }
+
+  // Cleanup event listener, sto, and interval on unmount.
+  componentWillUnmount() {
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    document.removeEventListener('onpageshow', this.handleVisibilityChange);
+    window.removeEventListener('resize', this.resizeChange);
+
+    if (this.sto) clearTimeout(this.sto);
+    if (this.si) clearTimeout(this.si);
+    if (this.textSto) clearTimeout(this.textSto);
+    if (this.resizeSto) clearTimeout(this.resizeSto)
   }
 
   render() {
