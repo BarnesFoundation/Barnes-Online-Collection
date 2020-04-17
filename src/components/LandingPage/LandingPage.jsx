@@ -39,6 +39,10 @@ class LandingPageHeader extends Component {
     // Ref for determining if images need to have height increased.
     this.wrapperRef = null;
 
+    // Ref for font wrapper
+    this.fontRef = null;
+    this.defaultFontSize = 0; // Default font size from style.
+
     this.imageRefs = {};
 
     this.state = {
@@ -48,6 +52,7 @@ class LandingPageHeader extends Component {
       styles: { opacity: 1 },
 
       imageDimensions: [],
+      fontSize: null,
     };
   }
 
@@ -103,7 +108,10 @@ class LandingPageHeader extends Component {
       );
 
       this.setIntervalsAndTimeouts();
+
+      // Reset ref setters, passing option to recalculate sizing for both ref children.
       this.setWrapperRef(this.wrapperRef, true);
+      this.setFontRef(this.fontRef, true);
 
     } else {
       if (this.sto) clearTimeout(this.sto);
@@ -175,7 +183,7 @@ class LandingPageHeader extends Component {
    * Set up wrapper ref to calculate image height.
    * Called on setting the ref, resize, and visibility events.
    * @see LandingPageHeader.handleVisibilityChange for invocation outside of render.
-   * @param {React.Ref} ref - wrapper div around images.
+   * @param {React.Ref<HTMLDivElement>} ref - wrapper div around images.
    * @param {boolean?} isReset - optional param for reset on doc/window event listeners.
    */
   setWrapperRef = (ref, isReset) => {
@@ -228,6 +236,50 @@ class LandingPageHeader extends Component {
     }
   }
 
+  /**
+   * Set up ref to calculate max font size of hero texts.
+   * @param {React.Ref<HTMLDivElement>} ref - wrapper div around captions.
+   * @param {boolean?} isReset - optional param for reset on doc/window event listeners.
+   */
+  setFontRef = (ref, isReset) => {
+    if (!this.fontRef || isReset) {
+      this.fontRef = ref; // Set ref so that this only runs once.
+
+      // Find default font size from styleSheet and cast to number.
+      if (!isReset) {
+        const defaultFontSize = parseInt(
+          window
+            .getComputedStyle(ref.children[0].children[0])
+            .getPropertyValue('font-size'),
+          10,
+        );
+
+        this.defaultFontSize = defaultFontSize; // Set to object property so this can be referenced later.
+      }
+
+      const { offsetHeight: parentHeight } = ref;
+
+      // This is coupled with elements appearing two deep
+      const copyElementsArray = [...ref.children[0].children];
+
+      // Take children, spread to array, map their offsetHeight and find max height.
+      const largestChildHeight = Math.max(
+        ...copyElementsArray.map(({ offsetHeight }) => offsetHeight)
+      );
+
+      // We want text to fill at most up to top 30px of parent container.
+      if (largestChildHeight > parentHeight - 30) {
+        const proportion = (parentHeight - 30)/largestChildHeight;
+
+        this.setState({ fontSize: this.defaultFontSize * proportion });
+      } else {
+
+        // If no additional style is needed, set state for this to null.
+        this.setState({ fontSize: null });
+      }
+    }
+  }
+
   render() {
     const {
       styles,
@@ -235,13 +287,23 @@ class LandingPageHeader extends Component {
       isInit,
       textShowing,
       imageDimensions,
+      fontSize,
     } = this.state;
+
+     // Copy styling.
+     let copyStyle;
+     if (fontSize) {
+       copyStyle = { ...copyStyle, fontSize };
+     }
 
     return (
       <div className='o-hero o-hero--landing-page'>
         <div className='o-hero__inner'>
           <div className='o-hero__overlay'></div>
-          <div className='container o-hero__container'>
+          <div
+            className='container o-hero__container'
+            ref={this.setFontRef}
+          >
             <div className='o-hero__copy'>
               {heroes.map(({ text }, index) => {
                 const isActiveImage = index === imageIndex;
@@ -249,7 +311,15 @@ class LandingPageHeader extends Component {
                 let supportingClassNames = 'o-hero__supporting';
                 if (!isActiveImage || !textShowing) supportingClassNames = `${supportingClassNames} o-hero__supporting--hidden`;
 
-                return <p key={text} className={supportingClassNames}>{text}</p>;
+                return (
+                  <p
+                    key={text}
+                    className={supportingClassNames}
+                    style={copyStyle}
+                  >
+                    {text}
+                  </p>
+                );
               })}
             </div>
           </div>
@@ -262,7 +332,7 @@ class LandingPageHeader extends Component {
             const isActiveImage = index === imageIndex;
             const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
 
-            let imageClassName = `o-hero__image o-hero__image--${index}`;
+            // img tag styling.
             let style = isActiveImage
               ? { ...styles }
               : { opacity: isInit ? 1 : 0 };
@@ -271,10 +341,17 @@ class LandingPageHeader extends Component {
               // If imageDimensions[index] is {} for a particular index,
               // the destructured values will be undefined and will subsequently
               // not be applied in the spread style prop.
-              const { width, height } = imageDimensions[index]
+              const { width, height } = imageDimensions[index];
 
-              style = { ...style, height, width };
+              style = {
+                ...style,
+                height: height || null,
+                width: width || null
+              };
             }
+
+            // Modify bem classes.
+            let imageClassName = `o-hero__image o-hero__image--${index}`;
 
             // Make sure next image appears beneath active image.
             if (isActiveImage && isInit) {
