@@ -241,14 +241,14 @@ class LandingPageHeader extends Component {
       );
 
       // We want text to fill at most up to top 30px of parent container.
-      if (largestChildHeight > parentHeight - 30) {
-        const proportion = (parentHeight - 30)/largestChildHeight;
+      if (largestChildHeight > parentHeight - 70) {
+        const proportion = (parentHeight - 70)/largestChildHeight;
 
-        this.setState({ fontSize: this.defaultFontSize * proportion });
-      } else {
-
-        // If no additional style is needed, set state for this to null.
-        this.setState({ fontSize: null });
+        this.setState(({ fontSize }) => ({
+          fontSize: fontSize
+            ? fontSize * proportion
+            : this.defaultFontSize * proportion
+        }));
       }
     }
   }
