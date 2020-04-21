@@ -51,7 +51,7 @@ class PanelEnsemble extends Component {
           </div>
           <div>
             <h3 className="h3">
-              Barnes arranged his collection in "ensembles"<br className="medium-and-up" /> to bring out visual relationships.
+              Dr. Barnes arranged his collection in “ensembles”<br className="medium-and-up" /> to bring out visual relationships.
             </h3>
             <h2 className="h2">{`On view: ${roomAndTitleText}`}</h2>
           </div>

@@ -49,7 +49,7 @@ class ArtObjectPageShell extends Component {
                 className="art-object__back"
                 onClick={modalHide}
               >
-                <span className="art-object__back-content">Continue Exploring The Collection</span>
+                <span className="art-object__back-content">Continue Exploring the Collection</span>
               </button>
             : <a
                 className="art-object__back-link"

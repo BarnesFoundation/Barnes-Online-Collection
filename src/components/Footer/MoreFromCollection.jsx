@@ -159,7 +159,7 @@ export class MoreFromCollection extends React.Component {
 			>
 				{Boolean (entries && entries.length) &&
 					<div className='m-block'>
-						<h2 className='font-beta m-block__title'>More from the collection</h2>
+						<h2 className='font-beta m-block__title'>More from the Collection</h2>
 						<div className='m-card-event-list'>
 							{(entries).map((entry, i) => <MoreFromCollectionCard key={i} moreFromDetail={entry} />)}
 						</div>

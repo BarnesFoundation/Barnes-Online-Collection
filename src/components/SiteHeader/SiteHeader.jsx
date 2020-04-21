@@ -143,7 +143,7 @@ class SiteHeader extends Component {
             </a>
             <nav className={gHeaderNavClassNames}>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
-              <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan your Visit</a>
+              <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan Your Visit</a>
               <a className={gHeaderNavLinkClassNames} href='/'>Our Collection</a>
               <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
               <btn
