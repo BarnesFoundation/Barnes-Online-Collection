@@ -6,92 +6,63 @@ import { htmlClassesRemove } from '../../actions/htmlClassManager';
 import { MAIN_WEBSITE_DOMAIN } from '../../constants';
 import './SideMenu.css';
 
+const IMPORTANT_LINKS = [
+  { href: MAIN_WEBSITE_DOMAIN + '/whats-on', text: 'What’s On' },
+  { href: MAIN_WEBSITE_DOMAIN + '/plan-your-visit', text: 'Plan Your Visit' },
+  { href:'/', text: 'Our Collection', isCurrent: true },
+  { href: MAIN_WEBSITE_DOMAIN + '/classes', text: 'Take a Class' },
+];
+const REGULAR_LINKS = [
+  { href: MAIN_WEBSITE_DOMAIN + '/about', text: 'About' },
+  { href: MAIN_WEBSITE_DOMAIN + '/support', text: 'Support' },
+  { href: MAIN_WEBSITE_DOMAIN + '/teachers', text: 'Teachers' },
+  { href: MAIN_WEBSITE_DOMAIN + '/about/careers-and-volunteering', text: 'Careers' },
+  { href: MAIN_WEBSITE_DOMAIN + '/press', text: 'Press' },
+  { href: 'https://shop.barnesfoundation.org/', text: 'Shop' },
+  { href: MAIN_WEBSITE_DOMAIN + '/host-an-event', text: 'Host an Event' },
+  { href: MAIN_WEBSITE_DOMAIN + '/whats-on/arboretum', text: 'Arboretum' },
+];
+
 /**
  * Default side menu for navigation.
  * If there is children for @see SideMenu.jsx, this is not rendered.
  */
-const DefaultSideMenu = () => (
+const DefaultSideMenu = ({ setEndRef, isOpen }) => (
   <nav className='g-nav__links' aria-labelledby='g-nav__title'>
     <div className='g-nav__important-links'>
-      <a
-        className='g-nav__link g-nav__link--important'
-        href={MAIN_WEBSITE_DOMAIN + '/whats-on'}
-      >
-        <span>What’s On</span>
-      </a>
-      <a
-        className='g-nav__link g-nav__link--important'
-        href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}
-      >
-        <span>Plan Your Visit</span>
-      </a>
-      <a
-        className='g-nav__link g-nav__link--important' aria-current='true'
-        href='/'
-      >
-        <span>Our Collection</span>
-      </a>
-      <a
-        className='g-nav__link g-nav__link--important'
-        href={MAIN_WEBSITE_DOMAIN + '/classes'}
-      >
-        <span>Take a Class</span>
-      </a>
+      {IMPORTANT_LINKS.map(({ href, text, isCurrent }) => (
+        <a
+          className='g-nav__link g-nav__link--important'
+          href={href}
+          aria-current={isCurrent}
+          key={text}
+          tabIndex={isOpen ? 0 : -1}
+        >
+          <span>{text}</span>
+        </a>
+      ))}
     </div>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/about'}
-    >
-      <span>About</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/support'}
-    >
-      <span>Support</span>
-    </a>
-    {/* <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/support/individual-giving'}
-    >
-      <span>Give</span>
-    </a> */}
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/teachers'}
-    >
-      <span>Teachers</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/about/careers-and-volunteering'}
-    >
-      <span>Careers</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/press'}
-    >
-      <span>Press</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={'https://shop.barnesfoundation.org/'}
-    >
-      <span>Shop</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + '/host-an-event'}
-    >
-      <span>Host an Event</span>
-    </a>
-    <a
-      className='g-nav__link'
-      href={MAIN_WEBSITE_DOMAIN + `/whats-on/arboretum`}
-    >
-      <span>Arboretum</span>
-    </a>
+    {REGULAR_LINKS.map(({ href, text }, i) => {
+      let additionalProps = {};
+      if (
+        i === REGULAR_LINKS.length - 1 &&
+        setEndRef
+      ) {
+        additionalProps = { ...additionalProps, ref: setEndRef };
+      }
+
+      return (
+        <a
+          className='g-nav__link'
+          href={href}
+          key={text}
+          tabIndex={isOpen ? 0 : -1}
+          {...additionalProps}
+        >
+          <span>{text}</span>
+        </a>
+      )
+    })}
   </nav>
 );
 
@@ -114,7 +85,11 @@ class SideMenu extends Component {
       isOverlayActive: OVERLAY_STATES.INACTIVE,
     };
 
-    this.sto = null; 
+    this.sto = null;
+
+    this.startRef = null;
+    this.containerRef = null;
+    this.endRef = null;
   }
 
   /**
@@ -137,9 +112,47 @@ class SideMenu extends Component {
   }
 
   /**
+   * Key listener function to keep track of tab and esc.
+   * Listen for tabs to keep tabs within side menu.
+   */
+  keyListener = (e) => {
+    const { isOpen, closeMenu } = this.props;
+
+    // Keep tab contained on tab.
+    if (
+      e.key === 'Tab' && 
+      isOpen &&
+      this.containerRef &&
+      this.startRef &&
+      this.endRef &&
+      document.activeElement === this.endRef
+    ) {
+      this.startRef.focus();
+    }
+
+    // Close menu on escape.
+    if (
+      e.key === 'Escape' &&
+      isOpen
+    ) {
+      closeMenu();
+    }
+  }
+
+  /**
+   * Add event listener for tab and esc key.
+   */
+  componentDidMount() {
+    document.addEventListener('keydown', this.keyListener);
+  }
+
+  /**
    * On unmount: if setTimeout exists, clear it.
+   * Remove event listener for tab and esc key.
    */
   componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyListener);
+
     if (this.sto) clearTimeout(this.sto);
   }
 
@@ -156,7 +169,11 @@ class SideMenu extends Component {
     if (isOpen) sideMenuClassNames = `${sideMenuClassNames} side-menu--active`;
 
     let gNavClassNames = 'g-nav';
-    if (children) gNavClassNames = `${gNavClassNames} g-nav--custom`;
+    if (children) {
+      gNavClassNames = `${gNavClassNames} g-nav--custom`;
+    } else {
+      gNavClassNames = `${gNavClassNames} g-nav--main   `;
+    }
     if (isOpen) gNavClassNames = `${gNavClassNames} g-nav--active`;
 
     let gNavOverlayClassNames = 'g-nav-overlay';
@@ -177,11 +194,14 @@ class SideMenu extends Component {
     }
 
     return (
-      <div className={sideMenuClassNames}>
+      <div
+        className={sideMenuClassNames}
+        aria-hidden={!isOpen}
+      >
         <div
           className={gNavClassNames}
           data-behavior='nav'
-          tabIndex={-1}
+          ref={ref => this.containerRef = ref}
         >
           <div
             className='g-nav__inner'
@@ -193,6 +213,8 @@ class SideMenu extends Component {
               type='button'
               aria-labelledby='nav-close-title'
               data-nav-hide
+              tabIndex={isOpen ? 0 : -1}
+              ref={ref => this.startRef = ref}
             >
               <svg className='icon--close' width={20} height={20}>
                 <title id='nav-close-title'>Close menu</title>
@@ -200,7 +222,13 @@ class SideMenu extends Component {
               </svg>
             </button>
             <h2 className='visuallyhidden' id='g-nav__title'>Main menu</h2>
-            {children || <DefaultSideMenu />}
+            {
+              children ||
+              <DefaultSideMenu
+                setEndRef={ref => this.endRef = ref}
+                isOpen={isOpen}
+              />
+            }
           </div>
         </div>
         <div

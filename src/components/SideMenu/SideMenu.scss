@@ -172,4 +172,17 @@
             cursor: default;
         }
     }
+
+    &--main {
+        #{ $self }__close {
+            color: $color-white !important;
+    
+            &:hover,
+            &:focus {
+                svg {
+                    color: $color__nav--hover !important;
+                }
+            }
+        }
+    }
 }
