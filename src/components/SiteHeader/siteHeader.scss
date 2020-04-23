@@ -196,3 +196,12 @@ html:not([class=""]) {
     align-items: left;
   }
 }
+
+// Focus for accessibility.
+.g-header__nav__btn,
+.g-header__nav__link,
+.g-header__logo {
+  &:focus {
+    color: $color-red-barnes-logo;
+  }
+}

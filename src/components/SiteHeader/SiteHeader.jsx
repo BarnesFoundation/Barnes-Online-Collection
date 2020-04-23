@@ -120,10 +120,19 @@ class SiteHeader extends Component {
     if (isArtObjectClassNames && isSecond) isArtObjectClassNames = `${isArtObjectClassNames} art-object-header--absolute`; // For second menu on artist page, absolutely position second menu.
 
     // Set up g-header classes.
-    // TODO => Change this to be more expressive.
+    let ariaHidden = false;
+    let ariaExpandedNav = false;
+
     let gHeaderClassNames = 'g-header';
-    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
-    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
+    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) {
+      gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
+      ariaHidden = true;
+    }
+    if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) {
+      gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
+      ariaHidden = false;
+      ariaExpandedNav = true;
+    }
 
     let gHeaderNavLinkClassNames = 'g-header__nav__link';
     if (!isGlobalSearchActive) gHeaderNavLinkClassNames = `${gHeaderNavLinkClassNames} g-header__nav__link--active`;
@@ -136,9 +145,18 @@ class SiteHeader extends Component {
 
     return (
       <div className={isArtObjectClassNames}>
-        <header className={gHeaderClassNames} data-behavior='header'>
+        <header
+          className={gHeaderClassNames}
+          data-behavior='header'
+          aria-hidden={ariaHidden}
+          role="banner"
+        >
           <div className='container'>
-            <a className='a-logo g-header__logo' href={MAIN_WEBSITE_DOMAIN}>
+            <a
+              className='a-logo g-header__logo'
+              href={MAIN_WEBSITE_DOMAIN}
+              tabIndex={0}
+            >
               {LOGOS}
             </a>
             <nav className={gHeaderNavClassNames}>
@@ -149,6 +167,8 @@ class SiteHeader extends Component {
               <btn
                 onClick={toggleGlobalSearch}
                 className={gHeaderBtnClassNames}
+                tabIndex={0}
+                aria-expanded={ariaExpandedNav}
               >
                 <svg width='26' height='26'>
                   <title id='search-open-title'>Search</title>
