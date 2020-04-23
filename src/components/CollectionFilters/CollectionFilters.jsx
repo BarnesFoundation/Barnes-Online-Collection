@@ -44,6 +44,32 @@ class CollectionFilters extends Component {
     );
   }
 
+  /**
+   * Keydown listener to close collection filter if escape is pressed while focus lies within menu.
+   */
+  keyListener = (e) => {
+    const { selectFilterSet } = this.props;
+
+    if (
+      e.key === 'Escape' &&
+      this.ref &&
+      document.activeElement &&
+      this.ref.contains(document.activeElement)
+    ) {
+      selectFilterSet(null);
+    }
+  }
+
+  // Set up event listener for escape key.
+  componentDidMount() {
+    document.addEventListener('keydown', this.keyListener);
+  }
+
+  // On unmount, remove event listener for escape key.
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyListener);
+  }
+
   componentWillReceiveProps(nextProps) {
     const mobileFiltersWasOpen = this.props.mobileFilters.visible;
     const mobileFiltersWillBeOpen = nextProps.mobileFilters.visible;
@@ -140,9 +166,6 @@ class CollectionFilters extends Component {
 
   render() {
     const { filterSets: { visibleFilterSet }, selectFilterSet} = this.props;
-
-    // const mobileFiltersVisible = this.props.mobileFilters.visible;
-    // const mobileSearchVisible = this.props.mobileSearch.visible;
 
     return (
       <div

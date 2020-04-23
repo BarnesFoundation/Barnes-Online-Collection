@@ -38,6 +38,7 @@ const CollectionFiltersMenuItem = ({
           selectFilterSet(null);
         }
       }}
+      tabIndex={0}
     >
       <div className='button-inner'>
         <div className='button-inner__content'>
