@@ -73,6 +73,7 @@ class MoreFromCollectionCard extends Component {
 						className='m-card-event__media-link'
 						href={entryUrl}
 						ref={this.setWrapperRef}
+						tabIndex={-1}
 					>
 						<img
 							alt={title}
