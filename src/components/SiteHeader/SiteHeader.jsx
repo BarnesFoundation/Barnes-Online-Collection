@@ -122,16 +122,19 @@ class SiteHeader extends Component {
     // Set up g-header classes.
     let ariaHidden = false;
     let ariaExpandedNav = false;
+    let tabIndex = 0;
 
     let gHeaderClassNames = 'g-header';
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) {
       gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
       ariaHidden = true;
+      tabIndex = -1;
     }
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) {
       gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
       ariaHidden = false;
       ariaExpandedNav = true;
+      tabIndex = 0;
     }
 
     let gHeaderNavLinkClassNames = 'g-header__nav__link';
@@ -155,19 +158,43 @@ class SiteHeader extends Component {
             <a
               className='a-logo g-header__logo'
               href={MAIN_WEBSITE_DOMAIN}
-              tabIndex={0}
+              tabIndex={tabIndex}
             >
               {LOGOS}
             </a>
             <nav className={gHeaderNavClassNames}>
-              <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/whats-on'}>What’s On</a>
-              <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}>Plan Your Visit</a>
-              <a className={gHeaderNavLinkClassNames} href='/'>Our Collection</a>
-              <a className='g-header__nav__link' href={MAIN_WEBSITE_DOMAIN + '/classes'}>Take a Class</a>
+              <a
+                className='g-header__nav__link'
+                href={MAIN_WEBSITE_DOMAIN + '/whats-on'}
+                tabIndex={tabIndex}
+              >
+                What’s On
+              </a>
+              <a
+                className='g-header__nav__link'
+                href={MAIN_WEBSITE_DOMAIN + '/plan-your-visit'}
+                tabIndex={tabIndex}
+              >
+                  Plan Your Visit
+              </a>
+              <a
+                className={gHeaderNavLinkClassNames}
+                href='/'
+                tabIndex={tabIndex}
+              >
+                  Our Collection
+              </a>
+              <a
+                className='g-header__nav__link'
+                href={MAIN_WEBSITE_DOMAIN + '/classes'}
+                tabIndex={tabIndex}
+              >
+                  Take a Class
+              </a>
               <btn
                 onClick={toggleGlobalSearch}
                 className={gHeaderBtnClassNames}
-                tabIndex={0}
+                tabIndex={tabIndex}
                 aria-expanded={ariaExpandedNav}
               >
                 <svg width='26' height='26'>
@@ -181,6 +208,7 @@ class SiteHeader extends Component {
                 data-nav-show
                 type='button'
                 aria-labelledby='nav-open-title'
+                tabIndex={tabIndex}
               >
                 <svg width='26' height='26'>
                   <title id='nav-open-title'>Menu</title>
@@ -202,7 +230,16 @@ class SiteHeader extends Component {
               <div className='container global-search__buttons-area'>
                 <span className='global-search__buttons-term'>Suggested terms</span>
                 <div className='global-search__buttons-group'>
-                  {SUGGESTED_TERMS.map(term => <button key={term} className='btn font-zeta global-search__button ' onClick={(e) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${term.toLowerCase()}`} >{term}</button>)}
+                  {SUGGESTED_TERMS.map(term => (
+                    <button
+                      key={term}
+                      className='btn font-zeta global-search__button'
+                      onClick={(e) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${term.toLowerCase()}`}
+                      tabIndex={tabIndex}
+                    >
+                      {term}
+                    </button>)
+                  )}
                 </div>
               </div>
             </div>
