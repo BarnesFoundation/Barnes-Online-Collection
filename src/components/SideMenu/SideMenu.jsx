@@ -88,7 +88,6 @@ class SideMenu extends Component {
     this.sto = null;
 
     this.startRef = null;
-    this.containerRef = null;
     this.endRef = null;
   }
 
@@ -122,7 +121,6 @@ class SideMenu extends Component {
     if (
       e.key === 'Tab' && 
       isOpen &&
-      this.containerRef &&
       this.startRef &&
       this.endRef &&
       document.activeElement === this.endRef
@@ -201,7 +199,6 @@ class SideMenu extends Component {
         <div
           className={gNavClassNames}
           data-behavior='nav'
-          ref={ref => this.containerRef = ref}
         >
           <div
             className='g-nav__inner'
