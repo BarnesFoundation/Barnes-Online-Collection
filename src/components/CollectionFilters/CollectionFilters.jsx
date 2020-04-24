@@ -48,13 +48,19 @@ class CollectionFilters extends Component {
    * Keydown listener to close collection filter if escape is pressed while focus lies within menu.
    */
   keyListener = (e) => {
-    const { selectFilterSet } = this.props;
+    const {
+      selectFilterSet,
+      filterSets: {
+        isArtistMenuToggled
+      }
+    } = this.props;
 
     if (
       e.key === 'Escape' &&
       this.ref &&
       document.activeElement &&
-      this.ref.contains(document.activeElement)
+      this.ref.contains(document.activeElement) &&
+      !isArtistMenuToggled
     ) {
       selectFilterSet(null);
     }
