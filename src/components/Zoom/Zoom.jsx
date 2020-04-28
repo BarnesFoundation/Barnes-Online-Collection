@@ -57,13 +57,18 @@ class Zoom extends Component {
         fullscreenControl: true,
         fullscreenControlOptions: {
           position: 'topleft'
-        }
+        },
       });
 
-      const info = `${IMAGE_BASE_URL}/tiles/${id}/info.json`;
-      const opts = { quality: 'color', tileFormat: 'jpg', fitBounds: true, setMaxBounds: true };
+      const url = `${IMAGE_BASE_URL}/tiles/${id}/info.json`;
 
-      const iiifLayer = leaflet.tileLayer.iiif(info, opts);
+      const iiifLayer = leaflet.tileLayer.iiif(url, {
+        quality: 'color',
+        tileFormat: 'jpg',
+        fitBounds: true,
+        setMaxBounds: true,
+      });
+
 
       // Add event handler to increase zoom if tile is not found.
       iiifLayer.on('tileerror', () => {
@@ -83,7 +88,7 @@ class Zoom extends Component {
       this.map.addLayer(iiifLayer);
       this.map.scrollWheelZoom.disable();
 
-      this.checkURL(info);
+      this.checkURL(url);
     }
   }
 
