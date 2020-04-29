@@ -1,0 +1,8 @@
+@import '../components-barnes-toolkit/scss/setup/_colors.scss';
+
+[is-focused=true] {
+    outline: 1px solid $color__red--barnes !important;
+    outline-offset: 5px;
+
+    // z-index: 999;
+}

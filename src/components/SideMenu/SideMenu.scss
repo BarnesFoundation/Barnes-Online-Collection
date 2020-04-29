@@ -174,11 +174,19 @@
     }
 
     &--main {
+        .g-nav__link {
+            &:focus {
+                outline-color: $color-white !important;
+            }
+        }
+        
         #{ $self }__close {
             color: $color-white !important;
     
             &:hover,
             &:focus {
+                outline-color: $color-white !important;
+
                 svg {
                     color: $color__nav--hover !important;
                 }

@@ -51,9 +51,26 @@ class Share extends React.Component {
 		const { id, people, title } = this.props.object;
 
 		return (
-			<div className='panel-button panel-button--share' onClick={() => { this.toggleShareDialog(); }}>
+			<div
+				className='panel-button panel-button--share'
+				onClick={() => { this.toggleShareDialog(); }}
+				onKeyPress={(e) => {
+					if (e.key === 'Enter' && !showShareDialog) {
+						this.toggleShareDialog();
+					}
+
+					if (e.key === 'Escape' && showShareDialog) {
+						this.toggleShareDialog();
+					}
+				}}
+				tabIndex={0}
+				aria-haspopup='listbox'
+			>
 				{showShareDialog &&
-					<div className="share-dialog">
+					<div
+						className="share-dialog"
+						role='listbox'
+					>
 						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.FACEBOOK) }}>Facebook</button>
 						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.TWITTER) }}>Twitter</button>
 						<button className="share-dialog__link" onClick={() => { this.onShareLinkClick(sharePlatforms.PINTEREST) }}>Pinterest</button>

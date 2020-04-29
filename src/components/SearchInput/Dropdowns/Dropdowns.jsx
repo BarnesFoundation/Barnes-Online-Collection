@@ -38,7 +38,11 @@ const DROPDOWN_TERMS_ARRAY = [
  * @see getDropdownContent
  * */
 const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, isArtists, isSideMenu }) => (
-    <ul className='dropdown__list'>
+    <ul
+        className='dropdown__list'
+        role='listbox'
+        aria-labelledby='dropdown_elem'
+    >
         {data
             .filter(({ key }) => key) // Filter out null items.
             .map(({ key, doc_count }) => {
@@ -59,6 +63,14 @@ const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, is
                         key={key}
                         className={listItemClassNames}
                         onClick={() => setActiveTerm(key)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                setActiveTerm(key);
+                            }
+                        }}
+                        tabIndex={0}
+                        role='option'
+                        aria-selected={isActiveItem}
                     >
                         <span>{key}</span>
                         {isArtists &&
@@ -506,6 +518,7 @@ class DropdownSection extends Component {
                                 key={term}
                                 className={buttonClassName}
                                 onClick={() => this.setActiveItem(term)}
+                                aria-haspopup='listbox'
                             >
                                 <span className='dropdowns-menu__button-content'>
                                     {term}

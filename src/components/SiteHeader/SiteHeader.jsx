@@ -59,13 +59,54 @@ class SiteHeader extends Component {
       isSideMenuOpen: false,
       isHeaderHidden: HEADER_HIDDEN.DEFAULT,
     };
+
+    this.startRef = null;
+    this.endRef = null;
+  }
+
+  keyListener = (e) => {
+    const {
+      isSideMenuOpen,
+      isHeaderHidden
+    } = this.state;
+    const { isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, } = this.props;
+    
+    if (
+      e.key === 'Tab' && 
+      !isSideMenuOpen &&
+      (isHeaderHidden === HEADER_HIDDEN.DEFAULT || isHeaderHidden === HEADER_HIDDEN.LOCKED) &&
+      this.startRef &&
+      this.endRef &&
+      document.activeElement === this.endRef
+    ) {
+      this.startRef.focus();
+    }
+
+    if (
+      e.key === 'Escape' &&
+      !isSideMenuOpen &&
+      isGlobalSearchHeader &&
+      isGlobalSearchActive
+    ) {
+      toggleGlobalSearch();
+    }
   }
 
   /**
-   * Add event listener for scroll on mount and cleanup event listener on unmount.
+   * Add event listener for scroll on mount.
    */
-  componentDidMount() { window.addEventListener('scroll', this.scroll); }
-  componentWillUnmount() { window.removeEventListener('scroll', this.scroll); }
+  componentDidMount() {
+    window.addEventListener('scroll', this.scroll);
+    document.addEventListener('keydown', this.keyListener);
+  }
+
+  /**
+   * Cleanup event listener on unmount
+   */
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.scroll);
+    document.removeEventListener('keydown', this.keyListener);
+  }
 
   /**
    * IIFE to keep w/ stateful variable to keep track of scroll state.
@@ -113,7 +154,7 @@ class SiteHeader extends Component {
   openSideMenu = () => this.setState({ isSideMenuOpen: true });
 
   render() {
-    const { isHeaderHidden } = this.state;
+    const { isHeaderHidden, isSideMenuOpen } = this.state;
     const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond } = this.props;
 
     let isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
@@ -122,19 +163,25 @@ class SiteHeader extends Component {
     // Set up g-header classes.
     let ariaHidden = false;
     let ariaExpandedNav = false;
-    let tabIndex = 0;
+    let tabIndex = (
+      (
+        (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) ||
+        (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.DEFAULT ) ||
+        (isGlobalSearchHeader && isGlobalSearchActive)
+      ) &&
+      !isSideMenuOpen         
+    ) ? 0 : -1;
 
     let gHeaderClassNames = 'g-header';
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) {
       gHeaderClassNames = `${gHeaderClassNames} g-header--unlocked`;
       ariaHidden = true;
-      tabIndex = -1;
     }
+
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) || (isGlobalSearchHeader && isGlobalSearchActive)) {
       gHeaderClassNames = `${gHeaderClassNames} g-header--locked`;
       ariaHidden = false;
       ariaExpandedNav = true;
-      tabIndex = 0;
     }
 
     let gHeaderNavLinkClassNames = 'g-header__nav__link';
@@ -144,7 +191,6 @@ class SiteHeader extends Component {
     if (isGlobalSearchActive) gHeaderBtnClassNames = `${gHeaderBtnClassNames} g-header__nav__btn--active`;
 
     let gHeaderNavClassNames = 'g-header__nav';
-    // if (true) gHeaderNavClassNames = `${gHeaderNavClassNames} g-header__nav--hidden`;
 
     return (
       <div className={isArtObjectClassNames}>
@@ -159,6 +205,7 @@ class SiteHeader extends Component {
               className='a-logo g-header__logo'
               href={MAIN_WEBSITE_DOMAIN}
               tabIndex={tabIndex}
+              ref={ref => this.startRef = ref}
             >
               {LOGOS}
             </a>
@@ -193,6 +240,11 @@ class SiteHeader extends Component {
               </a>
               <btn
                 onClick={toggleGlobalSearch}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    toggleGlobalSearch();
+                  }
+                }}
                 className={gHeaderBtnClassNames}
                 tabIndex={tabIndex}
                 aria-expanded={ariaExpandedNav}
@@ -225,28 +277,47 @@ class SiteHeader extends Component {
                   autoSuggest={true}
                   className='container search__searchbar'
                   submit={(query) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${query}`}
+                  tabIndex={tabIndex}
                 />
               }
               <div className='container global-search__buttons-area'>
                 <span className='global-search__buttons-term'>Suggested terms</span>
                 <div className='global-search__buttons-group'>
-                  {SUGGESTED_TERMS.map(term => (
-                    <button
-                      key={term}
-                      className='btn font-zeta global-search__button'
-                      onClick={(e) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${term.toLowerCase()}`}
-                      tabIndex={tabIndex}
-                    >
-                      {term}
-                    </button>)
+                  {SUGGESTED_TERMS.map((term, i) => {
+                    let additionalProps;
+                    if (i === SUGGESTED_TERMS.length - 1) {
+                      additionalProps = { ...additionalProps, ref: ref => this.endRef = ref };
+                    }
+                    
+                    return (
+                      <button
+                        key={term}
+                        className='btn font-zeta global-search__button'
+                        onClick={(e) => window.location.href = `${MAIN_WEBSITE_DOMAIN}/search?q=${term.toLowerCase()}`}
+                        tabIndex={tabIndex}
+                        {...additionalProps}
+                      >
+                        {term}
+                      </button>
+                    );
+                  }
                   )}
                 </div>
               </div>
             </div>
           }
           <SideMenu
-              closeMenu={() => this.setState({ isSideMenuOpen: false })}
-              isOpen={this.state.isSideMenuOpen}
+              closeMenu={() => {
+                // Wait for current event loop to complete to prevent race condition in keypress handler.
+                setTimeout(() => {
+                  this.setState({ isSideMenuOpen: false });
+                }, 0);
+                
+                if (this.startRef) {
+                  this.startRef.focus();
+                }
+              }}
+              isOpen={isSideMenuOpen}
           />
         </header>
       </div>

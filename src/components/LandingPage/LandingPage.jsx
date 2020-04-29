@@ -469,7 +469,7 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { object, objectsQuery, objects: liveObjects } = this.props;
+    const { object, objectsQuery, objects: liveObjects, modalIsOpen } = this.props;
     const metaTags = getMetaTagsFromObject(object);
     const isSearchPending = Boolean(objectsQuery && objectsQuery.isPending);
     const pageType = 'landing';
@@ -479,7 +479,12 @@ class LandingPage extends Component {
     // if (isFilterActive) isBackgroundActiveClasses = `${isBackgroundActiveClasses} shaded-background__tint--active`
 
     return (
-      <div className='app app-landing-page'>
+      <div
+        className='app app-landing-page'
+        style={{
+          visibility: !modalIsOpen ? 'visible' : 'hidden'
+        }}
+      >
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />

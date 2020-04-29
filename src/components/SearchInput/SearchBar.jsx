@@ -331,7 +331,7 @@ class SearchBar extends Component {
     }
 
     render() {
-        const { autoSuggest, className, placeholder, onFocus } = this.props;
+        const { autoSuggest, className, placeholder, onFocus, tabIndex } = this.props;
 		const { autoSuggestResults, value, isFocused } = this.state;
 
         let searchClassName = 'search__searchbar';
@@ -353,6 +353,7 @@ class SearchBar extends Component {
 
 								if (onFocus) onFocus(); // If there is an onfocus prop from parent, pass it here.
 							}}
+							tabIndex={tabIndex || 0}
 						/>
 						{Boolean(autoSuggest && autoSuggestResults.length && isFocused) &&
 							<Suggestions
@@ -365,7 +366,8 @@ class SearchBar extends Component {
                 <button
                     className='btn btn--primary search__button'
                     type='submit'
-                    onClick={this.enter}
+					onClick={this.enter}
+					tabIndex={tabIndex || 0}
                 >
                     Search
                 </button>
