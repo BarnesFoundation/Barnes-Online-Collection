@@ -59,6 +59,12 @@ const ListedContent = ({ data, activeTerms, pendingTerms = [], setActiveTerm, is
                         key={key}
                         className={listItemClassNames}
                         onClick={() => setActiveTerm(key)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                setActiveTerm(key);
+                            }
+                        }}
+                        tabIndex={0}
                     >
                         <span>{key}</span>
                         {isArtists &&
