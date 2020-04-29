@@ -1,6 +1,41 @@
 @import '../../scss/variables.scss';
 @import '../../scss/_mixins.scss';
 
+.osd-zoom {
+  height: 500px;
+  margin-bottom: 40px;
+
+  @include breakpoint('medium+') {
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+    width: 85%;
+    height: 600px;
+  }
+
+  &__view {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__button-group {
+    margin-top: 10px;
+  }
+
+  &__button {
+    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+    line-height: 30px;
+
+    background-color: $color-grey-light;
+    border: $mapbox-controls-border;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 .zoom {
   position: relative;
 
