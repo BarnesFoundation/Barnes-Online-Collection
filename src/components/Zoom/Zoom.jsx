@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
-import leaflet from 'leaflet';
-import 'leaflet-iiif';
-import 'leaflet.fullscreen';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.fullscreen/Control.FullScreen.css';
 import './zoom.css';
 
 const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
+
+/**
+ * Monkey patch OSD to replace default with color.
+ */
+const getTileUrl = OpenSeadragon.IIIFTileSource.prototype.getTileUrl;
+OpenSeadragon.IIIFTileSource.prototype.getTileUrl = function (...args) {
+  const res = getTileUrl.call(this, ...args);
+  res.replace('default', 'color');
+  return res;
+}
 
 class Zoom extends Component {
   constructor(props) {
@@ -28,10 +33,25 @@ class Zoom extends Component {
 
     try {
       const { data: res } = await axios.get(url);
+      const { width, height } = res;
+
+      // Modify json response to match
       const root = res['@id'].replace('http://localhost:8080/', '');
       res['@id'] = `${IMAGE_BASE_URL}/tiles/${root}`;
-
-      console.log(root);
+      res.sizes = [{ width, height }];
+      res.profile[1].qualities = ['color'];
+      res.tiles =  [
+        {
+          "height": 256,
+          "scaleFactors": [
+            1,
+            2,
+            4,
+            16,
+          ],
+          "width": 256
+        }
+      ];
       
       return res;
     } catch (e) {
@@ -50,7 +70,7 @@ class Zoom extends Component {
       // this.map.off();
       // this.map.remove();
 
-      // this.osd.destroy();
+      this.osd.destroy();
 
       this.mountLeaflet();
     }
@@ -59,107 +79,47 @@ class Zoom extends Component {
   mountLeaflet = async () => {
     const { id } = this.props;
     const res = await this.checkURL(`${IMAGE_BASE_URL}/tiles/${id}/info.json`);
+    console.log(res);
 
     if (this.ref) {
-      console.log('https://collection-tif-tiler.s3.amazonaws.com/tiles/BF1008/info.json');
-      console.log(`${IMAGE_BASE_URL}/tiles/${id}/info.json`);
       this.osd = OpenSeadragon({
         element: this.ref,
         visibilityRatio: 1.0,
         constrainDuringPan: true,
-        
-        // tileSources: [`${IMAGE_BASE_URL}/tiles/${id}/info.json`],
-        // tileSources: ['https://collection-tif-tiler.s3.amazonaws.com/tiles/BF25/info.json'],
         tileSources: [res],
-        
         navigatorBackground: '#000',
         showNavigationControl: false,
         immediateRender: true,
-        minZoomLevel: 4,
+        minZoomLevel: 0,
       });
 
       this.osd.addHandler('open', () => {
-        // const imageBounds = this.osd.world.getItemAt(0).getBounds();
-        // this.osd.viewport.fitBounds(imageBounds, true);
+        const imageBounds = this.osd.world.getItemAt(0).getBounds();
+        this.osd.viewport.fitBounds(imageBounds, true);
       });
     }
   }
 
-  // mountLeaflet = () => {
-  //   const { id } = this.props;
-
-  //   if (this.ref) {
-  //     this.map = leaflet.map(this.ref, {
-  //       center: [0, 0],
-  //       crs: leaflet.CRS.Simple,
-  //       zoom: 1,
-  //       fullscreenControl: true,
-  //       fullscreenControlOptions: {
-  //         position: 'topleft'
-  //       },
-  //     });
-
-  //     const url = `${IMAGE_BASE_URL}/tiles/${id}/info.json`;
-  //     // const url = 'https://collection-tif-tiler.s3.amazonaws.com/tiles/BF25/info.json';
-
-  //     const iiifLayer = leaflet.tileLayer.iiif(url, {
-  //       quality: 'color',
-  //       tileFormat: 'jpg',
-  //       fitBounds: true,
-  //       setMaxBounds: true,
-  //     });
-
-
-  //     // Add event handler to increase zoom if tile is not found.
-  //     iiifLayer.on('tileerror', () => {
-  //       const currentZoom = this.map.getZoom(); // Calculate current zoom.
-
-  //       // If missing a layer, zoom in and set min zoom to next level, preventing zoom out.
-  //       if (currentZoom !== this.map.getMaxZoom()) {
-  //         this.map.invalidateSize();
-  //         // this.map.setMinZoom(currentZoom + 1);
-  //         this.map.setZoom(currentZoom + 1);
-  //       }
-  //     });
-
-  //     // Set up scroll wheel when full screen.
-  //     this.map.on('enterFullscreen', () => this.map.scrollWheelZoom.enable());
-  //     this.map.on('exitFullscreen', () => this.map.scrollWheelZoom.disable());
-
-  //     this.map.addLayer(iiifLayer);
-  //     this.map.scrollWheelZoom.disable();
-
-  //     this.checkURL(url);
-  //   }
-  // }
-
   render() {
     return (
-        <section className="zoom">
-          {/* <div
-          style={{
-            height: '1000px',
-            width: '500px',
-          }}
+      <div className='osd-zoom'>
+        <div
+          className='osd-zoom__view'
           ref={ref => {
             if (!this.ref) {
               this.ref = ref;
               this.mountLeaflet();
             }
-          }}>
-
-          </div> */}
-          <div className="map-container">
-            <div ref={(ref) => {
-              if (!this.ref) {
-                this.ref = ref;
-                this.mountLeaflet();
-              }
-            }}>
-            </div>
-          </div>
-        </section>
-    )
+          }}
+        >
+        </div>
+        <div className='osd-zoom__button-group'>
+          <button className='osd-zoom__button osd-zoom__button--plus'>+</button>
+          <button className='osd-zoom__button osd-zoom__button--minus'>-</button>
+          <button className='osd-zoom__button osd-zoom__button--full-screen'>x</button>
+        </div>
+      </div>
+    );
   }
 }
 
