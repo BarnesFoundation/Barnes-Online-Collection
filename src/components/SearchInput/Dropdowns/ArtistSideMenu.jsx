@@ -72,7 +72,17 @@ export class ArtistSideMenuContent extends Component {
                                     checked={isActive}
                                     onChange={() => this.changeSort(value)}
                                 />
-                                <span className={radioTextClassNames}>{value}</span>
+                                <span
+                                    className={radioTextClassNames}
+                                    tabIndex={0}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            this.changeSort(value);
+                                        }
+                                    }}
+                                >
+                                        {value}
+                                </span>
                             </span>
                         )
                     })}
