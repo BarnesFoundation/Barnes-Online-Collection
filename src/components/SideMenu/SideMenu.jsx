@@ -195,6 +195,9 @@ class SideMenu extends Component {
       <div
         className={sideMenuClassNames}
         aria-hidden={!isOpen}
+        style={{
+          visibility: isOpen ? 'visible' : 'hidden'
+        }}
       >
         <div
           className={gNavClassNames}
