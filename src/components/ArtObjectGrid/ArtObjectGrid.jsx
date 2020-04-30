@@ -79,6 +79,10 @@ const GridListElement = ({
         onClick={() => {
           // Clear the object right away to avoid a FOUC while the new object loads.
           clearObject();
+
+          if (!shouldLinksUseModal) {
+            window.scrollTo(0,0);
+          }
         }}
         className='grid-list-el'
       >
