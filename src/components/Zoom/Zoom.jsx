@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
-import Icon from '../Icon';
 import './zoom.css';
 
 const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
@@ -197,7 +196,7 @@ class Zoom extends Component {
               }}
             >
               <span className='osd-zoom__button-content osd-zoom__button-content--full-screen'>
-                <Icon svgId='-full-screen'/>
+                <FullScreenIcon />
               </span>
             </button>
           </div>
@@ -207,5 +206,70 @@ class Zoom extends Component {
     );
   }
 }
+
+/**
+ * SVG icon for fullscreen.
+ */
+const FullScreenIcon = () => (
+  <svg
+    fill="currentColor"
+    id="icon--full-screen"
+    x="0px"
+    y="0px"
+    viewBox="0 0 512 512"
+    style={{ enableBackground: "new 0 0 512 512"}}
+  >
+    <g>
+      <g>
+        <polygon points="68.284,40 165,40 165,0 0,0 0,165 40,165 40,68.284 177,205.284 205.284,177 		" />
+      </g>
+    </g>
+    <g>
+      <g>
+        <polygon points="205.284,335 177,306.716 40,443.716 40,347 0,347 0,512 165,512 165,472 68.284,472 		" />
+      </g>
+    </g>
+    <g>
+      <g>
+        <polygon points="347,0 347,40 443.716,40 306.716,177 335,205.284 472,68.284 472,165 512,165 512,0 		" />
+      </g>
+    </g>
+    <g>
+      <g>
+        <polygon points="472,347 472,443.716 335,306.716 306.716,335 443.716,472 347,472 347,512 512,512 512,347 		" />
+      </g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+  </svg>
+)
 
 export default Zoom
