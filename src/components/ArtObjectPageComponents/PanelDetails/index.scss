@@ -20,10 +20,17 @@
 }
 
 .download-and-share {
-  display: block;
+  display: flex;
+  flex-direction: column;
+
+  .btn {
+    margin-top: 20px;
+    margin-left: 0;
+  }
 
   @include breakpoint('medium+') {
     display: flex;
+    flex-direction: row;
   }
 }
 
