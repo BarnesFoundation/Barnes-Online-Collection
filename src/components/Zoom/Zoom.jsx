@@ -10,9 +10,8 @@ const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
  */
 const getTileUrl = OpenSeadragon.IIIFTileSource.prototype.getTileUrl;
 OpenSeadragon.IIIFTileSource.prototype.getTileUrl = function (...args) {
-  const res = getTileUrl.call(this, ...args);
-  res.replace('default', 'color');
-  return res;
+  let res = getTileUrl.call(this, ...args);
+  return res.replace('default', 'color');
 }
 
 class Zoom extends Component {
@@ -25,13 +24,24 @@ class Zoom extends Component {
 
   /**
    * Check to see if url is valid, preventing rendering blank image.
-   * TODO => Replace this, this is only because IIIF viewer throws silently.
    * @param {string} url - url of info.json fike.
    */
-  async checkURL(url) {
+  async fetchTileSource(url, scaleErrorLevel) {
     const { catchFailureInViewer } = this.props;
 
     try {
+      const scaleFactors = [
+        1,
+        2,
+        4,
+        8,
+        16
+      ];
+
+      if (scaleErrorLevel > scaleFactors.length) {
+        throw new Error('No more valid scale levels.');
+      }
+
       const { data: res } = await axios.get(url);
       const { width, height } = res;
 
@@ -42,14 +52,11 @@ class Zoom extends Component {
       res.profile[1].qualities = ['color'];
       res.tiles =  [
         {
-          "height": 256,
-          "scaleFactors": [
-            1,
-            2,
-            4,
-            16,
-          ],
-          "width": 256
+          height: 256,
+          scaleFactors: scaleErrorLevel
+            ? scaleFactors.slice(0, scaleErrorLevel * -1)
+            : scaleFactors,
+          width: 256
         }
       ];
       
@@ -63,23 +70,21 @@ class Zoom extends Component {
   }
 
   /**
-   * Capture change in ID from parent, if there is a change remount the leaflet component.
+   * Capture change in ID from parent, if there is a change remount the OSD component.
    */
   componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
-      // this.map.off();
-      // this.map.remove();
-
       this.osd.destroy();
-
       this.mountLeaflet();
     }
   }
 
-  mountLeaflet = async () => {
+  mountLeaflet = async (scaleErrorLevel = 0) => {
     const { id } = this.props;
-    const res = await this.checkURL(`${IMAGE_BASE_URL}/tiles/${id}/info.json`);
-    console.log(res);
+    const res = await this.fetchTileSource(
+      `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
+      scaleErrorLevel
+    );
 
     if (this.ref) {
       this.osd = OpenSeadragon({
@@ -96,6 +101,11 @@ class Zoom extends Component {
       this.osd.addHandler('open', () => {
         const imageBounds = this.osd.world.getItemAt(0).getBounds();
         this.osd.viewport.fitBounds(imageBounds, true);
+      });
+
+      this.osd.addHandler('tile-load-failed', () => {
+        this.osd.destroy();
+        this.mountLeaflet(scaleErrorLevel + 1)
       });
     }
   }
