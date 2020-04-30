@@ -20,11 +20,9 @@ class Zoom extends Component {
     super(props);
 
     this.ref = null; // Ref for OSD mount
-    this.fullScreenRef = null; // Ref for fullscreen.
 
     // Full screen status.
     this.isFullScreen = false;
-
 
     // OSD functions.
     this.zoomIn = null;
@@ -73,6 +71,12 @@ class Zoom extends Component {
       if (catchFailureInViewer) {
         catchFailureInViewer();
       }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.osd) {
+      this.osd.destroy();
     }
   }
 
@@ -156,11 +160,9 @@ class Zoom extends Component {
   }
 
   render() {
+    
     return (
-      <div
-        className='osd-zoom'
-        ref={ref => this.fullScreenRef = ref}
-      >
+      <div className='osd-zoom'>
         <div
           className='osd-zoom__view'
           ref={ref => {
