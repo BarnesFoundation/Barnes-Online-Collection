@@ -165,7 +165,7 @@ class Zoom extends Component {
         </div>
         <div className='osd-zoom__button-group'>
           <button
-            className='osd-zoom__button osd-zoom__button--plus'
+            className='osd-zoom__button'
             onClick={() => {
               if (this.zoomIn) this.zoomIn();
             }}
@@ -173,20 +173,20 @@ class Zoom extends Component {
             <span className='osd-zoom__button-content'>+</span>
           </button>
           <button
-            className='osd-zoom__button osd-zoom__button--minus'
+            className='osd-zoom__button'
             onClick={() => {
               if (this.zoomOut) this.zoomOut();
             }}
           >
-            <span className='osd-zoom__button-content'>-</span>
+            <span className='osd-zoom__button-content osd-zoom__button-content--minus'>-</span>
           </button>
           <button
-            className='osd-zoom__button osd-zoom__button--full-screen'
+            className='osd-zoom__button'
             onClick={() => {
               if (this.fullScreen) this.fullScreen();
             }}
           >
-            <span className='osd-zoom__button-content'>
+            <span className='osd-zoom__button-content osd-zoom__button-content--full-screen'>
               <Icon svgId='-full-screen'/>
             </span>
           </button>

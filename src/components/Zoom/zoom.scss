@@ -27,18 +27,13 @@
 
   &__button {
     position: relative;
-    margin: 0 6px;
     width: 38px;
     height: 38px;
 
-    font-size: 22px;
-
+    margin: 0 6px;
+  
     background-color: $color-grey-light;
     border: $mapbox-controls-border;
-
-    &--full-screen {
-      font-size: 16px;
-    }
 
     &:hover {
       cursor: pointer;
@@ -47,6 +42,26 @@
   
   &__button-content {
     display: block;
+    
+
+    font-size: 22px;
+    overflow-y: hidden;
+
+    position: absolute;
+    top: 6px;
+    left: 10px;
+
+    &--minus {
+      top: 3px;
+      left: 14px;
+    }
+
+    &--full-screen {
+      top: 10px;
+      left: 10px;
+
+      font-size: 14px;
+    }
   }
 
 }
