@@ -20,11 +20,17 @@ class Zoom extends Component {
 
     this.map = null;
     this.ref = null;
+
+    // OSD functions.
+    this.zoomIn = null;
+    this.zoomOut = null;
+    this.fullScreen = null;
   }
 
   /**
    * Check to see if url is valid, preventing rendering blank image.
    * @param {string} url - url of info.json fike.
+   * @param {number} scaleErrorLevel - level of scale error, if any.
    */
   async fetchTileSource(url, scaleErrorLevel) {
     const { catchFailureInViewer } = this.props;
@@ -35,7 +41,6 @@ class Zoom extends Component {
         2,
         4,
         8,
-        16
       ];
 
       if (scaleErrorLevel > scaleFactors.length) {
@@ -53,6 +58,8 @@ class Zoom extends Component {
       res.tiles =  [
         {
           height: 256,
+          // If tiles errored out a scale factor of 16, we want to cut that down to 8,
+          // and so on.
           scaleFactors: scaleErrorLevel
             ? scaleFactors.slice(0, scaleErrorLevel * -1)
             : scaleFactors,
@@ -75,11 +82,15 @@ class Zoom extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
       this.osd.destroy();
-      this.mountLeaflet();
+      this.setUpOSD();
     }
   }
 
-  mountLeaflet = async (scaleErrorLevel = 0) => {
+  /**
+   * Set up OSD component.
+   * @param {number?} scaleErrorLevel - If an error has been thrown at a previous scale level.
+   */
+  setUpOSD = async (scaleErrorLevel = 0) => {
     const { id } = this.props;
     const res = await this.fetchTileSource(
       `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
@@ -89,13 +100,13 @@ class Zoom extends Component {
     if (this.ref) {
       this.osd = OpenSeadragon({
         element: this.ref,
-        visibilityRatio: 1.0,
         constrainDuringPan: true,
         tileSources: [res],
-        navigatorBackground: '#000',
+        navigatorBackground: '#fff',
         showNavigationControl: false,
-        immediateRender: true,
+        immediateRender: false,
         minZoomLevel: 0,
+        maxZoomLevel: 8,
       });
 
       this.osd.addHandler('open', () => {
@@ -105,8 +116,41 @@ class Zoom extends Component {
 
       this.osd.addHandler('tile-load-failed', () => {
         this.osd.destroy();
-        this.mountLeaflet(scaleErrorLevel + 1)
+        this.setUpOSD(scaleErrorLevel + 1)
       });
+
+      // Set up control functions.
+      this.zoomIn = () => {
+        const zoomTo = Math.max(
+          this.osd.viewport.getZoom() + 0.5,
+          this.osd.viewport.getZoom() * 2,
+        );
+
+        this.osd.viewport.zoomTo(
+          Math.min(
+            zoomTo,
+            this.osd.viewport.getMaxZoom()
+          )
+        );
+      }
+
+      this.zoomOut = () => {
+        const zoomTo = Math.min(
+          this.osd.viewport.getZoom() - 0.5,
+          this.osd.viewport.getZoom()/2,
+        );
+
+        this.osd.viewport.zoomTo(
+          Math.max(
+            zoomTo,
+            this.osd.viewport.getMinZoom()
+          )
+        );
+      }
+
+      this.fullScreen = () => {
+        this.osd.setFullScreen(true);
+      }
     }
   }
 
@@ -118,15 +162,36 @@ class Zoom extends Component {
           ref={ref => {
             if (!this.ref) {
               this.ref = ref;
-              this.mountLeaflet();
+              this.setUpOSD();
             }
           }}
         >
         </div>
         <div className='osd-zoom__button-group'>
-          <button className='osd-zoom__button osd-zoom__button--plus'>+</button>
-          <button className='osd-zoom__button osd-zoom__button--minus'>-</button>
-          <button className='osd-zoom__button osd-zoom__button--full-screen'>x</button>
+          <button
+            className='osd-zoom__button osd-zoom__button--plus'
+            onClick={() => {
+              if (this.zoomIn) this.zoomIn();
+            }}
+          >
+            +
+          </button>
+          <button
+            className='osd-zoom__button osd-zoom__button--minus'
+            onClick={() => {
+              if (this.zoomOut) this.zoomOut();
+            }}
+          >
+            -
+          </button>
+          <button
+            className='osd-zoom__button osd-zoom__button--full-screen'
+            onClick={() => {
+              if (this.fullScreen) this.fullScreen();
+            }}
+          >
+            x
+          </button>
         </div>
       </div>
     );
