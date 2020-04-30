@@ -19,8 +19,12 @@ class Zoom extends Component {
   constructor(props) {
     super(props);
 
-    this.map = null;
-    this.ref = null;
+    this.ref = null; // Ref for OSD mount
+    this.fullScreenRef = null; // Ref for fullscreen.
+
+    // Full screen status.
+    this.isFullScreen = false;
+
 
     // OSD functions.
     this.zoomIn = null;
@@ -145,14 +149,18 @@ class Zoom extends Component {
       }
 
       this.fullScreen = () => {
-        this.osd.setFullScreen(true);
+        this.osd.setFullScreen(!this.isFullScreen);
+        this.isFullScreen = !this.isFullScreen;
       }
     }
   }
 
   render() {
     return (
-      <div className='osd-zoom'>
+      <div
+        className='osd-zoom'
+        ref={ref => this.fullScreenRef = ref}
+      >
         <div
           className='osd-zoom__view'
           ref={ref => {
@@ -162,35 +170,37 @@ class Zoom extends Component {
             }
           }}
         >
+          {/** OSD controls. */}
+          <div className='osd-zoom__button-group'>
+            <button
+              className='osd-zoom__button'
+              onClick={() => {
+                if (this.zoomIn) this.zoomIn();
+              }}
+            >
+              <span className='osd-zoom__button-content'>+</span>
+            </button>
+            <button
+              className='osd-zoom__button'
+              onClick={() => {
+                if (this.zoomOut) this.zoomOut();
+              }}
+            >
+              <span className='osd-zoom__button-content osd-zoom__button-content--minus'>-</span>
+            </button>
+            <button
+              className='osd-zoom__button'
+              onClick={() => {
+                this.fullScreen();
+              }}
+            >
+              <span className='osd-zoom__button-content osd-zoom__button-content--full-screen'>
+                <Icon svgId='-full-screen'/>
+              </span>
+            </button>
+          </div>
         </div>
-        <div className='osd-zoom__button-group'>
-          <button
-            className='osd-zoom__button'
-            onClick={() => {
-              if (this.zoomIn) this.zoomIn();
-            }}
-          >
-            <span className='osd-zoom__button-content'>+</span>
-          </button>
-          <button
-            className='osd-zoom__button'
-            onClick={() => {
-              if (this.zoomOut) this.zoomOut();
-            }}
-          >
-            <span className='osd-zoom__button-content osd-zoom__button-content--minus'>-</span>
-          </button>
-          <button
-            className='osd-zoom__button'
-            onClick={() => {
-              if (this.fullScreen) this.fullScreen();
-            }}
-          >
-            <span className='osd-zoom__button-content osd-zoom__button-content--full-screen'>
-              <Icon svgId='-full-screen'/>
-            </span>
-          </button>
-        </div>
+        
       </div>
     );
   }

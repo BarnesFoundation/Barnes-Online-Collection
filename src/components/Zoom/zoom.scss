@@ -4,7 +4,7 @@
 .osd-zoom {
   $self: &;
   
-  height: 500px;
+  height: 400px;
   position: relative;
 
   @include breakpoint('medium+') {
@@ -23,12 +23,21 @@
     position: absolute;
     margin-left: calc(50% - 75px);
     bottom: 10px;
+    z-index: 9;
+
+    display: flex;
+    flex-direction: row;
   }
 
   &__button {
     position: relative;
-    width: 38px;
-    height: 38px;
+    width: 45px;
+    height: 45px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
 
     margin: 0 6px;
   
@@ -42,25 +51,15 @@
   
   &__button-content {
     display: block;
-    
+    width: 100%;
 
-    font-size: 22px;
-    overflow-y: hidden;
+    font-size: 20px;
+    color: $color-grey-dark;
+    text-align: center;
 
-    position: absolute;
-    top: 6px;
-    left: 10px;
-
-    &--minus {
-      top: 3px;
-      left: 14px;
-    }
-
-    &--full-screen {
-      top: 10px;
-      left: 10px;
-
-      font-size: 14px;
+    svg {
+      color: $color-grey-dark;
+      height: 15px;
     }
   }
 
