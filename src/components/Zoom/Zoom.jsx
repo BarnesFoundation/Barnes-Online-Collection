@@ -36,12 +36,7 @@ class Zoom extends Component {
     const { catchFailureInViewer } = this.props;
 
     try {
-      const scaleFactors = [
-        1,
-        2,
-        4,
-        8,
-      ];
+      const scaleFactors = [1, 2, 4, 8];
 
       if (scaleErrorLevel > scaleFactors.length) {
         throw new Error('No more valid scale levels.');

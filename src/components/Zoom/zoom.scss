@@ -3,7 +3,7 @@
 
 .osd-zoom {
   height: 500px;
-  margin-bottom: 40px;
+  position: relative;
 
   @include breakpoint('medium+') {
     margin-left: 7.5%;
@@ -18,11 +18,13 @@
   }
 
   &__button-group {
-    margin-top: 10px;
+    position: absolute;
+    margin-left: calc(50% - 75px);
+    bottom: 10px;
   }
 
   &__button {
-    margin: 0 10px;
+    margin: 0 6px;
     width: 40px;
     height: 40px;
     line-height: 30px;
