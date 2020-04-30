@@ -2,6 +2,8 @@
 @import '../../scss/_mixins.scss';
 
 .osd-zoom {
+  $self: &;
+  
   height: 500px;
   position: relative;
 
@@ -24,18 +26,29 @@
   }
 
   &__button {
+    position: relative;
     margin: 0 6px;
-    width: 40px;
-    height: 40px;
-    line-height: 30px;
+    width: 38px;
+    height: 38px;
+
+    font-size: 22px;
 
     background-color: $color-grey-light;
     border: $mapbox-controls-border;
+
+    &--full-screen {
+      font-size: 16px;
+    }
 
     &:hover {
       cursor: pointer;
     }
   }
+  
+  &__button-content {
+    display: block;
+  }
+
 }
 
 .zoom {

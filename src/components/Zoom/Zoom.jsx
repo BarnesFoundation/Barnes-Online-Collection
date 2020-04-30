@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
+import Icon from '../Icon';
 import './zoom.css';
 
 const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
@@ -169,7 +170,7 @@ class Zoom extends Component {
               if (this.zoomIn) this.zoomIn();
             }}
           >
-            +
+            <span className='osd-zoom__button-content'>+</span>
           </button>
           <button
             className='osd-zoom__button osd-zoom__button--minus'
@@ -177,7 +178,7 @@ class Zoom extends Component {
               if (this.zoomOut) this.zoomOut();
             }}
           >
-            -
+            <span className='osd-zoom__button-content'>-</span>
           </button>
           <button
             className='osd-zoom__button osd-zoom__button--full-screen'
@@ -185,7 +186,9 @@ class Zoom extends Component {
               if (this.fullScreen) this.fullScreen();
             }}
           >
-            x
+            <span className='osd-zoom__button-content'>
+              <Icon svgId='-full-screen'/>
+            </span>
           </button>
         </div>
       </div>
