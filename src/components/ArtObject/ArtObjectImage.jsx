@@ -24,6 +24,7 @@ class ArtObjectImage extends Component {
     if (
       this.ref &&
       this.ref.getBoundingClientRect().width > this.ref.naturalWidth &&
+      backupSrc && 
       !didLoad
     ) {
       this.setState({
