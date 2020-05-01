@@ -34,6 +34,7 @@ class ArtObjectImage extends Component {
     } else {
       this.props.revealArtObject();
     }
+
   }
 
   render() {
@@ -49,6 +50,7 @@ class ArtObjectImage extends Component {
         alt={this.props.alt}
         src={src}
         onLoad={this.revealImage}
+        onError={this.revealImage}
       />
     );
   }
