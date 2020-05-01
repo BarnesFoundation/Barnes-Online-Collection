@@ -30,9 +30,15 @@ class ArtObject extends Component {
   }
 
   render() {
+    
     return (
       <div className={this.getClasses()}>
-        <ArtObjectImage alt={this.props.title} src={this.props.imageUrlSmall} revealArtObject={this.revealArtObject}/>
+        <ArtObjectImage
+          alt={this.props.title}
+          src={this.props.imageUrlSmall}
+          backupSrc={this.props.imageUrlLarge}
+          revealArtObject={this.revealArtObject}
+        />
         <ArtObjectOverlay {...this.props}/>
       </div>
     );

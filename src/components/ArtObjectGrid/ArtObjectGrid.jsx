@@ -78,7 +78,11 @@ const GridListElement = ({
         }}
         onClick={() => {
           // Clear the object right away to avoid a FOUC while the new object loads.
-          if (shouldLinksUseModal) clearObject();
+          clearObject();
+
+          if (!shouldLinksUseModal) {
+            window.scrollTo(0,0);
+          }
         }}
         className='grid-list-el'
       >
@@ -88,6 +92,7 @@ const GridListElement = ({
           people={object.people}
           medium={object.medium}
           imageUrlSmall={object.imageUrlSmall}
+          imageUrlLarge={object.imageUrlLarge}
 
           // Only pass highlight if this is for search results.
           highlight={(isSearchResult) ? object.highlight : null}

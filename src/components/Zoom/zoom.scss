@@ -1,6 +1,81 @@
 @import '../../scss/variables.scss';
 @import '../../scss/_mixins.scss';
 
+.osd-zoom {
+  $self: &;
+  
+  height: 400px;
+  position: relative;
+
+  @include breakpoint('medium+') {
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+    width: 85%;
+    height: 600px;
+  }
+
+  &__view {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__button-group {
+    position: absolute;
+    
+    bottom: 10px;
+    z-index: 9;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  &__button {
+    position: relative;
+    width: 45px;
+    height: 45px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 6px;
+  
+    background-color: $color-grey-light;
+    border: $mapbox-controls-border;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  &__button-content {
+    display: block;
+
+    font-size: 20px;
+    color: $color-grey-dark;
+    text-align: center;
+
+    svg {
+      color: $color-grey-dark;
+      height: 16px;
+    }
+    
+    &--minus {
+      height: 26px;
+    }
+
+    &--full-screen {
+      height: 20px;
+    }
+
+  }
+
+}
+
 .zoom {
   position: relative;
 
