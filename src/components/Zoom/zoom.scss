@@ -21,12 +21,14 @@
 
   &__button-group {
     position: absolute;
-    margin-left: calc(50% - 75px);
+    
     bottom: 10px;
     z-index: 9;
 
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
   }
 
   &__button {
@@ -38,6 +40,7 @@
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
     margin: 0 6px;
   
@@ -51,7 +54,6 @@
   
   &__button-content {
     display: block;
-    width: 100%;
 
     font-size: 20px;
     color: $color-grey-dark;
@@ -59,8 +61,17 @@
 
     svg {
       color: $color-grey-dark;
-      height: 15px;
+      height: 16px;
     }
+    
+    &--minus {
+      height: 26px;
+    }
+
+    &--full-screen {
+      height: 20px;
+    }
+
   }
 
 }
