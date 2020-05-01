@@ -92,6 +92,7 @@ const GridListElement = ({
           people={object.people}
           medium={object.medium}
           imageUrlSmall={object.imageUrlSmall}
+          imageUrlLarge={object.imageUrlLarge}
 
           // Only pass highlight if this is for search results.
           highlight={(isSearchResult) ? object.highlight : null}

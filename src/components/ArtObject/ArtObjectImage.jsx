@@ -5,15 +5,50 @@ class ArtObjectImage extends Component {
     super(props);
 
     this.revealImage = this.revealImage.bind(this);
+
+    this.ref = null;
+
+    // State to keep track of image src and if image has already loaded.
+    this.state = {
+      src: this.props.src,
+      didLoad: false,
+    };
   }
 
   revealImage() {
-    this.props.revealArtObject();
+    const { backupSrc } = this.props;
+    const { didLoad } = this.state;
+
+    // If our ref is set, our image is smaller width than its container and this is our first image load,
+    // replace the original smallImageURL with a largeImageURL.
+    if (
+      this.ref &&
+      this.ref.getBoundingClientRect().width > this.ref.naturalWidth &&
+      !didLoad
+    ) {
+      this.setState({
+        src: backupSrc,
+        didLoad: true,
+      });
+    } else {
+      this.props.revealArtObject();
+    }
   }
 
   render() {
+    const { src } = this.state;
+
     return (
-      <img alt={this.props.alt} src={this.props.src} onLoad={this.revealImage}/>
+      <img
+        ref={(ref) => {
+          if (!this.ref) {
+            this.ref = ref;
+          }
+        }}
+        alt={this.props.alt}
+        src={src}
+        onLoad={this.revealImage}
+      />
     );
   }
 }
