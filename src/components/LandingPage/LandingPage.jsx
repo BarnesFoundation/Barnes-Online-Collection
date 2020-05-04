@@ -432,7 +432,6 @@ class LandingPage extends Component {
     if (newState && newState.isModal) return;
     if (
       JSON.stringify(prevProps.filters) === JSON.stringify(filters)
-      && prevProps.isModal === modalIsOpen
     ) {
       return;
     }
