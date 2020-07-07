@@ -24,8 +24,21 @@
   flex-direction: column;
 
   .btn {
-    margin-top: 20px;
+    margin-top: 20px !important;
     margin-left: 0;
+
+    &:first-of-type {
+      margin-top: 0px !important;
+    }
+
+    @include breakpoint('medium+') {
+      margin-top: 0 !important;
+      margin-left: 20px !important;
+
+      &:first-of-type {
+        margin-left: 0 !important;
+      }
+    }
   }
 
   @include breakpoint('medium+') {
