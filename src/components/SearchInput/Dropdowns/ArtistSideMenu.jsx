@@ -14,13 +14,7 @@ export class ArtistSideMenuContent extends Component {
 
         this.state = {
             artistRadio: ARTISTS_RADIOS.ABUNDANCE,
-            data: this.props.data.map((artist) => {
-                if (artist.key === "Kristján Daví�sson") {
-                    artist.key = "Kristján Davídsson"
-                }
-
-                return artist;
-            }),
+            data: this.props.data,
         }
     }
 
@@ -33,11 +27,7 @@ export class ArtistSideMenuContent extends Component {
         this.setState({
             artistRadio,
             data: artistRadio === ARTISTS_RADIOS.ALPHABETICAL
-                ? data.sort((a, b) => {
-                    if (a.sortedName < b.sortedName) return -1;
-                    if (a.sortedName > b.sortedName) return 1;
-                    return 0;
-                })
+                ? data.sort((a, b) => a.sortedName.localeCompare(b.sortedName))
                 : data.sort((a, b) => {
                     if (a.doc_count > b.doc_count) return -1;
                     if (a.doc_count < b.doc_count) return 1;

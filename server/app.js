@@ -36,6 +36,7 @@ const oneSecond = 1000
 const oneDay = 60 * 60 * 24 * oneSecond
 
 const buildSearchAssets = require('../scripts/build-search-assets');
+const { fixDiacritics } = require('./utils/fixDiacritics')
 
 let config = {
 	baseURL: process.env.REACT_APP_WWW_URL,
@@ -257,6 +258,19 @@ app.use('/api/search', (req, res) => {
       if (error) {
         res.json(error)
       } else {
+        if (esRes.hits && esRes.hits.hits) {
+
+          // Replace all hit's source with santitized source object.
+          // To extend this, replace key w/ ternary of _source[key] && fixDiacritics()
+          esRes.hits.hits = esRes.hits.hits.map(({  _source, ...rest }) => ({
+            _source: {
+              ..._source,
+              title: _source.title ? fixDiacritics(_source.title) : undefined,
+            },
+            ...rest,
+          }));
+        }
+
         res.json(esRes)
       }
   });

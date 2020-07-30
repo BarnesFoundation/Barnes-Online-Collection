@@ -5,6 +5,7 @@ const esClient = require('../server/utils/esClient');
 const ensemblesList = require('../src/ensembleIndexes');
 const constantsDirectory = path.resolve(__dirname, '../public/resources');
 const { copyrights, years, cultures, culturesMap } = require('./staticLists');
+const { fixDiacritics } = require('../server/utils/fixDiacritics');
 
 const index = process.env.ELASTICSEARCH_INDEX;
 
@@ -26,6 +27,8 @@ const getUniqueSearchValues = async (aggregationName, aggregationField, subAggre
 			"size": "200"
 		}, nest)
 		.build();
+
+	// writeAssetsFile(`body_${aggregationName}`, JSON.stringify(body, null, '\t'))
 
 	return await new Promise((resolve) => {
 		esClient.search({
@@ -102,7 +105,10 @@ const generateLocations = () => {
 const generateAssets = async () => {
 
 	const searchAssetsObject = {
-		artists: await getUniqueSearchValues('uniq_peoples', 'people.text', 'sortedName'),
+		// Fix broken characters for artist sort.
+		artists: (await getUniqueSearchValues('uniq_peoples', 'people.text', 'sortedName'))
+			.map(({ sortedName, key, ...rest }) => ({ sortedName: fixDiacritics(sortedName), key: fixDiacritics(key), ...rest })),
+
 		cultures: cultures /* await getUniqueSearchValues('uniq_cultures', 'culture.keyword') */,
 		mediums: await getUniqueSearchValues('uniq_mediums', 'medium.keyword'),
 		classifications: await getUniqueSearchValues('uniq_classifications', 'classification'),
