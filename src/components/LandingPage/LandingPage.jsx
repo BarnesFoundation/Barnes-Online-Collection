@@ -328,9 +328,9 @@ class LandingPageHeader extends Component {
           className='o-hero__image-wrapper'
           ref={this.setWrapperRef}
         >
-          {heroes.map(({ srcName }, index) => {
+          {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
-            const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
+            // const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
 
             // img tag styling.
             let style = isActiveImage
