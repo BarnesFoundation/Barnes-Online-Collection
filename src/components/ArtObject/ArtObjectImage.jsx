@@ -23,7 +23,7 @@ class ArtObjectImage extends Component {
     // replace the original smallImageURL with a largeImageURL.
     if (
       this.ref &&
-      this.ref.getBoundingClientRect().width > (this.ref.naturalWidth * 1.5) &&
+      this.ref.getBoundingClientRect().width > (this.ref.naturalWidth * 1.75) &&
       backupSrc && 
       !didLoad
     ) {
@@ -34,7 +34,6 @@ class ArtObjectImage extends Component {
     } else {
       this.props.revealArtObject();
     }
-
   }
 
   render() {
