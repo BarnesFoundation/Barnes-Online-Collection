@@ -330,7 +330,6 @@ class LandingPageHeader extends Component {
         >
           {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
-            // const src = `https://barnesfoundation-collection.imgix.net/collection-storyboard-images/${srcName}.jpg`;
 
             // img tag styling.
             let style = isActiveImage

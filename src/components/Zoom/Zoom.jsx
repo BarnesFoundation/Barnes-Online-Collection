@@ -3,7 +3,7 @@ import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
 import './zoom.css';
 
-const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
 
 /**
  * Monkey patch OSD to replace default with color.
@@ -49,7 +49,7 @@ class Zoom extends Component {
 
       // Modify json response to match
       const root = res['@id'].replace('http://localhost:8080/', '');
-      res['@id'] = `${IMAGE_BASE_URL}/tiles/${root}`;
+      res['@id'] = `${IMAGE_BASE_URL}/tiles/${root}`;      
       res.sizes = [{ width, height }];
       res.profile[1].qualities = ['color'];
       res.tiles =  [
