@@ -57,6 +57,7 @@ for them.
   width: calc(100% - 60px);
 
   &::placeholder {
+    font-size: 20px;
     color: $color__copy--light;
     opacity: 1;
   }
