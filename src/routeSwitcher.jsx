@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { TourPage } from './components/TourPage/TourPage';
 import LandingPage from './components/LandingPage/LandingPage';
 import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
@@ -88,6 +89,7 @@ class RouteSwitcher extends Component {
           <Route exact path='/objects/' component={LandingPage}/>
           <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
+		  <Route path='/tour/:id' component={TourPage} />
         </Switch>
         {this.modalRouteComponents}
       </div>
