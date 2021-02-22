@@ -184,7 +184,6 @@ export const Footer = ({ hasHours }) => {
 				<br className='large-only' /> 
 				from The John S. and James L. Knight Foundation
 				as part of the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
-				<br className='large-only' />
 				Additional funders of digital initiatives include Betsy Z. and Edward E. Cohen.
               </p>
               <div className='brand-links'>
