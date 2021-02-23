@@ -1,0 +1,27 @@
+@import '../../scss/variables.scss';
+
+.sticky-list {
+    position: relative;
+
+    &__section {
+        position: relative;
+        // z-index: 1; see if can be done w/out
+
+        &.sticky {
+            position: sticky;
+
+        }
+
+        &__header {
+            position: relative;
+            padding: 10px 25px;
+            background: $color__red--barnes;
+            color: $color-white;
+        }
+    
+        &__content {
+            padding: 10px 25px;
+        }
+    }
+   
+}
