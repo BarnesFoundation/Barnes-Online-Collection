@@ -37,6 +37,7 @@ const { oneDay } = require('./constants/times');
 const buildSearchAssets = require('../scripts/build-search-assets');
 const { fixDiacritics } = require('./utils/fixDiacritics')
 const craftService = require('./services/craftService');
+const tourService = require('./services/tourService');
 const { BARNES_SETTINGS, ALL_MORE_LIKE_THIS_FIELDS,
 		MORE_LIKE_THIS_FIELDS, BASIC_FIELDS } = require('./constants/fields');
 
@@ -575,6 +576,9 @@ app.get('/api/suggest', craftService.getSuggestions);
 
 /** Get autosuggest functionality for artists in advaned filters. */
 app.get('/api/advancedSearchSuggest', craftService.getAutoSuggestions);
+
+/** Endpoint for retrieving the information about a tour */
+app.get('/api/tour/:id', tourService.getTour);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
