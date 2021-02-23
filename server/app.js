@@ -32,21 +32,13 @@ const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-ob
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
-const oneSecond = 1000
-const oneDay = 60 * 60 * 24 * oneSecond
+const { oneDay } = require('./constants/times');
 
 const buildSearchAssets = require('../scripts/build-search-assets');
 const { fixDiacritics } = require('./utils/fixDiacritics')
-
-let config = {
-	baseURL: process.env.REACT_APP_WWW_URL,
-	method: 'get'
-};
-
-// Add authentication if running in staging/development
-if (process.env.NODE_ENV.toLowerCase() !== 'production') {
-	config = { ...config, auth: { username: process.env.WWW_USERNAME, password: process.env.WWW_PASSWORD } };
-}
+const craftService = require('./services/craftService');
+const { BARNES_SETTINGS, ALL_MORE_LIKE_THIS_FIELDS,
+		MORE_LIKE_THIS_FIELDS, BASIC_FIELDS } = require('./constants/fields');
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -126,57 +118,6 @@ const getIndexHtmlPromise = () => {
     })
   })
 }
-
-const BARNES_SETTINGS = {
-  size: 50
-}
-
-const ALL_MORE_LIKE_THIS_FIELDS = [
-  'tags.tag.*',
-  'tags.category.*',
-  'color.palette-color-*',
-  'color.average-*',
-  'color.palette-closest-*',
-  'title.*',
-  'people.*',
-  'people',
-  'medium.*',
-  'shortDescription.*',
-  'longDescription.*',
-  'visualDescription.*',
-  'culture.*',
-  'space',
-  'light_desc_*',
-  'color_desc_*',
-  'comp_desc_*',
-  'generic_desc_*',
-  'period',
-  'curvy',
-  'vertical',
-  'diagonal',
-  'horizontal',
-  'light'
-]
-
-const MORE_LIKE_THIS_FIELDS = [
-  'people',
-  'generic_desc_*',
-  'curvy',
-  'vertical',
-  'diagonal',
-  'horizontal',
-  'light',
-  'line'
-];
-
-const BASIC_FIELDS = [
-  "id",
-  "title",
-  "people",
-  "medium",
-  "imageOriginalSecret",
-  "imageSecret",
-];
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -626,101 +567,14 @@ app.use('/api/build-search-assets', async (req, res) => {
 	res.json(result);
 });
 
-/** Stores the entries to be displayed in a cache */
-const entryCache = async (request, response) => {
-	const key = `__cache__api_craft__entries`;
-	const body = memoryCache.get(key);
-
-	if (body) {
-		response.append('x-cached', true);
-		response.send(body);
-	}
-	else { 
-		const entries = await getEntries();
-		response.json(entries);
-		memoryCache.put(key, entries, oneDay);
-	 }
-}
-
-/** Returns the entries from the main Craft site */
-const getEntries = () => {
-	return new Promise( async(resolve) => {
-		
-		// Request for fetching entry
-		const entryRequest = (slug) => {
-			return axios(`/api/entry?slug=${slug}`, config);
-		};
-
-		// Fetch all in parallel
-		const entries = (await Promise.all([entryRequest('the-barnes-collection'), entryRequest('library-archives'), entryRequest('the-barnes-arboretum')])).map((response) => response.data);
-
-		resolve(entries);
-	});
-}
-
-
 /** Endpoint for retrieving entries from the www Craft site */
-app.get('/api/entries', entryCache);
+app.get('/api/entries', craftService.entryCacher);
 
 /** Endpoint for auto-suggest functionality from the www Craft site */
-app.get('/api/suggest', async (request, response) => {
-  const { q } = request.query;
-  const aConfig = { ...config, url: `/api/suggest?q=${q}`  };
-	response.json((await axios(aConfig)).data);
-});
+app.get('/api/suggest', craftService.getSuggestions);
 
 /** Get autosuggest functionality for artists in advaned filters. */
-app.get('/api/advancedSearchSuggest', async (request, response) => {
-  const { q: query } = request.query;
-
-  const { aggregations: { people: { buckets }}} = await esClient.search({
-    body: {
-      "size": 0,
-      "query": {
-          "bool" : {
-              "filter" : {
-                "exists" : {
-                  "field" : "imageSecret"
-                }
-              },
-              "must": {
-                "multi_match": {
-                  "query" : query,
-                  "type" : "bool_prefix",
-                  "fields": ["people", "people.text", "people.suggest"]
-                }
-              }
-          }
-      },
-      "_source" : ["id", "title", "people"],
-      "aggregations": {
-        "people": {
-          "terms" : {
-            "field" : "people.text",
-            "size" : 200
-          }
-        }
-      }
-    }
-  });
-
-  // Wrap return results in <strong> tags.
-  const highlighted = buckets.map(({ key, doc_count }) => {
-    const queryIndex = key.toLowerCase().indexOf(query.toLowerCase()); // In case query is LikE thIS.
-
-    const start = key.slice(0, queryIndex);
-    const middle = key.slice(queryIndex, queryIndex + query.length);
-    const end = key.slice(queryIndex + query.length);
-
-    return ({
-      key: `${start}<strong>${middle}</strong>${end}`,
-      doc_count: doc_count,
-      raw: key, // For when filter is applied.
-    });
-  });
-
-  response.json({ collectionAdvancedSearch: highlighted });
-})
+app.get('/api/advancedSearchSuggest', craftService.getAutoSuggestions);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
