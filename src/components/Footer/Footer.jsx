@@ -180,10 +180,11 @@ export const Footer = ({ hasHours }) => {
             </div>
             <div className='m-block__column'>
               <p className='color-medium'>
-                The Barnes Foundation collection online is made possible<br className='large-only' /> by generous support from The John S. and James L. Knight Foundation.
-              </p>
-              <p className='color-medium no-margin-top'>
-                Ongoing work continues through the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
+                The Barnes Foundation collection online is made possible by generous support
+				<br className='large-only' /> 
+				from The John S. and James L. Knight Foundation
+				as part of the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
+				Additional funders of digital initiatives include Betsy Z. and Edward E. Cohen.
               </p>
               <div className='brand-links'>
                 <a className='a-brand-link a-brand-link-on-grey a-brand-link--block brand-links__link' href='https://www.barnesfoundation.org/collection/credits'>Project Credits</a>
