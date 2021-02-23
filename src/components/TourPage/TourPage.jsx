@@ -51,6 +51,7 @@ export class TourPage extends React.Component {
 						<p>Displaying the {tourId} tour</p>
 						<p>{JSON.stringify(tour)}</p>
 					</div>
+
 					: // Otherwise, no tour found for that id
 					<div>
 						<p>Could not find tour with id "{tourId}"</p>
