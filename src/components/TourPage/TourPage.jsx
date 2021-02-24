@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import StickyList from '../StickyList/StickyList';
+
 export class TourPage extends React.Component {
 
 	constructor() {
@@ -8,7 +10,9 @@ export class TourPage extends React.Component {
 
 		this.state = {
 			tourId: null,
-			tour: null
+			title: null,
+      objects: null,
+      roomOrder: null,
 		};
 	};
 
@@ -22,7 +26,9 @@ export class TourPage extends React.Component {
 			try {
 				const tourResponse = await axios.get(`/api/tour/${id}`);
 				this.setState({
-					tour: tourResponse.data
+					title: tourResponse.data.title,
+          objects: tourResponse.data.data.hits.hits,
+          roomOrder: tourResponse.data.customRoomOrder
 				});
 			}
 
@@ -41,15 +47,16 @@ export class TourPage extends React.Component {
 
 	render() {
 
-		const { tourId, tour } = this.state;
+		const { tourId, title, objects } = this.state;
 
 		return (
 			<div className="app app-tour-page">
-				{(tourId && tour)
+				{(tourId && title && objects)
 					? // Display the tour if it was located
 					<div>
 						<p>Displaying the {tourId} tour</p>
-						<p>{JSON.stringify(tour)}</p>
+            <p>{title}</p>
+            <StickyList />
 					</div>
 
 					: // Otherwise, no tour found for that id

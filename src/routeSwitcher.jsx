@@ -89,7 +89,8 @@ class RouteSwitcher extends Component {
           <Route exact path='/objects/' component={LandingPage}/>
           <Route exact path='/objects/:id/:title' component={ArtObjectPage}/>
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
-		  <Route path='/tour/:id' component={TourPage} />
+          <Route exact path='/tour' component={LandingPage}/>
+		      <Route path='/tour/:id' component={TourPage} />
         </Switch>
         {this.modalRouteComponents}
       </div>
