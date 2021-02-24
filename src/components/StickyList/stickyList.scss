@@ -29,9 +29,23 @@
             padding: 10px 25px;
 
             &:last-of-type {
-                padding-bottom: 250px;
+                margin-bottom: 250px;
             }
         }
     }
    
+}
+
+.tour-page-hero {
+    position: relative;
+    margin-bottom: -7px;
+
+    .tour-title {
+        font-size: 27px;
+        font-weight: bold;
+        padding-left: 25px;
+        color: $color-white;
+        position: absolute;
+        bottom: 25px;
+    }
 }

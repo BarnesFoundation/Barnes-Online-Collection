@@ -155,7 +155,7 @@ class SiteHeader extends Component {
 
   render() {
     const { isHeaderHidden, isSideMenuOpen } = this.state;
-    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond } = this.props;
+    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond, isTour } = this.props;
 
     let isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
     if (isArtObjectClassNames && isSecond) isArtObjectClassNames = `${isArtObjectClassNames} art-object-header--absolute`; // For second menu on artist page, absolutely position second menu.
@@ -269,7 +269,14 @@ class SiteHeader extends Component {
               </button>
             </nav>
           </div>
-          <MobileLinks />
+
+          {!Boolean(isTour) 
+            ? // Display the mobile links for all pages except for tours
+              <MobileLinks />
+            :
+              null
+          }
+
           {isGlobalSearchHeader &&
             <div className='global-search'>
               {isGlobalSearchActive &&
@@ -350,7 +357,7 @@ class SiteHeaderGlobalSearch extends Component {
   }
 
   render() {
-    const { isArtObject } = this.props;
+    const { isArtObject, isTour } = this.props;
     const { isGlobalSearchActive, overlayActive } = this.state;
 
     // Apply shaded overlay classes. These are applied in this order so the z-index of higher is not overwritten.
@@ -364,6 +371,7 @@ class SiteHeaderGlobalSearch extends Component {
           isArtObject={Boolean(isArtObject)}
           isGlobalSearchActive={isGlobalSearchActive}
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
+          isTour={Boolean(isTour)}
         />
         <ConnectedSiteHeader
           isGlobalSearchHeader
@@ -371,6 +379,7 @@ class SiteHeaderGlobalSearch extends Component {
           isArtObject={Boolean(isArtObject)}
           isSecond
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
+          isTour={Boolean(isTour)}
         />
         {/* Lock scroll on global search activation. */}
         <LockScroll isLocked={isGlobalSearchActive}/>

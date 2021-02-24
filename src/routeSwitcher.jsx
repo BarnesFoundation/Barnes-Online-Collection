@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { TourPage } from './components/TourPage/TourPage';
+import TourPage from './components/TourPage/TourPage';
 import LandingPage from './components/LandingPage/LandingPage';
 import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
