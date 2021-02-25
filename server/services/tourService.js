@@ -4,8 +4,8 @@ const tours = require('../constants/tours.json');
 const getTour = async (request, response) => {
 	const tourId = request.params.id;
 
-	// Return the found tour
-	if (tours.hasOwnProperty(tourId)) {
+	// Return the found tour except the test tour
+	if (tours.hasOwnProperty(tourId) && tourId !=='test-tour') {
 		return response
 			.status(200)
 			.json(tours[tourId]);

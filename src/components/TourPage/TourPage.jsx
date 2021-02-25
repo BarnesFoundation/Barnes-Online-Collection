@@ -9,13 +9,40 @@ import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import Footer from "../Footer/Footer";
 import StickyList from "../StickyList/StickyList";
+import { formatTourData } from "./tourPageHelper";
 import "./tourPage.css";
 
-// to do
-// sticky-list can't be fixed because then a scroll event does not trigger
-// and that means that the top menu header does not collapse
-// look into the scroll listener that is done in the SiteHeader and see if we
-// can adapt to the section headers
+// default room order for tours, currently using the COVID flow
+export const DEFAULT_ROOM_ORDER = [
+  "Main Room",
+  "Room 7",
+  "Room 6",
+  "Room 5",
+  "Room 4",
+  "Room 3",
+  "Room 2",
+  "Room 8",
+  "Room 9",
+  "Room 10",
+  "Room 11",
+  "Room 12",
+  "Room 13",
+  "Room 14",
+  "Room 18",
+  "Room 17",
+  "Room 16",
+  "Room 15",
+  "Room 19",
+  "Room 23",
+  "Room 22",
+  "Room 21",
+  "Room 20",
+  "Le Bonheur de vivre",
+  "Second Floor Balcony East (Room 24)",
+  "Mezzanine",
+  "Gallery Foyer",
+  "Lower Lobby",
+];
 
 class TourPage extends React.Component {
   constructor(props) {
@@ -37,10 +64,14 @@ class TourPage extends React.Component {
     if (id) {
       try {
         const tourResponse = await axios.get(`/api/tour/${id}`);
+        const roomOrder = tourResponse.data.customRoomOrder.length
+          ? tourResponse.data.customRoomOrder
+          : DEFAULT_ROOM_ORDER;
+
         this.setState({
           title: tourResponse.data.title,
           objects: tourResponse.data.data.hits.hits,
-          roomOrder: tourResponse.data.customRoomOrder,
+          roomOrder: roomOrder,
         });
       } catch (error) {
         console.log(
@@ -56,25 +87,10 @@ class TourPage extends React.Component {
     }
   }
 
-  formatTourData() {
-    const lorem =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nunc vel risus commodo viverra maecenas accumsan lacus vel. Semper auctor neque vitae tempus quam. Accumsan tortor posuere ac ut consequat semper. Volutpat ac tincidunt vitae semper quis lectus nulla at volutpat. Tortor dignissim convallis aenean et tortor at. Integer enim neque volutpat ac tincidunt vitae semper quis lectus. Tempor id eu nisl nunc. Vel facilisis volutpat est velit egestas dui id ornare arcu. Libero volutpat sed cras ornare.";
-
-    return [
-      { header: "Room 1", content: lorem },
-      { header: "Room 2", content: lorem },
-      { header: "Room 3", content: lorem },
-      { header: "Room 4", content: lorem },
-      { header: "Room 5", content: lorem },
-      { header: "Room 6", content: lorem },
-      { header: "Room 7", content: lorem },
-    ];
-  }
-
   render() {
-    const { tourId, title, objects } = this.state;
+    const { tourId, title, roomOrder, objects } = this.state;
 
-	return (
+    return (
       <div className="app app-tour-page">
         <SiteHtmlHelmetHead />
         <HtmlClassManager />
@@ -85,7 +101,7 @@ class TourPage extends React.Component {
             <StickyList
               title={title}
               heroImage="https://d2r83x5xt28klo.cloudfront.net/6814_mpfCoboPefnN6Ws6_n.jpg"
-              sections={this.formatTourData()}
+              sections={formatTourData(roomOrder, objects)}
             />
           </div>
         ) : (
@@ -94,9 +110,7 @@ class TourPage extends React.Component {
             <p>Could not find tour with id "{tourId}"</p>
           </div>
         )}
-        <div style={{ "background-color": "white", "z-index": "1" }}>
-          <Footer />
-        </div>
+        <Footer />
       </div>
     );
   }

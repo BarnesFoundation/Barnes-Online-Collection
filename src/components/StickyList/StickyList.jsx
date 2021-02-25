@@ -18,7 +18,9 @@ class StickyListSection extends Component {
     return (
       <div className="sticky-list__section">
         <div className="sticky-list__section__header">{header}</div>
-        <div className="sticky-list__section__content">{content}</div>
+        <div className="sticky-list__section__content">
+          {JSON.stringify(content)}
+        </div>
       </div>
     );
   }
@@ -97,7 +99,6 @@ export default class StickyList extends Component {
               $window.scrollTop() <= $stickyPosition - $stickyHeight
             ) {
               // when bottom of sticky moves into window, remove absolute position
-              console.log("removing absolute!");
               $prevSticky.removeClass("absolute").removeAttr("style");
             }
           }
@@ -126,6 +127,7 @@ export default class StickyList extends Component {
           <StickyListSection
             header={section.header}
             content={section.content}
+            key={section.header}
           />
         ))}
       </div>

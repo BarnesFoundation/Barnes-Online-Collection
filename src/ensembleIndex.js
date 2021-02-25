@@ -15,3 +15,7 @@ export const getRoomAndTitleText = (ensembleIndex) => {
 
   return `${ENSEMBLE[ensembleIndex].roomTitle}${wallTitleStr}`;
 }
+
+export const getRoomName = (ensembleIndex) => {
+  return ENSEMBLE[ensembleIndex].roomTitle;
+};
