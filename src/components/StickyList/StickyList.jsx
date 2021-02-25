@@ -92,7 +92,13 @@ export default class StickyList extends Component {
 
     return (
       <div className="sticky-list">
-        <div className="tour-page-hero"><img src='https://d2r83x5xt28klo.cloudfront.net/6814_mpfCoboPefnN6Ws6_n.jpg' style={{"width": "100%", "margin-top": "-80px"}} /><h2 className="tour-title">{this.props.title}</h2></div>
+        <div className="sticky-list__hero">
+          <img
+            className="sticky-list__hero__image"
+            src={this.props.heroImage}
+          />
+          <h2 className="sticky-list__hero__title">{this.props.title}</h2>
+        </div>
         <div className="sticky-list__section">
           <div className="sticky-list__section__header">Room 1</div>
           <div className="sticky-list__section__content">{lorem}</div>

@@ -1,25 +1,33 @@
 @import '../../scss/variables.scss';
 
 .sticky-list {
-    // &__hero {
-    //     position: relative;
-    //     margin-bottom: -7px;
+    &__hero {
+        position: relative;
+        margin-bottom: -7px;
+        height: 225px;
+        overflow: hidden;
 
-    //     &__title {
-    //         font-size: 27px;
-    //         font-weight: bold;
-    //         padding-left: 25px;
-    //         color: $color-white;
-    //         position: absolute;
-    //         bottom: 25px;
-    //     }
-    // }
+        &__image {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+    
+        &__title {
+            font-size: 27px;
+            font-weight: bold;
+            padding-left: 25px;
+            color: $color-white;
+            position: absolute;
+            bottom: 25px;
+        }
+    }
 
     &__section {
         &__header {
             position: relative;
             z-index: 1;
-            // styling
             padding: 10px 25px;
             background: $color__red--barnes;
             color: $color-white;
