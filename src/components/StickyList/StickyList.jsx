@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import $ from "jquery";
+import ArtObject from "../ArtObject/ArtObject";
+import { formatTourData } from "../TourPage/tourPageHelper";
+import { parseObject } from "../../objectDataUtils";
 import "./stickyList.css";
 
 class StickyListSection extends Component {
@@ -13,13 +16,23 @@ class StickyListSection extends Component {
   }
 
   render() {
-    const { header, content } = this.props;
-
     return (
       <div className="sticky-list__section">
-        <div className="sticky-list__section__header">{header}</div>
+        <div className="sticky-list__section__header">{this.props.header}</div>
         <div className="sticky-list__section__content">
-          {JSON.stringify(content)}
+          {this.props.section.content.map((object) => {
+            const obj = parseObject(object);
+            return (
+              <ArtObject
+                key={obj.id}
+                title={obj.title}
+                people={obj.people}
+                medium={obj.medium}
+                imageUrlSmall={obj.imageUrlSmall}
+                imageUrlLarge={obj.imageUrlLarge}
+              />
+            );
+          })}
         </div>
       </div>
     );
@@ -116,18 +129,18 @@ export default class StickyList extends Component {
   }
 
   render() {
-    const { heroImage, title, sections } = this.props;
+    const { heroImage, title, objects, sectionOrder } = this.props;
     return (
       <div className="sticky-list">
         <div className="sticky-list__hero">
           <img className="sticky-list__hero__image" src={heroImage} />
           <h2 className="sticky-list__hero__title">{title}</h2>
         </div>
-        {sections.map((section) => (
+        {formatTourData(sectionOrder, objects).map((section) => (
           <StickyListSection
             header={section.header}
-            content={section.content}
             key={section.header}
+            section={section}
           />
         ))}
       </div>

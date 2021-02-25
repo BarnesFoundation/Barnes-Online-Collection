@@ -9,7 +9,6 @@ import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import Footer from "../Footer/Footer";
 import StickyList from "../StickyList/StickyList";
-import { formatTourData } from "./tourPageHelper";
 import "./tourPage.css";
 
 // default room order for tours, currently using the COVID flow
@@ -101,7 +100,8 @@ class TourPage extends React.Component {
             <StickyList
               title={title}
               heroImage="https://d2r83x5xt28klo.cloudfront.net/6814_mpfCoboPefnN6Ws6_n.jpg"
-              sections={formatTourData(roomOrder, objects)}
+              objects={objects}
+              sectionOrder={roomOrder}
             />
           </div>
         ) : (
