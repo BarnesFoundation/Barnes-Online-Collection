@@ -7,6 +7,7 @@ import * as ObjectActions from '../../actions/object';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
 import HtmlClassManager from '../HtmlClassManager';
+import Footer from '../Footer/Footer';
 import StickyList from '../StickyList/StickyList';
 import './tourPage.css'
 
@@ -58,20 +59,24 @@ class TourPage extends React.Component {
 
 		return (
 			<div className="app app-tour-page">
-        <SiteHtmlHelmetHead />
-        <HtmlClassManager />
-        <SiteHeader isTour />
-        {(tourId && title && objects)
-          ? // Display the tour if it was located
-            <div className="tour-page-container">
-              <StickyList title={title} />
-            </div>
-          : // Otherwise, no tour found for that id
-            <div className="container tour-page-container">
-              <p>Could not find tour with id "{tourId}"</p>
-            </div>
-        }
+				<SiteHtmlHelmetHead />
+				<HtmlClassManager />
+				<SiteHeader isTour />
+				{(tourId && title && objects)
+				? // Display the tour if it was located
+					<div className="tour-page-container">
+					<StickyList title={title} />
+					</div>
+				: // Otherwise, no tour found for that id
+					<div className="container tour-page-container">
+					<p>Could not find tour with id "{tourId}"</p>
+					</div>
+				}
+				<div style={{'background-color': 'white', 'z-index': '1'}}>
+					<Footer />
+				</div>
 			</div>
+
 		);
 	};
 };
