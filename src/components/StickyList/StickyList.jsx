@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import classnames from "classnames";
 import $ from "jquery";
 import ArtObject from "../ArtObject/ArtObject";
 import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
@@ -6,14 +7,57 @@ import { formatTourData } from "../TourPage/tourPageHelper";
 import { parseObject } from "../../objectDataUtils";
 import "./stickyList.css";
 
+class ObjectCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+    this.state = { descriptionVisible: false };
+  }
+
+  handleClick(event) {
+    if (this.props.object.shortDescription)
+      this.setState({ descriptionVisible: !this.state.descriptionVisible });
+  }
+
+  render() {
+    const { object } = this.props;
+    return (
+      <div
+        className={classnames("sticky-list__section__content__image-card", {
+          description: this.state.descriptionVisible,
+        })}
+        onClick={this.handleClick}
+      >
+        <div className="art-object__image-container">
+          <img
+            className="art-object__image"
+            src={object.imageUrlLarge}
+            alt={object.title}
+          />
+          <div className="art-object__image-information">
+            {/* less space between meta and image */}
+            {getObjectMetaDataHtml(object)}
+          </div>
+        </div>
+        {object.shortDescription ? (
+          <div className="overlay">
+            {/* fix  */}
+            <div
+              className="overlay-background"
+            >
+            </div>
+            <div className="overlay-text" dangerouslySetInnerHTML={{ __html: object.shortDescription }}></div>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+}
+
 class StickyListSection extends Component {
   constructor(props) {
     super(props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.match.params !== nextProps.match.params) {
-    }
   }
 
   render() {
@@ -22,21 +66,7 @@ class StickyListSection extends Component {
         <div className="sticky-list__section__header">{this.props.header}</div>
         <div className="sticky-list__section__content">
           {this.props.section.content.map((obj) => {
-            const object = parseObject(obj);
-            return (
-              <div className="sticky-list__section__content__image-card" onClick={this.handleClick}>
-                <div className="art-object__image-container">
-                  <img
-                    className="art-object__image"
-                    src={object.imageUrlLarge}
-                    alt={object.title}
-                  />
-                  <div className="art-object__image-information">
-                      {getObjectMetaDataHtml(object)}
-                  </div>
-              </div>
-              </div>
-            );
+            return <ObjectCard object={parseObject(obj)} key={obj.id} />;
           })}
         </div>
       </div>
@@ -47,11 +77,6 @@ class StickyListSection extends Component {
 export default class StickyList extends Component {
   constructor(props) {
     super(props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.match.params !== nextProps.match.params) {
-    }
   }
 
   componentDidMount() {

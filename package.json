@@ -10,6 +10,7 @@
 		"body-parser": "^1.17.2",
 		"bodybuilder": "^2.2.0",
 		"braces": "^2.3.1",
+		"classnames": "^2.2.6",
 		"compressible": "^2.0.10",
 		"cryptiles": "^4.1.2",
 		"deep-extend": "^0.5.1",

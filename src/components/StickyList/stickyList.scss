@@ -1,74 +1,125 @@
-@import '../../scss/variables.scss';
+@import "../../scss/variables.scss";
 
 .sticky-list {
-    &__hero {
+  &__hero {
+    position: relative;
+    margin-bottom: -7px;
+    height: 225px;
+    overflow: hidden;
+
+    &__image {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    &__title {
+      font-size: 27px;
+      font-weight: bold;
+      padding-left: 25px;
+      color: $color-white;
+      position: absolute;
+      bottom: 25px;
+    }
+  }
+
+  &__section {
+    &__header {
+      position: relative;
+      z-index: 1;
+      padding: 10px 25px;
+      background: $color__red--barnes;
+      color: $color-white;
+      top: 0;
+
+      &.fixed {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+        box-sizing: border-box;
+      }
+
+      &.absolute {
+        position: absolute;
+      }
+    }
+
+    &__content {
+      padding: 10px 25px;
+
+      &__image-card {
+        border: 1px solid $color__border;
+        border-radius: 3px;
+        padding: 5px 5px 5px;
+        margin-bottom: 30px;
         position: relative;
-        margin-bottom: -7px;
-        height: 225px;
-        overflow: hidden;
 
-        &__image {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        .art-object__image-information {
+            margin-top: 5px;
+        }
+
+        .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          overflow: scroll;
+
+          &-background {
+            height: 100%;
             width: 100%;
+            opacity: 0;
+          }
+
+          &-text {
+              display: none;
+          }
         }
-    
-        &__title {
-            font-size: 27px;
+
+        &.description {
+          .art-object__image-information {
+            // visibility: hidden;
+            // display: none;
+          }
+
+          .overlay-background {
+            opacity: 0.7;
+            background-color: $color_black;
+            transition: all 0.25s linear;
+          }
+
+          .overlay-text {
+            display: inline-block;
+            color: $color_white;
             font-weight: bold;
-            padding-left: 25px;
-            color: $color-white;
+            font-size: large;
+            padding: 30px;
             position: absolute;
-            bottom: 25px;
-        }
-    }
-
-    &__section {
-        &__header {
-            position: relative;
-            z-index: 1;
-            padding: 10px 25px;
-            background: $color__red--barnes;
-            color: $color-white;
             top: 0;
-    
-            &.fixed {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                z-index: 0;
-                box-sizing: border-box; 
-            }
-    
-            &.absolute {
-                position: absolute;
-            }
+            left: 0;
+            height: 100%;
+            width: 100%;
+            transition: all 1s linear;
+          }
         }
-
-        &__content {
-            padding: 10px 25px;
-
-            &__image-card {
-                border: 1px solid $color__border;
-                padding: 5px 5px 15px;
-                margin-bottom: 30px;
-            }
-        }
+      }
     }
-   
+  }
 }
 
 .tour-page-hero {
-    position: relative;
-    margin-bottom: -7px;
+  position: relative;
+  margin-bottom: -7px;
 
-    .tour-title {
-        font-size: 27px;
-        font-weight: bold;
-        padding-left: 25px;
-        color: $color-white;
-        position: absolute;
-        bottom: 25px;
-    }
+  .tour-title {
+    font-size: 27px;
+    font-weight: bold;
+    padding-left: 25px;
+    color: $color-white;
+    position: absolute;
+    bottom: 25px;
+  }
 }
