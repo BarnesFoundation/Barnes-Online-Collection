@@ -48,6 +48,12 @@
 
         &__content {
             padding: 10px 25px;
+
+            &__image-card {
+                border: 1px solid $color__border;
+                padding: 5px 5px 15px;
+                margin-bottom: 30px;
+            }
         }
     }
    

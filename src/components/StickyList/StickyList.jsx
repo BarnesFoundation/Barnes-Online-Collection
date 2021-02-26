@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import $ from "jquery";
 import ArtObject from "../ArtObject/ArtObject";
+import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 import { formatTourData } from "../TourPage/tourPageHelper";
 import { parseObject } from "../../objectDataUtils";
 import "./stickyList.css";
@@ -20,17 +21,21 @@ class StickyListSection extends Component {
       <div className="sticky-list__section">
         <div className="sticky-list__section__header">{this.props.header}</div>
         <div className="sticky-list__section__content">
-          {this.props.section.content.map((object) => {
-            const obj = parseObject(object);
+          {this.props.section.content.map((obj) => {
+            const object = parseObject(obj);
             return (
-              <ArtObject
-                key={obj.id}
-                title={obj.title}
-                people={obj.people}
-                medium={obj.medium}
-                imageUrlSmall={obj.imageUrlSmall}
-                imageUrlLarge={obj.imageUrlLarge}
-              />
+              <div className="sticky-list__section__content__image-card" onClick={this.handleClick}>
+                <div className="art-object__image-container">
+                  <img
+                    className="art-object__image"
+                    src={object.imageUrlLarge}
+                    alt={object.title}
+                  />
+                  <div className="art-object__image-information">
+                      {getObjectMetaDataHtml(object)}
+                  </div>
+              </div>
+              </div>
             );
           })}
         </div>

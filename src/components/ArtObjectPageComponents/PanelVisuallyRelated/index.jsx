@@ -11,7 +11,7 @@ import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
 import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 
-const getObjectMetaDataHtml = (object) => {
+export const getObjectMetaDataHtml = (object) => {
   const objectCopyright = getObjectCopyright(object);
 
   if (!object.id) {
@@ -144,18 +144,22 @@ class PanelVisuallyRelated extends Component {
         <div className="m-block__columns m-block__columns--page-cols">
           <div className="m-block__column m-block__column--page-col">
             <div className="art-object__image-container">
-              <img className="art-object__image" src={object.imageUrlLarge} alt={object.title}/>
+              <img
+                className="art-object__image"
+                src={object.imageUrlLarge}
+                alt={object.title}
+              />
               <div className="art-object__image-information">
                 {getObjectMetaDataHtml(object)}
-              <div className="share share--center">
-                <ShareDialog object={object}/>
+                <div className="share share--center">
+                  <ShareDialog object={object} />
+                </div>
               </div>
-              </div>
-              { filterTags &&
+              {filterTags && (
                 <div className="art-object__search-tags">
                   <FilterTagSetGeneric filterTags={filterTags} />
                 </div>
-              }
+              )}
             </div>
           </div>
           <div className="m-block__column m-block__column--page-col">
