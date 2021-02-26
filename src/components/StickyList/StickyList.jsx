@@ -11,12 +11,30 @@ class ObjectCard extends Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
-    this.state = { descriptionVisible: false };
+    this.state = { descriptionVisible: false, metaDataVisible: true };
   }
 
   handleClick(event) {
-    if (this.props.object.shortDescription)
-      this.setState({ descriptionVisible: !this.state.descriptionVisible });
+    if (this.props.object.shortDescription) {
+      const showDescription = !this.state.descriptionVisible;
+      let showMetaData = true;
+
+      const $el = $(event.target);
+      const $descriptionHeight = $el.find(".overlay-text").outerHeight(true);
+      const $imageHeight = $el
+        .parents(".sticky-list__section__content__image-card")
+        .find(".art-object__image")
+        .outerHeight();
+
+      if ($descriptionHeight > $imageHeight && showDescription) {
+        showMetaData = false;
+      }
+
+      this.setState({
+        descriptionVisible: showDescription,
+        metaDataVisible: showMetaData,
+      });
+    }
   }
 
   render() {
@@ -34,15 +52,22 @@ class ObjectCard extends Component {
             src={object.imageUrlLarge}
             alt={object.title}
           />
-          <div className="art-object__image-information">
+          <div
+            className={classnames("art-object__image-information", {
+              invisible: !this.state.metaDataVisible,
+            })}
+          >
             {getObjectMetaDataHtml(object)}
           </div>
         </div>
         {object.shortDescription ? (
-          <div
-            className="overlay"
-          >
-            <div className="overlay-text" dangerouslySetInnerHTML={{ __html: object.shortDescription }}></div>
+          <div className="overlay">
+            <div className="overlay-background">
+              <div
+                className="overlay-text"
+                dangerouslySetInnerHTML={{ __html: object.shortDescription }}
+              ></div>
+            </div>
           </div>
         ) : null}
       </div>
