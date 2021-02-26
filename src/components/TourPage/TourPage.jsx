@@ -1,9 +1,5 @@
 import React from "react";
 import axios from "axios";
-import { withRouter } from "react-router";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as ObjectActions from "../../actions/object";
 import { SiteHeader } from "../../components/SiteHeader/SiteHeader";
 import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";

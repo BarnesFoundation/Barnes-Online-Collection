@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import classnames from "classnames";
 import $ from "jquery";
-import ArtObject from "../ArtObject/ArtObject";
 import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 import { formatTourData } from "../TourPage/tourPageHelper";
 import { parseObject } from "../../objectDataUtils";
@@ -36,18 +35,14 @@ class ObjectCard extends Component {
             alt={object.title}
           />
           <div className="art-object__image-information">
-            {/* less space between meta and image */}
             {getObjectMetaDataHtml(object)}
           </div>
         </div>
         {object.shortDescription ? (
-          <div className="overlay">
-            {/* fix  */}
-            <div className="overlay-background"></div>
-            <div
-              className="overlay-text"
-              dangerouslySetInnerHTML={{ __html: object.shortDescription }}
-            ></div>
+          <div
+            className="overlay"
+          >
+            <div className="overlay-text" dangerouslySetInnerHTML={{ __html: object.shortDescription }}></div>
           </div>
         ) : null}
       </div>
@@ -167,21 +162,12 @@ export default class StickyList extends Component {
   }
 
   render() {
-    const {
-      heroImageId,
-      title,
-      description,
-      objects,
-      sectionOrder,
-    } = this.props;
+    const { title, description, objects, sectionOrder } = this.props;
 
     return (
       <div className="sticky-list">
         <div className="sticky-list__hero">
-          <img
-            className="sticky-list__hero__image"
-            src={this.getHeroImage()}
-          />
+          <img className="sticky-list__hero__image" src={this.getHeroImage()} />
           <h2 className="sticky-list__hero__title">{title}</h2>
         </div>
         <p
