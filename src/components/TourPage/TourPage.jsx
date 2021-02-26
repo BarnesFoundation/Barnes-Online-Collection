@@ -43,13 +43,15 @@ export const DEFAULT_ROOM_ORDER = [
   "Lower Lobby",
 ];
 
-class TourPage extends React.Component {
+export default class TourPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       tourId: null,
       title: null,
+	  heroImageId: null,
+	  description: null,
       objects: null,
       roomOrder: null,
     };
@@ -69,6 +71,9 @@ class TourPage extends React.Component {
 
         this.setState({
           title: tourResponse.data.title,
+		//   heroImageId is the id of an image that is already in the tour
+		  heroImageId: tourResponse.data.heroImageId,
+		  description: tourResponse.data.description,
           objects: tourResponse.data.data.hits.hits,
           roomOrder: roomOrder,
         });
@@ -87,7 +92,7 @@ class TourPage extends React.Component {
   }
 
   render() {
-    const { tourId, title, roomOrder, objects } = this.state;
+    const { tourId, title, heroImageId, description, roomOrder, objects } = this.state;
 
     return (
       <div className="app app-tour-page">
@@ -96,17 +101,18 @@ class TourPage extends React.Component {
         <SiteHeader isTour />
         {tourId && title && objects ? (
           // Display the tour if it was located
-          <div className="tour-page-container">
+          <div>
             <StickyList
               title={title}
-              heroImage="https://d2r83x5xt28klo.cloudfront.net/6814_mpfCoboPefnN6Ws6_n.jpg"
+              heroImageId={heroImageId}
+			  description={description}
               objects={objects}
               sectionOrder={roomOrder}
             />
           </div>
         ) : (
           // Otherwise, no tour found for that id
-          <div className="container tour-page-container">
+          <div className="container">
             <p>Could not find tour with id "{tourId}"</p>
           </div>
         )}
@@ -115,18 +121,3 @@ class TourPage extends React.Component {
     );
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    object: state.object,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({}, ObjectActions), dispatch);
-}
-
-const compWithRouter = withRouter(TourPage);
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(compWithRouter)
-);

@@ -1,7 +1,8 @@
 {
 	"soutine": {
 		"title": "Soutine at the Barnes",
-		"description": "",
+		"heroImageId": 5884,
+		"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vehicula ipsum a arcu cursus vitae. Nulla pellentesque dignissim enim sit amet venenatis urna cursus eget. Eget felis eget nunc lobortis mattis aliquam faucibus purus in.",
 		"body": {
 			"from": 0,
 			"size": 25,

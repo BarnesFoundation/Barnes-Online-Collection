@@ -24,6 +24,15 @@
     }
   }
 
+  &__description {
+      padding: 25px;
+      margin-top: 0px;
+
+    &.hidden {
+        display: none;
+    }
+  }
+
   &__section {
     &__header {
       position: relative;

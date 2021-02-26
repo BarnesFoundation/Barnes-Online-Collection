@@ -43,11 +43,11 @@ class ObjectCard extends Component {
         {object.shortDescription ? (
           <div className="overlay">
             {/* fix  */}
+            <div className="overlay-background"></div>
             <div
-              className="overlay-background"
-            >
-            </div>
-            <div className="overlay-text" dangerouslySetInnerHTML={{ __html: object.shortDescription }}></div>
+              className="overlay-text"
+              dangerouslySetInnerHTML={{ __html: object.shortDescription }}
+            ></div>
           </div>
         ) : null}
       </div>
@@ -77,6 +77,7 @@ class StickyListSection extends Component {
 export default class StickyList extends Component {
   constructor(props) {
     super(props);
+    this.getHeroImage = this.getHeroImage.bind(this);
   }
 
   componentDidMount() {
@@ -158,14 +159,39 @@ export default class StickyList extends Component {
     });
   }
 
+  getHeroImage() {
+    const object = this.props.objects.find(
+      (obj) => parseInt(obj._id) === this.props.heroImageId
+    );
+    return parseObject(object._source).imageUrlLarge;
+  }
+
   render() {
-    const { heroImage, title, objects, sectionOrder } = this.props;
+    const {
+      heroImageId,
+      title,
+      description,
+      objects,
+      sectionOrder,
+    } = this.props;
+
     return (
       <div className="sticky-list">
         <div className="sticky-list__hero">
-          <img className="sticky-list__hero__image" src={heroImage} />
+          <img
+            className="sticky-list__hero__image"
+            src={this.getHeroImage()}
+          />
           <h2 className="sticky-list__hero__title">{title}</h2>
         </div>
+        <p
+          className={classnames("sticky-list__description", {
+            hidden: !description.length,
+          })}
+        >
+          {description}
+        </p>
+
         {formatTourData(sectionOrder, objects).map((section) => (
           <StickyListSection
             header={section.header}
