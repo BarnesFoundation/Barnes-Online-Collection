@@ -34,6 +34,8 @@
   }
 
   &__section {
+    position: relative;
+
     &__header {
       position: relative;
       z-index: 1;
@@ -41,11 +43,11 @@
       background: $color__red--barnes;
       color: $color-white;
       top: 0;
+      width: 100%;
 
       &.fixed {
         position: fixed;
         top: 0;
-        width: 100%;
         z-index: 1;
         box-sizing: border-box;
       }
@@ -56,7 +58,7 @@
     }
 
     &__content {
-      padding: 10px 25px;
+      padding: 55px 25px 10px;
 
       &__image-card {
         border: 1px solid $color__border;
