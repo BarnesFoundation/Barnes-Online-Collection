@@ -95,7 +95,13 @@
           }
 
           &-text {
-            display: none;
+            visibility: hidden;
+            height: max-content;
+            display: block;
+            color: rgba(225, 225, 225, 1);
+            font-weight: bold;
+            font-size: large;
+            padding: 5px 30px 30px;
           }
         }
 
@@ -110,11 +116,7 @@
             border-radius: 3px;
 
             .overlay-text {
-              display: block;
-              color: rgba(225, 225, 225, 1);
-              font-weight: bold;
-              font-size: large;
-              padding: 5px 30px 30px;
+              visibility: visible;
             }
           }
         }

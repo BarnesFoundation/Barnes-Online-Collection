@@ -11,22 +11,24 @@ class ObjectCard extends Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
-    this.state = { descriptionVisible: false, metaDataVisible: true };
+    this.state = {
+      descriptionVisible: false,
+      metaDataVisible: true,
+    };
   }
 
   handleClick(event) {
+    event.preventDefault();
+
     if (this.props.object.shortDescription) {
       const showDescription = !this.state.descriptionVisible;
       let showMetaData = true;
 
-      const $el = $(event.target);
-      const $descriptionHeight = $el.find(".overlay-text").outerHeight(true);
-      const $imageHeight = $el
-        .parents(".sticky-list__section__content__image-card")
-        .find(".art-object__image")
-        .outerHeight();
-
-      if ($descriptionHeight > $imageHeight && showDescription) {
+      if (
+        this.overlayText.getBoundingClientRect().height > this.image.height &&
+        showDescription
+      ) {
+        // hide the meta text when the description will overlap it
         showMetaData = false;
       }
 
@@ -51,6 +53,9 @@ class ObjectCard extends Component {
             className="art-object__image"
             src={object.imageUrlLarge}
             alt={object.title}
+            ref={(image) => {
+              this.image = image;
+            }}
           />
           <div
             className={classnames("art-object__image-information", {
@@ -60,16 +65,19 @@ class ObjectCard extends Component {
             {getObjectMetaDataHtml(object)}
           </div>
         </div>
-        {object.shortDescription ? (
+        {object.shortDescription && (
           <div className="overlay">
             <div className="overlay-background">
               <div
                 className="overlay-text"
                 dangerouslySetInnerHTML={{ __html: object.shortDescription }}
+                ref={(overlayText) => {
+                  this.overlayText = overlayText;
+                }}
               ></div>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     );
   }
