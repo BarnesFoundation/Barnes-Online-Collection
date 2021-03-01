@@ -87,21 +87,17 @@
 		"smoothscroll-polyfill": "^0.4.4"
 	},
 	"scripts": {
-		"start": "npm-run-all --parallel watch-css server client",
+		"start-dev": "npm-run-all --parallel watch-css server-dev client",
 		"build": "npm run build-css && react-scripts build",
 		"postbuild": "gulp",
 		"build-sitemap": "node scripts/build-sitemap.js",
-		"server": "node server/index.js",
+		"start": "node server/index.js",
 		"server-dev": "PORT=4002 nodemon server/index.js",
 		"client": "PORT=3002 react-scripts start",
 		"test": "react-scripts test --env=jsdom",
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
 		"watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
-	},
-	"engine-strict": true,
-	"engines": {
-		"node": ">=10.9.0"
 	},
 	"proxy": "http://localhost:4002",
 	"browserslist": {
