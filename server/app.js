@@ -540,6 +540,11 @@ app.get('/objects/:id/:title/:panel', (req, res, next) => {
   renderAppObjectPage(req, res, next)
 })
 
+// Current setup of the Collection server requires server to
+// know about the client-side routing
+app.get('/tour/:id', (req, res, next) => {
+	return renderAppLandingPage(req, res, next);
+});
 
 // e.g. /track/image-download/5610_014b0a151d1954e6_o.jpg
 // bucket and prefix needs to be dealt with...
