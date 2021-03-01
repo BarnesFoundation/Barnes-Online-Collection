@@ -5,6 +5,8 @@ import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import Footer from "../Footer/Footer";
 import StickyList from "../StickyList/StickyList";
+import { META_TITLE, META_DESCRIPTION } from "../../constants";
+import { parseObject } from "../../objectDataUtils";
 import "./tourPage.css";
 
 // default room order for tours, currently using the COVID flow
@@ -46,10 +48,11 @@ export default class TourPage extends React.Component {
     this.state = {
       tourId: null,
       title: null,
-	  heroImageId: null,
-	  description: null,
+      description: null,
       objects: null,
       roomOrder: null,
+      heroImgSrc: null,
+      metaImgUrl: null,
     };
   }
 
@@ -65,13 +68,18 @@ export default class TourPage extends React.Component {
           ? tourResponse.data.customRoomOrder
           : DEFAULT_ROOM_ORDER;
 
+        const objects = tourResponse.data.data.hits.hits;
+        const heroImageId = tourResponse.data.heroImageId;
+        const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
+        const parsedObject = parseObject(object._source);
+
         this.setState({
           title: tourResponse.data.title,
-		//   heroImageId is the id of an image that is already in the tour
-		  heroImageId: tourResponse.data.heroImageId,
-		  description: tourResponse.data.description,
-          objects: tourResponse.data.data.hits.hits,
+          description: tourResponse.data.description,
+          objects: objects,
           roomOrder: roomOrder,
+          heroImageSrc: parsedObject.imageUrlLarge,
+          metaImgUrl: parsedObject.imageUrlSmall,
         });
       } catch (error) {
         console.log(
@@ -87,12 +95,30 @@ export default class TourPage extends React.Component {
     }
   }
 
+  getMetaTags(title) {
+    const metaTitle = `${META_TITLE} — ${title}`;
+    const metaDescription = `Barnes Foundation Collection: ${title} -- ${META_DESCRIPTION}`;
+
+    return {
+      title: metaTitle,
+      description: metaDescription,
+      image: this.state.metaImgUrl,
+    };
+  }
+
   render() {
-    const { tourId, title, heroImageId, description, roomOrder, objects } = this.state;
+    const {
+      tourId,
+      title,
+      description,
+      roomOrder,
+      objects,
+      heroImageSrc,
+    } = this.state;
 
     return (
       <div className="app app-tour-page">
-        <SiteHtmlHelmetHead />
+        <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
         <HtmlClassManager />
         <SiteHeader isTour />
         {tourId && title && objects ? (
@@ -100,8 +126,8 @@ export default class TourPage extends React.Component {
           <div>
             <StickyList
               title={title}
-              heroImageId={heroImageId}
-			  description={description}
+              heroImageSrc={heroImageSrc}
+              description={description}
               objects={objects}
               sectionOrder={roomOrder}
             />

@@ -141,23 +141,21 @@ class StickyListSection extends Component {
 export default class StickyList extends Component {
   constructor(props) {
     super(props);
-    this.getHeroImage = this.getHeroImage.bind(this);
-  }
-
-  getHeroImage() {
-    const object = this.props.objects.find(
-      (obj) => parseInt(obj._id) === this.props.heroImageId
-    );
-    return parseObject(object._source).imageUrlLarge;
   }
 
   render() {
-    const { title, description, objects, sectionOrder } = this.props;
+    const {
+      title,
+      heroImageSrc,
+      description,
+      objects,
+      sectionOrder,
+    } = this.props;
 
     return (
       <div className="sticky-list">
         <div className="sticky-list__hero">
-          <img className="sticky-list__hero__image" src={this.getHeroImage()} />
+          <img className="sticky-list__hero__image" src={heroImageSrc} />
           <h2 className="sticky-list__hero__title">{title}</h2>
         </div>
         <p
