@@ -126,7 +126,9 @@ class StickyListSection extends Component {
             this.header = header;
           }}
         >
-          {this.props.header}
+          <div className="sticky-list__section__header-text">
+            {this.props.header}
+          </div>
         </div>
         <div className="sticky-list__section__content">
           {this.props.section.content.map((obj) => {
@@ -156,7 +158,9 @@ export default class StickyList extends Component {
       <div className="sticky-list">
         <div className="sticky-list__hero">
           <img className="sticky-list__hero__image" src={heroImageSrc} />
-          <h2 className="sticky-list__hero__title">{title}</h2>
+          <div className="sticky-list__hero__title">
+            <h2>{title}</h2>
+          </div>
         </div>
         <p
           className={classnames("sticky-list__description", {

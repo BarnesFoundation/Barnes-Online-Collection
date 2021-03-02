@@ -15,17 +15,25 @@
     }
 
     &__title {
-      font-size: 27px;
-      font-weight: bold;
-      padding-left: 25px;
-      color: $color-white;
-      position: absolute;
-      bottom: 25px;
+      width: 100%;
+      max-width: 750px;
+      margin: auto;
+
+      h2 {
+        font-size: 27px;
+        font-weight: bold;
+        padding-left: 25px;
+        color: $color-white;
+        position: absolute;
+        bottom: 25px;
+      }
     }
   }
 
   &__description {
     padding: 25px;
+    max-width: 750px;
+    margin: auto;
     margin-top: 0px;
 
     &.hidden {
@@ -55,10 +63,18 @@
       &.absolute {
         position: absolute;
       }
+
+      &-text {
+        width: 100%;
+        max-width: 725px;
+        margin: auto;
+      }
     }
 
     &__content {
       padding: 55px 25px 10px;
+      max-width: 700px;
+      margin: auto;
 
       &__image-card {
         border: 1px solid $color__border;
