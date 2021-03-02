@@ -41,6 +41,19 @@
     }
   }
 
+  &__mobile {
+    display: none;
+
+    @include breakpoint("medium+") {
+      display: block;
+      padding: 25px;
+      max-width: 750px;
+      margin: auto;
+      margin-top: 0px;
+      text-align: center;
+    }
+  }
+
   &__section {
     position: relative;
 
