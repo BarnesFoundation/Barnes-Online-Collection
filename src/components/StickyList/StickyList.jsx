@@ -166,8 +166,8 @@ export default class StickyList extends Component {
           className={classnames("sticky-list__description", {
             hidden: !description.length,
           })}
+          dangerouslySetInnerHTML={{ __html: description}}
         >
-          {description}
         </p>
 
         {formatTourData(sectionOrder, objects).map((section) => (
