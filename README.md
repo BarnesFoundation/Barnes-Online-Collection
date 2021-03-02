@@ -38,7 +38,7 @@ Build and run the application
     yarn build
     yarn start
 
-The `yarn start` command will start the backend API server and the frontend development server both in parallel. This is so that changes can be made to either part and be compiled on the fly.
+The `yarn start-dev` command will start the backend API server and the frontend development server both in parallel. This is so that changes can be made to either part and be compiled on the fly.
 
 
 ## Deployment
