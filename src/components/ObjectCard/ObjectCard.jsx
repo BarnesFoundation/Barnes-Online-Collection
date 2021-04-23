@@ -36,6 +36,11 @@ export class ObjectCard extends Component {
     }
   }
 
+  imageAria(object) {
+    const culture = object.culture ? `, ${object.culture}` : "";
+    return `${object.title} by ${object.people}${culture}.`;
+  }
+
   render() {
     const { object } = this.props;
     return (
@@ -50,6 +55,7 @@ export class ObjectCard extends Component {
             className="object-card__content-image"
             src={object.imageUrlLarge}
             alt={object.title}
+            aria-label={this.imageAria(object)}
             ref={(image) => {
               this.image = image;
             }}

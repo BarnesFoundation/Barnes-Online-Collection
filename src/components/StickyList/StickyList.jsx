@@ -5,10 +5,11 @@ import { StickyListSection } from "../StickyListSection/StickyListSection";
 import "./stickyList.css";
 
 export default class StickyList extends Component {
-  constructor(props) {
-    super(props);
+  imageAria(object) {
+    const culture = object.culture ? `, ${object.culture}` : "";
+    return `${object.title} by ${object.people}${culture}.`;
   }
-
+  
   render() {
     const {
       title,
