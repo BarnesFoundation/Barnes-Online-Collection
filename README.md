@@ -13,7 +13,7 @@ Since the site only does *read* operations from the ElasticSearch database, we u
 
 To be able to run this project for local development, your environment will necessitate the following
 - Yarn
-- NPM/Node (v10.9.0)
+- NPM/Node (v10.19.0)
 
 Please install the above prior to proceeding further.
 

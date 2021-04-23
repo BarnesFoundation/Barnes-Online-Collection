@@ -1,9 +1,9 @@
 import { sortObjectsByRoom, formatTourData } from "./tourPageHelper";
 import { DEFAULT_ROOM_ORDER } from "./TourPage";
 
-const objects = require("../../../server/constants/tours.json")["test-tour"][
-  "data"
-]["hits"]["hits"];
+const objects = require("../../../server/constants/tours")["test-tour"]["data"][
+  "hits"
+]["hits"];
 
 describe("sortObjectsByRoom", () => {
   const objByRoom = sortObjectsByRoom(objects);
