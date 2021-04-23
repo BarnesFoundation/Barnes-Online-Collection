@@ -1,0 +1,40 @@
+@import "../../scss/variables.scss";
+
+.sticky-list-section {
+    position: relative;
+
+    &__header {
+      position: relative;
+      z-index: 1;
+      padding: 10px 25px;
+      background: $color__red--barnes;
+      color: $color-white;
+      top: 0;
+      width: 100%;
+
+      &.fixed {
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        box-sizing: border-box;
+      }
+
+      &.absolute {
+        position: absolute;
+      }
+
+      &-text {
+        width: 100%;
+        max-width: 725px;
+        margin: auto;
+      }
+    }
+
+    &__content {
+      padding: 55px 25px 10px;
+      max-width: 700px;
+      margin: auto;
+
+      
+    }
+  }

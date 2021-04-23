@@ -94,3 +94,35 @@ export const BREAKPOINTS = {
 };
 
 export const ART_OBJECT_GRID_INCREMENT = 12;
+
+// default room order for tours, currently using the COVID flow
+export const DEFAULT_ROOM_ORDER = [
+  "Main Room",
+  "Room 7",
+  "Room 6",
+  "Room 5",
+  "Room 4",
+  "Room 3",
+  "Room 2",
+  "Room 8",
+  "Room 9",
+  "Room 10",
+  "Room 11",
+  "Room 12",
+  "Room 13",
+  "Room 14",
+  "Room 18",
+  "Room 17",
+  "Room 16",
+  "Room 15",
+  "Room 19",
+  "Room 23",
+  "Room 22",
+  "Room 21",
+  "Room 20",
+  "Le Bonheur de vivre",
+  "Second Floor Balcony East (Room 24)",
+  "Mezzanine",
+  "Gallery Foyer",
+  "Lower Lobby",
+];
