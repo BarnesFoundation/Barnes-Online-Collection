@@ -16,23 +16,26 @@
 
     &__text {
       width: 100%;
-      max-width: 750px;
-      margin: auto;
-      padding-left: 25px;
+      
       color: $color-white;
       position: absolute;
       bottom: 25px;
 
+      &-title, &-subtitle {
+        max-width: 750px;
+        margin: auto;
+        padding-left: 25px;
+        margin-top: 0;
+      }
+
       &-title {
         font-size: 27px;
         font-weight: bold;
-        margin-top: 0;
       }
 
       &-subtitle {
         font-size: 21px;
         font-weight: semiBold;
-        margin-top: 0;
       }
     }
   }
