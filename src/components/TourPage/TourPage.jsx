@@ -52,6 +52,7 @@ export default class TourPage extends React.Component {
 
         this.setState({
           title: tourData.title,
+          subtitle: tourData.subtitle,
           description: tourData.description,
           objects: objects,
           roomOrder: roomOrder,
@@ -87,6 +88,7 @@ export default class TourPage extends React.Component {
     const {
       tourId,
       title,
+      subtitle,
       description,
       roomOrder,
       objects,
@@ -103,6 +105,7 @@ export default class TourPage extends React.Component {
           <div>
             <StickyList
               title={title}
+              subtitle={subtitle}
               heroImageSrc={heroImageSrc}
               description={description}
               objects={objects}
