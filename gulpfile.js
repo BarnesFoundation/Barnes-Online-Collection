@@ -4,16 +4,20 @@ const { src, dest, series } = require('gulp');
 const zip = require('gulp-zip');
 
 function build() {
-	return src(['package.json',
-		'.npmrc',
-		'build/**',
-		'server/**',
-		'server/constants/tours.json',
-		'scripts/**',
-		'src/artObjectTitles.json',
-		'src/ensembleIndexes.js',
-		'.ebextensions/**'], { base: './' })
-		.pipe(dest('dist'));
+	return src(
+    [
+      "package.json",
+      ".npmrc",
+      "build/**",
+      "server/**",
+      "server/constants/tours/**",
+      "scripts/**",
+      "src/artObjectTitles.json",
+      "src/ensembleIndexes.js",
+      ".ebextensions/**",
+    ],
+    { base: "./" }
+  ).pipe(dest("dist"));
 }
 
 function zipDist() {

@@ -1,0 +1,75 @@
+{
+    "title": "Barnes in Bloom",
+    "subtitle": "Masterpieces of Nature in the Barnes",
+    "heroImageId": 5515,
+    "description": "Whether its sunlit gardens, beautiful floral still lifes, or colorful and sometimes exotic landscapes, the Barnes Foundation is full of masterworks of nature. Enjoy a sampling of paintings about the natural world by artists such as Matisse, Renoir, Cezanne, Soutine, Monet and many others.",
+    "body": {
+        "from": 0,
+        "size": 25,
+        "_source": [
+            "id",
+            "title",
+            "people",
+            "medium",
+            "imageOriginalSecret",
+            "imageSecret",
+            "ensembleIndex",
+            "objRightsTypeId",
+            "onview",
+            "invno",
+            "image",
+            "curatorialApproval",
+            "shortDescription",
+            "nationality",
+            "birthDate",
+            "deathDate",
+            "artistPrefix",
+            "artistSuffix",
+            "culture",
+            "displayDate",
+            "medium",
+            "dimensions",
+            "creditLine",
+            "longDescription",
+            "bibliography",
+            "exhHistory",
+            "publishedProvenance"
+        ],
+        "query": {
+            "bool": {
+                "filter": {
+                    "terms": {
+                        "invno": [
+                            "bf149",
+                            "bf1153",
+                            "bf126",
+                            "bf861",
+                            "bf436",
+                            "bf730",
+                            "bf125",
+                            "bf928",
+                            "bf235",
+                            "bf289",
+                            "bf957",
+                            "bf949",
+                            "bf582",
+                            "bf820",
+                            "bf1005",
+                            "bf221",
+                            "bf6",
+                            "bf909",
+                            "bf73",
+                            "bf136",
+                            "bf397",
+                            "bf315",
+                            "bf2093",
+                            "bf218",
+                            "bf281"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "customRoomOrder": []
+}

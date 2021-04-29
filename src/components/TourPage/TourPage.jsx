@@ -5,41 +5,13 @@ import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import Footer from "../Footer/Footer";
 import StickyList from "../StickyList/StickyList";
-import { META_TITLE, META_DESCRIPTION } from "../../constants";
+import {
+  META_TITLE,
+  META_DESCRIPTION,
+  DEFAULT_ROOM_ORDER,
+} from "../../constants";
 import { parseObject } from "../../objectDataUtils";
 import "./tourPage.css";
-
-// default room order for tours, currently using the COVID flow
-export const DEFAULT_ROOM_ORDER = [
-  "Main Room",
-  "Room 7",
-  "Room 6",
-  "Room 5",
-  "Room 4",
-  "Room 3",
-  "Room 2",
-  "Room 8",
-  "Room 9",
-  "Room 10",
-  "Room 11",
-  "Room 12",
-  "Room 13",
-  "Room 14",
-  "Room 18",
-  "Room 17",
-  "Room 16",
-  "Room 15",
-  "Room 19",
-  "Room 23",
-  "Room 22",
-  "Room 21",
-  "Room 20",
-  "Le Bonheur de vivre",
-  "Second Floor Balcony East (Room 24)",
-  "Mezzanine",
-  "Gallery Foyer",
-  "Lower Lobby",
-];
 
 export default class TourPage extends React.Component {
   constructor(props) {
@@ -80,6 +52,7 @@ export default class TourPage extends React.Component {
 
         this.setState({
           title: tourData.title,
+          subtitle: tourData.subtitle,
           description: tourData.description,
           objects: objects,
           roomOrder: roomOrder,
@@ -115,6 +88,7 @@ export default class TourPage extends React.Component {
     const {
       tourId,
       title,
+      subtitle,
       description,
       roomOrder,
       objects,
@@ -131,6 +105,7 @@ export default class TourPage extends React.Component {
           <div>
             <StickyList
               title={title}
+              subtitle={subtitle}
               heroImageSrc={heroImageSrc}
               description={description}
               objects={objects}
