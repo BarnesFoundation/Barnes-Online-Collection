@@ -26,16 +26,7 @@ Install the necessary dependencies
 
 `npm ci`
 
-
 Copy the `.env` file and populate it with the correct values
-
-    cp .env-example .env
-    nano .env
-
-Build and run the application
-
-    npm run build
-    npm run start
 
 The `npm run start-dev` command will start the backend API server and the frontend development server both in parallel. This is so that changes can be made to either part and be compiled on the fly.
 
