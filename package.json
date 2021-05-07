@@ -21,7 +21,7 @@
 		"extend": "^3.0.2",
 		"fast-deep-equal": "^1.0.0",
 		"fstream": "^1.0.12",
-		"handlebars": "^4.0.14",
+		"handlebars": "^4.7.7",
 		"history": "^4.6.2",
 		"hoek": "^5.0.3",
 		"http-auth": "^3.1.3",
