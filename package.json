@@ -48,7 +48,7 @@
 		"tar": "^2.2.2",
 		"tunnel-agent": "^0.6.0",
 		"universal-analytics": "^0.4.16",
-		"url-parse": "^1.4.3",
+		"url-parse": "^1.5.0",
 		"xml2js": "^0.4.17",
 		"xmlbuilder": "^9.0.1"
 	},
