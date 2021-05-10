@@ -49,6 +49,10 @@
     &.hidden {
       display: none;
     }
+
+    p:first-child {
+      margin-top: 0px;
+    }
   }
 
   &__mobile {
