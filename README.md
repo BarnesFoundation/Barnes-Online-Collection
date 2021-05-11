@@ -32,8 +32,7 @@ The `npm run start-dev` command will start the backend API server and the fronte
 
 Once the local server is running, you will need to generate `searchAssets.json` by running
 
-`curl http://localhost:4002/api/build-search-assets` 
-
+`curl http://localhost:4002/api/build-search-assets`
 
 ## Deployment
 

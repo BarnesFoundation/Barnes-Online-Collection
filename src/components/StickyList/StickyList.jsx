@@ -31,12 +31,12 @@ export default class StickyList extends Component {
             )}
           </div>
         </div>
-        <p
+        <div
           className={classnames("sticky-list__description", {
             hidden: !description.length,
           })}
           dangerouslySetInnerHTML={{ __html: description }}
-        ></p>
+        ></div>
 
         <p className="sticky-list__mobile">
           <i>This interactive guide is best viewed on a mobile device.</i>
