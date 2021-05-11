@@ -30,6 +30,9 @@ Copy the `.env` file and populate it with the correct values
 
 The `npm run start-dev` command will start the backend API server and the frontend development server both in parallel. This is so that changes can be made to either part and be compiled on the fly.
 
+Once the local server is running, you will need to generate `searchAssets.json` by running
+
+`curl http://localhost:4002/api/build-search-assets`
 
 ## Deployment
 
