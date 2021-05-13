@@ -36,7 +36,7 @@
 		"lodash.template": "^4.5.0",
 		"macaddress": "^0.2.9",
 		"memory-cache": "^0.2.0",
-		"merge": "^1.2.1",
+		"merge": "^2.1.1",
 		"morgan": "^1.9.1",
 		"nwmatcher": "^1.4.4",
 		"randomatic": "^3.0.0",
