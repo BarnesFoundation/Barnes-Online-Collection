@@ -12,11 +12,7 @@ Since the site only does *read* operations from the ElasticSearch database, we u
 ## Requirements
 
 To be able to run this project for local development, your environment will necessitate the following
-<<<<<<< HEAD
-- NPM/Node (v10.19.0)
-=======
 - NPM/Node (v10.9.0)
->>>>>>> dependabot/npm_and_yarn/react-dev-utils-11.0.4
 
 Please install the above prior to proceeding further.
 
@@ -29,17 +25,8 @@ Clone this repository into your local environment
 Install the necessary dependencies
 
 `npm ci`
-<<<<<<< HEAD
 
 Copy the `.env` file and populate it with the correct values
-
-=======
-
-
-Copy the `.env` file and populate it with the correct values
-
-    cp .env-example .env
-    nano .env
 
 Build and run the application
 ```
@@ -47,7 +34,6 @@ Build and run the application
     npm run start
 ```
 
->>>>>>> dependabot/npm_and_yarn/react-dev-utils-11.0.4
 The `npm run start-dev` command will start the backend API server and the frontend development server both in parallel. This is so that changes can be made to either part and be compiled on the fly.
 
 Once the local server is running, you will need to generate `searchAssets.json` by running
