@@ -10,7 +10,9 @@ const getTour = async (request, response) => {
   }
 
   // Otherwise, this isn't a tour we have
-  return response.status(404).json({});
+  return response
+    .status(404)
+    .json({ message: `No tour with id ${tourId} found` });
 };
 
 module.exports = {
