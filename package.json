@@ -69,7 +69,7 @@
 		"querystringify": "^2.0.0",
 		"rc-slider": "^8.3.1",
 		"react": "^15.5.4",
-		"react-dev-utils": "^3.1.2",
+		"react-dev-utils": "^11.0.4",
 		"react-dom": "^15.5.4",
 		"react-draggable": "^4.2.0",
 		"react-ga": "^2.2.0",
