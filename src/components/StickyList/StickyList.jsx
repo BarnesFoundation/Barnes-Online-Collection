@@ -26,7 +26,7 @@ export default class StickyList extends Component {
           <img className="sticky-list__hero__image" src={heroImageSrc} />
           <div className="sticky-list__hero__text">
             <h2 className="sticky-list__hero__text-title">{title}</h2>
-            {!!subtitle.length && (
+            {subtitle && subtitle.length && (
               <h3 className="sticky-list__hero__text-subtitle">{subtitle}</h3>
             )}
           </div>
