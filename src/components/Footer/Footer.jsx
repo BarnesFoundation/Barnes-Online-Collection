@@ -53,17 +53,17 @@ class Newsletter extends Component {
         sessionStorage.setItem(NEWSLETTER_SESSION_STORAGE_KEY, true); // Set session storage in case of page refresh.
         this.setState({ isSubmitted: SUBMISSION_STATUS.COMPLETE });
 
-      // On error, set error status to denote a server error and reset submission status.
+        // On error, set error status to denote a server error and reset submission status.
       } catch (e) {
         this.setState({ isSubmitted: null, isError: ERROR_STATUS.SERVER });
       }
 
-    // If email is not valid.
+      // If email is not valid.
     } else {
       this.setState({ isError: ERROR_STATUS.USER });
     }
   }
-  
+
   render() {
     const { isSubmitted, isError } = this.state;
 
@@ -98,7 +98,7 @@ class Newsletter extends Component {
                 placeholder='email address'
                 required aria-required='true'
                 aria-describedby='emailerror1'
-                onChange={({ target: { value }}) => this.setState({ value })}
+                onChange={({ target: { value } }) => this.setState({ value })}
               />
               <button
                 className='m-newsletter__btn btn btn--icon'
@@ -127,7 +127,7 @@ class Newsletter extends Component {
             role='alert'
             tabIndex='-1'
             id='emailerror1'>
-              Enter a valid email address.
+            Enter a valid email address.
           </div>
 
           <div
@@ -136,7 +136,7 @@ class Newsletter extends Component {
             role='alert'
             tabIndex='-1'
             id='emailerror2'>
-              Error processing request, please try again later.
+            Error processing request, please try again later.
           </div>
 
           {/** Show submission status after submission. */}
@@ -144,13 +144,13 @@ class Newsletter extends Component {
             aria-hidden={isSubmitted !== SUBMISSION_STATUS.LOADING}
             className={processingClass}
             role='alert'>
-              Processing your request&hellip;
+            Processing your request&hellip;
           </div>
           <div
             aria-hidden={isSubmitted !== SUBMISSION_STATUS.COMPLETE}
             className={successClass}
             role='alert'>
-              Thanks for subscribing to our newsletter.
+            Thanks for subscribing to our newsletter.
           </div>
         </div>
       </div>
@@ -180,11 +180,11 @@ export const Footer = ({ hasHours }) => {
             </div>
             <div className='m-block__column'>
               <p className='color-medium'>
-                The Barnes Foundation collection online is made possible by generous support
-				<br className='large-only' /> 
-				from The John S. and James L. Knight Foundation
-				as part of the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
-				Additional funders of digital initiatives include Betsy Z. and Edward E. Cohen.
+                The Barnes Foundation collection online is made possible by generous support{" "}
+                <br className='large-only' />
+                from The John S. and James L. Knight Foundation
+                as part of the Knight Center for Digital Innovation in Audience Engagement at the Barnes.
+                Additional funders of digital initiatives include Betsy Z. and Edward E. Cohen.
               </p>
               <div className='brand-links'>
                 <a className='a-brand-link a-brand-link-on-grey a-brand-link--block brand-links__link' href='https://www.barnesfoundation.org/collection/credits'>Project Credits</a>
