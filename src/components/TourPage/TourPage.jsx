@@ -11,7 +11,6 @@ import {
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
-import "./tourPage.css";
 
 export default class TourPage extends React.Component {
   constructor(props) {
