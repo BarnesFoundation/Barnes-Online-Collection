@@ -3,39 +3,25 @@ const { fixDiacritics } = require("../utils/fixDiacritics");
 
 let esIndex = process.env.ELASTICSEARCH_INDEX
 
-const performSearch = (body, res) => {
-    esClient.search(
+const performSearch = async (body) => {
+    return esClient.search(
         {
             index: esIndex,
             body: body,
             // _source: 
         },
-        (error, esRes) => {
-            if (error) {
-                res.json(error)
-            } else {
-                if (esRes.hits && esRes.hits.hits) {
-
-                    // Replace all hit's source with santitized source object.
-                    // To extend this, replace key w/ ternary of _source[key] && fixDiacritics()
-                    esRes.hits.hits = esRes.hits.hits.map(({ _source, ...rest }) => ({
-                        _source: {
-                            ..._source,
-                            title: _source.title ? fixDiacritics(_source.title) : undefined,
-                        },
-                        ...rest,
-                    }));
-                }
-
-                res.json(esRes)
-            }
-        });
+    );
 }
 
-const search = (req, res) => {
+const search = async (req, res) => {
     // Get the body from a get or post request
     const body = (req.method === 'GET') ? req.query.body : req.body.body;
-    performSearch(body, res)
+    try {
+        const esRes = await performSearch(body)
+        res.json(esRes)
+    } catch (e) {
+        res.json(e)
+    }
 }
 
 const getObjectById = async (req, res) => {
