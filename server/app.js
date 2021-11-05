@@ -534,8 +534,9 @@ app.get('/api/suggest', craftService.getSuggestions);
 /** Get autosuggest functionality for artists in advaned filters. */
 app.get('/api/advancedSearchSuggest', craftService.getAutoSuggestions);
 
-/** Endpoint for retrieving the information about a tour */
+/** Endpoint for retrieving tour data */
 app.get('/api/tour/:id', tourService.getTour);
+app.get('/api/tour/eyeSpy/:id', tourService.getEyeSpyTour);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
