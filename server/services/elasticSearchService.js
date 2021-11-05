@@ -44,4 +44,5 @@ const getObjectById = async (req, res) => {
 module.exports = {
     search,
     getObjectById,
+    performSearch,
 }

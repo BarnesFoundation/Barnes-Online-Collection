@@ -36,10 +36,7 @@ export default class TourPage extends React.Component {
       try {
         const tourResponse = await axios.get(`/api/tour/${id}`);
         const tourData = tourResponse.data;
-        const objectsResponse = await axios.get("/api/search", {
-          params: { body: tourData.body },
-        });
-        const objects = objectsResponse.data.hits.hits;
+        const objects = tourData.objects;
 
         const roomOrder = tourData.customRoomOrder.length
           ? tourData.customRoomOrder
