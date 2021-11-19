@@ -13,7 +13,7 @@ import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyR
   // If eye spy tour, set the clue as the caption and object meta data and description as overlay
   if (clues) {
     // Set the clue to be the object caption and object meta + description as overlay text
-    object.contentInfo = (<p>{clues[object.invno]}</p>)
+    object.contentInfo = (<p>{parse(clues[object.invno])}</p>)
     object.overlayText = (
       <div>
         {getObjectMetaDataHtml(object)}
