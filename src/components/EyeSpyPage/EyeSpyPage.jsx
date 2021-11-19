@@ -38,6 +38,7 @@ export default class EyeSpyPage extends React.Component {
         const tourResponse = await axios.get(`/api/tour/eyeSpy/${id}`);
         const tourData = tourResponse.data;
         const objects = tourData.objects;
+        const clues = tourData.clues;
 
         const roomOrder = tourData.customRoomOrder.length
           ? tourData.customRoomOrder
@@ -46,7 +47,7 @@ export default class EyeSpyPage extends React.Component {
         const heroImageId = tourData.heroImageId;
         const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
         const parsedObject = parseObject(object._source);
-        const sections = formatTourData(roomOrder, objects)
+        const sections = formatTourData(roomOrder, objects, clues)
 
         this.setState({
           title: tourData.title,
