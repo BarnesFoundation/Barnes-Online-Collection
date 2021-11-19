@@ -16,11 +16,13 @@ const generateObjectImageUrls = (object) => {
 
   const canonicalRoot = (process.env.REACT_APP_CANONICAL_ROOT || '')
   const canonicalRootNoProt = canonicalRoot.replace(/^https?:\/\//i, '')
+  // Clone existing object
   const newObject = Object.assign({}, object)
   const imageTrackBaseUrl = `/track/image-download/`
   const imageIdReg = `${object.id}_${object.imageSecret}`
   const imageIdOrig = `${object.id}_${object.imageOriginalSecret}`
 
+  // Construct image urls for object with updated url roots
   newObject.imageUrlSmall = `${imageUrlBase}/${imageIdReg}_n.jpg`;
   newObject.imageUrlOriginal = `${imageUrlBase}/${imageIdOrig}_o.jpg`;
   newObject.imageUrlLarge = `${imageUrlBase}/${imageIdReg}_b.jpg`;
@@ -32,6 +34,7 @@ const generateObjectImageUrls = (object) => {
 const sanitizeEnsembleIndex = (object) => {
   let index = object.ensembleIndex;
 
+  // Update the ensemble index
   object.ensembleIndex = index ? index.split(',')[0] : null;
 
   return object;

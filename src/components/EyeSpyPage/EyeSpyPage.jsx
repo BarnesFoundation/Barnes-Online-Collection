@@ -92,7 +92,7 @@ export default class EyeSpyPage extends React.Component {
     } = this.state;
 
     return (
-      <div className="app app-tour-page">
+      <div className="app app-eyespy-page">
         <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
         <HtmlClassManager />
         <SiteHeader isTour />
