@@ -1,7 +1,9 @@
 const test = require("./test.json");
+const dec2021 = require("./dec-2021.json")
 
 // Key is the slug/tourId of the tour
 module.exports = {
+    "dec-2021": dec2021,
     // Tour for test suite
     test,
 }
