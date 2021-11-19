@@ -8,7 +8,11 @@ const getTourObjects = async (tourId) => {
     const objects = esRes.hits.hits
     const tour = { ...tours[tourId], objects }
     return tour
-    // Otherwise, this tour does not exist
+  // Return test tour if it is not production environment
+  } else if (tourId === "test-tour") {
+    const testTour = tours["test-tour"]
+    return process.env.NODE_ENV.toLowerCase() === "production" ? false : testTour;
+  // Otherwise, this tour does not exist
   } else {
     return false
   }
