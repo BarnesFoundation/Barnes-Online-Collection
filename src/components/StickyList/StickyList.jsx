@@ -39,7 +39,7 @@ export default class StickyList extends Component {
           <StickyListSection
             header={section.header}
             key={section.header}
-            section={section}
+            content={section.content}
           />
         ))}
       </div>
