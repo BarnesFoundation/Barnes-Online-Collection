@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { parseObject } from "../../objectDataUtils";
 import { ObjectCard } from "../ObjectCard/ObjectCard";
 import "./stickyListSection.css";
 
@@ -14,8 +13,6 @@ export class StickyListSection extends Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
-    const parsedObjects = this.props.content.map((obj) => { return parseObject(obj)})
-    this.setState({ parsedObjects: parsedObjects })
   }
 
   handleScroll(event) {
@@ -55,7 +52,7 @@ export class StickyListSection extends Component {
           </div>
         </div>
         <div className="sticky-list-section__content">
-          {this.state.parsedObjects && this.state.parsedObjects.map((obj) => {
+          {this.props.content.map((obj) => {
             return <ObjectCard object={obj} key={obj.id} />;
           })}
         </div>

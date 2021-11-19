@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 import "./objectCard.css";
 
 export class ObjectCard extends Component {
@@ -65,15 +64,15 @@ export class ObjectCard extends Component {
               invisible: !this.state.metaDataVisible,
             })}
           >
-            {getObjectMetaDataHtml(object)}
+            {object.contentInfo}
           </div>
         </div>
-        {object.shortDescription && (
+        {object.overlayText && (
           <div className="object-card__overlay">
             <div className="object-card__overlay-background">
               <div
                 className="object-card__overlay-text"
-                dangerouslySetInnerHTML={{ __html: object.shortDescription }}
+                dangerouslySetInnerHTML={{ __html: object.overlayText }}
                 ref={(overlayText) => {
                   this.overlayText = overlayText;
                 }}
