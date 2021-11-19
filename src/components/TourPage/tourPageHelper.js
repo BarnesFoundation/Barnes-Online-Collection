@@ -1,4 +1,25 @@
 import { getRoomName } from "../../ensembleIndex";
+import { parseObject } from "../../objectDataUtils";
+import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
+
+/**
+ * Given an object, parses the images urls, and sets the content info and overlay text attributes
+ */
+ export const parseTourObject = (object, eyeSpy = false) => {
+  object = parseObject(object);
+  
+  // If eye spy tour, set the clue as the caption and object meta data and description as overlay
+  if (eyeSpy) {
+    // TODO
+
+  // Else default to object meta data as caption and description as overlay text
+  } else {
+    object.contentInfo = getObjectMetaDataHtml(object)
+    object.overlayText = object.shortDescription
+  }
+
+  return object;
+}
 
 /**
  * Given a list of art objects, sorts the list into dictionary with 
@@ -11,8 +32,10 @@ export const sortObjectsByRoom = (objects) => {
     const room = getRoomName(object._source.ensembleIndex);
     // If key for this room doesn't exist, add it
     objByRoom[room] = objByRoom[room] ? objByRoom[room] : [];
+    // Parse the object to set required attributes
+    const parsedObject = parseTourObject(object._source);
     // Add object to room array
-    objByRoom[room].push(object._source);
+    objByRoom[room].push(parsedObject);
   }
   return objByRoom;
 };
