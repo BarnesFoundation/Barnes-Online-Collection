@@ -11,6 +11,7 @@ import {
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
+import { formatTourData } from "../TourPage/tourPageHelper";
 
 export default class EyeSpyPage extends React.Component {
   constructor(props) {
@@ -45,15 +46,15 @@ export default class EyeSpyPage extends React.Component {
         const heroImageId = tourData.heroImageId;
         const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
         const parsedObject = parseObject(object._source);
+        const sections = formatTourData(roomOrder, objects)
 
         this.setState({
           title: tourData.title,
           subtitle: tourData.subtitle,
           description: tourData.description,
-          objects: objects,
-          roomOrder: roomOrder,
           heroImageSrc: parsedObject.imageUrlLarge,
           metaImgUrl: parsedObject.imageUrlSmall,
+          sections: sections,
         });
       } catch (error) {
         console.log(
@@ -86,9 +87,8 @@ export default class EyeSpyPage extends React.Component {
       title,
       subtitle,
       description,
-      roomOrder,
-      objects,
       heroImageSrc,
+      sections
     } = this.state;
 
     return (
@@ -96,7 +96,7 @@ export default class EyeSpyPage extends React.Component {
         <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
         <HtmlClassManager />
         <SiteHeader isTour />
-        {tourId && title && objects ? (
+        {tourId && title && sections ? (
           // Display the tour if it was located
           <div>
             <StickyList
@@ -104,8 +104,7 @@ export default class EyeSpyPage extends React.Component {
               subtitle={subtitle}
               heroImageSrc={heroImageSrc}
               description={description}
-              objects={objects}
-              sectionOrder={roomOrder}
+              sections={sections}
             />
           </div>
         ) : (
