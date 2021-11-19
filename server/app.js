@@ -13,7 +13,6 @@ const path = require('path')
 const request = require('request')
 const s3 = new AWS.S3()
 const googleUA = require('universal-analytics')
-const esClient = require('./utils/esClient');
 
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
 
@@ -35,9 +34,9 @@ const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 const { oneDay } = require('./constants/times');
 
 const buildSearchAssets = require('../scripts/build-search-assets');
-const { fixDiacritics } = require('./utils/fixDiacritics')
 const craftService = require('./services/craftService');
 const tourService = require('./services/tourService');
+const elasticSearchService = require("./services/elasticSearchService");
 const { BARNES_SETTINGS, ALL_MORE_LIKE_THIS_FIELDS,
 		MORE_LIKE_THIS_FIELDS, BASIC_FIELDS } = require('./constants/fields');
 
@@ -168,55 +167,8 @@ app.get('/api/latestIndex', (req, res) => {
   res.json(esIndex);
 });
 
-app.get('/api/objects/:object_id', (req, res) => {
-    const options = {
-      index: esIndex,
-      type: 'object',
-      id: req.params.object_id
-    };
-
-    esClient.get(options, function (error, esRes) {
-      if (error) {
-        console.error(`[error] esClient: ${error.message}`)
-        res.json(error)
-      } else {
-        res.json(esRes._source)
-      }
-    });
-});
-
-app.use('/api/search', (req, res) => {
-
-  // Get the body from a get or post request
-  const body = (req.method === 'GET') ? req.query.body : req.body.body;
-
-  esClient.search(
-    {
-      index: esIndex,
-      body: body,
-      // _source: 
-    },
-    (error, esRes) => {
-      if (error) {
-        res.json(error)
-      } else {
-        if (esRes.hits && esRes.hits.hits) {
-
-          // Replace all hit's source with santitized source object.
-          // To extend this, replace key w/ ternary of _source[key] && fixDiacritics()
-          esRes.hits.hits = esRes.hits.hits.map(({  _source, ...rest }) => ({
-            _source: {
-              ..._source,
-              title: _source.title ? fixDiacritics(_source.title) : undefined,
-            },
-            ...rest,
-          }));
-        }
-
-        res.json(esRes)
-      }
-  });
-});
+app.get('/api/objects/:object_id', elasticSearchService.getObjectById);
+app.use('/api/search', elasticSearchService.search);
 
 function getObjectDescriptors (objectID) {
   let body = bodybuilder()
@@ -582,8 +534,9 @@ app.get('/api/suggest', craftService.getSuggestions);
 /** Get autosuggest functionality for artists in advaned filters. */
 app.get('/api/advancedSearchSuggest', craftService.getAutoSuggestions);
 
-/** Endpoint for retrieving the information about a tour */
+/** Endpoint for retrieving tour data */
 app.get('/api/tour/:id', tourService.getTour);
+app.get('/api/tour/eyeSpy/:id', tourService.getEyeSpyTour);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')
