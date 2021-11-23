@@ -91,6 +91,7 @@
 		"build": "npm run build-css && react-scripts build",
 		"postbuild": "gulp",
 		"build-sitemap": "node scripts/build-sitemap.js",
+		"write-search-assets": "node scripts/write-search-assets.js",
 		"start": "node server/index.js",
 		"server-dev": "PORT=4002 nodemon server/index.js",
 		"client": "PORT=3002 react-scripts start",
