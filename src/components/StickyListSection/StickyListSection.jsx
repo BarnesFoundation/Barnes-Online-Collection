@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { parseObject } from "../../objectDataUtils";
 import { ObjectCard } from "../ObjectCard/ObjectCard";
 import "./stickyListSection.css";
 
@@ -53,8 +52,8 @@ export class StickyListSection extends Component {
           </div>
         </div>
         <div className="sticky-list-section__content">
-          {this.props.section.content.map((obj) => {
-            return <ObjectCard object={parseObject(obj)} key={obj.id} />;
+          {this.props.content.map((obj) => {
+            return <ObjectCard object={obj} key={obj.id} />;
           })}
         </div>
       </div>

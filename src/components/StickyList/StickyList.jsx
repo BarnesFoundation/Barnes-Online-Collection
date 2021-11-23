@@ -1,23 +1,16 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { formatTourData } from "../TourPage/tourPageHelper";
 import { StickyListSection } from "../StickyListSection/StickyListSection";
 import "./stickyList.css";
 
 export default class StickyList extends Component {
-  imageAria(object) {
-    const culture = object.culture ? `, ${object.culture}` : "";
-    return `${object.title} by ${object.people}${culture}.`;
-  }
-  
   render() {
     const {
       title,
       subtitle,
       heroImageSrc,
       description,
-      objects,
-      sectionOrder,
+      sections
     } = this.props;
 
     return (
@@ -42,11 +35,11 @@ export default class StickyList extends Component {
           <i>This interactive guide is best viewed on a mobile device.</i>
         </p>
 
-        {formatTourData(sectionOrder, objects).map((section) => (
+        {sections.map((section) => (
           <StickyListSection
             header={section.header}
             key={section.header}
-            section={section}
+            content={section.content}
           />
         ))}
       </div>

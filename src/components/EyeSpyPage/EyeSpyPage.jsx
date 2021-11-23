@@ -11,9 +11,9 @@ import {
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
-import { formatTourData } from "./tourPageHelper";
+import { formatTourData } from "../TourPage/tourPageHelper";
 
-export default class TourPage extends React.Component {
+export default class EyeSpyPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -35,9 +35,10 @@ export default class TourPage extends React.Component {
     // If we have a slug, retrieve information for the tour
     if (id) {
       try {
-        const tourResponse = await axios.get(`/api/tour/${id}`);
+        const tourResponse = await axios.get(`/api/tour/eyeSpy/${id}`);
         const tourData = tourResponse.data;
         const objects = tourData.objects;
+        const clues = tourData.clues;
 
         const roomOrder = tourData.customRoomOrder.length
           ? tourData.customRoomOrder
@@ -46,7 +47,7 @@ export default class TourPage extends React.Component {
         const heroImageId = tourData.heroImageId;
         const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
         const parsedObject = parseObject(object._source);
-        const sections = formatTourData(roomOrder, objects)
+        const sections = formatTourData(roomOrder, objects, clues)
 
         this.setState({
           title: tourData.title,
@@ -88,11 +89,11 @@ export default class TourPage extends React.Component {
       subtitle,
       description,
       heroImageSrc,
-      sections,
+      sections
     } = this.state;
 
     return (
-      <div className="app app-tour-page">
+      <div className="app app-eyespy-page">
         <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
         <HtmlClassManager />
         <SiteHeader isTour />

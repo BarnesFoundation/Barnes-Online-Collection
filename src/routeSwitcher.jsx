@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import TourPage from './components/TourPage/TourPage';
+import EyeSpyPage from './components/EyeSpyPage/EyeSpyPage';
 import LandingPage from './components/LandingPage/LandingPage';
 import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
@@ -91,6 +92,8 @@ class RouteSwitcher extends Component {
           <Route exact path='/objects/:id/:title/:panel' component={ArtObjectPage} />
           <Route exact path='/tour' component={LandingPage}/>
 		      <Route path='/tour/:id' component={TourPage} />
+          <Route exact path='/eye-spy' component={LandingPage}/>
+		      <Route path='/eye-spy/:id' component={EyeSpyPage} />
         </Switch>
         {this.modalRouteComponents}
       </div>

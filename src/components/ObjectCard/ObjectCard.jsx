@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import classnames from "classnames";
-import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 import "./objectCard.css";
 
 export class ObjectCard extends Component {
@@ -17,7 +16,7 @@ export class ObjectCard extends Component {
   handleClick(event) {
     event.preventDefault();
 
-    if (this.props.object.shortDescription) {
+    if (this.props.object.overlayText) {
       const showDescription = !this.state.descriptionVisible;
       let showMetaData = true;
 
@@ -65,19 +64,20 @@ export class ObjectCard extends Component {
               invisible: !this.state.metaDataVisible,
             })}
           >
-            {getObjectMetaDataHtml(object)}
+            {object.contentInfo}
           </div>
         </div>
-        {object.shortDescription && (
+        {object.overlayText && (
           <div className="object-card__overlay">
             <div className="object-card__overlay-background">
               <div
                 className="object-card__overlay-text"
-                dangerouslySetInnerHTML={{ __html: object.shortDescription }}
                 ref={(overlayText) => {
                   this.overlayText = overlayText;
                 }}
-              ></div>
+              >
+                {object.overlayText}
+              </div>
             </div>
           </div>
         )}
