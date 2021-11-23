@@ -119,11 +119,17 @@ const generateAssets = async () => {
 	};
 
 	const searchAssetsDocument = JSON.stringify(searchAssetsObject, null, '\t');
-	const result = await writeAssetsFile('searchAssets.json', searchAssetsDocument);
+	return searchAssetsDocument;
+}
 
+/** Executes the work to generate the search assets and write to local file */
+const generateAndWriteAssets = async () => {
+	const searchAssetsDocument = await generateAssets();
+	const result = await writeAssetsFile("searchAssets.json", searchAssetsDocument);
 	return result;
 }
 
 module.exports = {
-	generateAssets
+	generateAssets,
+	generateAndWriteAssets,
 }
