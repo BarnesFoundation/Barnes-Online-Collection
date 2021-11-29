@@ -52,7 +52,7 @@ export class ObjectCard extends Component {
         <div className="object-card__content">
           <img
             className="object-card__content-image"
-            src={object.imageUrlLarge}
+            src={object.imageUrlLarge || object.imageUrlOriginal}
             alt={object.title}
             aria-label={this.imageAria(object)}
             ref={(image) => {
