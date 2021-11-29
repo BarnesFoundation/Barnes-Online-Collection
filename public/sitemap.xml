@@ -32603,4 +32603,16 @@
 <changefreq>weekly</changefreq>
 <priority>0.5</priority>
 </url>
+<url>
+<loc>https://collection.barnesfoundation.org/tour/bloom</loc>
+<lastmod>2021-11-29</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://collection.barnesfoundation.org/eye-spy/dec-2021</loc>
+<lastmod>2021-11-29</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.5</priority>
+</url>
 </urlset>
