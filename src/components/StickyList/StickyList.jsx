@@ -39,18 +39,18 @@ export default class StickyList extends Component {
         </p>
 
         {languages && (
-          <div className="sticky-list__language">
-            <select>
-              {languages.map(lang => (
-                <option 
-                  value={lang} 
-                  onClick={() => handleSelectLanguage(lang)}
-                >
-                  {lang}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select className="sticky-list__language">
+            {languages.map(lang => (
+              <option 
+                key={lang}
+                className="sticky-list__language-option"
+                value={lang} 
+                onClick={() => handleSelectLanguage(lang)}
+              >
+                {lang}
+              </option>
+            ))}
+          </select>
         )}
 
         {sections.map((section) => (
