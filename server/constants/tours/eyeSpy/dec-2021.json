@@ -1,8 +1,8 @@
 {
     "title": "Eye Spy Gallery Scavenger Hunt",
-    "subtitle": "Once you're finished finding all the clues, head back to the table outside the galleries to collect your prize!",
+    "subtitle": "",
     "heroImageId": 6670,
-    "description": "Can you find these faces in our galleries?",
+    "description": "<p>Can you find these faces in our galleries?</p><p>Once you're finished finding all the clues, head back to the table outside the galleries to collect your prize!</p>",
     "body": {
         "from": 0,
         "size": 25,
