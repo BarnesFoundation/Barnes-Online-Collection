@@ -39,6 +39,7 @@ export default class EyeSpyPage extends React.Component {
         const tourData = tourResponse.data;
         const objects = tourData.objects;
         const clues = tourData.clues;
+        const languages = tourData.translations && Object.keys(tourData.translations)
 
         const roomOrder = tourData.customRoomOrder.length
           ? tourData.customRoomOrder
@@ -56,6 +57,9 @@ export default class EyeSpyPage extends React.Component {
           heroImageSrc: parsedObject.imageUrlLarge,
           metaImgUrl: parsedObject.imageUrlSmall,
           sections: sections,
+          selectedLanguage: "English",
+          languages: ["English", ...languages],
+          tourData: tourData,
         });
       } catch (error) {
         console.log(
@@ -68,6 +72,43 @@ export default class EyeSpyPage extends React.Component {
           tourId: id,
         });
       }
+    }
+  }
+
+  // Handles updating the copy based on the selected language
+  handleSelectLanguage(language) {
+    const tourData = this.state.tourData
+    const roomOrder = tourData.customRoomOrder.length
+    ? tourData.customRoomOrder
+    : DEFAULT_ROOM_ORDER;
+    const objects = tourData.objects
+
+
+    if (language === "English") {
+      const sections = formatTourData(roomOrder, objects, tourData.clues)
+
+      this.setState({
+        ...this.state,
+        title: tourData.title,
+        subtitle: tourData.subtitle,
+        description: tourData.description,
+        sections: sections,
+        selectedLanguage: "English",
+      })
+    } else {
+      // Default to English translation if any fields aren't provided
+      const translation = tourData.translations[language]
+      const clues = translation.clues || tourData.clues
+      const sections = formatTourData(roomOrder, objects, clues)
+
+      this.setState({
+        ...this.state,
+        title: translation.title || tourData.title,
+        subtitle: translation.subtitle || tourData.subtitle,
+        description: translation.description || tourData.description,
+        sections: sections,
+        selectedLanguage: language,
+      })
     }
   }
 
@@ -89,7 +130,9 @@ export default class EyeSpyPage extends React.Component {
       subtitle,
       description,
       heroImageSrc,
-      sections
+      sections,
+      languages,
+      selectedLanguage,
     } = this.state;
 
     return (
@@ -106,6 +149,9 @@ export default class EyeSpyPage extends React.Component {
               heroImageSrc={heroImageSrc}
               description={description}
               sections={sections}
+              languages={languages}
+              selectedLanguage={selectedLanguage}
+              handleSelectLanguage={(this.handleSelectLanguage).bind(this)}
             />
           </div>
         ) : (
