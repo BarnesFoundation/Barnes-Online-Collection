@@ -68,5 +68,23 @@
         "A48": "This Egyptian God is making a silly face. You can see he's carved from a Limestone base.",
         "A103": "This vase looks both to the left and the right; have you seen a more fascinating sight?",
         "A147": "This face is surrounded by friends; her pony-tail has a leather band at the end."
+    },
+    "translations": {
+        "Español": {
+            "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
+            "description": "<p>¿Puedes encontrar todas estas caras en nuestras galerías?</p>",
+            "clues": {
+                "BF177": "Encuentra la dama del sombrero en primera fila<br />y la hayarás observando muy tranquila.",
+                "01.13.37": "Esta cara está hecha y pintada en piedra<br />por ser antigua, la información que tenemos es austera.",
+                "BF575": "Vemos una cara sin sus rasgos<br />pero simples líneas también pueden enseñarnos.  ",
+                "BF804": "La cara de esta criatura es feroz y gruñona<br />un alrededor áspero y pedregoso nos proporciona.",
+                "01.04.55": "Parece que esta cara de piedra está hecha<br />al pasar por la puerta, ¡gira a tu derecha!",
+                "BF115": "Este rostro todo en azul está pintado<br />¿crees que él está triste o cansado? ",
+                "BF2084": "Esta cara juega a las escondidas<br />¡entre las ramas echa unas miraditas! ",
+                "A48": "Este dios egipcio hace una cara curiosa<br />labrado sobre una base de piedra reposa.  ",
+                "A103": "Este jarrón puede mirar tanto a la derecha como a la izquierda<br />¡así esta única perspectiva es descubierta! ",
+                "A147": "Rodeada de amigos nos muestra su fineza<br />su cabello está recogido con una cinta sobre su cabeza."
+            }
+        }
     }
 }
