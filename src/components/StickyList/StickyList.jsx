@@ -10,7 +10,10 @@ export default class StickyList extends Component {
       subtitle,
       heroImageSrc,
       description,
-      sections
+      sections,
+      languages,
+      selectedLanguage,
+      handleSelectLanguage
     } = this.props;
 
     return (
@@ -34,6 +37,21 @@ export default class StickyList extends Component {
         <p className="sticky-list__mobile">
           <i>This interactive guide is best viewed on a mobile device.</i>
         </p>
+
+        {languages && (
+          <select className="sticky-list__language">
+            {languages.map(lang => (
+              <option 
+                key={lang}
+                className="sticky-list__language-option"
+                value={lang} 
+                onClick={() => handleSelectLanguage(lang)}
+              >
+                {lang}
+              </option>
+            ))}
+          </select>
+        )}
 
         {sections.map((section) => (
           <StickyListSection

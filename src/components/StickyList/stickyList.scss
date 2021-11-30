@@ -67,4 +67,21 @@
       text-align: center;
     }
   }
+
+  &__language {
+    margin: 0 25px 25px;
+    padding: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    cursor: default;
+    color: #6e6e6e;
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+
+    &-option {
+      cursor: default;
+      white-space: nowrap;
+    }
+  }
 }
