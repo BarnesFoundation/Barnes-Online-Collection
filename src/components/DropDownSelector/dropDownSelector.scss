@@ -1,0 +1,96 @@
+.language-dropdown-overlay {
+    position: fixed;
+    top:0;
+    left: 0;
+    right:0;
+    bottom: 0;
+    z-index: 0;
+    background: #000;
+    opacity: 0.1;
+  }
+  
+  .dd-wrapper {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    position: relative;
+    width: 100%;
+  }
+  
+  .dd-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    line-height: 33px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    cursor: default;
+    position: relative;
+    background-color: #fff;
+    color: #6E6E6E;
+    width: fit-content;
+  }
+  
+  .dd-header span {
+    margin-right: 15px;
+  }
+  
+  .dd-header-title {
+      margin: 4px 6px;
+      margin-left: 16px;
+  }
+  
+  .dd-list {
+    z-index: 99999 !important;
+    position: absolute;
+    left: -2px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 22px;
+    text-align: left;
+    background-color: #fff;
+    padding: 8px 0;
+    max-height: 340px;
+    opacity: 1;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    top: 100%; // this ensures that the dropdown opens upwards.
+    box-shadow: 0px 2px 16px 0px rgba(0,0,0,.2);
+    margin: 0;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+  }
+  
+  .dd-list-item {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0;
+    cursor: default;
+    display: flex;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 35px;
+    font-size: 16px;
+    color: #282828;
+    justify-content: space-between;
+    margin: 0;
+  
+    .select-s {
+      padding: 0 5px 0 19px;
+      width: 80%;
+    }
+  
+    img {
+      padding-right: 10px;
+    }
+  
+  }
+  
