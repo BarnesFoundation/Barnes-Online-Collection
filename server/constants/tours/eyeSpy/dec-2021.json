@@ -72,7 +72,7 @@
     "translations": {
         "Español": {
             "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
-            "description": "<p>¿Puedes encontrar todas estas caras en nuestras galerías?</p>",
+            "description": "<p>¿Puedes encontrar todas estas caras en nuestras galerías?</p><p>¿Encontraste todas las piezas de tu búsqueda? Regresa a la mesa que está al salir de las galerías para recoger tu premio y aprender más sobre las obras que observaste.</p>",
             "clues": {
                 "BF177": "Encuentra la dama del sombrero en primera fila<br />y la hayarás observando muy tranquila.",
                 "01.13.37": "Esta cara está hecha y pintada en piedra<br />por ser antigua, la información que tenemos es austera.",
