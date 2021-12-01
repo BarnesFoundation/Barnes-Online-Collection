@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classnames from "classnames";
 import { StickyListSection } from "../StickyListSection/StickyListSection";
+import DropDownSelector from "../DropDownSelector/DropDownSelector";
 import "./stickyList.css";
 
 export default class StickyList extends Component {
@@ -39,18 +40,14 @@ export default class StickyList extends Component {
         </p>
 
         {languages && (
-          <select className="sticky-list__language">
-            {languages.map(lang => (
-              <option 
-                key={lang}
-                className="sticky-list__language-option"
-                value={lang} 
-                onClick={() => handleSelectLanguage(lang)}
-              >
-                {lang}
-              </option>
-            ))}
-          </select>
+          <div className="sticky-list__language">
+            <DropDownSelector 
+              options={languages}
+              selectedItem={selectedLanguage}
+              handleSelectItem={handleSelectLanguage}
+              id="language-btn"
+            />
+          </div>
         )}
 
         {sections.map((section) => (
