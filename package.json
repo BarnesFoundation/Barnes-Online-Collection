@@ -45,7 +45,6 @@
 		"sshpk": "^1.13.2",
 		"stringstream": "^0.0.6",
 		"symbol-observable": "^1.0.4",
-		"tar": "^2.2.2",
 		"tunnel-agent": "^0.6.0",
 		"universal-analytics": "^0.4.16",
 		"url-parse": "^1.5.2",
