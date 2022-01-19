@@ -1,16 +1,17 @@
 <!doctype html>
-  <!--
+<!--
     Todo: Adding an arbitrary class 'keep-padding' to fix a bug where the header-unlocked styles think that an empty class means something special.
     See src/components-barnes-toolkit/scss/state/_header-unlocked.scss
    -->
 <html lang="en" class="keep-padding has-hero">
-  <head>
-    <!-- Note: most page-specific meta tags are defined with react-helmet. See: src/components/SiteHtmlHelmetHead/index.jsx -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
 
-    <!--
+<head>
+  <!-- Note: most page-specific meta tags are defined with react-helmet. See: src/components/SiteHtmlHelmetHead/index.jsx -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+
+  <!--
       Notice the use of %PUBLIC_URL% in these tags.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -19,371 +20,524 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <link rel="shortcut icon" href="/favicon.ico">
-    <!--
+  <link rel="shortcut icon" href="/favicon.ico">
+  <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="/manifest.json">
 
-    <meta data-react-helmet="true" name="title" content="{{metaTitle}}" />
-    <meta data-react-helmet="true" name="description" content="{{metaDescription}}" />
-    <meta data-react-helmet="true" name="geo.placename" content="{{metaPlacename}}" />
+  <meta data-react-helmet="true" name="title" content="{{metaTitle}}" />
+  <meta data-react-helmet="true" name="description" content="{{metaDescription}}" />
+  <meta data-react-helmet="true" name="geo.placename" content="{{metaPlacename}}" />
 
-    <title data-react-helmet="true">{{metaTitle}}</title>
+  <title data-react-helmet="true">{{metaTitle}}</title>
 
-    <meta data-react-helmet="true" property="og:type" content="website" />
-    <meta data-react-helmet="true" property="og:title" content="{{metaTitle}}" />
-    <meta data-react-helmet="true" property="og:url" content="{{metaCanonical}}" />
-    <meta data-react-helmet="true" property="og:site_name" content="{{metaTitle}}" />
-    <meta data-react-helmet="true" property="og:description" content="{{metaDescription}}" />
-    <meta data-react-helmet="true" property="og:image" content="{{metaImage}}" />
+  <meta data-react-helmet="true" property="og:type" content="website" />
+  <meta data-react-helmet="true" property="og:title" content="{{metaTitle}}" />
+  <meta data-react-helmet="true" property="og:url" content="{{metaCanonical}}" />
+  <meta data-react-helmet="true" property="og:site_name" content="{{metaTitle}}" />
+  <meta data-react-helmet="true" property="og:description" content="{{metaDescription}}" />
+  <meta data-react-helmet="true" property="og:image" content="{{metaImage}}" />
 
-    <link data-react-helmet="true" rel="canonical" href="{{metaCanonical}}" />
+  <link data-react-helmet="true" rel="canonical" href="{{metaCanonical}}" />
 
-    <!-- note: google analytics is done by react-ga plugin in routeWrapper.jsx -->
+  <!-- note: google analytics is done by react-ga plugin in routeWrapper.jsx -->
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-522X585');</script>
-    <!-- End Google Tag Manager -->
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-522X585');</script>
+  <!-- End Google Tag Manager -->
+</head>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-522X585"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
 
-    <div id="a17">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-522X585" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-      <!-- copied from the barnes-website-redesign repo. See frontend/tasks/icons.js -->
-      <div class="svg-sprite">
-        <!--?xml version="1.0" encoding="utf-8"?-->
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <symbol viewBox="0 0 512 512" id='icon-icon-checkmark'>
-            <path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path>
-          </symbol>
-          <symbol viewBox="0 0 24 24" id='icon--icon-information'>
-            <path fill="currentColor" d="M 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 C 18.628906 24 24 18.628906 24 12 C 24 5.371094 18.628906 0 12 0 Z M 12 2 C 17.523438 2 22 6.476563 22 12 C 22 17.523438 17.523438 22 12 22 C 6.476563 22 2 17.523438 2 12 C 2 6.476563 6.476563 2 12 2 Z M 12 5.8125 C 11.816406 5.8125 11.664063 5.808594 11.5 5.84375 C 11.335938 5.878906 11.183594 5.96875 11.0625 6.0625 C 10.941406 6.15625 10.851563 6.285156 10.78125 6.4375 C 10.710938 6.589844 10.6875 6.769531 10.6875 7 C 10.6875 7.226563 10.710938 7.40625 10.78125 7.5625 C 10.851563 7.71875 10.941406 7.84375 11.0625 7.9375 C 11.183594 8.03125 11.335938 8.085938 11.5 8.125 C 11.664063 8.164063 11.816406 8.1875 12 8.1875 C 12.179688 8.1875 12.371094 8.164063 12.53125 8.125 C 12.691406 8.085938 12.816406 8.03125 12.9375 7.9375 C 13.058594 7.84375 13.148438 7.71875 13.21875 7.5625 C 13.289063 7.410156 13.34375 7.226563 13.34375 7 C 13.34375 6.769531 13.289063 6.589844 13.21875 6.4375 C 13.148438 6.285156 13.058594 6.15625 12.9375 6.0625 C 12.816406 5.96875 12.691406 5.878906 12.53125 5.84375 C 12.371094 5.808594 12.179688 5.8125 12 5.8125 Z M 10.78125 9.15625 L 10.78125 18.125 L 13.21875 18.125 L 13.21875 9.15625 Z"></path>
-          </symbol>
-          <symbol viewBox="0 0 27 10" id="icon--icon_arrow-back" xmlns="http://www.w3.org/2000/svg">
-            <path d="M27 4H5V0L0 5l5 5V6h22"></path>
-          </symbol>
-          <symbol viewBox="0 0 10.65 17.77" id="icon--icon_arrow-right" xmlns="http://www.w3.org/2000/svg">
-            <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2.5" d="M.88.88l8 8-8 8"></path>
-          </symbol>
-          <symbol viewBox="0 0 512 512" fill="currentColor" id="icon--icon_arrow_down" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M256 352L96 198.406 141.72 160 256 275.188 370.28 160 416 198.406 256 352z"></path>
-          </symbol>
-          <symbol viewBox="0 0 15 13.7" id="icon--icon_basket" xmlns="http://www.w3.org/2000/svg">
-            <style>
-              .dst0 {
-                fill: currentColor
-              }
-      
-              .dst1 {
-                fill: none;
-                stroke: currentColor;
-                stroke-width: 2;
-                stroke-miterlimit: 10
-              }
-            </style>
-            <path class="dst0" d="M12.4 7.7l-1 4H3.6l-1-4h9.8m2.6-2H0l2 8h11l2-8z"></path>
-            <path class="dst1" d="M12 3.7l-3-3m-3 0l-3 3"></path>
-          </symbol>
-          <symbol viewBox="0 0 12.92 12.92" fill="currentColor" id="icon--icon_close" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M11.73 12.92l-.05-.05-5.22-5.22-5.27 5.27-.05-.05L0 11.73l.05-.05 5.22-5.22L0 1.19 1.19 0l5.27 5.27L11.73 0l1.19 1.19-.05.05-5.22 5.22 5.27 5.27-.05.05z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 16 18" fill="currentColor" id="icon--icon_enlarge" xmlns="http://www.w3.org/2000/svg">
-            <title>Enlarge</title>
-            <path d="M2 15V9H0v8h8v-2M8 1v2h6v6h2V1"></path>
-            <path d="M4.5 11.42l6.012-6.01 1.132 1.132-6.012 6.01z"></path>
-          </symbol>
-          <symbol viewBox="0 0 17 10" fill="currentColor" id="icon--icon_external" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 0H0v10h9V8H2V2h7V0"></path>
-            <path d="M13 1v3H7v2h6v3l4-4"></path>
-          </symbol>
-          <symbol viewBox="0 0 512 512" id="icon--icon_facebook">
-            <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
-          </symbol>
-          <symbol viewBox="0 0 20 20" id="icon--icon_instagram">
-            <path fill="currentColor"
-              d="M10 1.802c2.67 0 2.986.01 4.041.058.975.044 1.504.207 1.857.344.467.181.8.398 1.15.748s.567.683.748 1.15c.137.352.3.882.344 1.857.048 1.055.058 1.371.058 4.041s-.01 2.986-.058 4.041c-.044.975-.207 1.504-.344 1.857-.181.467-.398.8-.748 1.15-.35.35-.683.567-1.15.748-.352.137-.882.3-1.857.344-1.054.048-1.371.058-4.041.058s-2.987-.01-4.041-.058c-.975-.044-1.504-.207-1.857-.344a3.092 3.092 0 0 1-1.15-.748 3.092 3.092 0 0 1-.748-1.15c-.137-.352-.3-.882-.344-1.857-.048-1.055-.058-1.371-.058-4.041s.01-2.986.058-4.041c.044-.975.207-1.504.344-1.857.181-.467.398-.8.748-1.15s.683-.567 1.15-.748c.352-.137.882-.3 1.857-.344C7.014 1.812 7.33 1.802 10 1.802M10 0C7.284 0 6.944.012 5.877.06 4.813.109 4.086.278 3.45.525c-.658.256-1.216.597-1.772 1.153S.781 2.792.525 3.45C.278 4.086.109 4.813.06 5.877.012 6.944 0 7.284 0 10s.012 3.056.06 4.123c.049 1.064.218 1.791.465 2.427.256.658.597 1.215 1.153 1.771s1.114.898 1.771 1.153c.636.247 1.363.416 2.427.465C6.944 19.989 7.284 20 10 20s3.056-.011 4.123-.06c1.064-.049 1.791-.218 2.427-.465.658-.256 1.215-.597 1.771-1.153s.898-1.114 1.153-1.771c.247-.636.416-1.363.465-2.427.049-1.068.061-1.408.061-4.124s-.012-3.056-.06-4.123c-.049-1.064-.218-1.791-.465-2.427-.256-.658-.597-1.215-1.153-1.771S17.208.781 16.551.526C15.915.279 15.188.11 14.124.061 13.056.012 12.716 0 10 0z">
-            </path>
-            <path fill="currentColor"
-              d="M10 4.865a5.135 5.135 0 1 0 0 10.27 5.135 5.135 0 0 0 0-10.27zm0 8.468a3.333 3.333 0 1 1 0-6.665 3.333 3.333 0 0 1 0 6.665z">
-            </path>
-            <circle fill="currentColor" cx="15.338" cy="4.662" r="1.2"></circle>
-          </symbol>
-          <symbol viewBox="0 0 26 26" fill="currentColor" id="icon--icon_menu" xmlns="http://www.w3.org/2000/svg">
-            <path class="jst0" d="M1 4h24v2H1zm0 8h24v2H1zm0 8h24v2H1z"></path>
-          </symbol>
-          <symbol viewBox="0 0 20 20" id="icon--icon_pinterest">
-            <path fill="currentColor"
-              d="M10 0C4.483 0 0 4.476 0 10a9.996 9.996 0 0 0 5.986 9.156c-.027-.693 0-1.534.176-2.296.195-.81 1.289-5.448 1.289-5.448s-.323-.636-.323-1.583c0-1.478.857-2.587 1.924-2.587.917 0 1.348.684 1.348 1.503 0 .914-.583 2.282-.879 3.546-.255 1.065.527 1.929 1.582 1.929 1.896 0 3.165-2.435 3.165-5.319 0-2.189-1.471-3.83-4.161-3.83-3.028 0-4.922 2.261-4.922 4.787 0 .869.253 1.482.664 1.963.175.215.208.304.136.557-.04.184-.157.624-.195.8-.077.253-.274.342-.508.253-1.394-.573-2.051-2.101-2.051-3.82 0-2.84 2.402-6.249 7.149-6.249 3.825 0 6.33 2.765 6.33 5.729 0 3.921-2.174 6.851-5.392 6.851-1.076 0-2.091-.58-2.443-1.242 0 0-.586 2.302-.703 2.746-.215.772-.624 1.543-1.01 2.144A9.93 9.93 0 0 0 10 20c5.517 0 10-4.476 10-10S15.517 0 10 0z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 20 18" id="icon--icon_print" xmlns="http://www.w3.org/2000/svg">
-            <title>BF_LOGO_medium_screen</title>
-            <path d="M16 10H4v8h12v-8zm-2 6H6v-4h8v4z"></path>
-            <path
-              d="M18 6H2C.9 6 0 6.9 0 8v5c0 1.1.9 2 2 2h1v-2H2V8h16v5h-1v2h1c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM14 0H4v4h2V2h8v2h2V0z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 22 22" fill="currentColor" id="icon--icon_search" xmlns="http://www.w3.org/2000/svg">
-            <title>Search</title>
-            <path
-              d="M21.1 19.9l-5.09-5.093A8.399 8.399 0 0 0 9.5 1.1c-4.64 0-8.4 3.76-8.4 8.4a8.399 8.399 0 0 0 13.707 6.51L19.9 21.1l1.2-1.2zM2.706 9.5c0-3.747 3.048-6.795 6.795-6.795s6.795 3.048 6.795 6.795-3.048 6.795-6.795 6.795S2.705 13.247 2.705 9.5z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 20 18" fill="currentColor" id="icon--icon_share" xmlns="http://www.w3.org/2000/svg">
-            <title>Share</title>
-            <path
-              d="M14.4 12c-.7 0-1.4.3-1.8.9L8 10.1v-.6c0-.4-.1-.8-.3-1.2l5-3.2c.4.4 1 .7 1.7.7 1.3 0 2.4-1.1 2.4-2.4S15.7 1 14.4 1C13.1 1 12 2.1 12 3.4c0 .3.1.6.2.9L7.1 7.5c-.4-.3-1-.5-1.6-.5C4.1 7 3 8.1 3 9.5S4.1 12 5.5 12c.8 0 1.6-.4 2-1l4.6 2.8c-.1.2-.1.4-.1.6 0 1.3 1.1 2.4 2.4 2.4s2.4-1.1 2.4-2.4-1.1-2.4-2.4-2.4z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 21 20" id="icon--icon_twitter">
-            <path fill="currentColor"
-              d="M21 3.249a8.403 8.403 0 0 1-2.473.705 4.46 4.46 0 0 0 1.892-2.476 8.452 8.452 0 0 1-2.738 1.088 4.227 4.227 0 0 0-3.143-1.41c-2.376 0-4.306 1.998-4.306 4.467 0 .345.035.687.112 1.012C6.76 6.446 3.586 4.674 1.46 1.973a4.566 4.566 0 0 0-.585 2.245c0 1.551.764 2.909 1.919 3.715a4.183 4.183 0 0 1-1.952-.558v.04c0 2.181 1.484 3.983 3.454 4.391a4.088 4.088 0 0 1-1.134.157 4.32 4.32 0 0 1-.807-.075c.549 1.774 2.138 3.063 4.023 3.097a8.46 8.46 0 0 1-6.379 1.848 11.877 11.877 0 0 0 6.604 2.007c7.923 0 12.256-6.803 12.256-12.703 0-.19-.003-.387-.009-.577A8.974 8.974 0 0 0 21 3.249z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 23 16" id="icon--icon_youtube">
-            <path fill="currentColor"
-              d="M22.77 3.452s-.225-1.568-.914-2.258C20.981.288 20.001.283 19.551.23 16.332 0 11.504 0 11.504 0h-.01S6.666 0 3.447.23c-.45.053-1.43.058-2.305.964-.69.69-.914 2.258-.914 2.258S.008 5.232 0 7.041v1.912c.008 1.809.229 3.589.229 3.589s.224 1.568.914 2.258c.875.906 2.024.877 2.536.972 1.687.16 8.14.227 8.14.227 1.115-.006 5-.041 7.732-.236.45-.053 1.43-.057 2.305-.964.69-.69.914-2.258.914-2.258s.23-1.84.23-3.681V7.134c0-1.841-.23-3.682-.23-3.682zM8.999 12.001v-8l7 4-7 4z">
-            </path>
-          </symbol>
-          <symbol viewBox="0 0 164.958 50" id="icon--logo-l" xmlns="http://www.w3.org/2000/svg">
-            <title>Barnes</title>
-            <path
-              d="M16.876 20.374c0-1.625-1.125-2-2.875-2h-3v4.5h4.25a2.7 2.7 0 0 0 1.626-2.5zM14.75 27H11v4.627h3.375c2.124 0 3.126-.875 3.126-2.376 0-1.625-1-2.25-2.75-2.25z">
-            </path>
-            <path
-              d="M0 5v41h26V5zm15.876 31H5V14h10.376c4.5 0 7.126 2.124 7.126 5.624a5.337 5.337 0 0 1-3 4.626 5.33 5.33 0 0 1 3.626 5.5c-.002 3.5-2.753 6.25-7.252 6.25zM59 0v14h9.3c4.18.234 7.377 2.08 7.377 6.382a6.977 6.977 0 0 1-3.812 6.393L77 36h-6.067l-3.99-7.5H64.01V36H59l.158 14H106V0zm42 36h-5l-8-13v13h-6V14h6l8 13V14h5z">
-            </path>
-            <path
-              d="M70.142 21.364c0-2.09-.984-2.826-3.2-2.826h-2.934v5.778h4.166a3.248 3.248 0 0 0 1.968-2.952zM33 10v11.105L35.38 14h6.365L48.8 36h-5.84l-1.168-3.993L34.59 32l-1.583 4.333V40H52V10H33">
-            </path>
-            <path d="M35.8 28h4.843l-2.39-8.234L35.8 28M113 10l.15 4H126v4h-8v5h7v4h-7v5h9v4h-14v4l18-.103V10h-18"></path>
-            <g>
-              <path
-                d="M147.954 29.725c0-1.353-.615-1.782-2.83-2.458l-2.456-.737A8.023 8.023 0 0 1 139 24.473v6.136a13.808 13.808 0 0 0 5.265 1.082c2.828 0 3.69-.738 3.69-1.967z">
-              </path>
-              <path
-                d="M139 5v11.382c1.533-1.557 4.155-2.4 7.478-2.4A13.164 13.164 0 0 1 152 15.314v4.208h-.236a13.06 13.06 0 0 0-5.532-1.108c-1.722 0-3.2.492-3.2 1.722s.77 1.6 1.6 1.844l2.46.737c2.825.86 6.392 1.844 6.392 6.763 0 4.057-3.073 6.64-9.22 6.64a15.572 15.572 0 0 1-5.266-.99V46h25.958V5z">
-              </path>
-            </g>
-          </symbol>
-          <symbol viewBox="0 0 146 45" id="icon--logo-m" xmlns="http://www.w3.org/2000/svg">
-            <title>Barnes</title>
-            <path
-              d="M15.446 18.777c0-1.444-1-1.777-2.556-1.777H10v4h4a2.4 2.4 0 0 0 1.446-2.223zM13.46 24H10v4h3.134c1.836 0 2.7-.757 2.7-2.054C15.837 24.542 14.97 24 13.46 24z">
-            </path>
-            <path
-              d="M0 4v36h23V4zm14.393 28H5V13h8.96c3.887 0 6.156 1.835 6.156 4.857a4.61 4.61 0 0 1-2.593 4 4.6 4.6 0 0 1 3.13 4.743c0 3.025-2.374 5.4-6.26 5.4zM52 0v13h8.356c3.823 0 6.745 1.62 6.745 5.4a6.1 6.1 0 0 1-3.484 5.613L68 31.676V32h-5.4l-3.353-6H57v6h-5v13h41V0zm37 32h-4.935L77 20.934V32h-5V13h4.935L84 24.2V13h5z">
-            </path>
-            <path
-              d="M62 19.446c0-1.81-.85-2.446-2.765-2.446H57v5h3.3a2.81 2.81 0 0 0 1.7-2.554zM31.596 25h4.345l-2.144-7.387-2.2 7.387">
-            </path>
-            <path
-              d="M30 9v8.64L31.53 13h5.628L43 31.682V32h-4.885l-.903-3H30.84L30 31.79V35h16V9H30M100 9v4h12v4h-7v3h6v4h-6v4h8v4h-13v3h16V9h-16">
-            </path>
-            <g>
-              <path
-                d="M130.277 26.526c0-1.2-.5-1.575-2.3-2.172l-2-.65A6.4 6.4 0 0 1 123 21.885v5.42a10.457 10.457 0 0 0 4.278.958c2.3 0 3-.65 3-1.738z">
-              </path>
-              <path
-                d="M123 4v11.227c1.272-1.375 3.448-2.116 6.205-2.116a9.934 9.934 0 0 1 4.795 1.3V18h-.408a10.274 10.274 0 0 0-4.592-.98c-1.43 0-2.653.436-2.653 1.522a1.554 1.554 0 0 0 1.327 1.63l2.04.65c2.346.76 5.3 1.63 5.3 5.976 0 3.585-2.55 5.866-7.65 5.866A12.23 12.23 0 0 1 123 31.79V40h23V4z">
-              </path>
-            </g>
-          </symbol>
-          <symbol viewBox="0 0 121 37" id="icon--logo-s" xmlns="http://www.w3.org/2000/svg">
-            <title>Barnes</title>
-            <path
-              d="M12.084 15.333c0-1.083-.75-1.333-1.917-1.333H8v3h3a1.8 1.8 0 0 0 1.084-1.667zM10.594 20H8v3h2.35c1.378 0 2.028-.568 2.028-1.54 0-1.054-.65-1.46-1.784-1.46z">
-            </path>
-            <path
-              d="M0 4v29h19V4zm11.91 22H4V10h7.546c3.272 0 5.183 1.545 5.183 4.09a3.882 3.882 0 0 1-2.184 3.364 3.877 3.877 0 0 1 2.637 4c0 2.546-2 4.546-5.273 4.546zM44 0v10h6.79c3.105 0 5.522 1.63 5.522 4.813a4.8 4.8 0 0 1-2.754 4.633L58.125 26h-5.117l-3.023-5H47v5h-3v11h34V0zm30 26h-4.348L64 16.682V26h-4V10h4.348L70 19.43V10h4z">
-            </path>
-            <path
-              d="M52.042 15.446c0-1.383-.858-2.446-2.79-2.446H47v5h3.07c1.185 0 1.972-1.25 1.972-2.554zM26.308 21h3.617l-1.786-6.15L26.307 21">
-            </path>
-            <path
-              d="M25 8v6.863L26.294 11h4.763L36 26.555V27h-4.28l-.77-3h-5.432L25 26.2V30h13V8H25M83 8v3h10v3h-6v3h5v3h-5v4h6v3H83v3h13V8H83">
-            </path>
-            <g>
-              <path
-                d="M108.06 22.086c0-1-.417-1.31-1.916-1.808l-1.662-.542c-.815-.27-1.773-.678-1.482-1.513v4.514c-.106.45 1.324.8 2.562.8 1.914-.003 2.497-.546 2.497-1.45z">
-              </path>
-              <path
-                d="M103 4v8.69a6.712 6.712 0 0 1 5.077-1.76A8.02 8.02 0 0 1 112 12.014V15h-.334a8.284 8.284 0 0 0-3.756-.815c-1.17 0-2.17.362-2.17 1.267a1.288 1.288 0 0 0 1.084 1.357l1.67.54c1.918.634 4.34 1.358 4.34 4.976 0 2.985-2.086 4.884-6.26 4.884a9.855 9.855 0 0 1-3.574-.728V33h18V4z">
-              </path>
-            </g>
-          </symbol>
-          <symbol viewBox="0 0 200 62" fill="currentColor" id="icon--logo-xl" xmlns="http://www.w3.org/2000/svg">
-            <title>Barnes</title>
-            <path
-              d="M19.083 25.583c0-1.805-.526-2.583-2.47-2.583H12v5h5a2.38 2.38 0 0 0 2.083-2.417zM17.188 33H12v6h4.7c2.754 0 4.053-1.135 4.053-3.08.002-2.108-1.297-2.92-3.565-2.92z">
-            </path>
-            <path
-              d="M0 6v50h32V6zm17.853 38H6V18h11.262c5.317 0 8.422 2.51 8.422 6.647a6.308 6.308 0 0 1-3.548 5.467c2.07.737 4.285 2.512 4.285 6.5 0 4.135-3.25 7.386-8.567 7.386zM72 0v18h10.967c5.017 0 8.852 2.217 8.852 7.387a8.384 8.384 0 0 1-4.575 7.68L93 43.558V44h-7.488l-4.535-9H78v9h-6v18h56V0zm51 44h-7.11L106 28.858V44h-7V18h7.11L116 33.326V18h7z">
-            </path>
-            <path
-              d="M85 26.424C85 23.892 83.81 23 81.13 23H78v7h4.618A3.935 3.935 0 0 0 85 26.424zM43.35 34h5.96l-2.942-10.134L43.348 34">
-            </path>
-            <path
-              d="M41 13v11.366L43.118 18h7.794L59 43.632V44h-6.765l-1.25-4H42.16L41 43.718V49h22V13H41M137 13v5h17v5h-10v5h9v5h-9v6h11v5h-18v5h22V13h-22">
-            </path>
-            <g>
-              <path
-                d="M178.853 36.394c0-1.64-.745-2.16-3.43-2.98l-2.978-.893A9.725 9.725 0 0 1 168 30.028v7.438a16.737 16.737 0 0 0 6.38 1.313c3.43 0 4.473-.894 4.473-2.384z">
-              </path>
-              <path
-                d="M168 6v14.2c1.85-1.887 5.015-2.9 9.026-2.9 2.078 0 5.49.746 6.974 1.79V24h-.594c-1.484-.9-4.6-1.343-6.677-1.343s-3.86.6-3.86 2.087.928 1.94 1.93 2.235l2.967.893c3.41 1.043 7.716 2.235 7.716 8.2 0 4.918-3.71 8.048-11.13 8.048a18.724 18.724 0 0 1-6.354-1.2V56h32V6z">
-              </path>
-            </g>
-          </symbol>
-          <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-          <symbol aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" role="img" xmlns="http://www.w3.org/2000/svg" id='icon--caret-left' viewBox="0 0 192 512"><path fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path></symbol>
-          <symbol aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" role="img" xmlns="http://www.w3.org/2000/svg" id='icon--caret-right' viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></symbol>
-        </svg>
-      </div>
+  <div id="a17">
 
-      <!-- icons that are extraneous to the styleguide have been bundled by icomoon -->
-      <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <defs>
+    <!-- copied from the barnes-website-redesign repo. See frontend/tasks/icons.js -->
+    <div class="svg-sprite">
+      <!--?xml version="1.0" encoding="utf-8"?-->
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <symbol viewBox="0 0 512 512" id='icon-icon-checkmark'>
+          <path fill="currentColor"
+            d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 24 24" id='icon--icon-information'>
+          <path fill="currentColor"
+            d="M 12 0 C 5.371094 0 0 5.371094 0 12 C 0 18.628906 5.371094 24 12 24 C 18.628906 24 24 18.628906 24 12 C 24 5.371094 18.628906 0 12 0 Z M 12 2 C 17.523438 2 22 6.476563 22 12 C 22 17.523438 17.523438 22 12 22 C 6.476563 22 2 17.523438 2 12 C 2 6.476563 6.476563 2 12 2 Z M 12 5.8125 C 11.816406 5.8125 11.664063 5.808594 11.5 5.84375 C 11.335938 5.878906 11.183594 5.96875 11.0625 6.0625 C 10.941406 6.15625 10.851563 6.285156 10.78125 6.4375 C 10.710938 6.589844 10.6875 6.769531 10.6875 7 C 10.6875 7.226563 10.710938 7.40625 10.78125 7.5625 C 10.851563 7.71875 10.941406 7.84375 11.0625 7.9375 C 11.183594 8.03125 11.335938 8.085938 11.5 8.125 C 11.664063 8.164063 11.816406 8.1875 12 8.1875 C 12.179688 8.1875 12.371094 8.164063 12.53125 8.125 C 12.691406 8.085938 12.816406 8.03125 12.9375 7.9375 C 13.058594 7.84375 13.148438 7.71875 13.21875 7.5625 C 13.289063 7.410156 13.34375 7.226563 13.34375 7 C 13.34375 6.769531 13.289063 6.589844 13.21875 6.4375 C 13.148438 6.285156 13.058594 6.15625 12.9375 6.0625 C 12.816406 5.96875 12.691406 5.878906 12.53125 5.84375 C 12.371094 5.808594 12.179688 5.8125 12 5.8125 Z M 10.78125 9.15625 L 10.78125 18.125 L 13.21875 18.125 L 13.21875 9.15625 Z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 27 10" id="icon--icon_arrow-back" xmlns="http://www.w3.org/2000/svg">
+          <path d="M27 4H5V0L0 5l5 5V6h22"></path>
+        </symbol>
+        <symbol viewBox="0 0 10.65 17.77" id="icon--icon_arrow-right" xmlns="http://www.w3.org/2000/svg">
+          <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2.5" d="M.88.88l8 8-8 8"></path>
+        </symbol>
+        <symbol viewBox="0 0 512 512" fill="currentColor" id="icon--icon_arrow_down" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M256 352L96 198.406 141.72 160 256 275.188 370.28 160 416 198.406 256 352z"></path>
+        </symbol>
+        <symbol viewBox="0 0 15 13.7" id="icon--icon_basket" xmlns="http://www.w3.org/2000/svg">
+          <style>
+            .dst0 {
+              fill: currentColor
+            }
+
+            .dst1 {
+              fill: none;
+              stroke: currentColor;
+              stroke-width: 2;
+              stroke-miterlimit: 10
+            }
+          </style>
+          <path class="dst0" d="M12.4 7.7l-1 4H3.6l-1-4h9.8m2.6-2H0l2 8h11l2-8z"></path>
+          <path class="dst1" d="M12 3.7l-3-3m-3 0l-3 3"></path>
+        </symbol>
+        <symbol viewBox="0 0 12.92 12.92" fill="currentColor" id="icon--icon_close" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M11.73 12.92l-.05-.05-5.22-5.22-5.27 5.27-.05-.05L0 11.73l.05-.05 5.22-5.22L0 1.19 1.19 0l5.27 5.27L11.73 0l1.19 1.19-.05.05-5.22 5.22 5.27 5.27-.05.05z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 16 18" fill="currentColor" id="icon--icon_enlarge" xmlns="http://www.w3.org/2000/svg">
+          <title>Enlarge</title>
+          <path d="M2 15V9H0v8h8v-2M8 1v2h6v6h2V1"></path>
+          <path d="M4.5 11.42l6.012-6.01 1.132 1.132-6.012 6.01z"></path>
+        </symbol>
+        <symbol viewBox="0 0 17 10" fill="currentColor" id="icon--icon_external" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 0H0v10h9V8H2V2h7V0"></path>
+          <path d="M13 1v3H7v2h6v3l4-4"></path>
+        </symbol>
+        <symbol viewBox="0 0 512 512" id="icon--icon_facebook">
+          <path fill="currentColor"
+            d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 20 20" id="icon--icon_instagram">
+          <path fill="currentColor"
+            d="M10 1.802c2.67 0 2.986.01 4.041.058.975.044 1.504.207 1.857.344.467.181.8.398 1.15.748s.567.683.748 1.15c.137.352.3.882.344 1.857.048 1.055.058 1.371.058 4.041s-.01 2.986-.058 4.041c-.044.975-.207 1.504-.344 1.857-.181.467-.398.8-.748 1.15-.35.35-.683.567-1.15.748-.352.137-.882.3-1.857.344-1.054.048-1.371.058-4.041.058s-2.987-.01-4.041-.058c-.975-.044-1.504-.207-1.857-.344a3.092 3.092 0 0 1-1.15-.748 3.092 3.092 0 0 1-.748-1.15c-.137-.352-.3-.882-.344-1.857-.048-1.055-.058-1.371-.058-4.041s.01-2.986.058-4.041c.044-.975.207-1.504.344-1.857.181-.467.398-.8.748-1.15s.683-.567 1.15-.748c.352-.137.882-.3 1.857-.344C7.014 1.812 7.33 1.802 10 1.802M10 0C7.284 0 6.944.012 5.877.06 4.813.109 4.086.278 3.45.525c-.658.256-1.216.597-1.772 1.153S.781 2.792.525 3.45C.278 4.086.109 4.813.06 5.877.012 6.944 0 7.284 0 10s.012 3.056.06 4.123c.049 1.064.218 1.791.465 2.427.256.658.597 1.215 1.153 1.771s1.114.898 1.771 1.153c.636.247 1.363.416 2.427.465C6.944 19.989 7.284 20 10 20s3.056-.011 4.123-.06c1.064-.049 1.791-.218 2.427-.465.658-.256 1.215-.597 1.771-1.153s.898-1.114 1.153-1.771c.247-.636.416-1.363.465-2.427.049-1.068.061-1.408.061-4.124s-.012-3.056-.06-4.123c-.049-1.064-.218-1.791-.465-2.427-.256-.658-.597-1.215-1.153-1.771S17.208.781 16.551.526C15.915.279 15.188.11 14.124.061 13.056.012 12.716 0 10 0z">
+          </path>
+          <path fill="currentColor"
+            d="M10 4.865a5.135 5.135 0 1 0 0 10.27 5.135 5.135 0 0 0 0-10.27zm0 8.468a3.333 3.333 0 1 1 0-6.665 3.333 3.333 0 0 1 0 6.665z">
+          </path>
+          <circle fill="currentColor" cx="15.338" cy="4.662" r="1.2"></circle>
+        </symbol>
+        <symbol viewBox="0 0 26 26" fill="currentColor" id="icon--icon_menu" xmlns="http://www.w3.org/2000/svg">
+          <path class="jst0" d="M1 4h24v2H1zm0 8h24v2H1zm0 8h24v2H1z"></path>
+        </symbol>
+        <symbol viewBox="0 0 20 20" id="icon--icon_pinterest">
+          <path fill="currentColor"
+            d="M10 0C4.483 0 0 4.476 0 10a9.996 9.996 0 0 0 5.986 9.156c-.027-.693 0-1.534.176-2.296.195-.81 1.289-5.448 1.289-5.448s-.323-.636-.323-1.583c0-1.478.857-2.587 1.924-2.587.917 0 1.348.684 1.348 1.503 0 .914-.583 2.282-.879 3.546-.255 1.065.527 1.929 1.582 1.929 1.896 0 3.165-2.435 3.165-5.319 0-2.189-1.471-3.83-4.161-3.83-3.028 0-4.922 2.261-4.922 4.787 0 .869.253 1.482.664 1.963.175.215.208.304.136.557-.04.184-.157.624-.195.8-.077.253-.274.342-.508.253-1.394-.573-2.051-2.101-2.051-3.82 0-2.84 2.402-6.249 7.149-6.249 3.825 0 6.33 2.765 6.33 5.729 0 3.921-2.174 6.851-5.392 6.851-1.076 0-2.091-.58-2.443-1.242 0 0-.586 2.302-.703 2.746-.215.772-.624 1.543-1.01 2.144A9.93 9.93 0 0 0 10 20c5.517 0 10-4.476 10-10S15.517 0 10 0z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 20 18" id="icon--icon_print" xmlns="http://www.w3.org/2000/svg">
+          <title>BF_LOGO_medium_screen</title>
+          <path d="M16 10H4v8h12v-8zm-2 6H6v-4h8v4z"></path>
+          <path
+            d="M18 6H2C.9 6 0 6.9 0 8v5c0 1.1.9 2 2 2h1v-2H2V8h16v5h-1v2h1c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM14 0H4v4h2V2h8v2h2V0z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 22 22" fill="currentColor" id="icon--icon_search" xmlns="http://www.w3.org/2000/svg">
+          <title>Search</title>
+          <path
+            d="M21.1 19.9l-5.09-5.093A8.399 8.399 0 0 0 9.5 1.1c-4.64 0-8.4 3.76-8.4 8.4a8.399 8.399 0 0 0 13.707 6.51L19.9 21.1l1.2-1.2zM2.706 9.5c0-3.747 3.048-6.795 6.795-6.795s6.795 3.048 6.795 6.795-3.048 6.795-6.795 6.795S2.705 13.247 2.705 9.5z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 20 18" fill="currentColor" id="icon--icon_share" xmlns="http://www.w3.org/2000/svg">
+          <title>Share</title>
+          <path
+            d="M14.4 12c-.7 0-1.4.3-1.8.9L8 10.1v-.6c0-.4-.1-.8-.3-1.2l5-3.2c.4.4 1 .7 1.7.7 1.3 0 2.4-1.1 2.4-2.4S15.7 1 14.4 1C13.1 1 12 2.1 12 3.4c0 .3.1.6.2.9L7.1 7.5c-.4-.3-1-.5-1.6-.5C4.1 7 3 8.1 3 9.5S4.1 12 5.5 12c.8 0 1.6-.4 2-1l4.6 2.8c-.1.2-.1.4-.1.6 0 1.3 1.1 2.4 2.4 2.4s2.4-1.1 2.4-2.4-1.1-2.4-2.4-2.4z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 21 20" id="icon--icon_twitter">
+          <path fill="currentColor"
+            d="M21 3.249a8.403 8.403 0 0 1-2.473.705 4.46 4.46 0 0 0 1.892-2.476 8.452 8.452 0 0 1-2.738 1.088 4.227 4.227 0 0 0-3.143-1.41c-2.376 0-4.306 1.998-4.306 4.467 0 .345.035.687.112 1.012C6.76 6.446 3.586 4.674 1.46 1.973a4.566 4.566 0 0 0-.585 2.245c0 1.551.764 2.909 1.919 3.715a4.183 4.183 0 0 1-1.952-.558v.04c0 2.181 1.484 3.983 3.454 4.391a4.088 4.088 0 0 1-1.134.157 4.32 4.32 0 0 1-.807-.075c.549 1.774 2.138 3.063 4.023 3.097a8.46 8.46 0 0 1-6.379 1.848 11.877 11.877 0 0 0 6.604 2.007c7.923 0 12.256-6.803 12.256-12.703 0-.19-.003-.387-.009-.577A8.974 8.974 0 0 0 21 3.249z">
+          </path>
+        </symbol>
+        <symbol viewBox="0 0 23 16" id="icon--icon_youtube">
+          <path fill="currentColor"
+            d="M22.77 3.452s-.225-1.568-.914-2.258C20.981.288 20.001.283 19.551.23 16.332 0 11.504 0 11.504 0h-.01S6.666 0 3.447.23c-.45.053-1.43.058-2.305.964-.69.69-.914 2.258-.914 2.258S.008 5.232 0 7.041v1.912c.008 1.809.229 3.589.229 3.589s.224 1.568.914 2.258c.875.906 2.024.877 2.536.972 1.687.16 8.14.227 8.14.227 1.115-.006 5-.041 7.732-.236.45-.053 1.43-.057 2.305-.964.69-.69.914-2.258.914-2.258s.23-1.84.23-3.681V7.134c0-1.841-.23-3.682-.23-3.682zM8.999 12.001v-8l7 4-7 4z">
+          </path>
+        </symbol>
+        <!-- Barnes Logos -->
+        <!-- Large Logo -->
+        <symbol viewBox="0 0 164.958 50" id="icon--logo-l" xmlns="http://www.w3.org/2000/svg">
+          <title>Barnes</title>
+          <path
+            d="M16.876 20.374c0-1.625-1.125-2-2.875-2h-3v4.5h4.25a2.7 2.7 0 0 0 1.626-2.5zM14.75 27H11v4.627h3.375c2.124 0 3.126-.875 3.126-2.376 0-1.625-1-2.25-2.75-2.25z">
+          </path>
+          <path
+            d="M0 5v41h26V5zm15.876 31H5V14h10.376c4.5 0 7.126 2.124 7.126 5.624a5.337 5.337 0 0 1-3 4.626 5.33 5.33 0 0 1 3.626 5.5c-.002 3.5-2.753 6.25-7.252 6.25zM59 0v14h9.3c4.18.234 7.377 2.08 7.377 6.382a6.977 6.977 0 0 1-3.812 6.393L77 36h-6.067l-3.99-7.5H64.01V36H59l.158 14H106V0zm42 36h-5l-8-13v13h-6V14h6l8 13V14h5z">
+          </path>
+          <path
+            d="M70.142 21.364c0-2.09-.984-2.826-3.2-2.826h-2.934v5.778h4.166a3.248 3.248 0 0 0 1.968-2.952zM33 10v11.105L35.38 14h6.365L48.8 36h-5.84l-1.168-3.993L34.59 32l-1.583 4.333V40H52V10H33">
+          </path>
+          <path d="M35.8 28h4.843l-2.39-8.234L35.8 28M113 10l.15 4H126v4h-8v5h7v4h-7v5h9v4h-14v4l18-.103V10h-18"></path>
+          <g>
+            <path
+              d="M147.954 29.725c0-1.353-.615-1.782-2.83-2.458l-2.456-.737A8.023 8.023 0 0 1 139 24.473v6.136a13.808 13.808 0 0 0 5.265 1.082c2.828 0 3.69-.738 3.69-1.967z">
+            </path>
+            <path
+              d="M139 5v11.382c1.533-1.557 4.155-2.4 7.478-2.4A13.164 13.164 0 0 1 152 15.314v4.208h-.236a13.06 13.06 0 0 0-5.532-1.108c-1.722 0-3.2.492-3.2 1.722s.77 1.6 1.6 1.844l2.46.737c2.825.86 6.392 1.844 6.392 6.763 0 4.057-3.073 6.64-9.22 6.64a15.572 15.572 0 0 1-5.266-.99V46h25.958V5z">
+            </path>
+          </g>
+        </symbol>
+        <!-- Medium Logo -->
+        <symbol viewBox="0 0 146 45" id="icon--logo-m" xmlns="http://www.w3.org/2000/svg">
+          <title>Barnes</title>
+          <path
+            d="M15.446 18.777c0-1.444-1-1.777-2.556-1.777H10v4h4a2.4 2.4 0 0 0 1.446-2.223zM13.46 24H10v4h3.134c1.836 0 2.7-.757 2.7-2.054C15.837 24.542 14.97 24 13.46 24z">
+          </path>
+          <path
+            d="M0 4v36h23V4zm14.393 28H5V13h8.96c3.887 0 6.156 1.835 6.156 4.857a4.61 4.61 0 0 1-2.593 4 4.6 4.6 0 0 1 3.13 4.743c0 3.025-2.374 5.4-6.26 5.4zM52 0v13h8.356c3.823 0 6.745 1.62 6.745 5.4a6.1 6.1 0 0 1-3.484 5.613L68 31.676V32h-5.4l-3.353-6H57v6h-5v13h41V0zm37 32h-4.935L77 20.934V32h-5V13h4.935L84 24.2V13h5z">
+          </path>
+          <path
+            d="M62 19.446c0-1.81-.85-2.446-2.765-2.446H57v5h3.3a2.81 2.81 0 0 0 1.7-2.554zM31.596 25h4.345l-2.144-7.387-2.2 7.387">
+          </path>
+          <path
+            d="M30 9v8.64L31.53 13h5.628L43 31.682V32h-4.885l-.903-3H30.84L30 31.79V35h16V9H30M100 9v4h12v4h-7v3h6v4h-6v4h8v4h-13v3h16V9h-16">
+          </path>
+          <g>
+            <path
+              d="M130.277 26.526c0-1.2-.5-1.575-2.3-2.172l-2-.65A6.4 6.4 0 0 1 123 21.885v5.42a10.457 10.457 0 0 0 4.278.958c2.3 0 3-.65 3-1.738z">
+            </path>
+            <path
+              d="M123 4v11.227c1.272-1.375 3.448-2.116 6.205-2.116a9.934 9.934 0 0 1 4.795 1.3V18h-.408a10.274 10.274 0 0 0-4.592-.98c-1.43 0-2.653.436-2.653 1.522a1.554 1.554 0 0 0 1.327 1.63l2.04.65c2.346.76 5.3 1.63 5.3 5.976 0 3.585-2.55 5.866-7.65 5.866A12.23 12.23 0 0 1 123 31.79V40h23V4z">
+            </path>
+          </g>
+        </symbol>
+        <!-- Small Logo -->
+        <symbol viewBox="0 0 121 37" id="icon--logo-s" xmlns="http://www.w3.org/2000/svg">
+          <title>Barnes</title>
+          <path
+            d="M12.084 15.333c0-1.083-.75-1.333-1.917-1.333H8v3h3a1.8 1.8 0 0 0 1.084-1.667zM10.594 20H8v3h2.35c1.378 0 2.028-.568 2.028-1.54 0-1.054-.65-1.46-1.784-1.46z">
+          </path>
+          <path
+            d="M0 4v29h19V4zm11.91 22H4V10h7.546c3.272 0 5.183 1.545 5.183 4.09a3.882 3.882 0 0 1-2.184 3.364 3.877 3.877 0 0 1 2.637 4c0 2.546-2 4.546-5.273 4.546zM44 0v10h6.79c3.105 0 5.522 1.63 5.522 4.813a4.8 4.8 0 0 1-2.754 4.633L58.125 26h-5.117l-3.023-5H47v5h-3v11h34V0zm30 26h-4.348L64 16.682V26h-4V10h4.348L70 19.43V10h4z">
+          </path>
+          <path
+            d="M52.042 15.446c0-1.383-.858-2.446-2.79-2.446H47v5h3.07c1.185 0 1.972-1.25 1.972-2.554zM26.308 21h3.617l-1.786-6.15L26.307 21">
+          </path>
+          <path
+            d="M25 8v6.863L26.294 11h4.763L36 26.555V27h-4.28l-.77-3h-5.432L25 26.2V30h13V8H25M83 8v3h10v3h-6v3h5v3h-5v4h6v3H83v3h13V8H83">
+          </path>
+          <g>
+            <path
+              d="M108.06 22.086c0-1-.417-1.31-1.916-1.808l-1.662-.542c-.815-.27-1.773-.678-1.482-1.513v4.514c-.106.45 1.324.8 2.562.8 1.914-.003 2.497-.546 2.497-1.45z">
+            </path>
+            <path
+              d="M103 4v8.69a6.712 6.712 0 0 1 5.077-1.76A8.02 8.02 0 0 1 112 12.014V15h-.334a8.284 8.284 0 0 0-3.756-.815c-1.17 0-2.17.362-2.17 1.267a1.288 1.288 0 0 0 1.084 1.357l1.67.54c1.918.634 4.34 1.358 4.34 4.976 0 2.985-2.086 4.884-6.26 4.884a9.855 9.855 0 0 1-3.574-.728V33h18V4z">
+            </path>
+          </g>
+        </symbol>
+        <!-- Extra Large Logo -->
+        <symbol viewBox="0 0 200 62" fill="currentColor" id="icon--logo-xl" xmlns="http://www.w3.org/2000/svg">
+          <title>Barnes</title>
+          <path
+            d="M19.083 25.583c0-1.805-.526-2.583-2.47-2.583H12v5h5a2.38 2.38 0 0 0 2.083-2.417zM17.188 33H12v6h4.7c2.754 0 4.053-1.135 4.053-3.08.002-2.108-1.297-2.92-3.565-2.92z">
+          </path>
+          <path
+            d="M0 6v50h32V6zm17.853 38H6V18h11.262c5.317 0 8.422 2.51 8.422 6.647a6.308 6.308 0 0 1-3.548 5.467c2.07.737 4.285 2.512 4.285 6.5 0 4.135-3.25 7.386-8.567 7.386zM72 0v18h10.967c5.017 0 8.852 2.217 8.852 7.387a8.384 8.384 0 0 1-4.575 7.68L93 43.558V44h-7.488l-4.535-9H78v9h-6v18h56V0zm51 44h-7.11L106 28.858V44h-7V18h7.11L116 33.326V18h7z">
+          </path>
+          <path
+            d="M85 26.424C85 23.892 83.81 23 81.13 23H78v7h4.618A3.935 3.935 0 0 0 85 26.424zM43.35 34h5.96l-2.942-10.134L43.348 34">
+          </path>
+          <path
+            d="M41 13v11.366L43.118 18h7.794L59 43.632V44h-6.765l-1.25-4H42.16L41 43.718V49h22V13H41M137 13v5h17v5h-10v5h9v5h-9v6h11v5h-18v5h22V13h-22">
+          </path>
+          <g>
+            <path
+              d="M178.853 36.394c0-1.64-.745-2.16-3.43-2.98l-2.978-.893A9.725 9.725 0 0 1 168 30.028v7.438a16.737 16.737 0 0 0 6.38 1.313c3.43 0 4.473-.894 4.473-2.384z">
+            </path>
+            <path
+              d="M168 6v14.2c1.85-1.887 5.015-2.9 9.026-2.9 2.078 0 5.49.746 6.974 1.79V24h-.594c-1.484-.9-4.6-1.343-6.677-1.343s-3.86.6-3.86 2.087.928 1.94 1.93 2.235l2.967.893c3.41 1.043 7.716 2.235 7.716 8.2 0 4.918-3.71 8.048-11.13 8.048a18.724 18.724 0 0 1-6.354-1.2V56h32V6z">
+            </path>
+          </g>
+        </symbol>
+        <!-- Centennial Logo -->
+        <symbol id="icon--logo-100" fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 308.87 148.77"
+          style="enable-background:new 0 0 308.87 148.77;" xml:space="preserve">
+          <title>Barnes</title>
+
+          <path d="M55.1,34.42c0-2.44-1.69-3-4.32-3H45.9v6.76h6.75C54.53,37.43,55.1,35.55,55.1,34.42z" />
+          <path d="M51.9,44.36h-6v6.95h5.44c3.18,0,4.69-1.32,4.69-3.57C56.03,45.31,54.53,44.36,51.9,44.36z" />
+          <path d="M68.66,10.18H28.88v62.63h39.78V10.18z M53.6,57.87H37.27V24.86h15.58c6.75,0,10.69,3.19,10.69,8.44
+              c0,3.01-2.06,5.82-4.5,6.95c2.62,0.93,5.44,3.19,5.44,8.25C64.48,53.75,60.35,57.87,53.6,57.87z" />
+          <polygon points="80.04,32.87 82.75,24.86 92.68,24.86 103,57.12 103,57.87 94.37,57.87 92.78,52.43 81.52,52.43 80.04,57.49 
+              80.04,64.01 107.64,64.01 107.64,18.98 80.04,18.98 	" />
+          <polygon points="83.45,46.06 90.95,46.06 87.25,33.3 	" />
+          <path d="M135.79,35.74c0-3.19-1.5-4.31-4.88-4.31h-3.94v8.82h5.82C134.86,39.3,135.79,37.43,135.79,35.74z" />
+          <path
+            d="M190.1,2.68h-71.07v22.18h13.94c6.38,0,11.25,2.81,11.25,9.38c0,4.31-2.06,7.69-5.82,9.75l7.31,13.33v0.56h-8.82l-6-11.25
+              h-3.94v11.25h-7.94v22.44h71.07V2.68z M183.39,57.87h-8.63l-12.19-19.22v19.22h-8.63V24.86h8.63l12.19,19.46V24.86h8.63V57.87z" />
+          <polygon
+            points="201.48,24.86 223.34,24.86 223.34,31.42 209.65,31.42 209.65,37.43 221.47,37.43 221.47,44.18 209.65,44.18 
+              209.65,51.31 223.71,51.31 223.71,57.87 201.48,57.87 201.48,64.01 228.96,64.01 228.96,18.98 201.48,18.98 	" />
+          <path d="M253.98,48.47c0-2.06-0.94-2.72-4.32-3.74l-3.75-1.13c-1.84-0.56-4-1.41-5.59-3.14v9.36c2.02,0.94,5.24,1.65,8.03,1.65
+              C252.66,51.48,253.98,50.35,253.98,48.47z" />
+          <path d="M240.32,28.12c2.34-2.38,6.34-3.66,11.41-3.66c2.62,0,6.94,0.94,8.81,2.26v6.19h-0.75c-1.88-1.13-5.81-1.69-8.44-1.69
+              c-2.62,0-4.88,0.75-4.88,2.63c0,1.88,1.17,2.43,2.44,2.82l3.75,1.12c4.32,1.32,9.76,2.81,9.76,10.32c0,6.19-4.69,10.13-14.07,10.13
+              c-2.26,0-5.68-0.53-8.03-1.5v16.07h40.03V10.16h-40.03V28.12z" />
+          <path d="M286.08,125.66v-2.63h-1.85v16.43h1.85v-11.47c0.78-2.11,2.37-3.55,4.37-3.55c0.59,0,1.07,0.11,1.52,0.3v-1.81
+              c-0.37-0.11-0.81-0.22-1.44-0.22C288.48,122.7,286.82,124.03,286.08,125.66z" />
+          <path d="M55.28,122.7c-4.48,0-7.25,3.66-7.25,8.55c0,5.11,2.96,8.55,7.29,8.55c3.44,0,5.73-2.07,6.36-5.11H59.9
+              c-0.52,2.18-2.26,3.48-4.59,3.48c-3.18,0-5.44-2.59-5.48-6.77h12.1v-0.67C61.94,126.07,59.64,122.7,55.28,122.7z M49.91,129.95
+              c0.37-3.44,2.41-5.62,5.37-5.62c3.26,0,4.7,2.74,4.81,5.62H49.91z" />
+          <rect x="42.1" y="115.41" width="1.85" height="24.05" />
+          <polygon points="240.79,128.03 233.61,116.74 231.54,116.74 239.79,129.77 239.79,139.46 241.68,139.46 241.68,129.77 
+              249.97,116.74 247.93,116.74 	" />
+          <path d="M212.74,116.41c-5.03,0-8.36,4.77-8.36,11.69c0,6.92,3.33,11.69,8.36,11.69c5,0,8.33-4.77,8.33-11.69
+              C221.07,121.18,217.74,116.41,212.74,116.41z M212.74,138.06c-4.03,0-6.47-4.11-6.47-9.95c0-5.85,2.44-9.95,6.47-9.95
+              c4.03,0,6.48,4.11,6.48,9.95C219.22,133.95,216.78,138.06,212.74,138.06z" />
+          <path d="M12.84,118.19c3.33,0,5.59,1.85,6.55,4.74h1.85c-0.93-3.92-4-6.51-8.4-6.51c-5.59,0-9.99,4.51-9.99,11.69
+              c0,7.18,4.4,11.69,9.99,11.69c4.37,0,7.47-2.59,8.4-6.51h-1.85c-0.96,2.89-3.22,4.74-6.55,4.74c-4.7,0-8.07-3.85-8.07-9.92
+              C4.77,122,8.14,118.19,12.84,118.19z" />
+          <path d="M301.91,130.66l-2.92-0.81c-1.96-0.55-2.96-1.11-2.96-2.66c0-1.92,1.74-2.89,3.77-2.89c2.33,0,3.66,0.96,4.29,2.89h1.81
+              c-0.59-2.74-2.7-4.48-6.11-4.48c-3.03,0-5.55,1.7-5.55,4.55c0,2.37,1.55,3.51,3.89,4.14l3.07,0.85c2.07,0.59,3.03,1.52,3.03,2.92
+              c0,2.07-1.78,3.03-4,3.03c-2.26,0-3.92-1-4.59-3h-1.85c0.52,2.89,3.11,4.59,6.4,4.59c3.33,0,5.81-1.7,5.81-4.66
+              C306.02,132.99,304.72,131.4,301.91,130.66z" />
+          <path d="M257.29,122.7c-4.48,0-7.25,3.66-7.25,8.55c0,5.11,2.96,8.55,7.29,8.55c3.44,0,5.73-2.07,6.36-5.11h-1.78
+              c-0.52,2.18-2.26,3.48-4.59,3.48c-3.18,0-5.44-2.59-5.48-6.77h12.1v-0.67C263.95,126.07,261.66,122.7,257.29,122.7z M251.93,129.95
+              c0.37-3.44,2.4-5.62,5.36-5.62c3.26,0,4.7,2.74,4.81,5.62H251.93z" />
+          <path d="M31.41,122.7c-4.48,0-7.25,3.66-7.25,8.55c0,5.11,2.96,8.55,7.29,8.55c3.44,0,5.73-2.07,6.36-5.11h-1.78
+              c-0.52,2.18-2.26,3.48-4.59,3.48c-3.18,0-5.44-2.59-5.48-6.77h12.1v-0.67C38.07,126.07,35.78,122.7,31.41,122.7z M26.05,129.95
+              c0.37-3.44,2.4-5.62,5.36-5.62c3.26,0,4.7,2.74,4.81,5.62H26.05z" />
+          <path d="M136.41,122.7c-2.33,0-4.26,1.41-5.25,2.96v-2.63h-1.85v16.43h1.85v-11.51c0.81-1.96,2.66-3.55,4.92-3.55
+              c2.92,0,4.22,1.89,4.22,4.44v10.62h1.81v-10.88C142.11,125.11,140.15,122.7,136.41,122.7z" />
+          <path d="M192.91,116.41c-5.03,0-8.36,4.77-8.36,11.69c0,6.92,3.33,11.69,8.36,11.69c4.99,0,8.33-4.77,8.33-11.69
+              C201.24,121.18,197.91,116.41,192.91,116.41z M192.91,138.06c-4.03,0-6.47-4.11-6.47-9.95c0-5.85,2.44-9.95,6.47-9.95
+              c4.03,0,6.48,4.11,6.48,9.95C199.39,133.95,196.95,138.06,192.91,138.06z" />
+          <polygon
+            points="171.93,120.07 171.93,122.04 177.89,118.96 177.89,139.46 179.74,139.46 179.74,116.71 178.59,116.71 	" />
+          <path d="M72.92,122.7c-2.26,0-4.18,1.37-5.11,2.78v-10.06H66v24.05h1.81v-2.44c0.92,1.41,2.85,2.77,5.11,2.77
+              c4.85,0,7.18-4,7.18-8.55C80.1,126.7,77.77,122.7,72.92,122.7z M72.78,138.09c-2,0-3.85-1.15-4.96-3.26v-7.18
+              c1.11-2.11,2.96-3.26,4.96-3.26c3.44,0,5.48,2.89,5.48,6.84S76.22,138.09,72.78,138.09z" />
+          <path d="M158.13,125.44c-0.92-1.41-2.81-2.74-5.07-2.74c-4.77,0-7.07,3.96-7.07,8.33c0,4.4,2.29,8.33,7.07,8.33
+              c2.26,0,4.14-1.3,5.07-2.7v1.74c0,4-1.81,6.11-5.07,6.11c-2.52,0-4.33-1.11-4.88-3.4h-1.85c0.59,3.11,2.96,4.99,6.73,4.99
+              c4.11,0,6.92-2.63,6.92-7.81v-15.24h-1.85V125.44z M158.13,134.5c-1.07,2.04-2.89,3.18-4.88,3.18c-3.4,0-5.4-2.74-5.4-6.66
+              c0-3.89,2-6.62,5.4-6.62c2,0,3.81,1.15,4.88,3.18V134.5z" />
+          <circle cx="123.13" cy="118.04" r="1.26" />
+          <path d="M86.02,125.66v-2.63h-1.85v16.43h1.85v-11.47c0.78-2.11,2.37-3.55,4.37-3.55c0.59,0,1.07,0.11,1.52,0.3v-1.81
+              c-0.37-0.11-0.81-0.22-1.44-0.22C88.43,122.7,86.76,124.03,86.02,125.66z" />
+          <rect x="122.21" y="123.03" width="1.85" height="16.43" />
+          <path d="M100.3,122.7c-2.89,0-5.18,1.66-5.81,4.44h1.81c0.63-1.92,1.96-2.81,4-2.81c2.63,0,4.11,1.67,4.11,4.11v2.92
+              c-0.74-0.81-2.55-1.74-4.48-1.74c-3.4,0-6.14,2-6.14,5.03c0,3.15,2.74,5.07,6.07,5.07c2.03,0,3.85-0.96,4.55-1.81v1.55h1.78v-11.1
+              C106.19,124.92,103.97,122.7,100.3,122.7z M104.41,135.73c-0.52,1.41-2.37,2.44-4.37,2.44c-2.33,0-4.51-1.18-4.51-3.52
+              s2.18-3.48,4.51-3.48c2,0,3.85,1.04,4.37,2.44V135.73z" />
+          <path
+            d="M113.77,135.47v-10.84h4.26v-1.59h-4.26v-4.22h-1.81v4.22h-2.78v1.59h2.78v11.03c0,2.81,1.59,4.14,4,4.14
+              c0.89,0,1.81-0.22,2.44-0.55v-1.74c-0.63,0.37-1.44,0.63-2.26,0.63C114.59,138.13,113.77,137.32,113.77,135.47z" />
+          <path d="M273.27,122.7c-2.89,0-5.18,1.66-5.81,4.44h1.81c0.63-1.92,1.96-2.81,4-2.81c2.63,0,4.11,1.67,4.11,4.11v2.92
+              c-0.74-0.81-2.55-1.74-4.48-1.74c-3.4,0-6.14,2-6.14,5.03c0,3.15,2.74,5.07,6.07,5.07c2.03,0,3.85-0.96,4.55-1.81v1.55h1.78v-11.1
+              C279.16,124.92,276.94,122.7,273.27,122.7z M277.38,135.73c-0.52,1.41-2.37,2.44-4.37,2.44c-2.33,0-4.51-1.18-4.51-3.52
+              s2.18-3.48,4.51-3.48c2,0,3.85,1.04,4.37,2.44V135.73z" />
+        </symbol>
+        <!-- End Barnes Logos -->
+        <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+        <symbol aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" role="img"
+          xmlns="http://www.w3.org/2000/svg" id='icon--caret-left' viewBox="0 0 192 512">
+          <path fill="currentColor"
+            d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z">
+          </path>
+        </symbol>
+        <symbol aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" role="img"
+          xmlns="http://www.w3.org/2000/svg" id='icon--caret-right' viewBox="0 0 192 512">
+          <path fill="currentColor"
+            d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z">
+          </path>
+        </symbol>
+      </svg>
+    </div>
+
+    <!-- icons that are extraneous to the styleguide have been bundled by icomoon -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
         <symbol id="icon-cross_page" viewBox="0 0 32 32">
-        <title>cross_page</title>
-        <path d="M31.838 2.622l-2.46-2.46-13.378 13.378-13.378-13.378-2.46 2.46 13.378 13.378-13.378 13.378 2.46 2.46 13.378-13.378 13.378 13.378 2.46-2.46-13.378-13.378 13.378-13.378z"></path>
+          <title>cross_page</title>
+          <path
+            d="M31.838 2.622l-2.46-2.46-13.378 13.378-13.378-13.378-2.46 2.46 13.378 13.378-13.378 13.378 2.46 2.46 13.378-13.378 13.378 13.378 2.46-2.46-13.378-13.378 13.378-13.378z">
+          </path>
         </symbol>
         <symbol id="icon-cross_tag" viewBox="0 0 32 32">
-        <title>cross_tag</title>
-        <path d="M33.133 2.333l-3.466-3.466-13.667 13.67-13.667-13.67-3.466 3.466 13.67 13.667-13.67 13.667 3.466 3.466 13.667-13.67 13.667 13.67 3.466-3.466-13.67-13.667 13.67-13.667z"></path>
+          <title>cross_tag</title>
+          <path
+            d="M33.133 2.333l-3.466-3.466-13.667 13.67-13.667-13.67-3.466 3.466 13.67 13.667-13.67 13.667 3.466 3.466 13.667-13.67 13.667 13.67 3.466-3.466-13.67-13.667 13.67-13.667z">
+          </path>
         </symbol>
         <symbol id="icon-filters" viewBox="0 0 32 32">
-        <title>filters</title>
-        <path d="M16.414 7.619c-0.692-2.571-3.002-4.433-5.748-4.433s-5.056 1.862-5.738 4.391l-0.010 0.042h-4.919v3.048h4.919c0.693 2.57 3.003 4.43 5.747 4.43s5.054-1.86 5.737-4.388l0.010-0.042h15.587v-3.048zM10.667 12.369c-1.782 0-3.226-1.444-3.226-3.226s1.444-3.226 3.226-3.226c1.782 0 3.226 1.444 3.226 3.226v0c-0.002 1.781-1.445 3.224-3.226 3.226h-0z"></path>
-        <path d="M21.333 18.412c-2.747 0.005-5.057 1.871-5.738 4.403l-0.010 0.042h-15.586v3.048h15.586c0.693 2.57 3.003 4.43 5.747 4.43s5.054-1.86 5.737-4.388l0.010-0.042h4.92v-3.048h-4.919c-0.691-2.574-3.001-4.439-5.747-4.445h-0.001zM21.333 27.605c-1.782 0-3.226-1.444-3.226-3.226s1.444-3.226 3.226-3.226c1.782 0 3.226 1.444 3.226 3.226 0 0.001 0 0.001 0 0.002v-0c-0.002 1.781-1.445 3.224-3.226 3.226h-0z"></path>
+          <title>filters</title>
+          <path
+            d="M16.414 7.619c-0.692-2.571-3.002-4.433-5.748-4.433s-5.056 1.862-5.738 4.391l-0.010 0.042h-4.919v3.048h4.919c0.693 2.57 3.003 4.43 5.747 4.43s5.054-1.86 5.737-4.388l0.010-0.042h15.587v-3.048zM10.667 12.369c-1.782 0-3.226-1.444-3.226-3.226s1.444-3.226 3.226-3.226c1.782 0 3.226 1.444 3.226 3.226v0c-0.002 1.781-1.445 3.224-3.226 3.226h-0z">
+          </path>
+          <path
+            d="M21.333 18.412c-2.747 0.005-5.057 1.871-5.738 4.403l-0.010 0.042h-15.586v3.048h15.586c0.693 2.57 3.003 4.43 5.747 4.43s5.054-1.86 5.737-4.388l0.010-0.042h4.92v-3.048h-4.919c-0.691-2.574-3.001-4.439-5.747-4.445h-0.001zM21.333 27.605c-1.782 0-3.226-1.444-3.226-3.226s1.444-3.226 3.226-3.226c1.782 0 3.226 1.444 3.226 3.226 0 0.001 0 0.001 0 0.002v-0c-0.002 1.781-1.445 3.224-3.226 3.226h-0z">
+          </path>
         </symbol>
         <symbol id="icon-menu" viewBox="0 0 32 32">
-        <title>menu</title>
-        <path d="M0 4h32v2.667h-32v-2.667z"></path>
-        <path d="M0 14.667h32v2.667h-32v-2.667z"></path>
-        <path d="M0 25.333h32v2.667h-32v-2.667z"></path>
+          <title>menu</title>
+          <path d="M0 4h32v2.667h-32v-2.667z"></path>
+          <path d="M0 14.667h32v2.667h-32v-2.667z"></path>
+          <path d="M0 25.333h32v2.667h-32v-2.667z"></path>
         </symbol>
         <symbol id="icon-share_it" viewBox="0 0 32 32">
-        <title>share_it</title>
-        <path d="M12.052 16.974c0 2.776-2.25 5.026-5.026 5.026s-5.026-2.25-5.026-5.026c0-2.776 2.25-5.026 5.026-5.026s5.026 2.25 5.026 5.026z"></path>
-        <path d="M29.612 4.806c0 2.654-2.152 4.806-4.806 4.806s-4.806-2.152-4.806-4.806c0-2.654 2.152-4.806 4.806-4.806s4.806 2.152 4.806 4.806z"></path>
-        <path d="M29.612 26.806c0 2.654-2.152 4.806-4.806 4.806s-4.806-2.152-4.806-4.806c0-2.654 2.152-4.806 4.806-4.806s4.806 2.152 4.806 4.806z"></path>
-        <path d="M22.482 26.854l-17.368-10.536 17.344-11.158 1.084 1.68-14.656 9.43 14.632 8.876-1.036 1.708z"></path>
+          <title>share_it</title>
+          <path
+            d="M12.052 16.974c0 2.776-2.25 5.026-5.026 5.026s-5.026-2.25-5.026-5.026c0-2.776 2.25-5.026 5.026-5.026s5.026 2.25 5.026 5.026z">
+          </path>
+          <path
+            d="M29.612 4.806c0 2.654-2.152 4.806-4.806 4.806s-4.806-2.152-4.806-4.806c0-2.654 2.152-4.806 4.806-4.806s4.806 2.152 4.806 4.806z">
+          </path>
+          <path
+            d="M29.612 26.806c0 2.654-2.152 4.806-4.806 4.806s-4.806-2.152-4.806-4.806c0-2.654 2.152-4.806 4.806-4.806s4.806 2.152 4.806 4.806z">
+          </path>
+          <path d="M22.482 26.854l-17.368-10.536 17.344-11.158 1.084 1.68-14.656 9.43 14.632 8.876-1.036 1.708z"></path>
         </symbol>
         <symbol id="icon-zoom-in" viewBox="0 0 32 32">
-        <title>zoom-in</title>
-        <path d="M32 13.714h-13.714v-13.714h-4.571v13.714h-13.714v4.571h13.714v13.714h4.571v-13.714h13.714v-4.571z"></path>
+          <title>zoom-in</title>
+          <path d="M32 13.714h-13.714v-13.714h-4.571v13.714h-13.714v4.571h13.714v13.714h4.571v-13.714h13.714v-4.571z">
+          </path>
         </symbol>
         <symbol id="icon-zoom-out" viewBox="0 0 32 32">
-        <title>zoom-out</title>
-        <path d="M0 13.714h32v4.571h-32v-4.571z"></path>
+          <title>zoom-out</title>
+          <path d="M0 13.714h32v4.571h-32v-4.571z"></path>
         </symbol>
         <symbol id="icon-line_curvy" viewBox="0 0 32 32">
-        <title>line_curvy</title>
-        <path d="M32 20.745c-3.353 0-5.076-2.132-6.452-3.844s-2.332-2.776-4.217-2.776-2.83 1.055-4.216 2.775-3.101 3.846-6.453 3.846-5.069-2.132-6.449-3.846-2.329-2.775-4.213-2.775v-2.869c3.352 0 5.069 2.132 6.449 3.846s2.329 2.775 4.213 2.775 2.83-1.055 4.217-2.776 3.098-3.844 6.452-3.844 5.076 2.132 6.453 3.846 2.332 2.775 4.216 2.775z"></path>
+          <title>line_curvy</title>
+          <path
+            d="M32 20.745c-3.353 0-5.076-2.132-6.452-3.844s-2.332-2.776-4.217-2.776-2.83 1.055-4.216 2.775-3.101 3.846-6.453 3.846-5.069-2.132-6.449-3.846-2.329-2.775-4.213-2.775v-2.869c3.352 0 5.069 2.132 6.449 3.846s2.329 2.775 4.213 2.775 2.83-1.055 4.217-2.776 3.098-3.844 6.452-3.844 5.076 2.132 6.453 3.846 2.332 2.775 4.216 2.775z">
+          </path>
         </symbol>
         <symbol id="icon-line_diagonal" viewBox="0 0 32 32">
-        <title>line_diagonal</title>
-        <path d="M0.185 28.985l28.802-28.798 2.828 2.829-28.802 28.798-2.828-2.829z"></path>
+          <title>line_diagonal</title>
+          <path d="M0.185 28.985l28.802-28.798 2.828 2.829-28.802 28.798-2.828-2.829z"></path>
         </symbol>
         <symbol id="icon-line_horizontal" viewBox="0 0 32 32">
-        <title>line_horizontal</title>
-        <path d="M0 14.154h32v3.692h-32v-3.692z"></path>
+          <title>line_horizontal</title>
+          <path d="M0 14.154h32v3.692h-32v-3.692z"></path>
         </symbol>
         <symbol id="icon-lines_alltypes" viewBox="0 0 32 32">
-        <title>lines_alltypes</title>
-        <path d="M0 9.333h32v4h-32v-4z"></path>
-        <path d="M0 18.667h13.333v4h-13.333v-4z"></path>
-        <path d="M18.667 18.667h13.333v4h-13.333v-4z"></path>
+          <title>lines_alltypes</title>
+          <path d="M0 9.333h32v4h-32v-4z"></path>
+          <path d="M0 18.667h13.333v4h-13.333v-4z"></path>
+          <path d="M18.667 18.667h13.333v4h-13.333v-4z"></path>
         </symbol>
         <symbol id="icon-lines_broken" viewBox="0 0 32 32">
-        <title>lines_broken</title>
-        <path d="M0 18.667h13.333v4h-13.333v-4z"></path>
-        <path d="M18.667 18.667h13.333v4h-13.333v-4z"></path>
-        <path d="M0 9.333h13.333v4h-13.333v-4z"></path>
-        <path d="M18.667 9.333h13.333v4h-13.333v-4z"></path>
+          <title>lines_broken</title>
+          <path d="M0 18.667h13.333v4h-13.333v-4z"></path>
+          <path d="M18.667 18.667h13.333v4h-13.333v-4z"></path>
+          <path d="M0 9.333h13.333v4h-13.333v-4z"></path>
+          <path d="M18.667 9.333h13.333v4h-13.333v-4z"></path>
         </symbol>
         <symbol id="icon-lines_unbroken" viewBox="0 0 32 32">
-        <title>lines_unbroken</title>
-        <path d="M0 18.667h32v4h-32v-4z"></path>
-        <path d="M0 9.333h32v4h-32v-4z"></path>
+          <title>lines_unbroken</title>
+          <path d="M0 18.667h32v4h-32v-4z"></path>
+          <path d="M0 9.333h32v4h-32v-4z"></path>
         </symbol>
         <symbol id="icon-search" viewBox="0 0 32 32">
-        <title>search</title>
-        <path d="M32 30.080l-7.785-7.785c1.905-2.318 3.060-5.315 3.060-8.582 0-7.49-6.072-13.562-13.562-13.562s-13.562 6.072-13.562 13.562c0 7.49 6.072 13.562 13.562 13.562 3.267 0 6.264-1.155 8.605-3.079l-0.024 0.019 7.785 7.785zM2.59 13.714c0-6.144 4.98-11.124 11.124-11.124s11.124 4.98 11.124 11.124c0 6.144-4.98 11.124-11.124 11.124v0c-6.141-0.007-11.117-4.983-11.124-11.123v-0.001z"></path>
+          <title>search</title>
+          <path
+            d="M32 30.080l-7.785-7.785c1.905-2.318 3.060-5.315 3.060-8.582 0-7.49-6.072-13.562-13.562-13.562s-13.562 6.072-13.562 13.562c0 7.49 6.072 13.562 13.562 13.562 3.267 0 6.264-1.155 8.605-3.079l-0.024 0.019 7.785 7.785zM2.59 13.714c0-6.144 4.98-11.124 11.124-11.124s11.124 4.98 11.124 11.124c0 6.144-4.98 11.124-11.124 11.124v0c-6.141-0.007-11.117-4.983-11.124-11.123v-0.001z">
+          </path>
         </symbol>
         <symbol id="icon-shuffle" viewBox="0 0 32 32">
-        <title>shuffle</title>
-        <path d="M30.545 8.727l-5.818-5.091v3.636h-4.42c-0.003 0-0.007 0-0.011 0-1.372 0-2.595 0.636-3.39 1.629l-0.007 0.009-9.891 12.364c-0.267 0.333-0.673 0.544-1.129 0.544-0.001 0-0.003 0-0.004 0h-5.875v2.909h5.875c0.003 0 0.007 0 0.011 0 1.372 0 2.595-0.636 3.39-1.629l0.007-0.009 9.891-12.364c0.267-0.333 0.674-0.544 1.129-0.544 0.001 0 0.003 0 0.004 0h4.42v3.636z"></path>
-        <path d="M5.875 7.273h-5.875v2.909h5.875c0.001 0 0.002 0 0.004 0 0.457 0 0.865 0.212 1.13 0.544l0.002 0.003 2.82 3.526 1.863-2.327-2.412-3.017c-0.802-1.002-2.025-1.638-3.397-1.638-0.004 0-0.008 0-0.012 0h0.001z"></path>
-        <path d="M30.545 23.273l-5.818-5.091v3.636h-4.42c-0.001 0-0.002 0-0.004 0-0.457 0-0.865-0.212-1.13-0.544l-0.002-0.003-2.82-3.526-1.863 2.327 2.412 3.014c0.802 1.003 2.026 1.641 3.399 1.641 0.003 0 0.006 0 0.009 0h4.42v3.636z"></path>
+          <title>shuffle</title>
+          <path
+            d="M30.545 8.727l-5.818-5.091v3.636h-4.42c-0.003 0-0.007 0-0.011 0-1.372 0-2.595 0.636-3.39 1.629l-0.007 0.009-9.891 12.364c-0.267 0.333-0.673 0.544-1.129 0.544-0.001 0-0.003 0-0.004 0h-5.875v2.909h5.875c0.003 0 0.007 0 0.011 0 1.372 0 2.595-0.636 3.39-1.629l0.007-0.009 9.891-12.364c0.267-0.333 0.674-0.544 1.129-0.544 0.001 0 0.003 0 0.004 0h4.42v3.636z">
+          </path>
+          <path
+            d="M5.875 7.273h-5.875v2.909h5.875c0.001 0 0.002 0 0.004 0 0.457 0 0.865 0.212 1.13 0.544l0.002 0.003 2.82 3.526 1.863-2.327-2.412-3.017c-0.802-1.002-2.025-1.638-3.397-1.638-0.004 0-0.008 0-0.012 0h0.001z">
+          </path>
+          <path
+            d="M30.545 23.273l-5.818-5.091v3.636h-4.42c-0.001 0-0.002 0-0.004 0-0.457 0-0.865-0.212-1.13-0.544l-0.002-0.003-2.82-3.526-1.863 2.327 2.412 3.014c0.802 1.003 2.026 1.641 3.399 1.641 0.003 0 0.006 0 0.009 0h4.42v3.636z">
+          </path>
         </symbol>
         <symbol id="icon-line_vertical" viewBox="0 0 32 32">
-        <title>line_vertical</title>
-        <path d="M14 0h4v32h-4v-32z"></path>
+          <title>line_vertical</title>
+          <path d="M14 0h4v32h-4v-32z"></path>
         </symbol>
         <symbol id="icon-tool_colors" viewBox="0 0 32 32">
-        <title>tool_colors</title>
-        <path d="M0.571 14.857h6.857v2.286h-6.857v-2.286z"></path>
-        <path d="M24.571 14.857h6.857v2.286h-6.857v-2.286z"></path>
-        <path d="M14.857 24.571h2.286v6.857h-2.286v-6.857z"></path>
-        <path d="M14.857 0.571h2.286v6.857h-2.286v-6.857z"></path>
-        <path d="M4.688 6.303l1.616-1.616 4.514 4.514-1.616 1.616-4.514-4.514z"></path>
-        <path d="M21.184 22.8l1.616-1.616 4.514 4.514-1.616 1.616-4.514-4.514z"></path>
-        <path d="M4.686 25.697l4.514-4.514 1.616 1.616-4.514 4.514-1.616-1.616z"></path>
-        <path d="M21.184 9.201l4.514-4.514 1.616 1.616-4.514 4.514-1.616-1.616z"></path>
-        <path d="M16 7.639c0 0 0.001 0 0.001 0 4.618 0 8.362 3.744 8.362 8.362s-3.744 8.362-8.362 8.362c-4.618 0-8.362-3.744-8.362-8.362 0-0 0-0.001 0-0.001v0c0.006-4.615 3.746-8.355 8.361-8.361h0.001zM16 5.81c-5.628 0-10.191 4.563-10.191 10.191s4.563 10.191 10.191 10.191c5.628 0 10.191-4.563 10.191-10.191 0-0 0-0.001 0-0.001v0c-0.001-5.628-4.563-10.19-10.191-10.19v0z"></path>
-        <path d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z"></path>
+          <title>tool_colors</title>
+          <path d="M0.571 14.857h6.857v2.286h-6.857v-2.286z"></path>
+          <path d="M24.571 14.857h6.857v2.286h-6.857v-2.286z"></path>
+          <path d="M14.857 24.571h2.286v6.857h-2.286v-6.857z"></path>
+          <path d="M14.857 0.571h2.286v6.857h-2.286v-6.857z"></path>
+          <path d="M4.688 6.303l1.616-1.616 4.514 4.514-1.616 1.616-4.514-4.514z"></path>
+          <path d="M21.184 22.8l1.616-1.616 4.514 4.514-1.616 1.616-4.514-4.514z"></path>
+          <path d="M4.686 25.697l4.514-4.514 1.616 1.616-4.514 4.514-1.616-1.616z"></path>
+          <path d="M21.184 9.201l4.514-4.514 1.616 1.616-4.514 4.514-1.616-1.616z"></path>
+          <path
+            d="M16 7.639c0 0 0.001 0 0.001 0 4.618 0 8.362 3.744 8.362 8.362s-3.744 8.362-8.362 8.362c-4.618 0-8.362-3.744-8.362-8.362 0-0 0-0.001 0-0.001v0c0.006-4.615 3.746-8.355 8.361-8.361h0.001zM16 5.81c-5.628 0-10.191 4.563-10.191 10.191s4.563 10.191 10.191 10.191c5.628 0 10.191-4.563 10.191-10.191 0-0 0-0.001 0-0.001v0c-0.001-5.628-4.563-10.19-10.191-10.19v0z">
+          </path>
+          <path
+            d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z">
+          </path>
         </symbol>
         <symbol id="icon-tool_lights_1" viewBox="0 0 32 32">
-        <title>tool_lights_1</title>
-        <path d="M16 2.844c7.266 0 13.156 5.89 13.156 13.156s-5.89 13.156-13.156 13.156c-7.266 0-13.156-5.89-13.156-13.156v0c0.008-7.262 5.893-13.147 13.155-13.156h0.001zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16v0c0-8.837-7.163-16-16-16v0z"></path>
-        <path d="M16 7.111c4.909 0 8.889 3.98 8.889 8.889s-3.98 8.889-8.889 8.889v0z"></path>
+          <title>tool_lights_1</title>
+          <path
+            d="M16 2.844c7.266 0 13.156 5.89 13.156 13.156s-5.89 13.156-13.156 13.156c-7.266 0-13.156-5.89-13.156-13.156v0c0.008-7.262 5.893-13.147 13.155-13.156h0.001zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16v0c0-8.837-7.163-16-16-16v0z">
+          </path>
+          <path d="M16 7.111c4.909 0 8.889 3.98 8.889 8.889s-3.98 8.889-8.889 8.889v0z"></path>
         </symbol>
         <symbol id="icon-tool_lights" viewBox="0 0 32 32">
-        <title>tool_lights</title>
-        <path d="M16 5.714c5.681 0 10.286 4.605 10.286 10.286s-4.605 10.286-10.286 10.286v0z"></path>
-        <path d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z"></path>
+          <title>tool_lights</title>
+          <path d="M16 5.714c5.681 0 10.286 4.605 10.286 10.286s-4.605 10.286-10.286 10.286v0z"></path>
+          <path
+            d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z">
+          </path>
         </symbol>
         <symbol id="icon-tool_lines" viewBox="0 0 32 32">
-        <title>tool_lines</title>
-        <path d="M1.143 14.857h29.714v2.286h-29.714v-2.286z"></path>
-        <path d="M12.906 12.571h-11.763l1.143-2.286h10.621c10.266 0 13.583-4.082 13.616-4.123l1.821 1.381c-0.154 0.206-3.904 5.029-15.437 5.029z"></path>
-        <path d="M26.514 25.829c-0.025-0.032-3.342-4.114-13.608-4.114h-10.621l-1.143-2.286h11.763c11.533 0 15.283 4.823 15.437 5.029z"></path>
-        <path d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z"></path>
+          <title>tool_lines</title>
+          <path d="M1.143 14.857h29.714v2.286h-29.714v-2.286z"></path>
+          <path
+            d="M12.906 12.571h-11.763l1.143-2.286h10.621c10.266 0 13.583-4.082 13.616-4.123l1.821 1.381c-0.154 0.206-3.904 5.029-15.437 5.029z">
+          </path>
+          <path
+            d="M26.514 25.829c-0.025-0.032-3.342-4.114-13.608-4.114h-10.621l-1.143-2.286h11.763c11.533 0 15.283 4.823 15.437 5.029z">
+          </path>
+          <path
+            d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z">
+          </path>
         </symbol>
         <symbol id="icon-tool_space_small" viewBox="0 0 32 32">
-        <title>tool_space_small</title>
-        <path d="M16 2.844c7.266 0 13.156 5.89 13.156 13.156s-5.89 13.156-13.156 13.156c-7.266 0-13.156-5.89-13.156-13.156v0c0.008-7.262 5.893-13.147 13.155-13.156h0.001zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16v0c0-8.837-7.163-16-16-16v0z"></path>
-        <path d="M21.159 16c0 2.849-2.31 5.159-5.159 5.159s-5.159-2.31-5.159-5.159c0-2.849 2.31-5.159 5.159-5.159s5.159 2.31 5.159 5.159z"></path>
+          <title>tool_space_small</title>
+          <path
+            d="M16 2.844c7.266 0 13.156 5.89 13.156 13.156s-5.89 13.156-13.156 13.156c-7.266 0-13.156-5.89-13.156-13.156v0c0.008-7.262 5.893-13.147 13.155-13.156h0.001zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16v0c0-8.837-7.163-16-16-16v0z">
+          </path>
+          <path
+            d="M21.159 16c0 2.849-2.31 5.159-5.159 5.159s-5.159-2.31-5.159-5.159c0-2.849 2.31-5.159 5.159-5.159s5.159 2.31 5.159 5.159z">
+          </path>
         </symbol>
         <symbol id="icon-tool_space" viewBox="0 0 32 32">
-        <title>tool_space</title>
-        <path d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z"></path>
-        <path d="M20.426 16c0 2.445-1.982 4.426-4.426 4.426s-4.426-1.982-4.426-4.426c0-2.445 1.982-4.426 4.426-4.426s4.426 1.982 4.426 4.426z"></path>
+          <title>tool_space</title>
+          <path
+            d="M16 1.943c7.764 0 14.057 6.294 14.057 14.057s-6.294 14.057-14.057 14.057c-7.764 0-14.057-6.294-14.057-14.057v0c0.009-7.76 6.297-14.048 14.056-14.057h0.001zM16 0.114c-8.773 0-15.886 7.112-15.886 15.886s7.112 15.886 15.886 15.886c8.773 0 15.886-7.112 15.886-15.886v0c0-8.773-7.112-15.886-15.886-15.886v0z">
+          </path>
+          <path
+            d="M20.426 16c0 2.445-1.982 4.426-4.426 4.426s-4.426-1.982-4.426-4.426c0-2.445 1.982-4.426 4.426-4.426s4.426 1.982 4.426 4.426z">
+          </path>
         </symbol>
-        </defs>
-      </svg>
-      <div id="root"></div>
-    </div>
-    <!--
+      </defs>
+    </svg>
+    <div id="root"></div>
+  </div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -393,8 +547,11 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <style type="text/css" media="print">
-     .no-print { display: none; }
-    </style>
-  </body>
+  <style type="text/css" media="print">
+    .no-print {
+      display: none;
+    }
+  </style>
+</body>
+
 </html>
