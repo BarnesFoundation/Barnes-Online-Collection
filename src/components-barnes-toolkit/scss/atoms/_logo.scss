@@ -128,7 +128,19 @@ a.a-logo {
 
 // Styling for centennial logo
 .a-logo__svg--100 {
+  border: 1px solid green;
 
+  @include breakpoint('medium+') {
+    border: 5px dotted blue;
+  }
+
+  @include breakpoint('large+') {
+    border: 2px solid purple;
+  }
+
+  @include breakpoint('xlarge+') {
+    border: 10px dashed red;
+  }
 }
 
 .no-js .a-logo__svg {
