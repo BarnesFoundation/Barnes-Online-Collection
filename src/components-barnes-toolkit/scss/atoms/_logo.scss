@@ -76,7 +76,6 @@ We use 4 different logos - to ensure the logo stays sharp on all screen sizes.
 }
 
 a.a-logo {
-
   &:hover {
     color: $color__logo;
   }
@@ -89,7 +88,7 @@ a.a-logo {
 .a-logo__svg--s {
   display: block;
 
-  @include breakpoint('medium+') {
+  @include breakpoint("medium+") {
     display: none;
   }
 }
@@ -97,11 +96,11 @@ a.a-logo {
 .a-logo__svg--m {
   display: none;
 
-  @include breakpoint('medium+') {
+  @include breakpoint("medium+") {
     display: block;
   }
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     display: none;
   }
 }
@@ -109,11 +108,11 @@ a.a-logo {
 .a-logo__svg--l {
   display: none;
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     display: block;
   }
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     display: none;
   }
 }
@@ -121,25 +120,25 @@ a.a-logo {
 .a-logo__svg--xl {
   display: none;
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     display: block;
   }
 }
 
 // Styling for centennial logo
 .a-logo__svg--100 {
-  border: 1px solid green;
+  padding-top: #{map-get($logo100Padding, "small")}; /* 1 */
 
-  @include breakpoint('medium+') {
-    border: 5px dotted blue;
+  @include breakpoint("medium+") {
+    padding-top: #{map-get($logo100Padding, "medium")}; /* 1 */
   }
 
-  @include breakpoint('large+') {
-    border: 2px solid purple;
+  @include breakpoint("large+") {
+    padding-top: #{map-get($logo100Padding, "large")}; /* 1 */
   }
 
-  @include breakpoint('xlarge+') {
-    border: 10px dashed red;
+  @include breakpoint("xlarge+") {
+    padding-top: #{map-get($logo100Padding, "xlarge")}; /* 1 */
   }
 }
 
