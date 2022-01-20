@@ -17,11 +17,12 @@ const HEADER_HIDDEN = {
  * JSX element for Barnes logos.
  */
 const Logo = ({ size, width, height, logo, className }) => (
-  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}`} width={width} height={height} aria-labelledby='logo-title'>
+  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}${size === 's' ? "H" : ""}`} width={width} height={height} aria-labelledby='logo-title'>
     <title id='logo-title'>Barnes</title>
-    <use xlinkHref={`#icon--logo-${logo ? logo : size}`}></use>
+    <use xlinkHref={`#icon--logo-${size === 's' ? "100H" : logo ? "100" : size}`}></use>
   </svg>
 );
+
 
 // Static info mapped to static Logo JSX element.
 const logoSizes = [
@@ -33,21 +34,15 @@ const logoSizes = [
 
 // keep width constant, scale height
 const logo100Sizes = [
-  { size: 's', width: 121, height: 58.28 },
+  { size: 's', width: 263.66, height: 37 },
   { size: 'm', width: 146, height: 70.32 },
   { size: 'l', width: 164.958, height: 79.45 },
   { size: 'xl', width: 200, height: 95.75 },
 ];
 
-// keep height constant, scale width
-// const logo100Sizes = [
-//   { size: 's', width: 76.82, height: 37 },
-//   { size: 'm', width: 93.43, height: 45 },
-//   { size: 'l', width: 103.81, height: 50 },
-//   { size: 'xl', width: 128.72, height: 62 },
-// ];
 
-const Logos = ({ ref, tabIndex, isCentennial }) => (
+
+const Logos = ({ ref, tabIndex, isCentennial}) => (
   <a
     className='a-logo g-header__logo'
     href={MAIN_WEBSITE_DOMAIN}
@@ -59,6 +54,7 @@ const Logos = ({ ref, tabIndex, isCentennial }) => (
     ) : (
       logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
     )}
+
   </a>
 );
 
@@ -226,6 +222,7 @@ class SiteHeader extends Component {
     // Get year to determine whether to use centennial logo or original logo
     const today = new Date()
     const isCentennial = today.getFullYear() === 2022;
+    
 
     return (
       <div className={isArtObjectClassNames}>
