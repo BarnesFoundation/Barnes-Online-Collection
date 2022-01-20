@@ -1,5 +1,5 @@
-@import '../../scss/variables.scss';
-@import '../../scss/mixins.scss';
+@import "../../scss/variables.scss";
+@import "../../scss/mixins.scss";
 
 // Adding this to remove 70px paddingfor mobile header.
 html:not([class=""]) {
@@ -9,7 +9,7 @@ html:not([class=""]) {
 // This is to adjust hero width.
 .o-hero {
   &__copy {
-    @include breakpoint('medium+') {
+    @include breakpoint("medium+") {
       width: 91%;
     }
   }
@@ -42,10 +42,10 @@ html:not([class=""]) {
   &--unlocked {
     position: fixed;
 
-    transform: translate3d(0,-1200%,0);
+    transform: translate3d(0, -1200%, 0);
 
-    @include breakpoint('medium+') {
-      transform: translate3d(0,-600%,0);
+    @include breakpoint("medium+") {
+      transform: translate3d(0, -600%, 0);
     }
   }
 
@@ -53,8 +53,8 @@ html:not([class=""]) {
     position: fixed;
     color: $color-red-barnes-logo !important;
     background-color: $color-white !important;
-    
-    transform: translate3d(0,0,0);
+
+    transform: translate3d(0, 0, 0);
 
     #{ $self } {
       &__nav {
@@ -69,9 +69,24 @@ html:not([class=""]) {
         }
       }
     }
-  }
 
-  
+    .a-logo__svg--100 {
+      transform: scale(0.75) translate(0%, -10%);
+      transition: transform 0.5s ease;
+
+      @include breakpoint("medium+") {
+        transform: scale(0.75) translate(0%, -10%);
+      }
+
+      @include breakpoint("large+") {
+        transform: scale(0.75) translate(0%, -15%);
+      }
+
+      @include breakpoint("xlarge+") {
+        transform: scale(0.75) translate(0%, -15%);
+      }
+    }
+  }
 }
 
 .art-object-header {
@@ -84,7 +99,6 @@ html:not([class=""]) {
   .g-header {
     position: relative;
     color: $color-red-barnes-logo;
-
 
     &__nav {
       &__btn {
@@ -125,7 +139,7 @@ html:not([class=""]) {
   }
 
   // Hide mobile section on all larger sizes.
-  @include breakpoint('medium+') {
+  @include breakpoint("medium+") {
     background-color: transparent;
     display: none;
     height: 0px !important;
@@ -146,17 +160,19 @@ html:not([class=""]) {
   padding-top: 20px;
   overflow-y: inherit;
 
-  @include breakpoint('small-') {
-    max-height: calc(100vh - 100px); // 100 = g-header height + this elements 20px padding + 10 for padding.
+  @include breakpoint("small-") {
+    max-height: calc(
+      100vh - 100px
+    ); // 100 = g-header height + this elements 20px padding + 10 for padding.
     overflow-y: scroll;
   }
 
-  @include breakpoint('medium+') {
+  @include breakpoint("medium+") {
     max-height: none;
     padding-top: 35px;
   }
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     padding-top: 10px;
     overflow-y: inherit;
   }
@@ -165,7 +181,7 @@ html:not([class=""]) {
     padding-top: 30px;
     padding-bottom: 30px;
 
-    @include breakpoint('medium+') {
+    @include breakpoint("medium+") {
       padding-bottom: 60px;
     }
   }
@@ -173,7 +189,7 @@ html:not([class=""]) {
   &__button {
     width: auto;
 
-    @include breakpoint('small-') {
+    @include breakpoint("small-") {
     }
 
     margin-left: 0 !important;
