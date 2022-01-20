@@ -31,6 +31,22 @@ const logoSizes = [
   { size: 'xl', width: 200, height: 62 },
 ];
 
+// keep width constant, scale height
+const logo100Sizes = [
+  { size: 's', width: 121, height: 58.28 },
+  { size: 'm', width: 146, height: 70.32 },
+  { size: 'l', width: 164.958, height: 79.45 },
+  { size: 'xl', width: 200, height: 95.75 },
+];
+
+// keep height constant, scale width
+// const logo100Sizes = [
+//   { size: 's', width: 76.82, height: 37 },
+//   { size: 'm', width: 93.43, height: 45 },
+//   { size: 'l', width: 103.81, height: 50 },
+//   { size: 'xl', width: 128.72, height: 62 },
+// ];
+
 const Logos = ({ ref, tabIndex, isCentennial }) => (
   <a
     className='a-logo g-header__logo'
@@ -39,7 +55,7 @@ const Logos = ({ ref, tabIndex, isCentennial }) => (
     ref={ref}
   >
     {isCentennial ? (
-      logoSizes.map((logo => <Logo key={logo.size} {...logo} logo={100} height={undefined} className="a-logo__svg--100" />))
+      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} logo={100} height={undefined} className="a-logo__svg--100" />))
     ) : (
       logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
     )}
