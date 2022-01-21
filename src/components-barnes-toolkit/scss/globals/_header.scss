@@ -13,7 +13,6 @@ changed the layout 3 times.
 
 **/
 
-
 /**
  * 1 the height is set in the variables file. This makes things so much easier
  * and we can use the value across the site’s CSS
@@ -21,7 +20,7 @@ changed the layout 3 times.
 .g-header {
   background-color: $color__white;
   color: $color__black;
-  height: #{map-get($headerHeights, 'xsmall')}; /* 1 */
+  height: #{map-get($headerHeights, "xsmall")}; /* 1 */
   left: 0;
   padding: 3px 0 0;
   position: fixed;
@@ -29,19 +28,19 @@ changed the layout 3 times.
   transform: translate3d(0, 0, 0);
   transition: background 250ms ease, transform 300ms ease;
   width: 100%;
-  z-index: #{map-get($zIndexes, 'header')};
+  z-index: #{map-get($zIndexes, "header")};
 
-  @include breakpoint('medium+') {
-    height: #{map-get($headerHeights, 'medium')}; /* 1 */
+  @include breakpoint("medium+") {
+    height: #{map-get($headerHeights, "medium")}; /* 1 */
   }
 
-  @include breakpoint('large+') {
-    height: #{map-get($headerHeights, 'large')}; /* 1 */
+  @include breakpoint("large+") {
+    height: #{map-get($headerHeights, "large")}; /* 1 */
     padding-top: 0;
   }
 
-  @include breakpoint('xlarge+') {
-    height: #{map-get($headerHeights, 'xlarge')}; /* 1 */
+  @include breakpoint("xlarge+") {
+    height: #{map-get($headerHeights, "xlarge")}; /* 1 */
     padding-top: 2px;
   }
 
@@ -85,11 +84,11 @@ changed the layout 3 times.
   text-decoration: none;
   transition: color 150ms ease 50ms;
 
-  @include breakpoint('large-') {
+  @include breakpoint("large-") {
     margin-top: 0;
   }
 
-  @include breakpoint('medium-') {
+  @include breakpoint("medium-") {
     display: none;
   }
 
@@ -122,7 +121,7 @@ changed the layout 3 times.
   top: -2px;
   transition: color 250ms ease-in;
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     top: 2px;
   }
 
@@ -144,7 +143,7 @@ changed the layout 3 times.
  * Tweak the positioning/spacing of these buttons for utter perfection ;)
  */
 .g-header__nav__btn:not(:last-of-type) {
-  @include breakpoint('medium-') {
+  @include breakpoint("medium-") {
     display: none;
   }
 }
@@ -175,7 +174,6 @@ changed the layout 3 times.
   }
 }
 
-
 /**
  * Site title
  */
@@ -184,21 +182,21 @@ changed the layout 3 times.
 
   color: $color__red--barnes;
 
-  @include breakpoint('medium') {
+  @include breakpoint("medium") {
     margin-right: 50px;
     position: relative;
     top: 7px;
   }
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     margin-bottom: 25px;
   }
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     margin-bottom: 0;
   }
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     margin-left: 15px;
     max-width: 50px;
     position: relative;
@@ -212,42 +210,42 @@ changed the layout 3 times.
 
 .g-header--shopify {
   border-bottom: 1px solid $color__border;
-  height: #{map-get($headerHeightsShopify, 'xsmall')};
+  height: #{map-get($headerHeightsShopify, "xsmall")};
   padding-top: 0;
 
-  @include breakpoint('medium+') {
-    height: #{map-get($headerHeightsShopify, 'medium')};
+  @include breakpoint("medium+") {
+    height: #{map-get($headerHeightsShopify, "medium")};
   }
 
-  @include breakpoint('large+') {
-    height: #{map-get($headerHeightsShopify, 'large')};
+  @include breakpoint("large+") {
+    height: #{map-get($headerHeightsShopify, "large")};
   }
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     border-bottom: none;
-    height: #{map-get($headerHeightsShopify, 'xlarge')};
+    height: #{map-get($headerHeightsShopify, "xlarge")};
   }
 
-  @include breakpoint('xxlarge') {
-    height: #{map-get($headerHeightsShopify, 'xxlarge')};
+  @include breakpoint("xxlarge") {
+    height: #{map-get($headerHeightsShopify, "xxlarge")};
   }
 }
 
 .g-header--print {
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     border-bottom: none;
-    height: #{map-get($headerHeights, 'xlarge')};
+    height: #{map-get($headerHeights, "xlarge")};
   }
 
-  @include breakpoint('xxlarge') {
-    height: #{map-get($headerHeights, 'xxlarge')};
+  @include breakpoint("xxlarge") {
+    height: #{map-get($headerHeights, "xxlarge")};
   }
 }
 
 .g-header--shopify > .container {
   height: auto;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     justify-content: flex-start;
   }
 }
@@ -255,16 +253,16 @@ changed the layout 3 times.
 .g-header--shopify .a-logo {
   margin: 17px 0 11px;
 
-  @include breakpoint('medium') {
+  @include breakpoint("medium") {
     margin-top: -5px;
   }
 
-  @include breakpoint('large') {
+  @include breakpoint("large") {
     position: relative;
     top: -25px;
   }
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     margin-bottom: 30px;
     margin-top: -1px;
   }
@@ -278,21 +276,21 @@ changed the layout 3 times.
   font-size: 18px;
   justify-content: flex-end !important;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     right: 0;
     position: absolute;
     top: 13px;
   }
 
-  @include breakpoint('medium') {
+  @include breakpoint("medium") {
     position: relative;
     top: 3px;
   }
 
-  @include breakpoint('xlarge+') {
+  @include breakpoint("xlarge+") {
     position: relative;
     top: 15px;
-    z-index: #{map-get($zIndexes, 'headerTopBar')}
+    z-index: #{map-get($zIndexes, "headerTopBar")};
   }
 
   a:focus:not(.focus-ring),
@@ -311,26 +309,26 @@ changed the layout 3 times.
   margin-left: 15px;
   margin-top: 10px;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     margin-left: 30px;
     position: relative;
     top: -3px;
-    z-index: #{map-get($zIndexes, 'shopifyHeaderButton')};
+    z-index: #{map-get($zIndexes, "shopifyHeaderButton")};
   }
 
-  @include breakpoint('medium') {
+  @include breakpoint("medium") {
     bottom: -82px;
     position: absolute;
     right: 40px;
-    z-index: #{map-get($zIndexes, 'shopifyHeaderButton')};
+    z-index: #{map-get($zIndexes, "shopifyHeaderButton")};
   }
 
-  @include breakpoint('large+') {
+  @include breakpoint("large+") {
     position: relative;
     top: -1px;
   }
 
-  @include breakpoint('xlarge') {
+  @include breakpoint("xlarge") {
     display: none;
   }
 }
@@ -339,7 +337,7 @@ changed the layout 3 times.
   padding-right: 20px;
   padding-top: 10px;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     display: none;
   }
 }
@@ -353,7 +351,7 @@ changed the layout 3 times.
   padding-right: 20px;
   padding-top: 10px;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     display: none;
   }
 }
@@ -361,7 +359,7 @@ changed the layout 3 times.
 .g-header__cart {
   padding-top: 10px;
 
-  @include breakpoint('small-') {
+  @include breakpoint("small-") {
     margin-right: -17px;
     padding-top: 7px;
   }

@@ -16,20 +16,45 @@ const HEADER_HIDDEN = {
 /**
  * JSX element for Barnes logos.
  */
-const Logo = ({ size, width, height }) => (
-  <svg className={`a-logo__svg a-logo__svg--${size}`} width={width} height={height} aria-labelledby='logo-title'>
+const Logo = ({ size, width, height, logo, className }) => (
+  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}`} width={width} height={height} aria-labelledby='logo-title'>
     <title id='logo-title'>Barnes</title>
-    <use xlinkHref={`#icon--logo-${size}`}></use>
+    <use xlinkHref={`#icon--logo-${logo ? logo : size}`}></use>
   </svg>
 );
 
+
 // Static info mapped to static Logo JSX element.
-const LOGOS = [
+const logoSizes = [
   { size: 's', width: 121, height: 37 },
   { size: 'm', width: 146, height: 45 },
   { size: 'l', width: 164.958, height: 50 },
   { size: 'xl', width: 200, height: 62 },
-].map((logo => <Logo key={logo.size} {...logo} />));
+];
+
+const logo100Sizes = [
+  {size: 'xs', width: 121, logo: "100"},
+  { size: 's', height: 37, logo: "100H" },
+  { size: 'm', height: 45, logo: "100H" },
+  { size: 'l', width: 164.958, logo: "100" },
+  { size: 'xl', width: 200, logo: "100" },
+];
+
+const Logos = ({ ref, tabIndex, isCentennial}) => (
+  <a
+    className='a-logo g-header__logo'
+    href={MAIN_WEBSITE_DOMAIN}
+    tabIndex={tabIndex}
+    ref={ref}
+  >
+    {isCentennial ? (
+      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} className="a-logo__svg--100" />))
+    ) : (
+      logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
+    )}
+
+  </a>
+);
 
 const SUGGESTED_TERMS = ['CAREERS', 'CONTACT', 'SHOP', 'INTERNSHIP', 'MEMBERSHIP', 'PARKING', 'RESTAURANT', 'TICKETS'];
 
@@ -192,6 +217,11 @@ class SiteHeader extends Component {
 
     let gHeaderNavClassNames = 'g-header__nav';
 
+    // Get year to determine whether to use centennial logo or original logo
+    const today = new Date()
+    const isCentennial = today.getFullYear() === 2022;
+    
+
     return (
       <div className={isArtObjectClassNames}>
         <header
@@ -201,14 +231,7 @@ class SiteHeader extends Component {
           role="banner"
         >
           <div className='container'>
-            <a
-              className='a-logo g-header__logo'
-              href={MAIN_WEBSITE_DOMAIN}
-              tabIndex={tabIndex}
-              ref={ref => this.startRef = ref}
-            >
-              {LOGOS}
-            </a>
+            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} isCentennial={isCentennial} />
             <nav className={gHeaderNavClassNames}>
               <a
                 className='g-header__nav__link'
