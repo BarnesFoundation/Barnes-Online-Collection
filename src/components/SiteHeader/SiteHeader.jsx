@@ -17,9 +17,9 @@ const HEADER_HIDDEN = {
  * JSX element for Barnes logos.
  */
 const Logo = ({ size, width, height, logo, className }) => (
-  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}${size === 's' ? "H" : ""}`} width={width} height={height} aria-labelledby='logo-title'>
+  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}`} width={width} height={height} aria-labelledby='logo-title'>
     <title id='logo-title'>Barnes</title>
-    <use xlinkHref={`#icon--logo-${size === 's' ? "100H" : logo ? "100" : size}`}></use>
+    <use xlinkHref={`#icon--logo-${logo ? logo : size}`}></use>
   </svg>
 );
 
@@ -32,15 +32,13 @@ const logoSizes = [
   { size: 'xl', width: 200, height: 62 },
 ];
 
-// keep width constant, scale height
 const logo100Sizes = [
-  { size: 's', width: 263.66, height: 37 },
-  { size: 'm', width: 146, height: 70.32 },
-  { size: 'l', width: 164.958, height: 79.45 },
-  { size: 'xl', width: 200, height: 95.75 },
+  {size: 'xs', width: 121, logo: "100"},
+  { size: 's', height: 37, logo: "100H" },
+  { size: 'm', height: 45, logo: "100H" },
+  { size: 'l', width: 164.958, logo: "100" },
+  { size: 'xl', width: 200, logo: "100" },
 ];
-
-
 
 const Logos = ({ ref, tabIndex, isCentennial}) => (
   <a
@@ -50,7 +48,7 @@ const Logos = ({ ref, tabIndex, isCentennial}) => (
     ref={ref}
   >
     {isCentennial ? (
-      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} logo={100} height={undefined} className="a-logo__svg--100" />))
+      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} className="a-logo__svg--100" />))
     ) : (
       logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
     )}

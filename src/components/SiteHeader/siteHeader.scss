@@ -75,10 +75,6 @@ html:not([class=""]) {
     }
 
     .a-logo__svg--100 {
-      @include breakpoint("medium+") {
-        transform: scale(0.75) translate(0%, -10%);
-      }
-
       @include breakpoint("large+") {
         transform: scale(0.75) translate(0%, -15%);
       }

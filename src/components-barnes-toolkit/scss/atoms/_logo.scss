@@ -85,6 +85,14 @@ a.a-logo {
   fill: currentColor;
 }
 
+.a-logo__svg--xs {
+  display: block;
+
+  @include breakpoint("small+") {
+    display: none;
+  }
+}
+
 .a-logo__svg--s {
   display: block;
 
@@ -127,11 +135,7 @@ a.a-logo {
 
 // Styling for centennial logo
 .a-logo__svg--100 {
-  padding-top: #{map-get($logo100Padding, "small")}; /* 1 */
-
-  @include breakpoint("medium+") {
-    padding-top: #{map-get($logo100Padding, "medium")}; /* 1 */
-  }
+  padding-top: 0;
 
   @include breakpoint("large+") {
     padding-top: #{map-get($logo100Padding, "large")}; /* 1 */
