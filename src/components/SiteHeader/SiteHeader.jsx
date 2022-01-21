@@ -34,8 +34,8 @@ const logoSizes = [
 
 const logo100Sizes = [
   {size: 'xs', width: 121, logo: "100"},
-  { size: 's', height: 37, logo: "100H" },
-  { size: 'm', height: 45, logo: "100H" },
+  { size: 's', width: 263.66, height: 37, logo: "100H" },
+  { size: 'm', width: 320.67, height: 45, logo: "100H" },
   { size: 'l', width: 164.958, logo: "100" },
   { size: 'xl', width: 200, logo: "100" },
 ];
