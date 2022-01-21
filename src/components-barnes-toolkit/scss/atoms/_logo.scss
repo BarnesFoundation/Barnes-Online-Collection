@@ -85,20 +85,8 @@ a.a-logo {
   fill: currentColor;
 }
 
-.a-logo__svg--xs {
-  display: block;
-
-  @include breakpoint("small+") {
-    display: none;
-  }
-}
-
 .a-logo__svg--s {
-  display: none;
-
-  @include breakpoint("small+") {
-    display: block;
-  }
+  display: block;
 
   @include breakpoint("medium+") {
     display: none;
@@ -147,6 +135,26 @@ a.a-logo {
 
   @include breakpoint("xlarge+") {
     padding-top: #{map-get($logo100Padding, "xlarge")}; /* 1 */
+  }
+}
+
+.a-logo__svg--xs.a-logo__svg--100 {
+  display: block;
+
+  @include breakpoint("small+") {
+    display: none;
+  }
+}
+
+.a-logo__svg--s.a-logo__svg--100 {
+  display: none;
+
+  @include breakpoint("small+") {
+    display: block;
+  }
+
+  @include breakpoint("medium+") {
+    display: none;
   }
 }
 
