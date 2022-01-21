@@ -94,7 +94,11 @@ a.a-logo {
 }
 
 .a-logo__svg--s {
-  display: block;
+  display: none;
+
+  @include breakpoint("small+") {
+    display: block;
+  }
 
   @include breakpoint("medium+") {
     display: none;
