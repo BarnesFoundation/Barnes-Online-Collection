@@ -129,32 +129,32 @@ a.a-logo {
 .a-logo__svg--100 {
   padding-top: 0;
 
+  &.a-logo__svg--xs {
+    display: block;
+
+    @include breakpoint("small+") {
+      display: none;
+    }
+  }
+
+  &.a-logo__svg--s {
+    display: none;
+
+    @include breakpoint("small+") {
+      display: block;
+    }
+
+    @include breakpoint("medium+") {
+      display: none;
+    }
+  }
+
   @include breakpoint("large+") {
     padding-top: #{map-get($logo100Padding, "large")}; /* 1 */
   }
 
   @include breakpoint("xlarge+") {
     padding-top: #{map-get($logo100Padding, "xlarge")}; /* 1 */
-  }
-}
-
-.a-logo__svg--xs.a-logo__svg--100 {
-  display: block;
-
-  @include breakpoint("small+") {
-    display: none;
-  }
-}
-
-.a-logo__svg--s.a-logo__svg--100 {
-  display: none;
-
-  @include breakpoint("small+") {
-    display: block;
-  }
-
-  @include breakpoint("medium+") {
-    display: none;
   }
 }
 
