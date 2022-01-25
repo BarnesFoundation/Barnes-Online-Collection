@@ -10,11 +10,11 @@ Variables
 // recommended xxlarge is a px value and xsmall is fluid
 $main-col-widths: (
   xxlarge: 1440px,
-  xlarge: 'fluid',
-  large: 'fluid',
-  medium: 'fluid',
-  small: 'fluid',
-  xsmall: 'fluid'
+  xlarge: "fluid",
+  large: "fluid",
+  medium: "fluid",
+  small: "fluid",
+  xsmall: "fluid",
 );
 
 // Inner gutters, in px or vw, of each breakpoint
@@ -24,7 +24,7 @@ $inner-gutters: (
   large: 30px,
   medium: 30px,
   small: 20px,
-  xsmall: 20px
+  xsmall: 20px,
 );
 
 // Outer gutters, in px or vw, of each breakpoint
@@ -34,7 +34,7 @@ $outer-gutters: (
   large: 60px,
   medium: 40px,
   small: 25px,
-  xsmall: 25px
+  xsmall: 25px,
 );
 
 // How many columns are in each breakpoint
@@ -44,26 +44,44 @@ $column-count: (
   large: 12,
   medium: 6,
   small: 2,
-  xsmall: 2
+  xsmall: 2,
 );
 
 // Breakpoint information, where each starts and stops
 // if a breakpoint is not fluid, then the start value is equal to the main col value plus 2x the gutter at this breakpoint
 $breakpoints: (
-  xsmall: (start: null, end: 413),
-  small: (start: 414, end: 649),
-  medium: (start: 650, end: 989),
-  large: (start: 990, end: 1199),
-  xlarge: (start: 1200, end: 1599),
-  xxlarge: (start: 1600, end: null)
+  xsmall: (
+    start: null,
+    end: 413,
+  ),
+  small: (
+    start: 414,
+    end: 649,
+  ),
+  medium: (
+    start: 650,
+    end: 989,
+  ),
+  large: (
+    start: 990,
+    end: 1199,
+  ),
+  xlarge: (
+    start: 1200,
+    end: 1599,
+  ),
+  xxlarge: (
+    start: 1600,
+    end: null,
+  ),
 );
 
 // Uniform border radius
 $border-radius: 2px;
 
 // Some easing functions
-$bezier--bounce: cubic-bezier(.5, -.6, .5, 1.6);
-$bezier--ease-in-out: cubic-bezier(.5, 0, .5, 0);
+$bezier--bounce: cubic-bezier(0.5, -0.6, 0.5, 1.6);
+$bezier--ease-in-out: cubic-bezier(0.5, 0, 0.5, 0);
 
 // Z-index
 // Lets avoid z-index hell by keeping a map here
@@ -88,7 +106,7 @@ $zIndexes: (
   FourOhFourCopy: 1,
   accordionTabFocus: 1,
   shopifyProductListTag: 1,
-  shopifyProductListImage: 0
+  shopifyProductListImage: 0,
 );
 
 // Header heights
@@ -98,7 +116,7 @@ $headerHeights: (
   large: 110px,
   medium: 100px,
   small: 70px,
-  xsmall: 70px
+  xsmall: 70px,
 );
 
 // Header heights (for Shopify header)
@@ -108,5 +126,13 @@ $headerHeightsShopify: (
   large: 110px,
   medium: 110px,
   small: 70px,
-  xsmall: 70px
+  xsmall: 70px,
+);
+
+// Centennial Logo Padding
+$logo100Padding: (
+  xxlarge: 30px,
+  xlarge: 30px,
+  large: 25px,
+  medium: 45px,
 );
