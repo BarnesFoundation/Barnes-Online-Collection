@@ -55,6 +55,7 @@ export default class EyeSpyPage extends React.Component {
           subtitle: tourData.subtitle,
           description: tourData.description,
           heroImageSrc: parsedObject.imageUrlLarge,
+          heroImageStyle: tourData.heroImageStyle,
           metaImgUrl: parsedObject.imageUrlSmall,
           sections: sections,
           selectedLanguage: "English",
@@ -127,12 +128,7 @@ export default class EyeSpyPage extends React.Component {
     const {
       tourId,
       title,
-      subtitle,
-      description,
-      heroImageSrc,
       sections,
-      languages,
-      selectedLanguage,
     } = this.state;
 
     return (
@@ -144,13 +140,7 @@ export default class EyeSpyPage extends React.Component {
           // Display the tour if it was located
           <div>
             <StickyList
-              title={title}
-              subtitle={subtitle}
-              heroImageSrc={heroImageSrc}
-              description={description}
-              sections={sections}
-              languages={languages}
-              selectedLanguage={selectedLanguage}
+              {...this.state}
               handleSelectLanguage={(this.handleSelectLanguage).bind(this)}
             />
           </div>
