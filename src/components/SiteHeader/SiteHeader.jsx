@@ -33,11 +33,11 @@ const logoSizes = [
 ];
 
 const logo100Sizes = [
-  {size: 'xs', width: 121, logo: "100"},
-  { size: 's', width: 263.66, height: 37, logo: "100H" },
-  { size: 'm', width: 320.67, height: 45, logo: "100H" },
-  { size: 'l', width: 164.958, logo: "100" },
-  { size: 'xl', width: 200, logo: "100" },
+  { size: "xs", width: 121, height: 150, logo: "100" },
+  { size: "s", width: 263.66, height: 37, logo: "100H" },
+  { size: "m", width: 320.67, height: 45, logo: "100H" },
+  { size: "l", width: 164.958, height: 150, logo: "100" },
+  { size: "xl", width: 200, height: 150, logo: "100" },
 ];
 
 const Logos = ({ ref, tabIndex, isCentennial}) => (
