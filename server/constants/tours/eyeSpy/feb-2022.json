@@ -16,7 +16,7 @@
             "backgroundColor": "rgba(0, 0, 0, 0.3)"
         }
     },
-    "description": "<p>Can you spy all of these hearts in our galleries?</p><p>Check them off when you find them and return to the table to learn more about the pieces you saw!</p>",
+    "description": "<p>Can you spy all of these hearts in our galleries?</p><p>Check them off when you find them and turn in the completed sheet for a prize!</p>",
     "body": {
         "from": 0,
         "size": 25,
@@ -84,7 +84,7 @@
     "translations": {
         "Español": {
             "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
-            "description": "<p>¿Puedes encontrar todos estos corazones en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para aprender más sobre las obras que observaste.</p>",
+            "description": "<p>¿Puedes encontrar todos estos corazones en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para ganar un premio.</p>",
             "clues": {
                 "01.13.18": "Este baúl está lleno de símbolos de amor<br />al igual que la madre del cuadro superior",
                 "01.12.05": "Este salvamanteles la mesa protege<br />evita que una olla una marca deje",
