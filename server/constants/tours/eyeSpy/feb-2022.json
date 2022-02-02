@@ -1,0 +1,101 @@
+{
+    "title": "Eye Spy Gallery Scavenger Hunt",
+    "subtitle": "",
+    "heroImageId": 5244,
+    "heroImageStyle": {
+        "container": {
+            "background": "#f7f2ee"
+        },
+        "img": {
+            "width": "1500px",
+            "maxWidth": "unset",
+            "left": "-125px",
+            "top": "-145px"
+        },
+        "overlay": {
+            "backgroundColor": "rgba(0, 0, 0, 0.3)"
+        }
+    },
+    "description": "<p>Can you spy all of these hearts in our galleries?</p><p>Check them off when you find them and return to the table to learn more about the pieces you saw!</p>",
+    "body": {
+        "from": 0,
+        "size": 25,
+        "_source": [
+            "id",
+            "title",
+            "people",
+            "medium",
+            "imageOriginalSecret",
+            "imageSecret",
+            "ensembleIndex",
+            "objRightsTypeId",
+            "onview",
+            "invno",
+            "image",
+            "curatorialApproval",
+            "shortDescription",
+            "nationality",
+            "birthDate",
+            "deathDate",
+            "artistPrefix",
+            "artistSuffix",
+            "culture",
+            "displayDate",
+            "medium",
+            "dimensions",
+            "creditLine",
+            "longDescription",
+            "bibliography",
+            "exhHistory",
+            "publishedProvenance"
+        ],
+        "query": {
+            "bool": {
+                "filter": {
+                    "terms": {
+                        "invno": [
+                            "01.13.18",
+                            "01.12.05",
+                            "01.04.01",
+                            "01.05.27",
+                            "01.23.20",
+                            "01.21.25",
+                            "01.21.35a",
+                            "01.15.06",
+                            "01.18.08"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "customRoomOrder": [],
+    "clues": {
+        "01.13.18": "This chest is full of symbols of love<br />that you will also find a mother is demonstrating above",
+        "01.12.05": "This trivet protects hot pots of broth<br />from burning a hole in your tablecloth",
+        "01.04.01": "You can find this heart in a corner<br />in a place you would rest a curious learner",
+        "01.05.27": "This metalwork is in a line of four<br />look for the heart nearest the door",
+        "01.23.20": "Find these hearts at this pillar's base<br />where at the top a source of light can be placed",
+        "01.21.25": "Look for this heart in a very high place<br />where it is sitting above a face",
+        "01.21.35a": "Underneath this heart, you can hang your keys<br />or a hat, or a spoon to eat your peas!",
+        "01.15.06": "This heart has two large curls<br />find it above a case with wonders from around the world",
+        "01.18.08": "These hearts are surrounded by any animal you wish<br />there's some cats, some birds, and even some fish!"
+    },
+    "translations": {
+        "Español": {
+            "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
+            "description": "<p>¿Puedes encontrar todos estos corazones en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para aprender más sobre las obras que observaste.</p>",
+            "clues": {
+                "01.13.18": "Este baúl está lleno de símbolos de amor<br />al igual que la madre del cuadro superior",
+                "01.12.05": "Este salvamanteles la mesa protege<br />evita que una olla una marca deje",
+                "01.04.01": "En una esquina este corazón vas a localizar<br />donde alguien se sentaba a imaginar",
+                "01.05.27": "Esta pieza metálica está en fila con otras<br />ve si el corazón próximo a la puerta notas",
+                "01.23.20": "Encuentra estos corazones en la base de un pilar<br />que desde su lado superior una vela podría iluminar",
+                "01.21.25": "Busca este corazón en un lugar muy alto<br />encima de una cara podrás encontrarlo",
+                "01.21.35a": "Debajo de este corazón cuelgas objetos<br />llaves, sombrero o un cucharón quedan sujetos",
+                "01.15.06": "Este corazón tiene dos rizos grandes<br />encuéntralo arriba de las antigüedades internacionales",
+                "01.18.08": "Estos corazones están rodeados de múltiples animales<br />gatos, aves y peces de diseños especiales"
+            }
+        }
+    }
+}
