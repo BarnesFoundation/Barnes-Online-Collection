@@ -218,7 +218,7 @@ export const Footer = ({ hasHours }) => {
             </div>
             <div className='g-footer__hours'>
               <h2 className='font-zeta footer-detail'>Hours</h2>
-              <p>Fri–Mon: 11am – 5pm<br />Members: 10am – 5pm<br /></p>
+              <p>Thu–Mon: 11am – 5pm<br />Members: 10am – 5pm<br /></p>
             </div>
             <Newsletter />
           </div>
