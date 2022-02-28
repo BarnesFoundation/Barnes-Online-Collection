@@ -1,0 +1,101 @@
+{
+  "title": "Eye Spy Gallery Scavenger Hunt",
+  "subtitle": "",
+  "heroImageId": 5244,
+  "heroImageStyle": {
+    "container": {
+      "background": "#f7f2ee"
+    },
+    "img": {
+      "width": "1500px",
+      "maxWidth": "unset",
+      "left": "-125px",
+      "top": "-145px"
+    },
+    "overlay": {
+      "backgroundColor": "rgba(0, 0, 0, 0.3)"
+    }
+  },
+  "description": "<p>Can you spy all of these hearts in our galleries?</p><p>Check them off when you find them and turn in the completed sheet for a prize!</p>",
+  "body": {
+    "from": 0,
+    "size": 25,
+    "_source": [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret",
+      "ensembleIndex",
+      "objRightsTypeId",
+      "onview",
+      "invno",
+      "image",
+      "curatorialApproval",
+      "shortDescription",
+      "nationality",
+      "birthDate",
+      "deathDate",
+      "artistPrefix",
+      "artistSuffix",
+      "culture",
+      "displayDate",
+      "medium",
+      "dimensions",
+      "creditLine",
+      "longDescription",
+      "bibliography",
+      "exhHistory",
+      "publishedProvenance"
+    ],
+    "query": {
+      "bool": {
+        "filter": {
+          "terms": {
+            "invno": [
+              "01.13.18",
+              "01.12.05",
+              "01.04.01",
+              "01.05.27",
+              "01.23.20",
+              "01.21.25",
+              "01.21.35a",
+              "01.15.06",
+              "01.18.08"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customRoomOrder": [],
+  "clues": {
+    "01.02.44": "Symmetry means the same on both sides<br />How many pieces do you get when this hinge divides?",
+    "BF831": "From 14 windows we can spy<br />a canal with boats sailing by.",
+    "01.06.16": "This chest of drawers is small in scale<br />So small, it could fit in the mail!",
+    "01.08.01": "This one hinge is parallel to another<br />which means that it’s facing its brother.",
+    "BF138": "An angle is the measure of the corner of a space<br />Can you find the angles at this sunny race?",
+    "BF2": "On this platter of fruit can be found<br />shapes that are curvy, and shapes that are round.",
+    "01.18.10": "This tiny hexagram sits high on the wall<br />It has six points, can you count them all? ",
+    "BF2512": "If you look around, you’ll see all kinds of lines<br />We use them to build the spaces of our lives",
+    "01.20.21": "There are repeating pattens all over this chair<br />in the back, in the legs, on the seat—everywhere! "
+  },
+  "translations": {
+    "Español": {
+      "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
+      "description": "<p>¿Puedes encontrar todos estos corazones en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para ganar un premio.</p>",
+      "clues": {
+        "01.02.44": "En simetría hay formas iguales al doblar una figura por la mitad / divide esta bisagra y verás las similitudes con claridad",
+        "BF831": "Desde catorce ventanas podemos espiar / canales con botes que salen a navegar ",
+        "01.06.16": "Este mueble con cajones es más pequeño / en menor escala también guarda algún secreto ",
+        "01.08.01": "Esta bisagra es paralela a una pieza vecina / significa que una igualdad en distancia las denomina  ",
+        "BF138": "Las esquinas tienen una forma llamada ángulos / ¿puedes encontrarlos en esta carrera con obstáculos? ",
+        "BF2": "En este plato lleno de frutas / encuentras formas redondas o con curvas .",
+        "01.18.10": "Un hexagrama (con seis puntos) está en este cuarto / sus seis picos localizarás en lo alto ",
+        "BF2512": "Observa alrededor y notarás muchas líneas / éstas construyen los espacios de nuestras vidas  ",
+        "01.20.21": "Fíjate en los patrones que se repiten de una silla / en la espalda, las patas, el asiento, ¡no es tan sencilla!  "
+      }
+    }
+  }
+}
