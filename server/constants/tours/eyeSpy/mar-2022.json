@@ -7,7 +7,7 @@
         "backgroundColor": "rgba(0, 0, 0, 0.3)"
     }
 },
-  "description": "<p>Can you spy all of these hearts in our galleries?</p><p>Check them off when you find them and turn in the completed sheet for a prize!</p>",
+  "description": "<p>Can you spy all of these works in our galleries?</p><p>Check them off when you find them and turn in the completed sheet for a prize!</p>",
   "body": {
     "from": 0,
     "size": 25,
@@ -75,7 +75,7 @@
   "translations": {
     "Español": {
       "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
-      "description": "<p>¿Puedes encontrar todos estos corazones en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para ganar un premio.</p>",
+      "description": "<p>¿Puedes encontrar todos estas obras en nuestras galerías?</p><p>Marca las que vayas encontrando y entrega la hoja con la búsqueda completa para ganar un premio.</p>",
       "clues": {
         "01.02.44": "En simetría hay formas iguales al doblar una figura por la mitad<br />divide esta bisagra y verás las similitudes con claridad",
         "BF831": "Desde catorce ventanas podemos espiar<br />canales con botes que salen a navegar ",
