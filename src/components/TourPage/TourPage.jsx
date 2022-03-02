@@ -43,8 +43,8 @@ export default class TourPage extends React.Component {
           ? tourData.customRoomOrder
           : DEFAULT_ROOM_ORDER;
 
-        const heroImageId = tourData.heroImageId;
-        const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
+        const heroImageInvno = tourData.heroImageInvno;
+        const object = objects.find((obj) => obj._source.invno === heroImageInvno);
         const parsedObject = parseObject(object._source);
         const sections = formatTourData(roomOrder, objects)
 
