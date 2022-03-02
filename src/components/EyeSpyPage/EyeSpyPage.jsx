@@ -39,14 +39,14 @@ export default class EyeSpyPage extends React.Component {
         const tourData = tourResponse.data;
         const objects = tourData.objects;
         const clues = tourData.clues;
-        const languages = tourData.translations && Object.keys(tourData.translations)
+        const languages = tourData.translations ? Object.keys(tourData.translations) : []
 
         const roomOrder = tourData.customRoomOrder.length
           ? tourData.customRoomOrder
           : DEFAULT_ROOM_ORDER;
 
-        const heroImageId = tourData.heroImageId;
-        const object = objects.find((obj) => parseInt(obj._id) === heroImageId);
+        const heroImageInvno = tourData.heroImageInvno;
+        const object = objects.find((obj) => obj._source.invno === heroImageInvno);
         const parsedObject = parseObject(object._source);
         const sections = formatTourData(roomOrder, objects, clues)
 

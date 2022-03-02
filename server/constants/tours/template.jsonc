@@ -1,0 +1,110 @@
+{
+    "title": "", // string: Title that will overlay the hero image
+    "subtitle": "", // string: Subtitle that will overlay the hero image
+    "heroImageInvno": "BF123", // string: inventory number for the hero image, the image selected must be included in the tour
+    "heroImageStyle": {
+        // Optional field that defines styling for the hero image.
+        // ** If no custom styles are being applied to the Hero Image, remove this field **
+        // ** If no custom styles are being applied to a key/value pair in this object, remove the unused key **
+        // This field would be included in situation where there are no images 
+        // available that would create a good hero image, so custom styling needs
+        // to be applied to make the image readable.
+        // Each key corresponds to a different html object and will apply the styles as inline css
+        // EG: "background": "#000000" will apply a background color of black to the html object
+        "container": {
+            // "container" is a wrapper for the hero image that is behind the hero
+            // CSS included here can be used to to apply a background color behind 
+            // an image, for an example see the feb-2022 eye-spy tour
+        },
+        "img": {
+            // Styling for hero image
+            // CSS included here can be used to resize or offset the hero image,
+            // for an example see the feb-2022 eye-spy tour
+        },
+        "overlay": {
+            // "overlay" is a wrapper for the hero image that is infront of the hero
+            // CSS included here can be used to apply a translucent overlay color to 
+            // provide contrast to make text readable, see feb-2022 eye-spy for an example 
+        }
+    },
+    "description": "", // string: Description that appears below the hero header and above the tour content
+    // HTML tags can be included in the description
+    "body": { // Body defines the query, the only section that needs to be updated is "invno"
+        "from": 0,
+        "size": 25,
+        "_source": [
+            "id",
+            "title",
+            "people",
+            "medium",
+            "imageOriginalSecret",
+            "imageSecret",
+            "ensembleIndex",
+            "objRightsTypeId",
+            "onview",
+            "invno",
+            "image",
+            "curatorialApproval",
+            "shortDescription",
+            "nationality",
+            "birthDate",
+            "deathDate",
+            "artistPrefix",
+            "artistSuffix",
+            "culture",
+            "displayDate",
+            "medium",
+            "dimensions",
+            "creditLine",
+            "longDescription",
+            "bibliography",
+            "exhHistory",
+            "publishedProvenance"
+        ],
+        "query": {
+            "bool": {
+                "filter": {
+                    "terms": {
+                        "invno": [
+                            // string array: An array of the inventory numbers 
+                            // of the objects to be included in the tours.
+                            // All letters included in the invno must be converted
+                            // to lowercase, eg: "bf123".
+                            "bf123"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "customRoomOrder": [
+        // string array: Optional array with the room titles in the order that 
+        // the rooms should appear in the tour
+        // Leave this array empty if you wish to use the default room order 
+        // defined in src/constants.DEFAULT_ROOM_ORDER
+    ],
+    // ** The "clues" and "translation" attributes are only used in eye-spy tours **
+    "clues": {
+        // object: Keys in this object should match the "invno" of the objects
+        // included in the tour and the values should be the clues.
+        // HTML can be included in the clue.
+        "BF123": "This is an example clue!"
+    },
+    "translations": {
+        // object: Each key in this object represents a translation, the key should 
+        // appear as you would like it to be in the drop-down language selector
+        // Each translation should include the fields that should be translated,
+        // any fields that are not included will default to English
+        "Español": {
+            "title": "", // string: Title that will overlay the hero image
+            "subtitle": "", // string: Subtitle that will overlay the hero image
+            "description": "", // string: Description that appears below the hero header and above the tour content
+            // HTML tags can be included in the description
+            "clues": {
+                // object: Keys in this object should match the "invno" of the objects
+                // included in the tour and the values should be the clues.
+                "BF123": "¡Esta es una pista de ejemplo!"
+            }
+        }
+    }
+}
