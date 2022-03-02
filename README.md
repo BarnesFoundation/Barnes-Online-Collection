@@ -91,10 +91,21 @@ For keys that are known to be numbers, we just calculate their distance. If the 
 
 Its a very naive approach but works well with the current collection, and much better than elasticsearch's default more_like_this query (which makes it difficult to do 'dissimilar' objects).
 
-
-
 ## Sitemap generation
 
 The `npm run build-sitemap` helper script re-generates the sitemap.xml file. The script hits the api endpoint and uses the data to template the file. Because the barnes collection never or rarely changes, this should not need to be run regularly.
 
 This project assumes you have a separate Elasticsearch instance with the collection data and an S3 bucket with the images, following the [Flickr](https://www.flickr.com/services/api/misc.urls.html) convention.
+
+## Tours and Eye Spy Scavenger Hunts
+
+Each tour or scavenger hunt requires its own config file. Set up the JSON config files according to the [template](server/constants/tours/template.jsonc), which has comments documenting each attribute. 
+
+To add a tour to the site you will need to add a new JSON config file to the tours folder [server/constants/tours](server/constants/tours/) folder and import it into the [index file](server/constants//tours/index.js). This will add a new page with the slug defined in [index.js](server/constants/tours/index.js) at `/tour/<slug>`. 
+
+To add an Eye Spy Scavenger Hunt, do the same as for a tour but in the [eyeSpy folder](server/constants/tours/eyeSpy/) and [index file](server/constants/tours/eyeSpy/index.js). This will add a new page with the slug defined in [index.js](server/constants/tours/eyeSpy/index.js) at `eye-spy/<slug>`. 
+
+
+Once the new page has been added, the [sitemap](public/sitemap.xml) should be updated. This can be done by either manually adding the new page or by deploying the changes to prod, running the sitemap script described [above](README.md#sitemap-generation), and then redeploying the app with the updated sitemap.
+
+There should not be any updates required to the client side when a new tour is added. Both the tours and scavenger hunts are set up the same way, but use different templates and endpoints to help differentiate between how the data should be presented.
