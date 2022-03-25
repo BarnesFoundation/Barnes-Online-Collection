@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { SiteHeader } from "../../components/SiteHeader/SiteHeader";
+import { SiteHeader } from "../SiteHeader/SiteHeader";
 import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import Footer from "../Footer/Footer";
@@ -11,8 +11,7 @@ import {
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
-import { formatTourData } from "../TourPage/tourPageHelper";
-import NotFound from "../NotFound/notFound";
+import { formatTourData } from "../Tour/tourPageHelper";
 
 export default class EyeSpyPage extends React.Component {
   constructor(props) {
