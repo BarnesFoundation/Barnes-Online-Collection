@@ -1,10 +1,10 @@
 {
   "title": "Eye Spy Gallery Scavenger Hunt",
   "subtitle": "",
-  "heroImageInvno": "BF138",
+  "heroImageInvno": "BF357",
   "heroImageStyle": {
     "overlay": {
-      "backgroundColor": "rgba(0, 0, 0, 0.3)"
+        "backgroundColor": "rgba(0, 0, 0, 0.4)"
     }
   },
   "description": "<p>Can you spy all of these works in our galleries? Find a member of the Barnes team wearing a white apron to mark off your sheet when you find them and turn in the completed sheet for a prize!</p>",
@@ -45,15 +45,15 @@
         "filter": {
           "terms": {
             "invno": [
-              "01.02.44",
-              "bf831",
-              "01.06.16",
-              "01.08.01",
-              "bf138",
-              "bf2",
-              "01.18.10",
-              "bf2512",
-              "01.20.21"
+              "bf136",
+              "bf357",
+              "bf2554",
+              "bf80",
+              "a230",
+              "a126",
+              "a108",
+              "bf278",
+              "a250"
             ]
           }
         }
