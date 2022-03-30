@@ -32627,4 +32627,10 @@
 <changefreq>weekly</changefreq>
 <priority>0.5</priority>
 </url>
+<url>
+<loc>https://collection.barnesfoundation.org/eye-spy/apr-2022</loc>
+<lastmod>2022-04-01</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.5</priority>
+</url>
 </urlset>
