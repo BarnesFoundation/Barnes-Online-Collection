@@ -1,0 +1,92 @@
+{
+  "title": "Eye Spy Gallery Scavenger Hunt",
+  "subtitle": "",
+  "heroImageInvno": "BF357",
+  "heroImageStyle": {
+    "overlay": {
+        "backgroundColor": "rgba(0, 0, 0, 0.4)"
+    }
+  },
+  "description": "<p>Can you spy all of these works in our galleries? Find a member of the Barnes team wearing a white apron to mark off your sheet when you find them and turn in the completed sheet for a prize!</p>",
+  "body": {
+    "from": 0,
+    "size": 25,
+    "_source": [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret",
+      "ensembleIndex",
+      "objRightsTypeId",
+      "onview",
+      "invno",
+      "image",
+      "curatorialApproval",
+      "shortDescription",
+      "nationality",
+      "birthDate",
+      "deathDate",
+      "artistPrefix",
+      "artistSuffix",
+      "culture",
+      "displayDate",
+      "medium",
+      "dimensions",
+      "creditLine",
+      "longDescription",
+      "bibliography",
+      "exhHistory",
+      "publishedProvenance"
+    ],
+    "query": {
+      "bool": {
+        "filter": {
+          "terms": {
+            "invno": [
+              "bf136",
+              "bf357",
+              "bf2554",
+              "bf80",
+              "a230",
+              "a126",
+              "a108",
+              "bf278",
+              "a250"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customRoomOrder": [],
+  "clues": {
+    "BF136": "Come see a slice of Van Gogh’s memory of his home in the 19th century",
+    "BF357": "Chaïm Soutine painted this when he was in a hurry <br/> you might notice this scene is quite blurry ",
+    "BF2554": "This piece is from the Pennsylvania Dutch <br/> the ancestry with which Dr. Barnes kept in touch ",
+    "BF80": "We know this lady’s important because of the bird inside her royal blues <br/> In ancient China, animals on clothes gave us clues ",
+    "A230": "Here this Benin-made sculpture proudly stands <br/> Even though we know he’s far from his homeland ",
+    "A126": "The Pende people made this pendant out of ivory <br/> we wear pendants on different kinds of jewelry ",
+    "A108": "The Imerina people had a lot of names <br/> We can see their history in this panel’s frames ",
+    "BF278": "William Glackens was from Lenni Lenape land <br/> Take a look at this sketch he did by hand! ",
+    "A250": "This cup was made by the Kuba people in Africa’s center <br/> They used the cup to celebrate and drink in lots of splendor  "
+  },
+  "translations": {
+    "Español": {
+      "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
+      "description": "<p>¿Puedes encontrar todas estas obras en nuestras galerías? Localiza a un miembro del equipo Barnes (con mandil blanco) para que marque lo que has encontrado y entrega tu hoja con la búsqueda completa para ganar un premio.</p>",
+      "clues": {
+        "BF136": "Ven a ver una escena en la memoria de Van Gogh, <br/> en el siglo diecinueve en esta casa vivió",
+        "BF357": "Chaïm Soutine pintó esta imagen muy de prisa, <br/> nota como la pintura se muestra imprecisa ",
+        "BF2554": "La comunidad Pennsylvania-Dutch hizo esta pieza, <br/> el Dr. Barnes a sus antepasados celebra ",
+        "BF80": "El ave y el color azul de su traje nos dice que la dama es importante, <br/> la simbología en la China antigua estos diseños comparte  ",
+        "A230": "Esta escultra se muestra con mucho orgullo, <br/> a pesar de estar tan lejos de su mundo ",
+        "A126": "La gente Pende fabricó este colgante de marfil, <br/> otro de tipo de joyería que podemos usar y construir",
+        "A108": "La población de Imerina tiene muchos nombres, <br/> su historia vemos en un grabado de aquel entonces... ",
+        "BF278": "William Glackens es de la tierra de los Lenni Lenape, <br/> observa  su dibujo y su firma en el margen ",
+        "A250": "Esta taza fue hecha por el pueblo Kuba en Africa central, <br/> con esplendor la utilizaban para beber y celebrar "
+      }
+    }
+  }
+}
