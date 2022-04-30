@@ -1,0 +1,100 @@
+{
+  "title": "Eye Spy Gallery Scavenger Hunt",
+  "subtitle": "",
+  "heroImageInvno": "BF331",
+  "heroImageStyle": {
+    "overlay": {
+      "backgroundColor": "rgba(0, 0, 0, 0.4)"
+    }
+  },
+  "description": "<p>Can you spy all of these works in our galleries? Find a member of the Barnes team wearing a white apron to mark off your sheet when you find them and turn in the completed sheet for a prize! </p>",
+  "body": {
+    "from": 0,
+    "size": 25,
+    "_source": [
+      "id",
+      "title",
+      "people",
+      "medium",
+      "imageOriginalSecret",
+      "imageSecret",
+      "ensembleIndex",
+      "objRightsTypeId",
+      "onview",
+      "invno",
+      "image",
+      "curatorialApproval",
+      "shortDescription",
+      "nationality",
+      "birthDate",
+      "deathDate",
+      "artistPrefix",
+      "artistSuffix",
+      "culture",
+      "displayDate",
+      "medium",
+      "dimensions",
+      "creditLine",
+      "longDescription",
+      "bibliography",
+      "exhHistory",
+      "publishedProvenance"
+    ],
+    "query": {
+      "bool": {
+        "filter": {
+          "terms": {
+            "invno": [
+              "01.10.03",
+              "bf331",
+              "bf160",
+              "01.13.49c",
+              "01.13.49a",
+              "01.13.49b",
+              "01.05.38",
+              "a238",
+              "bf436",
+              "bf1080",
+              "bf1165"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "customRoomOrder": [],
+  "clues": {
+    "01.10.03": "Though these cut, they also help unite <br/> look for the birds that aren't in flight ",
+    "BF331": "Chaïm Soutine painted this when he was in a hurry <br/> you might notice this scene is quite blurry ",
+    "BF160": "Glackens was inspired by Matisse's bold colors <br/> he is one of many painters influenced by others ",
+    "01.13.49c": "",
+    "01.13.49a": "",
+    "01.13.49b": "This is a whole that can be split in three <br/> Dr. Barnes made new connections, what do you see? ",
+    "BF443": "Look for wooden arms with their hands full <br/> knitters used this device to spin their wool ",
+    "01.05.38": "These three panels come together as one <br/> Without their connection, the story is undone",
+    "A238": "A door is the connection between two places <br/> here it connects two different cultural spaces ",
+    "BF436": "Many dots make up this scene <br/> take a step back—you'll see what I mean ",
+    "BF1080": "This figure is famous for composing scripts in Japan <br/> you can find him with a calligraphy brush in his hand ",
+    "BF1165": "This birth certificate tells a personal tale <br/> it brings together images of different scales"
+  },
+  "translations": {
+    "Español": {
+      "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
+      "description": "<p>¿Puedes encontrar todas estas obras en nuestras galerías? Localiza a un miembro del equipo Barnes (con mandil blanco) para que marque lo que has encontrado y entrega tu hoja con la búsqueda completa para ganar un premio.</p>",
+      "clues": {
+        "01.10.03": "Nos ayudan a unir a pesar de cortar <br/> encuentra dos pajaritos que no van a volar",
+        "BF331": "Chaïm Soutine pintó estos árboles como líneas <br/> Parecen ser hilos movidos por brisas continuas.  ",
+        "BF160": "Glackens se inspiró en Matisse y sus llamativos colores <br/> este es un ejemplo de la influencia que occure entre pintores.  ",
+        "01.13.49c": "",
+        "01.13.49a": "",
+        "01.13.49b": "Este es un hueco que se divide en tres <br/> El Dr. Barnes hizo sus conexiones y tú, ¿qué es lo que ves? ",
+        "BF443": "Busca un objeto con brazos de madera <br/> así los tejedores trabajaban el hilo que la lana genera.  ",
+        "01.05.38": "Estos tres páneles crean una unidad <br/> como están enlazados, vemos la historia con claridad.  ",
+        "A238": "Una puerta  conecta dos áreas contiguas  <br/> esta puerta conecta dos culturas lejanas ",
+        "BF436": "Múltiples puntos crean esta escena <br/> cuando te alejas tienes una vista plena  ",
+        "BF1080": "Este personaje japonés es famoso por su escritura  <br/> encuéntralo con su brocha escribiendo una figura",
+        "BF1165": "Esta acta de nacimiento nos cuenta la historia de una persona <br/> las imágenes unen todos los datos que nos proporciona"
+      }
+    }
+  }
+}
