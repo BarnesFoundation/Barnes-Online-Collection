@@ -1,7 +1,7 @@
 {
   "title": "Eye Spy Gallery Scavenger Hunt",
   "subtitle": "",
-  "heroImageInvno": "bf961",
+  "heroImageInvno": "BF961",
   "heroImageStyle": {
     "overlay": {
       "backgroundColor": "rgba(0, 0, 0, 0.4)"
@@ -63,32 +63,32 @@
   },
   "customRoomOrder": [],
   "clues": {
-    "bf819": "Not everyone in your family is related <br /> sometimes friends can be celebrated",
-    "bf961": "It takes a village full of love and trust <br /> when all sorts of people help raise us",
-    "bf990": "Giving gratitude is at a family’s core <br /> what are you thankful for? ",
-    "bf2553": "Next to Mom our eyes can close <br /> we’re so comfortable we take a doze",
-    "bf335": "On Mom’s knee we like to stay <br /> from her arms we don’t want to stray",
-    "bf854": "Papas are full of love and pride <br /> especially when their children are by their side",
-    "bf2075": "Sibling love cannot be beat <br /> even when all you want to do is eat",
-    "bf888": "These three sisters like to pose <br /> in this portrait, their closeness shows",
-    "bf582": "Families grow, evolve, and change <br /> even if at first it might feel strange",
-    "bf350": "Our animals are part of our families too <br /> they make us happy when we're feeling blue"
+    "BF819": "Not everyone in your family is related <br /> sometimes friends can be celebrated",
+    "BF961": "It takes a village full of love and trust <br /> when all sorts of people help raise us",
+    "BF990": "Giving gratitude is at a family’s core <br /> what are you thankful for? ",
+    "BF2553": "Next to Mom our eyes can close <br /> we’re so comfortable we take a doze",
+    "BF335": "On Mom’s knee we like to stay <br /> from her arms we don’t want to stray",
+    "BF854": "Papas are full of love and pride <br /> especially when their children are by their side",
+    "BF2075": "Sibling love cannot be beat <br /> even when all you want to do is eat",
+    "BF888": "These three sisters like to pose <br /> in this portrait, their closeness shows",
+    "BF582": "Families grow, evolve, and change <br /> even if at first it might feel strange",
+    "BF350": "Our animals are part of our families too <br /> they make us happy when we're feeling blue"
   },
   "translations": {
     "Español": {
       "title": "Búsqueda 'Ojo de Espía' en la Galería Barnes",
       "description": "<p>¿Puedes encontrar todas estas obras en nuestras galerías? Marca lo que has encontrado y entrega tu hoja con la búsqueda completa para ganar un premio.</p>",
       "clues": {
-        "bf819": "No todos en nuestra familia estamos relacionados <br /> a veces los amigos también son celebrados.",
-        "bf961": "En un esfuerzo comunitario de amor y confianza <br /> para crecer, en las personas encontramos esperanza.",
-        "bf990": "La gratitud empieza en la familia <br /> ¿Tienes algo por lo que estás agradecido o agradecida?",
-        "bf2553": "Cerca de una madre cerramos los ojos <br /> simplemente nos sentimos muy cómodos.",
-        "bf335": "Nos encanta quedarnos en las rodillas de mamá <br /> pues entre sus brazos encontramos la calma.",
-        "bf854": "Los padres están llenos de amor y de orgullo <br /> por eso cuidan de sus hijos y su futuro.",
-        "bf2075": "No hay nada como el amor entre hermanos <br /> no importa si aburridos o cansados estamos.",
-        "bf888": "A estas tres hermanas les gusta posar <br /> en esta pintura su cercanía se puede notar.",
-        "bf582": "Las familias crecen, evolucionan y cambian <br /> al principio es raro pero luego su alegría contagian.",
-        "bf350": "Las mascotas también son parte de la familia <br /> ellas nos hacen sentir felices con una caricia."
+        "BF819": "No todos en nuestra familia estamos relacionados <br /> a veces los amigos también son celebrados.",
+        "BF961": "En un esfuerzo comunitario de amor y confianza <br /> para crecer, en las personas encontramos esperanza.",
+        "BF990": "La gratitud empieza en la familia <br /> ¿Tienes algo por lo que estás agradecido o agradecida?",
+        "BF2553": "Cerca de una madre cerramos los ojos <br /> simplemente nos sentimos muy cómodos.",
+        "BF335": "Nos encanta quedarnos en las rodillas de mamá <br /> pues entre sus brazos encontramos la calma.",
+        "BF854": "Los padres están llenos de amor y de orgullo <br /> por eso cuidan de sus hijos y su futuro.",
+        "BF2075": "No hay nada como el amor entre hermanos <br /> no importa si aburridos o cansados estamos.",
+        "BF888": "A estas tres hermanas les gusta posar <br /> en esta pintura su cercanía se puede notar.",
+        "BF582": "Las familias crecen, evolucionan y cambian <br /> al principio es raro pero luego su alegría contagian.",
+        "BF350": "Las mascotas también son parte de la familia <br /> ellas nos hacen sentir felices con una caricia."
       }
     }
   }
