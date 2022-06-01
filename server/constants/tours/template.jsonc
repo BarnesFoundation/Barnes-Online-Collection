@@ -1,7 +1,7 @@
 {
     "title": "", // string: Title that will overlay the hero image
     "subtitle": "", // string: Subtitle that will overlay the hero image
-    "heroImageInvno": "BF123", // string: inventory number for the hero image, the image selected must be included in the tour
+    "heroImageInvno": "BF123", // string: Capitalized inventory number for the hero image, the image selected must be included in the tour
     "heroImageStyle": {
         // Optional field that defines styling for the hero image.
         // ** If no custom styles are being applied to the Hero Image, remove this field **
@@ -85,7 +85,7 @@
     ],
     // ** The "clues" and "translation" attributes are only used in eye-spy tours **
     "clues": {
-        // object: Keys in this object should match the "invno" of the objects
+        // object: Keys in this object should match the "invno" of the objects and should be capitalized
         // included in the tour and the values should be the clues.
         // HTML can be included in the clue.
         "BF123": "This is an example clue!"
@@ -101,7 +101,7 @@
             "description": "", // string: Description that appears below the hero header and above the tour content
             // HTML tags can be included in the description
             "clues": {
-                // object: Keys in this object should match the "invno" of the objects
+                // object: Keys in this object should match the "invno" of the objects and should be capitalized
                 // included in the tour and the values should be the clues.
                 "BF123": "¡Esta es una pista de ejemplo!"
             }
