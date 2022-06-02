@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"async": "^2.6.0",
+		"async": "^2.6.4",
 		"aws-sdk": "^2.814.0",
 		"axios": "^0.21.2",
 		"babel-polyfill": "^6.26.0",
@@ -31,7 +31,7 @@
 		"js-yaml": "^3.13.1",
 		"json-schema-traverse": "^0.3.1",
 		"lodash": "^4.17.21",
-		"lodash-es": "^4.17.14",
+		"lodash-es": "^4.17.21",
 		"lodash.mergewith": "^4.6.2",
 		"lodash.template": "^4.5.0",
 		"macaddress": "^0.2.9",
@@ -47,7 +47,6 @@
 		"symbol-observable": "^1.0.4",
 		"tunnel-agent": "^0.6.0",
 		"universal-analytics": "^0.4.16",
-		"url-parse": "^1.5.6",
 		"xml2js": "^0.4.17",
 		"xmlbuilder": "^9.0.1"
 	},
