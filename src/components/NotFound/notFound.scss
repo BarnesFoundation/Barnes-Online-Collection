@@ -1,0 +1,22 @@
+@import '../../scss/variables.scss';
+@import '../../scss/mixins.scss';
+
+
+.not-found{
+    position: sticky;
+    top: #{map-get($headerHeights, "xsmall")}; /* 1 */
+    z-index: 10;
+
+    @include breakpoint("medium+") {
+      top: #{map-get($headerHeights, "medium")}; /* 1 */
+    }
+  
+    @include breakpoint("large+") {
+      top: #{map-get($headerHeights, "large")}; /* 1 */
+    }
+  
+    @include breakpoint("xlarge+") {
+      top: #{map-get($headerHeights, "xlarge")}; /* 1 */
+    }
+
+}
