@@ -12,6 +12,7 @@ import {
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
 import { formatTourData } from "../TourPage/tourPageHelper";
+import NotFound from "../NotFound/notFound";
 
 export default class EyeSpyPage extends React.Component {
   constructor(props) {
@@ -132,26 +133,24 @@ export default class EyeSpyPage extends React.Component {
     } = this.state;
 
     return (
-      <div className="app app-eyespy-page">
-        <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
-        <HtmlClassManager />
-        <SiteHeader isTour />
-        {tourId && title && sections ? (
-          // Display the tour if it was located
+      tourId && title && sections ? (
+        <div className="app app-eyespy-page">
+          <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
+          <HtmlClassManager />
+          <SiteHeader isTour />
+            {/* Display the tour if it was located */}
           <div>
             <StickyList
               {...this.state}
               handleSelectLanguage={(this.handleSelectLanguage).bind(this)}
             />
           </div>
+          <Footer />
+        </div>
         ) : (
-          // Otherwise, no tour found for that id
-          <div className="container">
-            <p>Could not find tour with id "{tourId}"</p>
-          </div>
-        )}
-        <Footer />
-      </div>
-    );
+            // Otherwise, no tour found for that id
+            <NotFound/>
+            )
+    )
   }
 }
