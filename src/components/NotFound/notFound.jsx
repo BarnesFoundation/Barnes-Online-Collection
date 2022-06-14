@@ -1,13 +1,31 @@
 import React from "react";
 import { SiteHeader } from '../SiteHeader/SiteHeader';
-import { Footer } from '../Footer/Footer';
-import './notFound.scss'
+import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
+import HtmlClassManager from "../HtmlClassManager";
+import Footer from '../Footer/Footer';
+import {
+  META_TITLE,
+} from "../../constants";
+import './notFound.scss';
 
 export default class NotFound extends React.Component {
+
+  getMetaTags() {
+    const metaTitle = `${META_TITLE} — Not Found`;
+    const metaDescription = `Barnes Foundation Collection: Not Found`;
+
+    return {
+        title: metaTitle,
+        description: metaDescription,
+    };
+    }
+
   render() {    
 
     return (
         <div className='app app-not-found-page' id="not-found">
+          <SiteHtmlHelmetHead metaTags={this.getMetaTags()} />
+          <HtmlClassManager />
           <SiteHeader isNotFound />
           <div className="not-found container">
             <br/>
