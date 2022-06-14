@@ -5,7 +5,7 @@
 .not-found{
     position: sticky;
     top: #{map-get($headerHeights, "xsmall")}; /* 1 */
-    z-index: 10;
+    z-index: #{map-get($zIndexes, "header")};
 
     @include breakpoint("medium+") {
       top: #{map-get($headerHeights, "medium")}; /* 1 */
