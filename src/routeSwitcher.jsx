@@ -10,6 +10,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';
 import * as ModalActions from './actions/modal';
+import NotFound from './components/NotFound/notFound';
 
 const renderMergedProps = (component, ...rest) => (
   React.createElement(component, Object.assign({}, ...rest))
@@ -94,6 +95,7 @@ class RouteSwitcher extends Component {
 		      <Route path='/tour/:id' component={TourPage} />
           <Route exact path='/eye-spy' component={LandingPage}/>
 		      <Route path='/eye-spy/:id' component={EyeSpyPage} />
+          <Route path='*' component={NotFound} />
         </Switch>
         {this.modalRouteComponents}
       </div>
