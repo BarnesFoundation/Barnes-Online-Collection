@@ -4,7 +4,9 @@ const feb2022 = require("./feb-2022.json");
 const mar2022 = require("./mar-2022.json");
 const apr2022 = require("./apr-2022.json");
 const may2022 = require("./may-2022.json");
-const jun2022 = require("./june-2022.json");
+const jun2022 = require("./jun-2022.json");
+const jul2022 = require("./jul-2022.json");
+
 
 // Key is the slug/tourId of the tour
 module.exports = {
@@ -14,6 +16,7 @@ module.exports = {
     "apr-2022": apr2022,
     "may-2022": may2022,
     "jun-2022": jun2022,
+    "jul-2022": jul2022,
     // Tour for test suite
     test,
 }
