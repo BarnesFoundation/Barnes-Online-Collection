@@ -180,9 +180,10 @@ class SiteHeader extends Component {
 
   render() {
     const { isHeaderHidden, isSideMenuOpen } = this.state;
-    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond, isTour } = this.props;
+    const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond, isTour, isNotFound } = this.props;
 
     let isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
+    let isNotFoundClassNames = isNotFound ? 'not-found-header' : null; // Define class to change color of header and padding.
     if (isArtObjectClassNames && isSecond) isArtObjectClassNames = `${isArtObjectClassNames} art-object-header--absolute`; // For second menu on artist page, absolutely position second menu.
 
     // Set up g-header classes.
@@ -230,7 +231,7 @@ class SiteHeader extends Component {
           aria-hidden={ariaHidden}
           role="banner"
         >
-          <div className='container'>
+          <div className={`container ${isNotFoundClassNames}`}>
             <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} isCentennial={isCentennial} />
             <nav className={gHeaderNavClassNames}>
               <a
@@ -380,7 +381,7 @@ class SiteHeaderGlobalSearch extends Component {
   }
 
   render() {
-    const { isArtObject, isTour } = this.props;
+    const { isArtObject, isTour, isNotFound } = this.props;
     const { isGlobalSearchActive, overlayActive } = this.state;
 
     // Apply shaded overlay classes. These are applied in this order so the z-index of higher is not overwritten.
@@ -395,6 +396,7 @@ class SiteHeaderGlobalSearch extends Component {
           isGlobalSearchActive={isGlobalSearchActive}
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
           isTour={Boolean(isTour)}
+          isNotFound={Boolean(isNotFound)}
         />
         <ConnectedSiteHeader
           isGlobalSearchHeader
@@ -403,6 +405,7 @@ class SiteHeaderGlobalSearch extends Component {
           isSecond
           toggleGlobalSearch={() => this.setGlobalSearchStatus(!isGlobalSearchActive)}
           isTour={Boolean(isTour)}
+          isNotFound={Boolean(isNotFound)}
         />
         {/* Lock scroll on global search activation. */}
         <LockScroll isLocked={isGlobalSearchActive}/>

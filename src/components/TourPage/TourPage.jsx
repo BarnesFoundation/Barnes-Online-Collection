@@ -12,6 +12,7 @@ import {
 } from "../../constants";
 import { parseObject } from "../../objectDataUtils";
 import { formatTourData } from "./tourPageHelper";
+import NotFound from "../NotFound/notFound";
 
 export default class TourPage extends React.Component {
   constructor(props) {
@@ -92,29 +93,27 @@ export default class TourPage extends React.Component {
     } = this.state;
 
     return (
-      <div className="app app-tour-page">
-        <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
-        <HtmlClassManager />
-        <SiteHeader isTour />
-        {tourId && title && sections ? (
-          // Display the tour if it was located
-          <div>
-            <StickyList
-              title={title}
-              subtitle={subtitle}
-              heroImageSrc={heroImageSrc}
-              description={description}
-              sections={sections}
-            />
+        tourId && title && sections ? (
+          <div className="app app-tour-page">
+            <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
+            <HtmlClassManager />
+            <SiteHeader isTour />
+              {/* Display the tour if it was located */}
+            <div>
+              <StickyList
+                title={title}
+                subtitle={subtitle}
+                heroImageSrc={heroImageSrc}
+                description={description}
+                sections={sections}
+              />
+            </div>
+            <Footer />
           </div>
         ) : (
-          // Otherwise, no tour found for that id
-          <div className="container">
-            <p>Could not find tour with id "{tourId}"</p>
-          </div>
-        )}
-        <Footer />
-      </div>
+               // Otherwise, no tour found for that id
+               <NotFound/>
+             )
     );
   }
 }
