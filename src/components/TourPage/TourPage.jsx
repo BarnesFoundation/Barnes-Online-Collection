@@ -32,11 +32,12 @@ export default class TourPage extends React.Component {
   async componentDidMount() {
     // Extract the slug for this tour
     const { id } = this.props.match.params;
+    const slug = this.props.location.pathname;
 
     // If we have a slug, retrieve information for the tour
-    if (id) {
+    if (slug) {
       try {
-        const tourResponse = await axios.get(`/api/tour/${id}`);
+        const tourResponse = await axios.get(`/api${slug}`);
         const tourData = tourResponse.data;
         const objects = tourData.objects;
 
