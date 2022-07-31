@@ -17,6 +17,7 @@ module.exports = {
     "may-2022": may2022,
     "jun-2022": jun2022,
     "jul-2022": jul2022,
+    "aug-2022": aug2022,
     // Tour for test suite
     test,
 }
