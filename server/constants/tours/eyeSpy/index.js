@@ -6,6 +6,7 @@ const apr2022 = require("./apr-2022.json");
 const may2022 = require("./may-2022.json");
 const jun2022 = require("./jun-2022.json");
 const jul2022 = require("./jul-2022.json");
+const aug2022 = require("./aug-2022.json");
 
 
 // Key is the slug/tourId of the tour
