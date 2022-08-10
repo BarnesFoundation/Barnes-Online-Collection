@@ -19,7 +19,7 @@ export default class TourPage extends React.Component {
     super(props);
 
     this.state = {
-      tourId: null,
+      slug: null,
       title: null,
       description: null,
       objects: null,
@@ -31,42 +31,40 @@ export default class TourPage extends React.Component {
 
   async componentDidMount() {
     // Extract the slug for this tour
-    const { id } = this.props.match.params;
     const slug = this.props.location.pathname;
 
     // If we have a slug, retrieve information for the tour
     if (slug) {
       try {
         const tourResponse = await axios.get(`/api${slug}`);
-        const tourData = tourResponse.data;
-        const objects = tourData.objects;
+        const { tourData, objects } = tourResponse.data;
 
-        const roomOrder = tourData.customRoomOrder.length
-          ? tourData.customRoomOrder
+        const roomOrder = tourData.roomOrder.length
+          ? tourData.roomOrder.map(r => r.room.replaceAll("_", " "))
           : DEFAULT_ROOM_ORDER;
 
-        const heroImageInvno = tourData.heroImageInvno;
-        const object = objects.find((obj) => obj._source.invno === heroImageInvno);
+        const heroImageInvno = tourData.collectionObjects.find(obj => obj.heroImage).inventoryNumber;
+        const object = objects.find((obj) => obj._source.invno.toLowerCase() === heroImageInvno.toLowerCase());
         const parsedObject = parseObject(object._source);
-        const sections = formatTourData(roomOrder, objects)
+        const sections = formatTourData(roomOrder, objects, tourData.collectionObjects)
 
         this.setState({
           title: tourData.title,
           subtitle: tourData.subtitle,
-          description: tourData.description,
+          description: tourData.description.html,
           heroImageSrc: parsedObject.imageUrlLarge,
           metaImgUrl: parsedObject.imageUrlSmall,
           sections: sections,
         });
       } catch (error) {
         console.log(
-          `An error occurred retrieving the tour for id ${id}`,
+          `An error occurred retrieving the tour for slug ${slug}`,
           error
         );
       } finally {
         this.setState({
           ...this.state,
-          tourId: id,
+          slug: slug,
         });
       }
     }
@@ -85,7 +83,7 @@ export default class TourPage extends React.Component {
 
   render() {
     const {
-      tourId,
+      slug,
       title,
       subtitle,
       description,
@@ -94,7 +92,7 @@ export default class TourPage extends React.Component {
     } = this.state;
 
     return (
-        tourId && title && sections ? (
+        slug && title && sections ? (
           <div className="app app-tour-page">
             <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
             <HtmlClassManager />

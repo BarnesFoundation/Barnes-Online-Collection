@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import classnames from "classnames";
+import parse from "html-react-parser";
 import { StickyListSection } from "../StickyListSection/StickyListSection";
 import DropDownSelector from "../DropDownSelector/DropDownSelector";
 import "./stickyList.css";
@@ -35,8 +36,7 @@ export default class StickyList extends Component {
           className={classnames("sticky-list__description", {
             hidden: !description.length,
           })}
-          dangerouslySetInnerHTML={{ __html: description }}
-        ></div>
+        >{parse(description)}</div>
 
         <p className="sticky-list__mobile">
           <i>This interactive guide is best viewed on a mobile device.</i>

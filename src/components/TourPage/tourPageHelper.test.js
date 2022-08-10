@@ -1,10 +1,13 @@
-import { sortObjectsByRoom, formatTourData } from "./tourPageHelper";
+import { sortObjectsByRoom, formatTourData, parseTourObject } from "./tourPageHelper";
 import { DEFAULT_ROOM_ORDER } from "../../constants";
+import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 
-const objects = require("../../../server/constants/tours/test")["objects"];
+const data = require("../../../server/constants/tours/test");
+const objectsCopy = data["tourData"]["collectionObjects"];
+const objects = data["objects"]
 
 describe("sortObjectsByRoom", () => {
-  const objByRoom = sortObjectsByRoom(objects);
+  const objByRoom = sortObjectsByRoom(objects, objectsCopy);
 
   it("should sort the objects by room number", () => {
     expect(objByRoom["Main Room"].length).toBe(1);
@@ -24,7 +27,7 @@ describe("sortObjectsByRoom", () => {
 });
 
 describe("formatTourData", () => {
-  const tourData = formatTourData(DEFAULT_ROOM_ORDER, objects);
+  const tourData = formatTourData(DEFAULT_ROOM_ORDER, objects, objectsCopy);
 
   it("should properly format room data object", () => {
     expect(tourData[0].header).toBe("Main Room");
