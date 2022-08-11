@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import TourPage from './components/TourPage/TourPage';
-import EyeSpyPage from './components/EyeSpyPage/EyeSpyPage';
 import LandingPage from './components/LandingPage/LandingPage';
 import ArtObjectPage from './components/ArtObjectPage/ArtObjectPage';
 import ArtObjectPageModal from './components/ArtObjectPageComponents/ArtObjectPageModal';

@@ -1,6 +1,4 @@
-const { gql } = "graphql-request";
 const tours = require("../constants/tours");
-const eyeSpyTours = require("../constants/tours/eyeSpy")
 const elasticSearchService = require("./elasticSearchService");
 const graphQLClient = require("../utils/graphCmsClient");
 
@@ -144,29 +142,6 @@ const getTour = async (request, response) => {
   }
 };
 
-const getEyeSpyTour = async (request, response) => {
-  const tourId = request.params.id;
-  try {
-    // Get data for tour objects
-    const tour = await getTourObjects(tourId, eyeSpyTours)
-
-    // If tour object is truthy, a tour exists
-    if (tour) {
-      // Combine the clue data with the obj data
-      return response.status(200).json(tour)
-      // Otherwise, the tour does not exist
-    } else {
-      return response
-        .status(404)
-        .json({ message: `No Eye Spy tour with id ${tourId} found` });
-    }
-  } catch (e) {
-    console.log(e);
-    response.status(500).json(e)
-  }
-}
-
 module.exports = {
   getTour,
-  getEyeSpyTour,
 };
