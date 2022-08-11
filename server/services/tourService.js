@@ -97,6 +97,29 @@ const getTour = async (request, response) => {
               html
             }
           }
+          localizations(includeCurrent: false) {
+            slug
+            subtitle
+            title
+            description {
+              html
+            }
+            locale
+            collectionObjects {
+              id
+              inventoryNumber
+              heroImage
+              localizations(includeCurrent: false) {
+                locale
+                description {
+                  html
+                }
+                overlay {
+                  html
+                }
+              }
+            }
+          }
         }
       }
       `,

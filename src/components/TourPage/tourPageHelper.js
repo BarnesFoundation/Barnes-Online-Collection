@@ -99,3 +99,29 @@ export const formatTourData = (roomOrder, objects, objectsCopy) => {
 
   return tourData;
 };
+
+/**
+ * Given an locale abbreviation, returns the full string of the language name
+ */
+export const localeToLanguage = (locale) => {
+  switch (locale) {
+    case "es":
+      return "Español";
+    case "en":
+    default:
+      return "English"
+  }
+}
+
+/**
+ * Given a language, returns the locale abbreviation
+ */
+ export const languageToLocale = (language) => {
+  switch (language) {
+    case "Español":
+      return "es";
+    case "English":
+    default:
+      return "en"
+  }
+}

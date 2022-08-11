@@ -69,7 +69,8 @@
             { "room": "Room_19"},
             { "room": "Mezzanine"},
             { "room": "Gallery_Foyer"}
-        ]
+        ],
+        "localizations": []
     },
     "objects": [
         {
