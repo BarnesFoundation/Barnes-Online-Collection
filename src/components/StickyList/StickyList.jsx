@@ -24,7 +24,7 @@ export default class StickyList extends Component {
         <div className="sticky-list__hero" style={heroImageStyle && heroImageStyle.container}>
           <div className="sticky-list__hero__overlay" style={heroImageStyle && heroImageStyle.overlay}>
           </div>
-          <img className="sticky-list__hero__image" src={heroImageSrc} style={heroImageStyle && heroImageStyle.img} />
+          <img className="sticky-list__hero__image" src={heroImageSrc} style={heroImageStyle && heroImageStyle.img} alt="" />
           <div className="sticky-list__hero__text">
             <h2 className="sticky-list__hero__text-title">{title}</h2>
             {subtitle && subtitle.length && (
