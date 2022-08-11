@@ -94,7 +94,7 @@ class RouteSwitcher extends Component {
           <Route exact path='/tour' component={LandingPage}/>
 		      <Route path='/tour/:id' component={TourPage} />
           <Route exact path='/eye-spy' component={LandingPage}/>
-		      <Route path='/eye-spy/:id' component={EyeSpyPage} />
+		      <Route path='/eye-spy/:id' component={TourPage} />
           <Route path='*' component={NotFound} />
         </Switch>
         {this.modalRouteComponents}
