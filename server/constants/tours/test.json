@@ -1,63 +1,77 @@
 {
-    "title": "Test Tour",
-    "subtitle": "",
-    "description": "To be used for testing purposes only!",
-    "heroImageInvno": "BF125",
-    "body": {
-        "from": 0,
-        "size": 25,
-        "_source": [
-            "id",
-            "title",
-            "people",
-            "medium",
-            "imageOriginalSecret",
-            "imageSecret",
-            "ensembleIndex",
-            "objRightsTypeId",
-            "onview",
-            "invno",
-            "image",
-            "curatorialApproval",
-            "shortDescription",
-            "nationality",
-            "birthDate",
-            "deathDate",
-            "artistPrefix",
-            "artistSuffix",
-            "culture",
-            "displayDate",
-            "medium",
-            "dimensions",
-            "creditLine",
-            "longDescription",
-            "bibliography",
-            "exhHistory",
-            "publishedProvenance"
-        ],
-        "query": {
-            "bool": {
-                "filter": {
-                    "exists": {
-                        "field": "imageSecret"
-                    }
+    "tourData": {
+        "title": "Test Tour",
+        "subtitle": "",
+        "description": {
+            "html": "<p>To be used for testing purposes only!</p>"
+        },
+        "collectionObjects": [
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF271",
+                "description": null,
+                "overlay": {
+                    "html": "<p>Test overlay</p>"
+                }
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF367",
+                "description": null,
+                "overlay": null
+            },
+            {
+                "heroImage": true,
+                "inventoryNumber": "BF125",
+                "description": null,
+                "overlay": null
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF331",
+                "description": {
+                    "html": "<p>Test Description</p>"
                 },
-                "must": [
-                    {
-                        "match": {
-                            "people": "Chaim Soutine"
-                        }
-                    },
-                    {
-                        "match": {
-                            "onview": 1
-                        }
-                    }
-                ]
+                "overlay": {
+                    "html": "<p>Test overlay</p>"
+                }
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF357",
+                "description": {
+                    "html": "<p>Test Description</p>"
+                },
+                "overlay": null
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF953",
+                "description": null,
+                "overlay": null
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF269",
+                "description": null,
+                "overlay": null
+            },
+            {
+                "heroImage": false,
+                "inventoryNumber": "BF332",
+                "description": null,
+                "overlay": null
             }
-        }
+        ],
+        "roomOrder": [
+            { "room": "Main_Room"},
+            { "room": "Room_14"},
+            { "room": "Room_19"},
+            { "room": "Mezzanine"},
+            { "room": "Gallery_Foyer"}
+        ],
+        "localizations": []
     },
-    "customRoomOrder": [],
     "objects": [
         {
             "_source": {
