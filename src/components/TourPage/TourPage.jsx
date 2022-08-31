@@ -13,6 +13,7 @@ import {
 import { parseObject } from "../../objectDataUtils";
 import { formatTourData, languageToLocale, localeToLanguage } from "./tourPageHelper";
 import NotFound from "../NotFound/notFound";
+import Spinner from "../Spinner/Spinner";
 
 export default class TourPage extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export default class TourPage extends React.Component {
       roomOrder: null,
       heroImgSrc: null,
       metaImgUrl: null,
+      loading: true,
     };
   }
 
@@ -71,6 +73,7 @@ export default class TourPage extends React.Component {
         this.setState({
           ...this.state,
           slug: slug,
+          loading: false,
         });
       }
     }
@@ -128,7 +131,23 @@ export default class TourPage extends React.Component {
       slug,
       title,
       sections,
+      loading,
     } = this.state;
+
+    if (loading) {
+      return (
+        <div className="app app-tour-page">
+          <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
+          <HtmlClassManager />
+          <SiteHeader isTour />
+          {/* Display the tour if it was located */}
+          <div>
+            <Spinner />
+          </div>
+          <Footer />
+        </div>
+      )
+    }
 
     return (
       slug && title && sections ? (
