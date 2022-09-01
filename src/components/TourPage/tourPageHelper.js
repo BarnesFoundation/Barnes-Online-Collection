@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import parse from "html-react-parser";
 import { getRoomName } from "../../ensembleIndex";
 import { parseObject } from "../../objectDataUtils";
@@ -7,23 +7,47 @@ import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyR
 /**
  * Given an object, parses the images urls, and sets the content info and overlay text attributes
  */
- export const parseTourObject = (object, clues = undefined) => {
+export const parseTourObject = (object, objectCopy) => {
   object = parseObject(object);
-  
-  // If eye spy tour, set the clue as the caption and object meta data and description as overlay
-  if (clues) {
-    // Set the clue to be the object caption and object meta + description as overlay text
-    object.contentInfo = (<p>{parse(clues[object.invno])}</p>)
-    object.overlayText = (
-      <div>
-        {getObjectMetaDataHtml(object)}
-        {object.shortDescription.length ? parse(object.shortDescription) : <span></span>}
-      </div>
-    )
-  // Else default to object meta data as caption and description as overlay text
+  let content = "";
+  let overlay = "";
+
+  if (objectCopy.description) {
+    // content = (<div>
+    //   {parse(objectCopy.description.html)}
+    // </div>
+    // )
+    content = parse(objectCopy.description.html)
+    overlay = getObjectMetaDataHtml(object)
+
+    if (objectCopy.overlay) {
+      overlay = (
+        <div>
+          {overlay}
+          {parse(objectCopy.overlay.html)}
+        </div>
+      );
+
+    } else if (object.shortDescription.length) {
+      overlay = (
+        <div>
+          {overlay}
+          {parse(object.shortDescription)}
+        </div>
+      );
+    }
   } else {
-    object.contentInfo = getObjectMetaDataHtml(object)
-    object.overlayText = parse(object.shortDescription)
+    if (objectCopy.overlay) {
+      overlay = parse(objectCopy.overlay.html);
+    }
+  }
+
+  object.contentInfo = content ? content : getObjectMetaDataHtml(object);
+
+  if (overlay) {
+    object.overlayText = overlay;
+  } else if (object.shortDescription.length) {
+    object.overlayText = parse(object.shortDescription);
   }
 
   return object;
@@ -33,7 +57,7 @@ import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyR
  * Given a list of art objects, sorts the list into dictionary with 
  * room numbers as the keys and an array of art objects as the value
  */
-export const sortObjectsByRoom = (objects, clues = undefined) => {
+export const sortObjectsByRoom = (objects, objectsCopy) => {
   // Obj containing all art objects organized by room
   const objByRoom = {};
   for (const object of objects) {
@@ -41,8 +65,10 @@ export const sortObjectsByRoom = (objects, clues = undefined) => {
     const room = getRoomName(object._source.ensembleIndex);
     // If key for this room doesn't exist, add it
     objByRoom[room] = objByRoom[room] ? objByRoom[room] : [];
+    // Find the associated copy
+    const objectCopy = objectsCopy.find(copy => object._source.invno.toLowerCase() === copy.inventoryNumber.toLowerCase())
     // Parse the object to set required attributes
-    const parsedObject = parseTourObject(object._source, clues);
+    const parsedObject = parseTourObject(object._source, objectCopy);
     // Add object to room array
     objByRoom[room].push(parsedObject);
   }
@@ -53,11 +79,12 @@ export const sortObjectsByRoom = (objects, clues = undefined) => {
  * Given an array with the room numbers in order and an array of art objects, 
  * returns an array of room objects with the section header and art object content.
  */
-export const formatTourData = (roomOrder, objects, clues = undefined) => {
+export const formatTourData = (roomOrder, objects, objectsCopy) => {
   const tourData = [];
   // Get dictionary of art objects organized by room number
-  const objByRoom = sortObjectsByRoom(objects, clues);
-
+  const objByRoom = sortObjectsByRoom(objects, objectsCopy);
+  // TODO: handle when not all rooms are included
+  // console.log(objByRoom)
   for (const room of roomOrder) {
     // If the dictionary has a key for that room, add it to the tourData array
     if (objByRoom[room]) {
@@ -72,3 +99,29 @@ export const formatTourData = (roomOrder, objects, clues = undefined) => {
 
   return tourData;
 };
+
+/**
+ * Given an locale abbreviation, returns the full string of the language name
+ */
+export const localeToLanguage = (locale) => {
+  switch (locale) {
+    case "es":
+      return "Español";
+    case "en":
+    default:
+      return "English"
+  }
+}
+
+/**
+ * Given a language, returns the locale abbreviation
+ */
+ export const languageToLocale = (language) => {
+  switch (language) {
+    case "Español":
+      return "es";
+    case "English":
+    default:
+      return "en"
+  }
+}

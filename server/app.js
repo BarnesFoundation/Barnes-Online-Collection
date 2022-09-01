@@ -544,8 +544,8 @@ app.get('/api/suggest', craftService.getSuggestions);
 app.get('/api/advancedSearchSuggest', craftService.getAutoSuggestions);
 
 /** Endpoint for retrieving tour data */
-app.get('/api/tour/:id', tourService.getTour);
-app.get('/api/tour/eyeSpy/:id', tourService.getEyeSpyTour);
+app.get('/api/tour/:slug', tourService.getTour);
+app.get('/api/eye-spy/:id', tourService.getTour);
 
 app.use(function (req, res) {
   res.status(404).send('Error 404: Page not Found')

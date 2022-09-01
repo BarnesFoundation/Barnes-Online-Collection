@@ -21,6 +21,8 @@
 		"extend": "^3.0.2",
 		"fast-deep-equal": "^1.0.0",
 		"fstream": "^1.0.12",
+		"graphql": "^16.5.0",
+		"graphql-request": "^4.3.0",
 		"handlebars": "^4.7.7",
 		"history": "^4.6.2",
 		"hoek": "^5.0.3",

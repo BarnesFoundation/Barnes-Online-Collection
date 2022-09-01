@@ -10,12 +10,15 @@ export const ENSEMBLE_IMAGE_URL = (index) => {
 }
 
 export const getRoomAndTitleText = (ensembleIndex) => {
-  const wallTitle = ENSEMBLE[ensembleIndex].wallTitle;
+  const ensembleInfo = ENSEMBLE[ensembleIndex];
+  if (!ensembleInfo) return '';
+
+  const wallTitle = ensembleInfo.wallTitle;
   const wallTitleStr = wallTitle ? `, ${wallTitle}` : '';
 
-  return `${ENSEMBLE[ensembleIndex].roomTitle}${wallTitleStr}`;
+  return `${ensembleInfo.roomTitle}${wallTitleStr}`;
 }
 
 export const getRoomName = (ensembleIndex) => {
-  return ENSEMBLE[ensembleIndex].roomTitle;
+  return ENSEMBLE[ensembleIndex] ? ENSEMBLE[ensembleIndex].roomTitle : '';
 };
