@@ -17,7 +17,7 @@
 		"diff": "^3.5.0",
 		"dotenv": "^4.0.0",
 		"elasticsearch": "16.5.0",
-		"express": "^4.15.3",
+		"express": "^4.17.3",
 		"extend": "^3.0.2",
 		"fast-deep-equal": "^1.0.0",
 		"fstream": "^1.0.12",
