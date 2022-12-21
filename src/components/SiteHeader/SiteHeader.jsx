@@ -220,7 +220,8 @@ class SiteHeader extends Component {
 
     // Get year to determine whether to use centennial logo or original logo
     const today = new Date()
-    const isCentennial = today.getFullYear() === 2022;
+    const isCentennial = true;
+    // const isCentennial = today.getFullYear() === 2022;
     
 
     return (
