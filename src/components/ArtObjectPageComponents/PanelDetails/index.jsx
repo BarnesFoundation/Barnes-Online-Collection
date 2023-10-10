@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import axios from 'axios';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SummaryTable from './SummaryTable';
@@ -39,10 +43,29 @@ const getTabList = (artObjectProps) => (
 // For modulo
 const STATIC_IMAGE_COUNT = 7;
 
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1
+  }
+};
+
 class Thumbnail extends Component {
   constructor(props) {
     super(props);
-
     this.ref = null;
 
     this.state = {
@@ -63,7 +86,12 @@ class Thumbnail extends Component {
 
   render() {
     const { isLandscapeThumbnail } = this.state;
-    const { onClick, isActive, src, alt } = this.props;
+    const { onClick, isActive, src, alt, rendition } = this.props;
+    const imageThumbnailProxy = rendition.proxies.find((proxy) => {
+      return proxy.name === 'Thumbnail'
+    });
+    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`
+    console.log(imageSourceUrl);
     
     // Set up classNames, if selected add BEM modifier.
     let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
@@ -77,7 +105,9 @@ class Thumbnail extends Component {
       // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
     }
 
-    if (isLandscapeThumbnail) thumbnailClassName = `${thumbnailClassName} thumbnails__thumbnail--wide`;
+    if (isLandscapeThumbnail) {
+      thumbnailClassName = `${thumbnailClassName} thumbnails__thumbnail--wide`;
+    }
 
     return (
       <li
@@ -88,7 +118,7 @@ class Thumbnail extends Component {
           <div className='art-object-fade__in'>
             <div className='thumbnails__thumbnail-wrapper'>
               <img
-                className={thumbnailClassName} src={src} alt={alt}
+                className={thumbnailClassName} src={imageSourceUrl} alt={alt}
                 ref={this.setRef}
               />
             </div>
@@ -104,14 +134,16 @@ class Thumbnail extends Component {
   }
 }
 
-const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen }) => {
-  const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => (
+const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen, renditions }) => {
+  console.log('renditions', renditions)
+  const images = renditions.map((rendition, i) => (
       <Thumbnail
         key={i}
         onClick={() => setActiveImageIndex(i)}
         isActive={activeImageIndex === i}
         src={object.imageUrlSmall}
         alt={object.title}
+        rendition={rendition}
       />
     )
   );
@@ -247,8 +279,27 @@ class PanelDetails extends Component {
       imageLoaded: false,
       activeImageIndex: 0,
       thumbnailsOpen: false,
+      renditions: null,
     };
   }
+
+
+  /** Async method to fetch possible additional renditions for this object */
+  async componentDidUpdate() {
+    if (this.props.object.id && this.state.renditions === null) {
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: `/api/objects/${this.props.object.id}/assets`
+        });
+  
+        this.setState({...this.state, renditions: response.data || []})
+      } catch (error) {
+        console.error(`An error occurred fetching renditions`, error);
+      }
+    }
+  }
+
 
   /** On child image loading, update this state. */
   onLoad = () => this.setState({ imageLoaded: true });
@@ -273,7 +324,7 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
+    const { imageLoaded, activeImageIndex, thumbnailsOpen, renditions } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -294,15 +345,16 @@ class PanelDetails extends Component {
             setActiveImageIndex={this.setActiveImageIndex}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {/* {Boolean(imageLoaded) &&
+          {Boolean(imageLoaded) && renditions?.length &&
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
               object={object}
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
+              renditions={renditions}
             />
-          } */}
+          }
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
           <div className='container-inner-narrow'>
