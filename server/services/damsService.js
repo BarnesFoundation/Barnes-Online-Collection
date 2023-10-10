@@ -37,7 +37,7 @@ function generateGetAssetQuery(objectId) {
                     startIndex: 0,
                     size: 10,
                 },
-                data: ["asset.id", "asset.base", "asset.attributes"],
+                data: ["asset.id", "asset.base", "asset.attributes", "asset.file", "asset.proxies"],
             },
         ],
     };
