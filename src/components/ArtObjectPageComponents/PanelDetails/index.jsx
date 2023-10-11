@@ -90,8 +90,9 @@ class Thumbnail extends Component {
     const imageThumbnailProxy = rendition.proxies.find((proxy) => {
       return proxy.name === 'Thumbnail'
     });
-    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`
-    console.log(imageSourceUrl);
+
+    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`;
+    const renditionCaption = rendition.attributes['Artwork Caption (TMS)'] || '';
     
     // Set up classNames, if selected add BEM modifier.
     let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
@@ -126,7 +127,7 @@ class Thumbnail extends Component {
           </div>
           <ArtObjectOverlay
             isThumbnail
-            people={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'}
+            people={renditionCaption}
           />
         </div>
       </li>
