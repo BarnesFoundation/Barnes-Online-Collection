@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 import axios from 'axios';
 
 import { connect } from 'react-redux';
