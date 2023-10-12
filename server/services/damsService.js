@@ -2,6 +2,7 @@ const axios = require("axios");
 
 const NETX_BASE_URL = process.env.NETX_BASE_URL;
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
+const NETX_ENABLED = process.env.NETX_ENABLED || false;
 
 function generateGetAssetQuery(objectId) {
     return {
@@ -44,6 +45,11 @@ function generateGetAssetQuery(objectId) {
 }
 
 async function getAssetByObjectId(objectId) {
+    // In case we want to disable interaction with NetX for now
+    if (NETX_ENABLED === false) {
+        return [];
+    }
+
     const response = await axios({
         baseURL: NETX_BASE_URL,
         url: '/api/rpc',
