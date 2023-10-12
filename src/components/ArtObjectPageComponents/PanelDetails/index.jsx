@@ -347,7 +347,7 @@ class PanelDetails extends Component {
             renditions={renditions}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {Boolean(imageLoaded) && renditions?.length &&
+          {Boolean(imageLoaded) && renditions?.length ?
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
@@ -355,7 +355,7 @@ class PanelDetails extends Component {
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
               renditions={renditions}
-            />
+            /> : null
           }
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
