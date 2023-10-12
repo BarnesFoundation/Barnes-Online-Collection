@@ -239,20 +239,20 @@ class Image extends Component {
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
-          {/** Uncomment this once we have thumbnail data. */}
+          {/** Renders the left/right navigation arrows when renditions exist */}
           {isLoaded && renditionsExist && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
             >
-              <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
+              <Icon classes='image-art-object__arrow' svgId='-icon_arrow-left'/>
             </button>
             <span className='image-art-object__counter'>{activeImageIndex + 1} / {renditions.length}</span>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
               onClick={() => setActiveImageIndex(activeImageIndex + 1)}
             >
-              <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
+              <Icon classes='image-art-object__arrow' svgId='-icon_arrow-right'/>
             </button>
           </div>}
         </div>
