@@ -40,29 +40,6 @@ const getTabList = (artObjectProps) => (
   ].filter(({ tabContent }) => tabContent) // Filter out tabs with no content.
 );
 
-// For modulo
-const STATIC_IMAGE_COUNT = 7;
-
-const responsive = {
-  superLargeDesktop: {
-    // the naming can be any, depends on you.
-    breakpoint: { max: 4000, min: 3000 },
-    items: 5
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 3
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 2
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1
-  }
-};
-
 class Thumbnail extends Component {
   constructor(props) {
     super(props);
@@ -136,7 +113,6 @@ class Thumbnail extends Component {
 }
 
 const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen, renditions }) => {
-  console.log('renditions', renditions)
   const images = renditions.map((rendition, i) => (
       <Thumbnail
         key={i}
@@ -215,49 +191,70 @@ class Image extends Component {
       isLoaded,
       object,
       activeImageIndex,
-      setActiveImageIndex
+      setActiveImageIndex,
+      renditions
     } = this.props;
+
+    // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    
+    const showZoomImageView = Boolean(!didCatchFailure && object.id && activeImageIndex === 0);
+    const renditionsExist = renditions?.length > 0;
+
     let additionalStyle = {};
-    if (!didCatchFailure) {
+    let imageUrlToRender = '';
+
+    // If we encountered failure during rendering of the Zoom component, we'll hide it
+    // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
+    if (!didCatchFailure && activeImageIndex === 0) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
+
+    // We'll render the image from the object itself 
+    if (activeImageIndex === 0) {
+      imageUrlToRender = object.imageUrlLarge
+    }  // Otherwise, one of the renditions was clicked. So we need to render that image
+    else {
+      const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
+        return proxy.name === 'Preview'
+      });
+      imageUrlToRender = `https://barnesfoundation.netx.net${imageThumbnailPreview.file.url}/`;
+    }
+
 
     return (
       <div>
         <div className='image-art-object'>
-          {(!didCatchFailure && object.id) &&
+          {(showZoomImageView) &&
             <Zoom
               id={object.id}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           }
           <img
-            aria-hidden='true'
+            aria-hidden={showZoomImageView.toString()}
             className='image-art-object__img'
-            src={object.imageUrlLarge}
+            src={imageUrlToRender || object.imageUrlLarge}
             alt={object.title}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {/* {isLoaded && <div className='image-art-object__button-group'>
+          {isLoaded && renditionsExist && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
             </button>
-            <span className='image-art-object__counter'>{activeImageIndex + 1} / {STATIC_IMAGE_COUNT}</span>
+            <span className='image-art-object__counter'>{activeImageIndex + 1} / {renditions.length}</span>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
               onClick={() => setActiveImageIndex(activeImageIndex + 1)}
             >
               <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
             </button>
-          </div>} */}
+          </div>}
         </div>
         <div className='image-caption'>
           {object.people && <div
@@ -310,13 +307,16 @@ class PanelDetails extends Component {
    * If max is > DEFAULT_THUMBNAIL_COUNT, automatically open accordion. 
    */
   setActiveImageIndex = (index) => {
-    const nextIndex = index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT;
+    const { renditions } = this.state;
+    if (renditions?.length) {
+      const nextIndex = index < 0 ? renditions.length - 1 : index % renditions.length;
 
-    // Check if next index is greater than DEFAULT_THUMBNAIL_COUNT, set thumbnailsOpen to true.
-    if (nextIndex > DEFAULT_THUMBNAIL_COUNT - 1) {
-      this.setState({ activeImageIndex: nextIndex, thumbnailsOpen: true });
-    } else {
-      this.setState({ activeImageIndex: nextIndex });
+      // Check if next index is greater than DEFAULT_THUMBNAIL_COUNT, set thumbnailsOpen to true.
+      if (nextIndex > DEFAULT_THUMBNAIL_COUNT - 1) {
+        this.setState({ activeImageIndex: nextIndex, thumbnailsOpen: true });
+      } else {
+        this.setState({ activeImageIndex: nextIndex });
+      }
     }
   }
 
@@ -344,6 +344,7 @@ class PanelDetails extends Component {
             object={object}
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
+            renditions={renditions}
           />
           {/** Uncomment this once we have thumbnail data. */}
           {Boolean(imageLoaded) && renditions?.length &&
