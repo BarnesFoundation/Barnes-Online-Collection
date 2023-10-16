@@ -38,6 +38,11 @@ const COPYRIGHT = {
     copy: 'Public Domain',
     link: 'https://creativecommons.org/publicdomain/mark/1.0/',
     type: 'large'
+  },
+  11: {
+    copy: 'Public Domain, Temporarily Under Exclusive License',
+    link: 'https://creativecommons.org/publicdomain/mark/1.0/',
+    type: 'large-exclusive'
   }
 };
 

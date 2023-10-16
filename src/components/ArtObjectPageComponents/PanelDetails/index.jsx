@@ -360,7 +360,6 @@ class PanelDetails extends Component {
           <div className='container-inner-narrow'>
             <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails} />
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
-              {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
               <a
                 className='btn btn--primary btn--100 btn--vertically-center'
                 href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl : requestImageUrl}
