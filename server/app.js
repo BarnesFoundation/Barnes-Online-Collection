@@ -215,7 +215,7 @@ function getRelatedObjects (objectID) {
       .get(`${canonicalRoot}/api/search`, { params: { body } })
       .then(response => response.data.hits.hits)
       .catch(error => console.error(error.message))
-};
+}
 
 const getDistance = (from, to) => {
   const fromKeys = Object.keys(from)

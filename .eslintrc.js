@@ -20,6 +20,16 @@ module.exports = {
     "no-mixed-spaces-and-tabs": "off",
     "react/no-unescaped-entities": "off",
     "no-control-regex": "off",
-    "react/no-deprecated": "off"
+    "react/no-deprecated": "off",
+    "no-async-promise-executor": "off"
+  },
+  settings: {
+    react: { version: "detect" },
+
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
 };
