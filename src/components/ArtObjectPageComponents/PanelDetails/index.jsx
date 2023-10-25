@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SummaryTable from './SummaryTable';
@@ -12,6 +14,8 @@ import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
 
+// For now, renditions are not enabled
+const ENABLE_ADDITIONAL_RENDITIONS = false;
 
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
@@ -36,13 +40,9 @@ const getTabList = (artObjectProps) => (
   ].filter(({ tabContent }) => tabContent) // Filter out tabs with no content.
 );
 
-// For modulo
-const STATIC_IMAGE_COUNT = 7;
-
 class Thumbnail extends Component {
   constructor(props) {
     super(props);
-
     this.ref = null;
 
     this.state = {
@@ -63,7 +63,13 @@ class Thumbnail extends Component {
 
   render() {
     const { isLandscapeThumbnail } = this.state;
-    const { onClick, isActive, src, alt } = this.props;
+    const { onClick, isActive, src, alt, rendition } = this.props;
+    const imageThumbnailProxy = rendition.proxies.find((proxy) => {
+      return proxy.name === 'Thumbnail'
+    });
+
+    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`;
+    const renditionCaption = rendition.attributes['Artwork Caption (TMS)'] || '';
     
     // Set up classNames, if selected add BEM modifier.
     let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
@@ -77,7 +83,9 @@ class Thumbnail extends Component {
       // gridListElClassName = `${gridListElClassName} grid-list-el--active`;
     }
 
-    if (isLandscapeThumbnail) thumbnailClassName = `${thumbnailClassName} thumbnails__thumbnail--wide`;
+    if (isLandscapeThumbnail) {
+      thumbnailClassName = `${thumbnailClassName} thumbnails__thumbnail--wide`;
+    }
 
     return (
       <li
@@ -88,7 +96,7 @@ class Thumbnail extends Component {
           <div className='art-object-fade__in'>
             <div className='thumbnails__thumbnail-wrapper'>
               <img
-                className={thumbnailClassName} src={src} alt={alt}
+                className={thumbnailClassName} src={imageSourceUrl} alt={alt}
                 ref={this.setRef}
               />
             </div>
@@ -96,7 +104,7 @@ class Thumbnail extends Component {
           </div>
           <ArtObjectOverlay
             isThumbnail
-            people={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'}
+            people={renditionCaption}
           />
         </div>
       </li>
@@ -104,14 +112,15 @@ class Thumbnail extends Component {
   }
 }
 
-const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen }) => {
-  const images = [...Array(STATIC_IMAGE_COUNT)].map((_x, i) => (
+const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, toggleOpen, renditions }) => {
+  const images = renditions.map((rendition, i) => (
       <Thumbnail
         key={i}
         onClick={() => setActiveImageIndex(i)}
         isActive={activeImageIndex === i}
         src={object.imageUrlSmall}
         alt={object.title}
+        rendition={rendition}
       />
     )
   );
@@ -182,49 +191,70 @@ class Image extends Component {
       isLoaded,
       object,
       activeImageIndex,
-      setActiveImageIndex
+      setActiveImageIndex,
+      renditions
     } = this.props;
+
+    // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    
+    const showZoomImageView = Boolean(!didCatchFailure && object.id && activeImageIndex === 0);
+    const renditionsExist = renditions?.length > 0;
+
     let additionalStyle = {};
-    if (!didCatchFailure) {
+    let imageUrlToRender = '';
+
+    // If we encountered failure during rendering of the Zoom component, we'll hide it
+    // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
+    if (!didCatchFailure && activeImageIndex === 0) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
+
+    // We'll render the image from the object itself 
+    if (activeImageIndex === 0) {
+      imageUrlToRender = object.imageUrlLarge
+    }  // Otherwise, one of the renditions was clicked. So we need to render that image
+    else {
+      const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
+        return proxy.name === 'Preview'
+      });
+      imageUrlToRender = `https://barnesfoundation.netx.net${imageThumbnailPreview.file.url}/`;
+    }
+
 
     return (
       <div>
         <div className='image-art-object'>
-          {(!didCatchFailure && object.id) &&
+          {(showZoomImageView) &&
             <Zoom
               id={object.id}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           }
           <img
-            aria-hidden='true'
+            aria-hidden={showZoomImageView.toString()}
             className='image-art-object__img'
-            src={object.imageUrlLarge}
+            src={imageUrlToRender || object.imageUrlLarge}
             alt={object.title}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={ref => this.ref = ref}
           />
-          {/** Uncomment this once we have thumbnail data. */}
-          {/* {isLoaded && <div className='image-art-object__button-group'>
+          {/** Renders the left/right navigation arrows when renditions exist */}
+          {isLoaded && renditionsExist && <div className='image-art-object__button-group'>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--left'
               onClick={() => setActiveImageIndex(activeImageIndex - 1)}
             >
-              <Icon classes='image-art-object__arrow' svgId='-caret-left'/>
+              <Icon classes='image-art-object__arrow' svgId='-icon_arrow-left'/>
             </button>
-            <span className='image-art-object__counter'>{activeImageIndex + 1} / {STATIC_IMAGE_COUNT}</span>
+            <span className='image-art-object__counter'>{activeImageIndex + 1} / {renditions.length}</span>
             <button
               className='btn image-art-object__arrow-button image-art-object__arrow-button--right'
               onClick={() => setActiveImageIndex(activeImageIndex + 1)}
             >
-              <Icon classes='image-art-object__arrow' svgId='-caret-right'/>
+              <Icon classes='image-art-object__arrow' svgId='-icon_arrow-right'/>
             </button>
-          </div>} */}
+          </div>}
         </div>
         <div className='image-caption'>
           {object.people && <div
@@ -247,8 +277,27 @@ class PanelDetails extends Component {
       imageLoaded: false,
       activeImageIndex: 0,
       thumbnailsOpen: false,
+      renditions: null,
     };
   }
+
+
+  /** Async method to fetch possible additional renditions for this object */
+  async componentDidUpdate() {
+    if (ENABLE_ADDITIONAL_RENDITIONS && this.props.object.id && this.state.renditions === null) {
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: `/api/objects/${this.props.object.id}/assets`
+        });
+  
+        this.setState({...this.state, renditions: response.data || []})
+      } catch (error) {
+        console.error(`An error occurred fetching renditions`, error);
+      }
+    }
+  }
+
 
   /** On child image loading, update this state. */
   onLoad = () => this.setState({ imageLoaded: true });
@@ -258,13 +307,16 @@ class PanelDetails extends Component {
    * If max is > DEFAULT_THUMBNAIL_COUNT, automatically open accordion. 
    */
   setActiveImageIndex = (index) => {
-    const nextIndex = index < 0 ? STATIC_IMAGE_COUNT - 1 : index % STATIC_IMAGE_COUNT;
+    const { renditions } = this.state;
+    if (renditions?.length) {
+      const nextIndex = index < 0 ? renditions.length - 1 : index % renditions.length;
 
-    // Check if next index is greater than DEFAULT_THUMBNAIL_COUNT, set thumbnailsOpen to true.
-    if (nextIndex > DEFAULT_THUMBNAIL_COUNT - 1) {
-      this.setState({ activeImageIndex: nextIndex, thumbnailsOpen: true });
-    } else {
-      this.setState({ activeImageIndex: nextIndex });
+      // Check if next index is greater than DEFAULT_THUMBNAIL_COUNT, set thumbnailsOpen to true.
+      if (nextIndex > DEFAULT_THUMBNAIL_COUNT - 1) {
+        this.setState({ activeImageIndex: nextIndex, thumbnailsOpen: true });
+      } else {
+        this.setState({ activeImageIndex: nextIndex });
+      }
     }
   }
 
@@ -273,7 +325,7 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
+    const { imageLoaded, activeImageIndex, thumbnailsOpen, renditions } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -292,23 +344,24 @@ class PanelDetails extends Component {
             object={object}
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
+            renditions={renditions}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {/* {Boolean(imageLoaded) &&
+          {Boolean(imageLoaded) && renditions?.length ?
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
               object={object}
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
-            />
-          } */}
+              renditions={renditions}
+            /> : null
+          }
         </div>
         <div className='art-object__more-info m-block m-block--shallow'>
           <div className='container-inner-narrow'>
             <SummaryTable {...object} objectCopyrightDetails={objectCopyrightDetails} />
             <div className='m-block m-block--no-border m-block--shallow m-block--flush-top download-and-share'>
-              {/* Removed rel='noopener noreferrer nofollow' from the following links. */}
               <a
                 className='btn btn--primary btn--100 btn--vertically-center'
                 href={objectCopyrightDetails.type === 'large' ? downloadRequestUrl : requestImageUrl}
