@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import classnames from "classnames";
-import parse from "html-react-parser";
-import { StickyListSection } from "../StickyListSection/StickyListSection";
-import DropDownSelector from "../DropDownSelector/DropDownSelector";
-import "./stickyList.css";
+import React, { Component } from 'react';
+import classnames from 'classnames';
+import parse from 'html-react-parser';
+import { StickyListSection } from '../StickyListSection/StickyListSection';
+import DropDownSelector from '../DropDownSelector/DropDownSelector';
+import './stickyList.css';
 
 export default class StickyList extends Component {
-  render() {
+  render () {
     const {
       title,
       subtitle,
@@ -33,8 +33,8 @@ export default class StickyList extends Component {
           </div>
         </div>
         <div
-          className={classnames("sticky-list__description", {
-            hidden: !description.length,
+          className={classnames('sticky-list__description', {
+            hidden: !description.length
           })}
         >{parse(description)}</div>
 
@@ -44,7 +44,7 @@ export default class StickyList extends Component {
 
         {languages && (
           <div className="sticky-list__language">
-            <DropDownSelector 
+            <DropDownSelector
               options={languages}
               selectedItem={selectedLanguage}
               handleSelectItem={handleSelectLanguage}

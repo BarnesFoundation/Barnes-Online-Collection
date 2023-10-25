@@ -1,20 +1,20 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import check from "../../components-barnes-toolkit/icons/icon_check.svg";
-import down_gray from "../../components-barnes-toolkit/images/down_gray_1x.png";
-import down_white from "../../components-barnes-toolkit/images/down_wht_1x.png";
-import up_gray from "../../components-barnes-toolkit/images/up_gray_1x.png";
-import up_white from "../../components-barnes-toolkit/images/up_wht_1x.png";
-import "./dropDownSelector.css";
+import check from '../../components-barnes-toolkit/icons/icon_check.svg';
+import down_gray from '../../components-barnes-toolkit/images/down_gray_1x.png';
+import down_white from '../../components-barnes-toolkit/images/down_wht_1x.png';
+import up_gray from '../../components-barnes-toolkit/images/up_gray_1x.png';
+import up_white from '../../components-barnes-toolkit/images/up_wht_1x.png';
+import './dropDownSelector.css';
 
 /**
  *
  */
-const DROP_UP = "UP";
-const DROP_DOWN = "DOWN";
+const DROP_UP = 'UP';
+const DROP_DOWN = 'DOWN';
 
 export default class DropDownSelector extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -28,12 +28,12 @@ export default class DropDownSelector extends Component {
 
   show = () => {
     this.setState({ listVisible: true });
-    document.addEventListener("click", this.hide);
+    document.addEventListener('click', this.hide);
   };
 
   hide = () => {
     this.setState({ listVisible: false });
-    document.removeEventListener("click", this.hide);
+    document.removeEventListener('click', this.hide);
   };
 
   getDropdownIcon = dir => {
@@ -51,15 +51,17 @@ export default class DropDownSelector extends Component {
           <div className="dd-header-title" aria-labelledby={this.props.id}>
             {this.props.selectedItem}
           </div>
-          {this.state.listVisible ? (
+          {this.state.listVisible
+            ? (
             <span>
               <img src={this.getDropdownIcon(DROP_UP)} aria-hidden={true} />
             </span>
-          ) : (
+              )
+            : (
             <span>
               <img src={this.getDropdownIcon(DROP_DOWN)} aria-hidden={true} />
             </span>
-          )}
+              )}
         </div>
         {this.state.listVisible && (
           <ul className="dd-list">

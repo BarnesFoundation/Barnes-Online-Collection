@@ -19,11 +19,11 @@ class App extends Component {
   /**
    * Async method to fetch searchAssets file.
    */
-  componentDidMount() {
+  componentDidMount () {
     setSearchAssets();
   }
 
-  render() {
+  render () {
     return (
       <Provider store={this.props.store}>
         <Router history={history}>

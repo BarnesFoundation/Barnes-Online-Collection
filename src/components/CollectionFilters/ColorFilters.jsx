@@ -8,7 +8,7 @@ import { BREAKPOINTS } from '../../constants';
 import Filter from './Filter';
 
 class ColorFilters extends Component {
-  buildFilters() {
+  buildFilters () {
     return this.props.filterSets.sets.colors.options.map((option, index) => (
       <Filter
         key={index}
@@ -18,7 +18,7 @@ class ColorFilters extends Component {
     ));
   }
 
-  render() {
+  render () {
     return (
       <div>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
@@ -39,15 +39,14 @@ class ColorFilters extends Component {
   }
 }
 
-
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColorFilters);

@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import "./spinner.css";
+import React, { Component } from 'react';
+import './spinner.css';
 
 class Spinner extends Component {
-  render() {
+  render () {
     return (
       <div className="spinner">
         <div className="bounce1"></div>

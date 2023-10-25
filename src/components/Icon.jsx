@@ -9,4 +9,4 @@ export default ({ svgId, classes, ...props }) => {
       <use xlinkHref={`#icon-${svgId}`}></use>
     </svg>
   );
-}
+};

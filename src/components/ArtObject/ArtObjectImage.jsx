@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class ArtObjectImage extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.revealImage = this.revealImage.bind(this);
@@ -11,11 +11,11 @@ class ArtObjectImage extends Component {
     // State to keep track of image src and if image has already loaded.
     this.state = {
       src: this.props.src,
-      didLoad: false,
+      didLoad: false
     };
   }
 
-  revealImage() {
+  revealImage () {
     const { backupSrc } = this.props;
     const { didLoad } = this.state;
 
@@ -24,19 +24,19 @@ class ArtObjectImage extends Component {
     if (
       this.ref &&
       this.ref.getBoundingClientRect().width > (this.ref.naturalWidth * 1.75) &&
-      backupSrc && 
+      backupSrc &&
       !didLoad
     ) {
       this.setState({
         src: backupSrc,
-        didLoad: true,
+        didLoad: true
       });
     } else {
       this.props.revealArtObject();
     }
   }
 
-  render() {
+  render () {
     const { src } = this.state;
 
     return (

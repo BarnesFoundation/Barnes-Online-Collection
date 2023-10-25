@@ -14,12 +14,12 @@ const CollectionFiltersMenuItem = ({
   title,
   visibleFilterSet,
   hasAdvancedFiltersOrSearch,
-  scrollMenuIntoView,
+  scrollMenuIntoView
 }) => {
   let filterClassNames = 'btn-collection-filter font-zeta color-light';
   if (slug === 'search') {
     filterClassNames = `${filterClassNames} btn-collection-filter--search`;
-    
+
     // Check if there are any advanced filters, if so, add class for notification.
     if (hasAdvancedFiltersOrSearch) filterClassNames = `${filterClassNames} btn-collection-filter--applied`;
   }
@@ -31,7 +31,7 @@ const CollectionFiltersMenuItem = ({
       className={filterClassNames}
       onClick={() => {
         scrollMenuIntoView();
-        
+
         if (slug !== visibleFilterSet) {
           selectFilterSet(slug);
         } else {
@@ -57,7 +57,7 @@ const CollectionFiltersMenuItem = ({
       </div>
     </button>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   visibleFilterSet: state.filterSets.visibleFilterSet,

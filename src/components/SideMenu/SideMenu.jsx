@@ -9,8 +9,8 @@ import './SideMenu.css';
 const IMPORTANT_LINKS = [
   { href: MAIN_WEBSITE_DOMAIN + '/whats-on', text: 'What’s On' },
   { href: MAIN_WEBSITE_DOMAIN + '/plan-your-visit', text: 'Plan Your Visit' },
-  { href:'/', text: 'Our Collection', isCurrent: true },
-  { href: MAIN_WEBSITE_DOMAIN + '/classes', text: 'Take a Class' },
+  { href: '/', text: 'Our Collection', isCurrent: true },
+  { href: MAIN_WEBSITE_DOMAIN + '/classes', text: 'Take a Class' }
 ];
 const REGULAR_LINKS = [
   { href: MAIN_WEBSITE_DOMAIN + '/about', text: 'About' },
@@ -20,7 +20,7 @@ const REGULAR_LINKS = [
   { href: MAIN_WEBSITE_DOMAIN + '/press', text: 'Press' },
   { href: 'https://shop.barnesfoundation.org/', text: 'Shop' },
   { href: MAIN_WEBSITE_DOMAIN + '/host-an-event', text: 'Host an Event' },
-  { href: MAIN_WEBSITE_DOMAIN + '/whats-on/arboretum', text: 'Arboretum' },
+  { href: MAIN_WEBSITE_DOMAIN + '/whats-on/arboretum', text: 'Arboretum' }
 ];
 
 /**
@@ -61,7 +61,7 @@ const DefaultSideMenu = ({ setEndRef, isOpen }) => (
         >
           <span>{text}</span>
         </a>
-      )
+      );
     })}
   </nav>
 );
@@ -71,18 +71,18 @@ const DefaultSideMenu = ({ setEndRef, isOpen }) => (
 const OVERLAY_STATES = {
   ACTIVE: 'ACTIVE',
   TRANSITION: 'TRANSITION',
-  INACTIVE: 'INACTIVE',
-}
+  INACTIVE: 'INACTIVE'
+};
 
 /**
  * Side menu component.
  */
 class SideMenu extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
-      isOverlayActive: OVERLAY_STATES.INACTIVE,
+      isOverlayActive: OVERLAY_STATES.INACTIVE
     };
 
     this.sto = null;
@@ -93,9 +93,9 @@ class SideMenu extends Component {
 
   /**
    * Check if isOpen has changed, if it has then alter the transition state for the overlay.
-   * @param {React.Props} prevProps 
+   * @param {React.Props} prevProps
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     if (prevProps.isOpen !== this.props.isOpen) {
       if (this.props.isOpen) {
         this.setState({ isOverlayActive: OVERLAY_STATES.ACTIVE });
@@ -119,7 +119,7 @@ class SideMenu extends Component {
 
     // Keep tab contained on tab.
     if (
-      e.key === 'Tab' && 
+      e.key === 'Tab' &&
       isOpen &&
       this.startRef &&
       this.endRef &&
@@ -135,12 +135,12 @@ class SideMenu extends Component {
     ) {
       closeMenu();
     }
-  }
+  };
 
   /**
    * Add event listener for tab and esc key.
    */
-  componentDidMount() {
+  componentDidMount () {
     document.addEventListener('keydown', this.keyListener);
   }
 
@@ -148,16 +148,16 @@ class SideMenu extends Component {
    * On unmount: if setTimeout exists, clear it.
    * Remove event listener for tab and esc key.
    */
-  componentWillUnmount() {
+  componentWillUnmount () {
     document.removeEventListener('keydown', this.keyListener);
 
     if (this.sto) clearTimeout(this.sto);
   }
 
-  render() {
+  render () {
     const { closeMenu, isOpen, children, setRef } = this.props;
     const { isOverlayActive } = this.state;
-    
+
     const handleNavCloseBtnClick = (e) => {
       e.preventDefault();
       closeMenu();
@@ -239,7 +239,7 @@ class SideMenu extends Component {
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = state => ({ htmlClassManager: state.htmlClassManager });
 const mapDispatchToProps = dispatch => (

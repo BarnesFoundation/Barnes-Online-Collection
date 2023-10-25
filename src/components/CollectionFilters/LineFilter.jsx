@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import Icon from '../Icon';
 
 class LineFilter extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(event) {
+  handleClick (event) {
     event.preventDefault();
     this.props.handleClick();
   }
 
-  render() {
+  render () {
     return (
       <button
         onClick={this.handleClick}

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import FilterTag from './FilterTag';
 
 class FilterTagSetGeneric extends Component {
-  filterTags() {
+  filterTags () {
     const filters = this.props.filterTags;
     if (!filters) {
       return null;
@@ -18,7 +18,7 @@ class FilterTagSetGeneric extends Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <div className="filter-tag-set">
         {this.filterTags()}

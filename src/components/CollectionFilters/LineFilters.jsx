@@ -9,9 +9,8 @@ import { BREAKPOINTS } from '../../constants';
 import Filter from './Filter';
 
 class LineFilters extends Component {
-  buildFilters(type) {
+  buildFilters (type) {
     const filters = this.props.filterSets.sets.lines.options[type];
-
 
     return (
       filters.map((option, index) => {
@@ -27,7 +26,7 @@ class LineFilters extends Component {
     );
   }
 
-  getLineFilters() {
+  getLineFilters () {
     return (
       <div className="line-filters-container">
         <div className="line-filters-group">{this.buildFilters('composition')}</div>
@@ -36,7 +35,7 @@ class LineFilters extends Component {
     );
   }
 
-  render() {
+  render () {
     return (
       <div>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
@@ -53,15 +52,14 @@ class LineFilters extends Component {
   }
 }
 
-
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LineFilters);

@@ -3,7 +3,7 @@ import MediaQuery from 'react-responsive';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Icon from '../Icon';
-import { MoreFromCollection } from '../../components/Footer/MoreFromCollection'
+import { MoreFromCollection } from '../../components/Footer/MoreFromCollection';
 import { MAIN_WEBSITE_DOMAIN, NEWSLETTER_URL, BREAKPOINTS } from '../../constants';
 import './footer.css';
 
@@ -14,26 +14,26 @@ const LEAD_SOURCE = 'www-collection-form';
 // Enum indicating status of email submission.
 const SUBMISSION_STATUS = {
   LOADING: 'LOADING',
-  COMPLETE: 'COMPLETE',
+  COMPLETE: 'COMPLETE'
 };
 
 // Enum indicating status of any error.
 const ERROR_STATUS = {
   USER: 'USER',
-  SERVER: 'SERVER',
+  SERVER: 'SERVER'
 };
 
 /**
  * Newsletter component, stores submission data in localStorage.
  */
 class Newsletter extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
-      isSubmitted: Boolean(sessionStorage.getItem(NEWSLETTER_SESSION_STORAGE_KEY)) ? SUBMISSION_STATUS.COMPLETE : null,
+      isSubmitted: sessionStorage.getItem(NEWSLETTER_SESSION_STORAGE_KEY) ? SUBMISSION_STATUS.COMPLETE : null,
       isError: null,
-      value: '',
+      value: ''
     };
   }
 
@@ -62,9 +62,9 @@ class Newsletter extends Component {
     } else {
       this.setState({ isError: ERROR_STATUS.USER });
     }
-  }
+  };
 
-  render() {
+  render () {
     const { isSubmitted, isError } = this.state;
 
     let processingClass = 'm-newsletter__loading';
@@ -159,7 +159,7 @@ class Newsletter extends Component {
 }
 
 /**
- * Footer class, hours section is abled to be removed by not passing hasHours. 
+ * Footer class, hours section is abled to be removed by not passing hasHours.
  */
 export const Footer = ({ hasHours }) => {
   let gFooterClasses = 'g-footer g-footer--no-border';
@@ -180,7 +180,7 @@ export const Footer = ({ hasHours }) => {
             </div>
             <div className='m-block__column'>
               <p className='color-medium'>
-                The Barnes Foundation collection online is made possible by generous support{" "}
+                The Barnes Foundation collection online is made possible by generous support{' '}
                 <br className='large-only' />
                 from The John S. and James L. Knight Foundation
                 as part of the Knight Center for Digital Innovation in Audience Engagement at the Barnes.

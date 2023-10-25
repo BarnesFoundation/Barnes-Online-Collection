@@ -11,7 +11,7 @@ import { BREAKPOINTS } from '../../constants';
 import './searchInput.css';
 
 class SearchInput extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -19,7 +19,7 @@ class SearchInput extends Component {
       pendingTerms: [], // For mobile, filters are actioned on apply.
       hasOverlay: false, // If a dropdown has been selected.
       topOffset: 0, // Offset for overlay.
-      searchValue: '', // For search term apply.
+      searchValue: '' // For search term apply.
     };
 
     this.ref = null;
@@ -28,7 +28,7 @@ class SearchInput extends Component {
   updatePendingTerms = pendingTerms => this.setState({ pendingTerms });
   setApplyPendingTerms = applyPendingTerms => this.setState({ applyPendingTerms });
 
-  render() {
+  render () {
     const { addFilter, closeFilterSet, isCollectionAdvancedSearch } = this.props;
     const { applyPendingTerms, pendingTerms, hasOverlay, topOffset, searchValue } = this.state;
 
@@ -53,7 +53,7 @@ class SearchInput extends Component {
                 placeholder='Search collection'
                 isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
-              
+
             </MediaQuery>
 
             {/** Tablet */}
@@ -81,7 +81,7 @@ class SearchInput extends Component {
                 isCollectionAdvancedSearch={Boolean(isCollectionAdvancedSearch)}
               />
             </MediaQuery>
-            
+
             <div className='search__dropdowns'>
               <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
                 <Dropdowns
@@ -107,7 +107,7 @@ class SearchInput extends Component {
             </div>
           </div>
         </div>
-        
+
         <MediaQuery
           maxWidth={BREAKPOINTS.tablet_max}
         >
@@ -122,7 +122,7 @@ class SearchInput extends Component {
           />
         </MediaQuery>
       </div>
-    )
+    );
   }
 }
 

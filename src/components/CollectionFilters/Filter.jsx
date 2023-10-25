@@ -12,19 +12,19 @@ import * as FiltersActions from '../../actions/filters';
 import * as FilterSetsActions from '../../actions/filterSets';
 
 class Filter extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.handleButtonFilter = this.handleButtonFilter.bind(this);
     this.handleSliderFilter = this.handleSliderFilter.bind(this);
   }
 
-  isFilterApplied() {
+  isFilterApplied () {
     return this.props.filters.ordered.filter((filter) => {
       return filter.slug === this.props.filter.slug;
     }).length > 0;
   }
 
-  handleButtonFilter() {
+  handleButtonFilter () {
     const filter = this.props.filter;
 
     if (this.isFilterApplied()) {
@@ -34,13 +34,13 @@ class Filter extends Component {
     }
   }
 
-  handleSliderFilter(value) {
-    let filter = this.props.filter;
+  handleSliderFilter (value) {
+    const filter = this.props.filter;
     filter.value = value;
     this.props.addFilter(filter);
   }
 
-  getClasses() {
+  getClasses () {
     const filter = this.props.filter;
     // todo: this is kind of a quick fix. Maybe this should be defined in a more structured way.
     const isRadioStyle = filter.filterGroup === 'linearity';
@@ -48,7 +48,7 @@ class Filter extends Component {
     let classes = 'btn btn-filter ';
     classes += filter.filterType + '-filter';
 
-    switch(filter.filterType) {
+    switch (filter.filterType) {
       case 'colors':
         classes += ' color-filter__' + filter.name;
         break;
@@ -71,12 +71,12 @@ class Filter extends Component {
     return classes;
   }
 
-  buildFilter() {
+  buildFilter () {
     switch (this.props.filter.filterType) {
       case 'colors':
         return <ColorFilter
           handleClick={this.handleButtonFilter}
-          style={{background: this.props.filter.color}}
+          style={{ background: this.props.filter.color }}
           classes={this.getClasses()}
           />;
       case 'lines_composition':
@@ -109,22 +109,22 @@ class Filter extends Component {
     }
   }
 
-  render() {
+  render () {
     return (this.buildFilter());
   }
 }
 
 const mapStateToProps = state => {
   return {
-    filters: state.filters,
-  }
-}
+    filters: state.filters
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     FiltersActions,
-    FilterSetsActions,
+    FilterSetsActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

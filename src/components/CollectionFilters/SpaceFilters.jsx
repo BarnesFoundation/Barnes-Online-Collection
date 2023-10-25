@@ -8,12 +8,12 @@ import MediaQuery from 'react-responsive';
 import { BREAKPOINTS } from '../../constants';
 
 class SpaceFilters extends Component {
-  buildFilter() {
+  buildFilter () {
     const filter = this.props.filterSets.sets.space.filter;
     return <Filter filter={filter} />;
   }
 
-  render() {
+  render () {
     return (
       <div className='space-filters-container'>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
@@ -30,15 +30,14 @@ class SpaceFilters extends Component {
   }
 }
 
-
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpaceFilters);

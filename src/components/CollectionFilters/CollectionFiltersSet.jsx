@@ -9,7 +9,7 @@ import LightFilters from './LightFilters';
 import SpaceFilters from './SpaceFilters';
 
 class CollectionFiltersSet extends Component {
-  filterSet() {
+  filterSet () {
     const slug = this.props.filterSets.visibleFilterSet;
 
     switch (slug) {
@@ -26,7 +26,7 @@ class CollectionFiltersSet extends Component {
     }
   }
 
-  getClasses() {
+  getClasses () {
     let classes = 'collection-filters-set';
     if (this.props.filterSets.visibleFilterSet) {
       classes += ' collection-filters-set--is-open';
@@ -34,7 +34,7 @@ class CollectionFiltersSet extends Component {
     return classes;
   }
 
-  render() {
+  render () {
     return (
       <div className={this.getClasses()}>
         {this.filterSet()}
@@ -43,15 +43,14 @@ class CollectionFiltersSet extends Component {
   }
 }
 
-
 const mapStateToProps = state => {
   return {
     filterSets: state.filterSets
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersSet);

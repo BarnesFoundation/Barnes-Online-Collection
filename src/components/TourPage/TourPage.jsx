@@ -1,22 +1,22 @@
-import React from "react";
-import axios from "axios";
-import { SiteHeader } from "../../components/SiteHeader/SiteHeader";
-import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
-import HtmlClassManager from "../HtmlClassManager";
-import Footer from "../Footer/Footer";
-import StickyList from "../StickyList/StickyList";
+import React from 'react';
+import axios from 'axios';
+import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
+import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
+import HtmlClassManager from '../HtmlClassManager';
+import Footer from '../Footer/Footer';
+import StickyList from '../StickyList/StickyList';
 import {
   META_TITLE,
   META_DESCRIPTION,
-  DEFAULT_ROOM_ORDER,
-} from "../../constants";
-import { parseObject } from "../../objectDataUtils";
-import { formatTourData, languageToLocale, localeToLanguage } from "./tourPageHelper";
-import NotFound from "../NotFound/notFound";
-import Spinner from "../Spinner/Spinner";
+  DEFAULT_ROOM_ORDER
+} from '../../constants';
+import { parseObject } from '../../objectDataUtils';
+import { formatTourData, languageToLocale, localeToLanguage } from './tourPageHelper';
+import NotFound from '../NotFound/notFound';
+import Spinner from '../Spinner/Spinner';
 
 export default class TourPage extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -27,11 +27,11 @@ export default class TourPage extends React.Component {
       roomOrder: null,
       heroImgSrc: null,
       metaImgUrl: null,
-      loading: true,
+      loading: true
     };
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     // Extract the slug for this tour
     const slug = this.props.location.pathname;
 
@@ -43,13 +43,13 @@ export default class TourPage extends React.Component {
         const languages = tourData.localizations.map(data => localeToLanguage(data.locale));
 
         const roomOrder = tourData.roomOrder.length
-          ? tourData.roomOrder.map(r => r.room.replaceAll("_", " "))
+          ? tourData.roomOrder.map(r => r.room.replaceAll('_', ' '))
           : DEFAULT_ROOM_ORDER;
 
         const heroImageInvno = tourData.collectionObjects.find(obj => obj.heroImage).inventoryNumber;
         const object = objects.find((obj) => obj._source.invno.toLowerCase() === heroImageInvno.toLowerCase());
         const parsedObject = parseObject(object._source);
-        const sections = formatTourData(roomOrder, objects, tourData.collectionObjects)
+        const sections = formatTourData(roomOrder, objects, tourData.collectionObjects);
 
         this.setState({
           title: tourData.title,
@@ -57,12 +57,12 @@ export default class TourPage extends React.Component {
           description: tourData.description.html,
           heroImageSrc: parsedObject.imageUrlLarge,
           metaImgUrl: parsedObject.imageUrlSmall,
-          sections: sections,
-          selectedLanguage: "English",
-          languages: languages.length ? ["English", ...languages] : null,
+          sections,
+          selectedLanguage: 'English',
+          languages: languages.length ? ['English', ...languages] : null,
           tourData,
           objects,
-          roomOrder,
+          roomOrder
         });
       } catch (error) {
         console.log(
@@ -72,37 +72,37 @@ export default class TourPage extends React.Component {
       } finally {
         this.setState({
           ...this.state,
-          slug: slug,
-          loading: false,
+          slug,
+          loading: false
         });
       }
     }
   }
 
   // Handles updating the copy based on the selected language
-  handleSelectLanguage(language) {
-    const { tourData, roomOrder, objects } = this.state
-    const requestedLocale = languageToLocale(language)
+  handleSelectLanguage (language) {
+    const { tourData, roomOrder, objects } = this.state;
+    const requestedLocale = languageToLocale(language);
 
-    if (requestedLocale === "en") {
-      const sections = formatTourData(roomOrder, objects, tourData.collectionObjects)
+    if (requestedLocale === 'en') {
+      const sections = formatTourData(roomOrder, objects, tourData.collectionObjects);
 
       this.setState({
         ...this.state,
         title: tourData.title,
         subtitle: tourData.subtitle,
         description: tourData.description,
-        sections: sections,
-        selectedLanguage: language,
-      })
+        sections,
+        selectedLanguage: language
+      });
     } else {
       // get collection objects from localization
-      const localization = tourData.localizations.find(data => data.locale === requestedLocale)
+      const localization = tourData.localizations.find(data => data.locale === requestedLocale);
       const collectionObjects = localization.collectionObjects.map(collectionObj => {
-        const locale = collectionObj.localizations.find(data => data.locale === requestedLocale)
-        return { ...collectionObj, ...locale }
-      })
-      const sections = formatTourData(roomOrder, objects, collectionObjects)
+        const locale = collectionObj.localizations.find(data => data.locale === requestedLocale);
+        return { ...collectionObj, ...locale };
+      });
+      const sections = formatTourData(roomOrder, objects, collectionObjects);
 
       this.setState({
         ...this.state,
@@ -110,28 +110,28 @@ export default class TourPage extends React.Component {
         subtitle: localization.subtitle || tourData.subtitle,
         description: (localization.description && localization.description.html) || tourData.description.html,
         sections,
-        selectedLanguage: language,
-      })
+        selectedLanguage: language
+      });
     }
   }
 
-  getMetaTags(title) {
+  getMetaTags (title) {
     const metaTitle = `${META_TITLE} — ${title}`;
     const metaDescription = `Barnes Foundation Collection: ${title} -- ${META_DESCRIPTION}`;
 
     return {
       title: metaTitle,
       description: metaDescription,
-      image: this.state.metaImgUrl,
+      image: this.state.metaImgUrl
     };
   }
 
-  render() {
+  render () {
     const {
       slug,
       title,
       sections,
-      loading,
+      loading
     } = this.state;
 
     if (loading) {
@@ -146,7 +146,7 @@ export default class TourPage extends React.Component {
           </div>
           <Footer />
         </div>
-      )
+      );
     }
 
     return (

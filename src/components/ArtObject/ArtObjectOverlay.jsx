@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ArtObjectCaption from './ArtObjectCaption';
 
 class ArtObjectOverlay extends Component {
-  render() {
+  render () {
     return (
       <div className="art-object-overlay">
         <ArtObjectCaption {...this.props} />

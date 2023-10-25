@@ -5,7 +5,7 @@ import Icon from '../Icon.jsx';
 import * as FiltersActions from '../../actions/filters';
 
 class FilterTag extends Component {
-  getFilterIcon() {
+  getFilterIcon () {
     if (this.props.filter.filterType === 'colors') {
       return <span className='color-filter-icon' style={{ background: this.props.filter.color }}></span>;
     } else if (this.props.filter.svgId) {
@@ -15,14 +15,14 @@ class FilterTag extends Component {
     }
   }
 
-  getFilterContent() {
-    const { filter: { filterType, value }} = this.props;
+  getFilterContent () {
+    const { filter: { filterType, value } } = this.props;
 
     if (filterType === 'light' || filterType === 'space') {
       return <span className='filter-tag-text'>{value}%</span>;
     } else if (filterType === 'search') {
       return <span className='filter-tag-text'>"{value}"</span>;
-    }else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
+    } else if (filterType !== 'colors' && filterType !== 'lines_composition' && filterType !== 'lines_linearity') {
       return <span className='filter-tag-text'>{value}</span>;
     }
   }
@@ -34,9 +34,9 @@ class FilterTag extends Component {
     } else {
       this.props.removeFilter(this.props.filter);
     }
-  }
+  };
 
-  render() {
+  render () {
     return (
       <button
         className={`applied-filter-tag applied-filter-tag-${this.props.filter.filterType}`}
@@ -53,13 +53,13 @@ class FilterTag extends Component {
 const mapStateToProps = state => {
   return {
     filters: state.filters
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    FiltersActions,
+    FiltersActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterTag);

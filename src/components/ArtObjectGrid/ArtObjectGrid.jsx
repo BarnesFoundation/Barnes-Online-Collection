@@ -61,7 +61,7 @@ const GridListElement = ({
   modalPreviousLocation,
   clearObject,
   isFilterResult,
-  isSearchResult,
+  isSearchResult
 }) => {
   let gridListElementClassNames = 'masonry-grid-element';
   if (isFilterResult) gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
@@ -73,15 +73,15 @@ const GridListElement = ({
           pathname: getArtObjectUrlFromId(object.id, object.title),
           state: {
             isModal: shouldLinksUseModal || Boolean(modalPreviousLocation),
-            modalPreviousLocation: modalPreviousLocation
-          },
+            modalPreviousLocation
+          }
         }}
         onClick={() => {
           // Clear the object right away to avoid a FOUC while the new object loads.
           clearObject();
 
           if (!shouldLinksUseModal) {
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
           }
         }}
         className='grid-list-el'
@@ -106,19 +106,19 @@ const GridListElement = ({
  * Class to manage converting raw object[] data into a masonry grid.
  */
 class ArtObjectGrid extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     // For 'View More' results.
     this.state = {
-      truncateThreshold: ART_OBJECT_GRID_INCREMENT,
+      truncateThreshold: ART_OBJECT_GRID_INCREMENT
     };
-  };
+  }
 
   /**
    * Set reset truncate if prop exists.
    */
-  componentDidMount() {
+  componentDidMount () {
     const { setResetTruncateThreshold } = this.props;
 
     if (setResetTruncateThreshold) {
@@ -137,7 +137,7 @@ class ArtObjectGrid extends Component {
     this.setState({ ...this.state, truncateThreshold: truncateThreshold + ART_OBJECT_GRID_INCREMENT });
   };
 
-  render() {
+  render () {
     // Destructure props.
     const {
       // For masonry grid display.
@@ -154,7 +154,7 @@ class ArtObjectGrid extends Component {
       // For detecting if a search or location filter has been placed.
       hasSearch,
       hasFilter,
-      hasRoom,
+      hasRoom
     } = this.props;
 
     // Searching is rendered on default, on false body will render.
@@ -166,20 +166,20 @@ class ArtObjectGrid extends Component {
     // Convert object[] to an array of ArtObjects wrapped in Links.
     const uncutMasonryElements = isRoomResult
       ? Object.entries(
-          liveObjects.reduce((acc, object) => ({ // Put liveObjects into bucket according to ensemble index.
-              ...acc,
-              [object.ensembleIndex]: acc[object.ensembleIndex] ? [...acc[object.ensembleIndex], object] : [object]
-            }), {})
-        )
+        liveObjects.reduce((acc, object) => ({ // Put liveObjects into bucket according to ensemble index.
+          ...acc,
+          [object.ensembleIndex]: acc[object.ensembleIndex] ? [...acc[object.ensembleIndex], object] : [object]
+        }), {})
+      )
         .sort(([keyA], [keyB]) => keyA - keyB) // Reverse sort keys by number to guarantee render in order.
-        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index. 
+        .filter(([key]) => ensembleIndexes[key]) // Filter out any items w/ no matching ensemble index.
         .map(([key, value]) => (
           <div
             className='location-results'
             key={`${ensembleIndexes[key].roomTitle}, ${ensembleIndexes[key].wallTitle}`}
           >
             <h3 className='font-delta location-results__header'>
-              {ensembleIndexes[key].roomTitle}{ensembleIndexes[key].wallTitle ? `, ${ensembleIndexes[key].wallTitle}`: ''}
+              {ensembleIndexes[key].roomTitle}{ensembleIndexes[key].wallTitle ? `, ${ensembleIndexes[key].wallTitle}` : ''}
             </h3>
             <div className='search-results-grid'>
               {value.map((object) => (
@@ -209,7 +209,7 @@ class ArtObjectGrid extends Component {
 
     // If this is a 'View More' Grid, truncate results.
     // This will always be false if location filter is applied.
-    const masonryElements = (hasMoreResults  && !isRoomResult)
+    const masonryElements = (hasMoreResults && !isRoomResult)
       ? uncutMasonryElements.slice(0, this.state.truncateThreshold)
       : uncutMasonryElements;
 
@@ -220,12 +220,13 @@ class ArtObjectGrid extends Component {
       <SearchResultsGrid isRoomResult={isRoomResult}>
         {masonryElements}
       </SearchResultsGrid>
-      ) : (
+        )
+      : (
         <MasonryGrid>
           {masonryElements}
         </MasonryGrid>
-      );
-    
+        );
+
     let bodyClass = 'component-art-object-grid-results';
     if (shouldLinksUseModal) bodyClass = `${bodyClass} component-art-object-grid-results--landing-page`;
 
@@ -235,10 +236,10 @@ class ArtObjectGrid extends Component {
         <div className={bodyClass}>
           {displayGrid}
           {Boolean(
-            hasMoreResults
-              && uncutMasonryElements.length !== masonryElements.length
-              && !isRoomResult
-            ) &&
+            hasMoreResults &&
+              uncutMasonryElements.length !== masonryElements.length &&
+              !isRoomResult
+          ) &&
             <ViewMoreButton onClick={this.incrementTruncateThreshold}
           />}
         </div>

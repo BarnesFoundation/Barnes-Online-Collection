@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import './index.css';
 
 class AccordionMenu extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
-      selectedIdx: null,
+      selectedIdx: null
     };
 
     this.handleContentTabClick = this.handleContentTabClick.bind(this);
   }
 
-  handleContentTabClick(idx) {
-    return function(e) {
+  handleContentTabClick (idx) {
+    return function (e) {
       // if it's already selected, toggle it closed
       const selectedIndex = this.state.selectedIdx === idx ? null : idx;
 
@@ -21,11 +21,11 @@ class AccordionMenu extends Component {
     }.bind(this);
   }
 
-  selectTab(idx) {
-    this.setState({selectedIdx: idx});
+  selectTab (idx) {
+    this.setState({ selectedIdx: idx });
   }
 
-  render() {
+  render () {
     return (
       <div className="component-m-support-accordion">
         {
@@ -60,15 +60,15 @@ class AccordionMenu extends Component {
                     data-height=""
                   >
                     <div className="m-accordion-tabs__inner">
-                      <div dangerouslySetInnerHTML={{__html: tabContent}}></div>
+                      <div dangerouslySetInnerHTML={{ __html: tabContent }}></div>
                     </div>
                   </div>
                 </div>
-              )
+              );
             })
         }
       </div>
-    )
+    );
   }
 }
 

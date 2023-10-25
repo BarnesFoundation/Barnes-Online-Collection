@@ -11,17 +11,17 @@ const percentFormatter = (v) => {
 };
 
 class CustomSlider extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.onSliderChange = this.onSliderChange.bind(this);
   }
 
-  onSliderChange(value) {
+  onSliderChange (value) {
     this.props.handleChange(value);
   }
 
-  render() {
+  render () {
     return (
       <div
         className="component-slider"

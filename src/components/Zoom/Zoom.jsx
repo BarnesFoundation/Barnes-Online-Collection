@@ -10,12 +10,12 @@ const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
  */
 const getTileUrl = OpenSeadragon.IIIFTileSource.prototype.getTileUrl;
 OpenSeadragon.IIIFTileSource.prototype.getTileUrl = function (...args) {
-  let res = getTileUrl.call(this, ...args);
+  const res = getTileUrl.call(this, ...args);
   return res.replace('default', 'color');
-}
+};
 
 class Zoom extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.ref = null; // Ref for OSD mount
@@ -34,7 +34,7 @@ class Zoom extends Component {
    * @param {string} url - url of info.json fike.
    * @param {number} scaleErrorLevel - level of scale error, if any.
    */
-  async fetchTileSource(url, scaleErrorLevel) {
+  async fetchTileSource (url, scaleErrorLevel) {
     const { catchFailureInViewer } = this.props;
 
     try {
@@ -49,10 +49,10 @@ class Zoom extends Component {
 
       // Modify json response to match
       const root = res['@id'].replace('http://localhost:8080/', '');
-      res['@id'] = `${IMAGE_BASE_URL}/tiles/${root}`;      
+      res['@id'] = `${IMAGE_BASE_URL}/tiles/${root}`;
       res.sizes = [{ width, height }];
       res.profile[1].qualities = ['color'];
-      res.tiles =  [
+      res.tiles = [
         {
           height: 256,
           // If tiles errored out a scale factor of 16, we want to cut that down to 8,
@@ -63,7 +63,7 @@ class Zoom extends Component {
           width: 256
         }
       ];
-      
+
       return res;
     } catch (e) {
       console.log(e);
@@ -73,7 +73,7 @@ class Zoom extends Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     if (this.osd) {
       this.osd.destroy();
     }
@@ -82,7 +82,7 @@ class Zoom extends Component {
   /**
    * Capture change in ID from parent, if there is a change remount the OSD component.
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     if (prevProps.id !== this.props.id) {
       this.osd.destroy();
       this.setUpOSD();
@@ -109,7 +109,7 @@ class Zoom extends Component {
         showNavigationControl: false,
         immediateRender: false,
         minZoomLevel: 0,
-        maxZoomLevel: 8,
+        maxZoomLevel: 8
       });
 
       this.osd.addHandler('open', () => {
@@ -119,14 +119,14 @@ class Zoom extends Component {
 
       this.osd.addHandler('tile-load-failed', () => {
         this.osd.destroy();
-        this.setUpOSD(scaleErrorLevel + 1)
+        this.setUpOSD(scaleErrorLevel + 1);
       });
 
       // Set up control functions.
       this.zoomIn = () => {
         const zoomTo = Math.max(
           this.osd.viewport.getZoom() + 0.5,
-          this.osd.viewport.getZoom() * 2,
+          this.osd.viewport.getZoom() * 2
         );
 
         this.osd.viewport.zoomTo(
@@ -135,12 +135,12 @@ class Zoom extends Component {
             this.osd.viewport.getMaxZoom()
           )
         );
-      }
+      };
 
       this.zoomOut = () => {
         const zoomTo = Math.min(
           this.osd.viewport.getZoom() - 0.5,
-          this.osd.viewport.getZoom()/2,
+          this.osd.viewport.getZoom() / 2
         );
 
         this.osd.viewport.zoomTo(
@@ -149,17 +149,16 @@ class Zoom extends Component {
             this.osd.viewport.getMinZoom()
           )
         );
-      }
+      };
 
       this.fullScreen = () => {
         this.osd.setFullScreen(!this.isFullScreen);
         this.isFullScreen = !this.isFullScreen;
-      }
+      };
     }
-  }
+  };
 
-  render() {
-    
+  render () {
     return (
       <div className='osd-zoom'>
         <div
@@ -201,7 +200,7 @@ class Zoom extends Component {
             </button>
           </div>
         </div>
-        
+
       </div>
     );
   }
@@ -217,7 +216,7 @@ const FullScreenIcon = () => (
     x="0px"
     y="0px"
     viewBox="0 0 512 512"
-    style={{ enableBackground: "new 0 0 512 512"}}
+    style={{ enableBackground: 'new 0 0 512 512' }}
   >
     <g>
       <g>
@@ -270,6 +269,6 @@ const FullScreenIcon = () => (
     <g>
     </g>
   </svg>
-)
+);
 
-export default Zoom
+export default Zoom;

@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import classnames from "classnames";
-import "./objectCard.css";
+import React, { Component } from 'react';
+import classnames from 'classnames';
+import './objectCard.css';
 
 export class ObjectCard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
     this.state = {
       descriptionVisible: false,
-      metaDataVisible: true,
+      metaDataVisible: true
     };
   }
 
-  handleClick(event) {
+  handleClick (event) {
     event.preventDefault();
 
     if (this.props.object.overlayText) {
@@ -30,22 +30,22 @@ export class ObjectCard extends Component {
 
       this.setState({
         descriptionVisible: showDescription,
-        metaDataVisible: showMetaData,
+        metaDataVisible: showMetaData
       });
     }
   }
 
-  imageAria(object) {
-    const culture = object.culture ? `, ${object.culture}` : "";
+  imageAria (object) {
+    const culture = object.culture ? `, ${object.culture}` : '';
     return `${object.title} by ${object.people}${culture}.`;
   }
 
-  render() {
+  render () {
     const { object } = this.props;
     return (
       <div
-        className={classnames("object-card", {
-          description: this.state.descriptionVisible,
+        className={classnames('object-card', {
+          description: this.state.descriptionVisible
         })}
         onClick={this.handleClick}
       >
@@ -60,8 +60,8 @@ export class ObjectCard extends Component {
             }}
           />
           <div
-            className={classnames("object-card__content-info", {
-              invisible: !this.state.metaDataVisible,
+            className={classnames('object-card__content-info', {
+              invisible: !this.state.metaDataVisible
             })}
           >
             {object.contentInfo}

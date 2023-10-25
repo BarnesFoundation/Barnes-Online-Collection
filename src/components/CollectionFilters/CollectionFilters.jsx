@@ -22,23 +22,23 @@ import './collectionFilters.css';
 import { ClickTracker } from '../SearchInput/Dropdowns/ClickTracker';
 
 class CollectionFilters extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.ref = null; // This ref is for CollectionFiltersMenu scrollIntoView method.
   }
 
-  hasBeenReset(props) {
-    const hasNothingSet = !props.search.length
-      && !props.filters.ordered.length
-      && !Object.values(props.filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0);
+  hasBeenReset (props) {
+    const hasNothingSet = !props.search.length &&
+      !props.filters.ordered.length &&
+      !Object.values(props.filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0);
 
     const searchHasChanged = props.search !== this.props.search;
     const filtersHaveChanged = (
       props.filters.ordered !== this.props.filters.ordered ||
       JSON.stringify(props.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)
     );
-    
+
     return hasNothingSet && (
       searchHasChanged || filtersHaveChanged
     );
@@ -64,19 +64,19 @@ class CollectionFilters extends Component {
     ) {
       selectFilterSet(null);
     }
-  }
+  };
 
   // Set up event listener for escape key.
-  componentDidMount() {
+  componentDidMount () {
     document.addEventListener('keydown', this.keyListener);
   }
 
   // On unmount, remove event listener for escape key.
-  componentWillUnmount() {
+  componentWillUnmount () {
     document.removeEventListener('keydown', this.keyListener);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     const mobileFiltersWasOpen = this.props.mobileFilters.visible;
     const mobileFiltersWillBeOpen = nextProps.mobileFilters.visible;
     const mobileSearchWillBeOpen = nextProps.mobileSearch.visible;
@@ -120,8 +120,6 @@ class CollectionFilters extends Component {
 
       // if we are closing the mobile filters
       if (!mobileFiltersWillBeOpen) {
-
-
         // Note: We're showing filters on the main page now,
         // and we're not setup to store both two states in order to revert to
         // the last state... So for now, just apply the changes every time.
@@ -130,13 +128,12 @@ class CollectionFilters extends Component {
         //   return;
         // }
 
-         // if no changes are pending, do nothing
+        // if no changes are pending, do nothing
         if (!this.props.mobileFilters.filtersPending) {
           return;
 
         // if there are changes pending
         } else {
-
           // if they're added filters, find the filtered objects
           if (nextProps.filters.ordered.length) {
             this.props.findFilteredObjects(nextProps.filters);
@@ -157,7 +154,6 @@ class CollectionFilters extends Component {
       return;
     }
 
-    
     // otherwise, we're not in mobile search land, handle the new filter
     if (
       (nextProps.filters.ordered !== this.props.filters.ordered) || // High-level filters
@@ -165,23 +161,21 @@ class CollectionFilters extends Component {
     ) {
       this.props.findFilteredObjects(nextProps.filters, 0);
       this.props.clearSearchTerm();
-
-      return;
     }
   }
 
-  render() {
-    const { filterSets: { visibleFilterSet }, selectFilterSet} = this.props;
+  render () {
+    const { filterSets: { visibleFilterSet }, selectFilterSet } = this.props;
 
     return (
       <div
         className='container collection-filters-wrap__container'
         ref={ref => {
-            if (!this.ref) {
-              this.ref = ref;
-              this.forceUpdate();
-            }
+          if (!this.ref) {
+            this.ref = ref;
+            this.forceUpdate();
           }
+        }
         }
       >
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
@@ -223,9 +217,9 @@ const mapStateToProps = state => {
     mobileFilters: state.mobileFilters,
     mobileSearch: state.mobileSearch,
     filters: state.filters,
-    search: state.search,
-  }
-}
+    search: state.search
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
@@ -235,9 +229,9 @@ const mapDispatchToProps = dispatch => {
     MobileFiltersActions,
     MobileSearchActions,
     ObjectsActions,
-    HtmlClassManagerActions,
+    HtmlClassManagerActions
   ),
   dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFilters);

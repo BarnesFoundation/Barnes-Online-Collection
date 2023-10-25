@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet';
-import { META_TITLE, META_DESCRIPTION, CANONICAL_ROOT, META_IMAGE, META_PLACENAME} from '../../constants';
+import { META_TITLE, META_DESCRIPTION, CANONICAL_ROOT, META_IMAGE, META_PLACENAME } from '../../constants';
 
 class SiteHtmlHelmetHead extends Component {
-  render() {
+  render () {
     const metaTags = this.props.metaTags || {};
     const metaTitle = metaTags.title || META_TITLE;
     const metaDescription = metaTags.description || META_DESCRIPTION;

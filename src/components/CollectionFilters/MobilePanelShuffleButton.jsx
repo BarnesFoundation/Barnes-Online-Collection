@@ -8,18 +8,18 @@ import Icon from '../Icon';
 import * as FiltersActions from '../../actions/filters';
 
 class MobilePanelCloser extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(e) {
+  handleClick (e) {
     // We have removed the shuffle option from the collections site.
     // this.props.shuffleFilters();
   }
 
-  render() {
+  render () {
     return (
       <div className="btn btn-no-style btn-filter-shuffle" onClick={this.handleClick}>
         <Icon svgId="shuffle" classes="" />
@@ -31,13 +31,13 @@ class MobilePanelCloser extends Component {
 
 const mapStateToProps = state => {
   return {
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
-    FiltersActions,
+    FiltersActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobilePanelCloser);

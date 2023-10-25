@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import SearchInput from '../SearchInput/SearchInput';
 
 class MobileFiltersMenu extends Component {
-  render() {
+  render () {
     return (
       <div className="mobile-panel mobile-search-panel">
         <SearchInput />
@@ -17,13 +17,13 @@ class MobileFiltersMenu extends Component {
 
 const mapStateToProps = state => {
   return {
-    search: state.search,
-  }
-}
+    search: state.search
+  };
+};
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
+  return bindActionCreators(Object.assign({}
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersMenu);

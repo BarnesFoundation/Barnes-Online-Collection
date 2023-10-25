@@ -1,21 +1,21 @@
-import React, { Component } from "react";
-import classnames from "classnames";
-import { ObjectCard } from "../ObjectCard/ObjectCard";
-import "./stickyListSection.css";
+import React, { Component } from 'react';
+import classnames from 'classnames';
+import { ObjectCard } from '../ObjectCard/ObjectCard';
+import './stickyListSection.css';
 
 export class StickyListSection extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.handleScroll = this.handleScroll.bind(this);
     this.state = { isFixed: false, isAbsolute: true };
   }
 
-  componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
+  componentDidMount () {
+    window.addEventListener('scroll', this.handleScroll);
   }
 
-  handleScroll(event) {
+  handleScroll (event) {
     let isFixed = this.state.isFixed;
     const sectionBounds = this.section.getBoundingClientRect();
 
@@ -27,10 +27,10 @@ export class StickyListSection extends Component {
       isFixed = false;
     }
 
-    this.setState({ isFixed: isFixed, isAbsolute: !isFixed });
+    this.setState({ isFixed, isAbsolute: !isFixed });
   }
 
-  render() {
+  render () {
     return (
       <div
         className="sticky-list-section"
@@ -39,9 +39,9 @@ export class StickyListSection extends Component {
         }}
       >
         <div
-          className={classnames("sticky-list-section__header", {
+          className={classnames('sticky-list-section__header', {
             fixed: this.state.isFixed,
-            absolute: this.state.isAbsolute,
+            absolute: this.state.isAbsolute
           })}
           ref={(header) => {
             this.header = header;

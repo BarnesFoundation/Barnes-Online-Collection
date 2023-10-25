@@ -15,19 +15,19 @@ const getLiveClassList = () => {
   return document.documentElement.className.split(' ');
 };
 
-var origClasslist = null;
+let origClasslist = null;
 
 class HtmlClassManager extends Component {
   static defaultProps = {
-    classNameList: [],
-  }
+    classNameList: []
+  };
 
-  componentDidMount() {
+  componentDidMount () {
     origClasslist = getLiveClassList();
     this.props.htmlClassesReset(origClasslist);
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillUpdate (nextProps) {
     // update the classList to the latest
     updateHtmlClassList(nextProps.classNameList);
 
@@ -45,31 +45,31 @@ class HtmlClassManager extends Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     updateHtmlClassList(origClasslist);
   }
 
-  render() {
-    return <div className="component-html-class-manager" />
+  render () {
+    return <div className="component-html-class-manager" />;
   }
 }
 
 HtmlClassManager.propTypes = {
-  classNameList: PropTypes.array.isRequired,
+  classNameList: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     classNameList: state.htmlClassManager,
-    modalIsOpen: state.modal.modalIsOpen,
-  }
-}
+    modalIsOpen: state.modal.modalIsOpen
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
     HtmlClassManagerActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(HtmlClassManager);

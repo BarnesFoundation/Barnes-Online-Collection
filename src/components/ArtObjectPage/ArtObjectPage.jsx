@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router';
 import * as ObjectActions from '../../actions/object';
-import {getMetaTagsFromObject} from '../../helpers';
+import { getMetaTagsFromObject } from '../../helpers';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
 import HtmlClassManager from '../HtmlClassManager';
@@ -12,29 +12,29 @@ import Footer from '../Footer/Footer';
 import './artObjectPage.css';
 
 class ArtObjectPage extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = this.getState(this.props);
   }
 
-  getState(nextProps) {
+  getState (nextProps) {
     const requestObjectId = parseInt(nextProps.match.params.id, 10);
     const panelSlug = nextProps.match.params.panel || '';
 
     return {
-      panelSlug: panelSlug,
-      requestObjectId: requestObjectId
+      panelSlug,
+      requestObjectId
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (this.props.match.params !== nextProps.match.params) {
       this.setState(this.getState(nextProps));
     }
   }
 
-  render() {
+  render () {
     const object = this.props.object;
     const metaTags = getMetaTagsFromObject(object);
 
@@ -53,16 +53,16 @@ class ArtObjectPage extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
-    object: state.object,
+    object: state.object
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return bindActionCreators(Object.assign(
     {},
-    ObjectActions,
+    ObjectActions
   ), dispatch);
 }
 

@@ -5,7 +5,7 @@ import ArtObjectImage from './ArtObjectImage';
 import ArtObjectOverlay from './ArtObjectOverlay';
 
 class ArtObject extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -15,11 +15,11 @@ class ArtObject extends Component {
     this.revealArtObject = this.revealArtObject.bind(this);
   }
 
-  revealArtObject() {
+  revealArtObject () {
     this.setState({ loaded: true });
   }
 
-  getClasses() {
+  getClasses () {
     let classes = 'art-object-fade__';
     if (this.state.loaded) {
       classes += 'in';
@@ -29,8 +29,7 @@ class ArtObject extends Component {
     return classes;
   }
 
-  render() {
-    
+  render () {
     return (
       <div className={this.getClasses()}>
         <ArtObjectImage

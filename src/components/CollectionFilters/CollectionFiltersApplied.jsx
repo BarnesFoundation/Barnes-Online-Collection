@@ -5,11 +5,11 @@ import FilterTag from './FilterTag';
 const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount, isSearchPending }) => {
   const mergedOrders = [
     ...ordered,
-    ...orderedAdvanced.map(order => ({ ...order, isAdvanced: true })), // So we know that this is an advanced filter.
-  ].sort((orderA, orderB) => orderA.index - orderB.index) // Sort by index key.
+    ...orderedAdvanced.map(order => ({ ...order, isAdvanced: true })) // So we know that this is an advanced filter.
+  ].sort((orderA, orderB) => orderA.index - orderB.index); // Sort by index key.
 
   return (
-    Boolean(ordered.length || orderedAdvanced.length) && 
+    Boolean(ordered.length || orderedAdvanced.length) &&
       <div className='applied-filter-tags-container-wrap'>
         <div className='applied-filter-tags-container'>
           {mergedOrders.map((filter) => (
@@ -25,7 +25,7 @@ const CollectionFiltersApplied = ({ ordered, orderedAdvanced, objectsCount, isSe
         </div>
       </div>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   ordered: state.filters.ordered,
@@ -33,7 +33,7 @@ const mapStateToProps = (state) => ({
     .flatMap(value => Object.values(value))
     .filter(value => !value.isHiddenTag),
   objectsCount: state.objectsQuery.lastIndex,
-  isSearchPending: state.objectsQuery.isPending,
+  isSearchPending: state.objectsQuery.isPending
 });
 
 export default connect(mapStateToProps)(CollectionFiltersApplied);

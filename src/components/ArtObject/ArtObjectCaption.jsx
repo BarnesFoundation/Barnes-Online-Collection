@@ -3,8 +3,7 @@ import { sentenceCase } from 'change-case';
 
 const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
   // If there are any highlights, take the first key string.
-  let highlightText = Boolean(
-    highlight && Object.keys(highlight).length && Object.keys(highlight).every(key => !key.includes('people') && !key.includes('title')))
+  let highlightText = highlight && Object.keys(highlight).length && Object.keys(highlight).every(key => !key.includes('people') && !key.includes('title'))
     ? Object.keys(highlight)[0]
     : null;
 
@@ -15,7 +14,7 @@ const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
   if (highlightText) highlightText = sentenceCase(highlightText);
 
   let captionClassName = 'art-object-caption';
-  if (isThumbnail) captionClassName = `${captionClassName} art-object-caption--thumbnail`
+  if (isThumbnail) captionClassName = `${captionClassName} art-object-caption--thumbnail`;
 
   return (
     <div className={captionClassName}>
@@ -24,7 +23,7 @@ const ArtObjectCaption = ({ title, people, highlight, isThumbnail }) => {
       </h2>
       {people &&
         <h3 className="h3 color-light">
-          
+
           {title}
         </h3>
       }

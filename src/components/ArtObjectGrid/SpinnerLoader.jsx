@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class SpinnerLoader extends Component {
-  render() {
+  render () {
     return (
       <div className="spinner">
         <div className="bounce1"></div>

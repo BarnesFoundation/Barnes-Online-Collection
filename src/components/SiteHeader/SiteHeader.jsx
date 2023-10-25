@@ -10,48 +10,49 @@ import './siteHeader.css';
 const HEADER_HIDDEN = {
   DEFAULT: 'DEFAULT',
   LOCKED: 'LOCKED',
-  UNLOCKED: 'UNLOCKED',
+  UNLOCKED: 'UNLOCKED'
 };
 
 /**
  * JSX element for Barnes logos.
  */
 const Logo = ({ size, width, height, logo, className }) => (
-  <svg className={`a-logo__svg a-logo__svg--${size} ${className ? className : ""}`} width={width} height={height} aria-labelledby='logo-title'>
+  <svg className={`a-logo__svg a-logo__svg--${size} ${className || ''}`} width={width} height={height} aria-labelledby='logo-title'>
     <title id='logo-title'>Barnes</title>
-    <use xlinkHref={`#icon--logo-${logo ? logo : size}`}></use>
+    <use xlinkHref={`#icon--logo-${logo || size}`}></use>
   </svg>
 );
-
 
 // Static info mapped to static Logo JSX element.
 const logoSizes = [
   { size: 's', width: 121, height: 37 },
   { size: 'm', width: 146, height: 45 },
   { size: 'l', width: 164.958, height: 50 },
-  { size: 'xl', width: 200, height: 62 },
+  { size: 'xl', width: 200, height: 62 }
 ];
 
 const logo100Sizes = [
-  { size: "xs", width: 121, height: 150, logo: "100" },
-  { size: "s", width: 263.66, height: 37, logo: "100H" },
-  { size: "m", width: 320.67, height: 45, logo: "100H" },
-  { size: "l", width: 164.958, height: 150, logo: "100" },
-  { size: "xl", width: 200, height: 150, logo: "100" },
+  { size: 'xs', width: 121, height: 150, logo: '100' },
+  { size: 's', width: 263.66, height: 37, logo: '100H' },
+  { size: 'm', width: 320.67, height: 45, logo: '100H' },
+  { size: 'l', width: 164.958, height: 150, logo: '100' },
+  { size: 'xl', width: 200, height: 150, logo: '100' }
 ];
 
-const Logos = ({ ref, tabIndex, isCentennial}) => (
+const Logos = ({ ref, tabIndex, isCentennial }) => (
   <a
     className='a-logo g-header__logo'
     href={MAIN_WEBSITE_DOMAIN}
     tabIndex={tabIndex}
     ref={ref}
   >
-    {isCentennial ? (
-      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} className="a-logo__svg--100" />))
-    ) : (
-      logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
-    )}
+    {isCentennial
+      ? (
+          logo100Sizes.map(logo => <Logo key={logo.size} {...logo} className="a-logo__svg--100" />)
+        )
+      : (
+          logoSizes.map(logo => <Logo key={logo.size} {...logo} />)
+        )}
 
   </a>
 );
@@ -77,12 +78,12 @@ const MobileLinks = () => (
 );
 
 class SiteHeader extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
       isSideMenuOpen: false,
-      isHeaderHidden: HEADER_HIDDEN.DEFAULT,
+      isHeaderHidden: HEADER_HIDDEN.DEFAULT
     };
 
     this.startRef = null;
@@ -94,10 +95,10 @@ class SiteHeader extends Component {
       isSideMenuOpen,
       isHeaderHidden
     } = this.state;
-    const { isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, } = this.props;
-    
+    const { isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive } = this.props;
+
     if (
-      e.key === 'Tab' && 
+      e.key === 'Tab' &&
       !isSideMenuOpen &&
       (isHeaderHidden === HEADER_HIDDEN.DEFAULT || isHeaderHidden === HEADER_HIDDEN.LOCKED) &&
       this.startRef &&
@@ -115,12 +116,12 @@ class SiteHeader extends Component {
     ) {
       toggleGlobalSearch();
     }
-  }
+  };
 
   /**
    * Add event listener for scroll on mount.
    */
-  componentDidMount() {
+  componentDidMount () {
     window.addEventListener('scroll', this.scroll);
     document.addEventListener('keydown', this.keyListener);
   }
@@ -128,7 +129,7 @@ class SiteHeader extends Component {
   /**
    * Cleanup event listener on unmount
    */
-  componentWillUnmount() {
+  componentWillUnmount () {
     window.removeEventListener('scroll', this.scroll);
     document.removeEventListener('keydown', this.keyListener);
   }
@@ -141,7 +142,7 @@ class SiteHeader extends Component {
     // State object for closure, keeps track if a scroll event has been fired and last scroll position.
     const scrollState = {
       isScrolling: false,
-      height: 0,
+      height: 0
     };
 
     return () => {
@@ -178,25 +179,27 @@ class SiteHeader extends Component {
 
   openSideMenu = () => this.setState({ isSideMenuOpen: true });
 
-  render() {
+  render () {
     const { isHeaderHidden, isSideMenuOpen } = this.state;
     const { isArtObject, isGlobalSearchHeader, toggleGlobalSearch, isGlobalSearchActive, isSecond, isTour, isNotFound } = this.props;
 
     let isArtObjectClassNames = isArtObject ? 'art-object-header' : null; // Define class to change color of header and padding.
-    let isNotFoundClassNames = isNotFound ? 'not-found-header' : null; // Define class to change color of header and padding.
+    const isNotFoundClassNames = isNotFound ? 'not-found-header' : null; // Define class to change color of header and padding.
     if (isArtObjectClassNames && isSecond) isArtObjectClassNames = `${isArtObjectClassNames} art-object-header--absolute`; // For second menu on artist page, absolutely position second menu.
 
     // Set up g-header classes.
     let ariaHidden = false;
     let ariaExpandedNav = false;
-    let tabIndex = (
+    const tabIndex = (
       (
         (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) ||
-        (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.DEFAULT ) ||
+        (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.DEFAULT) ||
         (isGlobalSearchHeader && isGlobalSearchActive)
       ) &&
-      !isSideMenuOpen         
-    ) ? 0 : -1;
+      !isSideMenuOpen
+    )
+      ? 0
+      : -1;
 
     let gHeaderClassNames = 'g-header';
     if ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.UNLOCKED) || (isGlobalSearchHeader && !isGlobalSearchActive)) {
@@ -216,13 +219,12 @@ class SiteHeader extends Component {
     let gHeaderBtnClassNames = 'g-header__nav__btn g-header__btn__search btn btn--icon-only html4-hidden';
     if (isGlobalSearchActive) gHeaderBtnClassNames = `${gHeaderBtnClassNames} g-header__nav__btn--active`;
 
-    let gHeaderNavClassNames = 'g-header__nav';
+    const gHeaderNavClassNames = 'g-header__nav';
 
     // Get year to determine whether to use centennial logo or original logo
-    const today = new Date()
+    const today = new Date();
     const isCentennial = true;
     // const isCentennial = today.getFullYear() === 2022;
-    
 
     return (
       <div className={isArtObjectClassNames}>
@@ -295,11 +297,10 @@ class SiteHeader extends Component {
             </nav>
           </div>
 
-          {!Boolean(isTour) 
+          {!isTour
             ? // Display the mobile links for all pages except for tours
               <MobileLinks />
-            :
-              null
+            : null
           }
 
           {isGlobalSearchHeader &&
@@ -320,7 +321,7 @@ class SiteHeader extends Component {
                     if (i === SUGGESTED_TERMS.length - 1) {
                       additionalProps = { ...additionalProps, ref: ref => this.endRef = ref };
                     }
-                    
+
                     return (
                       <button
                         key={term}
@@ -344,7 +345,7 @@ class SiteHeader extends Component {
                 setTimeout(() => {
                   this.setState({ isSideMenuOpen: false });
                 }, 0);
-                
+
                 if (this.startRef) {
                   this.startRef.focus();
                 }
@@ -355,38 +356,38 @@ class SiteHeader extends Component {
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = state => ({ isArtistMenuToggled: state.filterSets.isArtistMenuToggled });
 const ConnectedSiteHeader = connect(mapStateToProps)(SiteHeader);
 
 class SiteHeaderGlobalSearch extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
       isGlobalSearchActive: false,
-      overlayActive: false,
+      overlayActive: false
     };
-  };
+  }
 
   setGlobalSearchStatus = (isGlobalSearchActive) => {
     this.setState({ isGlobalSearchActive });
-    
+
     // This drops the z-index of the shaded overlay only after animation has completed, to prevent a FOUC.
     if (isGlobalSearchActive) {
       this.setState({ overlayActive: true });
     } else {
       setTimeout(() => this.setState({ overlayActive: false }), 300);
     }
-  }
+  };
 
-  render() {
+  render () {
     const { isArtObject, isTour, isNotFound } = this.props;
     const { isGlobalSearchActive, overlayActive } = this.state;
 
     // Apply shaded overlay classes. These are applied in this order so the z-index of higher is not overwritten.
-    let shadedOverlayClassNames = 'shaded-background__tint'
+    let shadedOverlayClassNames = 'shaded-background__tint';
     if (isGlobalSearchActive) shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--active`;
     if (overlayActive) shadedOverlayClassNames = `${shadedOverlayClassNames} shaded-background__tint--higher`;
 

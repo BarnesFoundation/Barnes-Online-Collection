@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class ArtObjectCard extends Component {
-  render() {
+  render () {
     return (
       <div>
         <img src={this.props.imageUrlSmall} alt={this.props.title}/>

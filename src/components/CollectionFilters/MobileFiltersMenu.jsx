@@ -13,18 +13,18 @@ import LightFilters from './LightFilters';
 import SpaceFilters from './SpaceFilters';
 
 class MobileFiltersMenu extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.applyMobileFilters = this.applyMobileFilters.bind(this);
   }
 
-  applyMobileFilters() {
+  applyMobileFilters () {
     this.props.applyMobileFilters(this.props.filters.ordered);
     this.props.closeMobileFilters();
   }
 
-  render() {
+  render () {
     const filters = this.props.filters.ordered;
     const hasFilters = filters && filters.length > 0;
 
@@ -54,15 +54,15 @@ const mapStateToProps = state => {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
     filters: state.filters,
-    search: state.search,
-  }
-}
+    search: state.search
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign({},
     MobileFiltersActions,
     FiltersActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersMenu);

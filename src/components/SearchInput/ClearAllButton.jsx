@@ -8,19 +8,19 @@ import * as FiltersActions from '../../actions/filters';
 import * as ObjectsActions from '../../actions/objects';
 
 class ClearAllButton extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick () {
     this.props.clearSearchTerm();
     this.props.getAllObjects();
     this.props.clearAllFilters();
   }
 
-  render() {
+  render () {
     return (
       <div
         onClick={this.handleClick}
@@ -32,7 +32,7 @@ class ClearAllButton extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -41,7 +41,6 @@ const mapDispatchToProps = (dispatch) => {
     FiltersActions,
     ObjectsActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClearAllButton);
-

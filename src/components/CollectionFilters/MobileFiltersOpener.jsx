@@ -9,22 +9,22 @@ import * as MobileFiltersActions from '../../actions/mobileFilters';
 import * as MobileSearchActions from '../../actions/mobileSearch';
 
 class MobileFiltersOpener extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.handleClickFilterBtn = this.handleClickFilterBtn.bind(this);
     this.handleClickSearchBtn = this.handleClickSearchBtn.bind(this);
   }
 
-  handleClickFilterBtn() {
+  handleClickFilterBtn () {
     this.props.openMobileFilters();
   }
 
-  handleClickSearchBtn() {
+  handleClickSearchBtn () {
     this.props.openMobileSearch();
   }
 
-  render() {
+  render () {
     const filterCount = this.props.filters.length;
 
     return (
@@ -51,16 +51,16 @@ const mapStateToProps = state => {
   return {
     filterSets: state.filterSets,
     filters: state.filters,
-    mobileFilters: state.mobileFilters,
-  }
-}
+    mobileFilters: state.mobileFilters
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(Object.assign(
     {},
     MobileFiltersActions,
-    MobileSearchActions,
+    MobileSearchActions
   ), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersOpener);

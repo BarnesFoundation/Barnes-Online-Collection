@@ -7,7 +7,7 @@ const ENSEMBLE = require('./ensembleIndexes');
 
 export const ENSEMBLE_IMAGE_URL = (index) => {
   return `${imageUrlBase}/ensembles/${index}.jpg`;
-}
+};
 
 export const getRoomAndTitleText = (ensembleIndex) => {
   const ensembleInfo = ENSEMBLE[ensembleIndex];
@@ -17,7 +17,7 @@ export const getRoomAndTitleText = (ensembleIndex) => {
   const wallTitleStr = wallTitle ? `, ${wallTitle}` : '';
 
   return `${ensembleInfo.roomTitle}${wallTitleStr}`;
-}
+};
 
 export const getRoomName = (ensembleIndex) => {
   return ENSEMBLE[ensembleIndex] ? ENSEMBLE[ensembleIndex].roomTitle : '';

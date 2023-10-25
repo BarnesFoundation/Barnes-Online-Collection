@@ -7,7 +7,7 @@ smoothscroll.polyfill();
 
 let hasBeenScrolled = false; // Only scroll down once.
 
-const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer, hasScroll } ) => {
+const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer, hasScroll }) => {
   // onClick, scroll parent ref into view.  This is a ref to prevent weird height issues w/ absolutely positioned content.
   // This is wrapped in a RAF to prevent no scroll on clicking Search button.
   const scrollMenuIntoView = () => {
@@ -30,7 +30,7 @@ const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer, hasScr
     >
       <div className='collection-filters'>
         {Object.entries(sets)
-            .map(([key, { title, slug, svgId, tooltip }]) => (
+          .map(([key, { title, slug, svgId, tooltip }]) => (
               <CollectionFiltersMenuItem
                 key={key}
                 title={title}
@@ -39,7 +39,7 @@ const CollectionFiltersMenu = ({ sets, visibleFilterSet, parentContainer, hasScr
                 tooltip={tooltip}
                 scrollMenuIntoView={scrollMenuIntoView}
               />
-            ))}
+          ))}
       </div>
     </div>
   );
