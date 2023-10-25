@@ -14,6 +14,8 @@ import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
 
+// For now, renditions are not enabled
+const ENABLE_ADDITIONAL_RENDITIONS = false;
 
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
@@ -282,7 +284,7 @@ class PanelDetails extends Component {
 
   /** Async method to fetch possible additional renditions for this object */
   async componentDidUpdate() {
-    if (this.props.object.id && this.state.renditions === null) {
+    if (ENABLE_ADDITIONAL_RENDITIONS && this.props.object.id && this.state.renditions === null) {
       try {
         const response = await axios({
           method: 'GET',
