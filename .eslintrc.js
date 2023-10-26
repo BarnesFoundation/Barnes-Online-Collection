@@ -4,7 +4,7 @@ module.exports = {
     ecmaVersion: 13,
     ecmaFeatures: {
       jsx: true,
-      },
+    },
   },
 
   env: {
@@ -12,8 +12,8 @@ module.exports = {
     node: true,
     es6: true,
   },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  plugins: ["react"],
+  extends: ["prettier", "eslint:recommended", "plugin:react/recommended"],
+  plugins: ["prettier", "react"],
   rules: {
     "react/prop-types": "off",
     "no-unused-vars": "off",
@@ -21,7 +21,13 @@ module.exports = {
     "react/no-unescaped-entities": "off",
     "no-control-regex": "off",
     "react/no-deprecated": "off",
-    "no-async-promise-executor": "off"
+    "no-async-promise-executor": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
   },
   settings: {
     react: { version: "detect" },
