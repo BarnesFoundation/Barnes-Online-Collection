@@ -1,4 +1,4 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from "../constants";
 
 const initialState = {
   modalIsOpen: false,
@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const modal = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.MODAL_SHOW:
       return Object.assign({}, state, { modalIsOpen: true });
     case ActionTypes.MODAL_HIDE:

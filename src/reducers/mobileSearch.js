@@ -1,11 +1,11 @@
-import * as ActionTypes from '../constants';
+import * as ActionTypes from "../constants";
 
 const initialState = {
   visible: false,
 };
 
 const mobileSearch = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.OPEN_MOBILE_SEARCH:
       return Object.assign({}, state, { visible: true });
     case ActionTypes.CLOSE_MOBILE_SEARCH:
@@ -13,6 +13,6 @@ const mobileSearch = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default mobileSearch;
