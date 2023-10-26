@@ -12,12 +12,12 @@ const mapObjects = (objects) => {
 
   if (dedupedObjectLen > 0) {
     DEV_LOG(
-      `Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`,
+      `Note: ${dedupedObjectLen} objects were duplicates and removed from the results.`
     );
   }
 
   return mappedObjects.map((object) =>
-    Object.assign({}, object._source, { id: object._id }),
+    Object.assign({}, object._source, { id: object._id })
   );
 };
 

@@ -38,7 +38,7 @@ const formatSearchBody = (tour) => {
     query: { bool: { filter: { terms: { invno: [] } } } },
   };
   const invNums = tour.collectionObjects.map((object) =>
-    object.inventoryNumber.toLowerCase(),
+    object.inventoryNumber.toLowerCase()
   );
   body.query.bool.filter.terms.invno = invNums;
   return body;
@@ -123,7 +123,7 @@ const getTour = async (request, response) => {
         }
       }
       `,
-      { slug: slug },
+      { slug: slug }
     );
 
     // Get data for tour objects

@@ -110,7 +110,7 @@
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
 		"watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-		"lint": "eslint"
+		"lint": "eslint src/**/*.js; eslint server/**/*.js"
 	},
 	"proxy": "http://localhost:4002",
 	"browserslist": {

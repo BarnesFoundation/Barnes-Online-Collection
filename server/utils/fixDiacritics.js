@@ -29,7 +29,7 @@ const fixDiacritics = (stringWithBrokenDiacritics) =>
   stringWithBrokenDiacritics && typeof stringWithBrokenDiacritics === "string"
     ? FIX_DIACRITIC_PAIRS.reduce(
         (acc, replaceArgs) => acc.replace(...replaceArgs),
-        stringWithBrokenDiacritics,
+        stringWithBrokenDiacritics
       )
     : undefined;
 
