@@ -1,31 +1,31 @@
-import { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as HtmlClassManagerActions from './actions/htmlClassManager';
-import * as ModalActions from './actions/modal';
-import { withRouter } from 'react-router';
-import { CLASSNAME_NAV_ACTIVE } from './constants';
+import { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as HtmlClassManagerActions from "./actions/htmlClassManager";
+import * as ModalActions from "./actions/modal";
+import { withRouter } from "react-router";
+import { CLASSNAME_NAV_ACTIVE } from "./constants";
 
 class CommonWrap extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  componentDidMount () {
-    document.addEventListener('keydown', this.handleKeyDown);
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
-  componentWillUnmount () {
-    document.removeEventListener('keydown', this.handleKeyDown);
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     // this.scrollToTopOnRouteChange(prevProps);
   }
 
-  handleKeyDown (event) {
+  handleKeyDown(event) {
     // esc
     const isEscKey = event.keyCode === 27;
     if (isEscKey) {
@@ -37,29 +37,31 @@ class CommonWrap extends Component {
     }
   }
 
-  scrollToTopOnRouteChange (prevProps) {
+  scrollToTopOnRouteChange(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
     }
   }
 
-  render () {
+  render() {
     return this.props.children;
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    modalIsOpen: state.modal.modalIsOpen
+    modalIsOpen: state.modal.modalIsOpen,
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-    HtmlClassManagerActions,
-    ModalActions
-  ), dispatch);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, HtmlClassManagerActions, ModalActions),
+    dispatch
+  );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CommonWrap));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CommonWrap));

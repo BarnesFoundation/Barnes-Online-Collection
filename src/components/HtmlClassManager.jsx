@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CLASSNAME_MODAL_OPEN } from '../constants';
-import * as HtmlClassManagerActions from '../actions/htmlClassManager';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { CLASSNAME_MODAL_OPEN } from "../constants";
+import * as HtmlClassManagerActions from "../actions/htmlClassManager";
 
-const updateHtmlClassList = list => {
+const updateHtmlClassList = (list) => {
   // the <html> element
-  document.documentElement.className = list.join(' ');
+  document.documentElement.className = list.join(" ");
 };
 
 const getLiveClassList = () => {
   // the <html> element
-  return document.documentElement.className.split(' ');
+  return document.documentElement.className.split(" ");
 };
 
 let origClasslist = null;
 
 class HtmlClassManager extends Component {
   static defaultProps = {
-    classNameList: []
+    classNameList: [],
   };
 
-  componentDidMount () {
+  componentDidMount() {
     origClasslist = getLiveClassList();
     this.props.htmlClassesReset(origClasslist);
   }
 
-  componentWillUpdate (nextProps) {
+  componentWillUpdate(nextProps) {
     // update the classList to the latest
     updateHtmlClassList(nextProps.classNameList);
 
@@ -45,31 +45,31 @@ class HtmlClassManager extends Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     updateHtmlClassList(origClasslist);
   }
 
-  render () {
+  render() {
     return <div className="component-html-class-manager" />;
   }
 }
 
 HtmlClassManager.propTypes = {
-  classNameList: PropTypes.array.isRequired
+  classNameList: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     classNameList: state.htmlClassManager,
-    modalIsOpen: state.modal.modalIsOpen
+    modalIsOpen: state.modal.modalIsOpen,
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-    HtmlClassManagerActions
-  ), dispatch);
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, HtmlClassManagerActions),
+    dispatch
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HtmlClassManager);

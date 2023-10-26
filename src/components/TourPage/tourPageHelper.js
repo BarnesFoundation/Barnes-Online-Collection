@@ -17,8 +17,8 @@ export const parseTourObject = (object, objectCopy) => {
     //   {parse(objectCopy.description.html)}
     // </div>
     // )
-    content = parse(objectCopy.description.html)
-    overlay = getObjectMetaDataHtml(object)
+    content = parse(objectCopy.description.html);
+    overlay = getObjectMetaDataHtml(object);
 
     if (objectCopy.overlay) {
       overlay = (
@@ -27,7 +27,6 @@ export const parseTourObject = (object, objectCopy) => {
           {parse(objectCopy.overlay.html)}
         </div>
       );
-
     } else if (object.shortDescription.length) {
       overlay = (
         <div>
@@ -51,10 +50,10 @@ export const parseTourObject = (object, objectCopy) => {
   }
 
   return object;
-}
+};
 
 /**
- * Given a list of art objects, sorts the list into dictionary with 
+ * Given a list of art objects, sorts the list into dictionary with
  * room numbers as the keys and an array of art objects as the value
  */
 export const sortObjectsByRoom = (objects, objectsCopy) => {
@@ -66,7 +65,11 @@ export const sortObjectsByRoom = (objects, objectsCopy) => {
     // If key for this room doesn't exist, add it
     objByRoom[room] = objByRoom[room] ? objByRoom[room] : [];
     // Find the associated copy
-    const objectCopy = objectsCopy.find(copy => object._source.invno.toLowerCase() === copy.inventoryNumber.toLowerCase())
+    const objectCopy = objectsCopy.find(
+      (copy) =>
+        object._source.invno.toLowerCase() ===
+        copy.inventoryNumber.toLowerCase()
+    );
     // Parse the object to set required attributes
     const parsedObject = parseTourObject(object._source, objectCopy);
     // Add object to room array
@@ -76,7 +79,7 @@ export const sortObjectsByRoom = (objects, objectsCopy) => {
 };
 
 /**
- * Given an array with the room numbers in order and an array of art objects, 
+ * Given an array with the room numbers in order and an array of art objects,
  * returns an array of room objects with the section header and art object content.
  */
 export const formatTourData = (roomOrder, objects, objectsCopy) => {
@@ -109,19 +112,19 @@ export const localeToLanguage = (locale) => {
       return "Español";
     case "en":
     default:
-      return "English"
+      return "English";
   }
-}
+};
 
 /**
  * Given a language, returns the locale abbreviation
  */
- export const languageToLocale = (language) => {
+export const languageToLocale = (language) => {
   switch (language) {
     case "Español":
       return "es";
     case "English":
     default:
-      return "en"
+      return "en";
   }
-}
+};

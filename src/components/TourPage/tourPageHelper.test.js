@@ -1,10 +1,14 @@
-import { sortObjectsByRoom, formatTourData, parseTourObject } from "./tourPageHelper";
+import {
+  sortObjectsByRoom,
+  formatTourData,
+  parseTourObject,
+} from "./tourPageHelper";
 import { DEFAULT_ROOM_ORDER } from "../../constants";
 import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 
 const data = require("../../../server/constants/tours/test");
 const objectsCopy = data["tourData"]["collectionObjects"];
-const objects = data["objects"]
+const objects = data["objects"];
 
 describe("sortObjectsByRoom", () => {
   const objByRoom = sortObjectsByRoom(objects, objectsCopy);

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-export default ({ svgId, classes, ...props }) => {
+export const Icon = ({ svgId, classes, ...props }) => {
   let className = `icon icon-${svgId}`;
   if (classes) className = `${className} ${classes}`;
 
@@ -10,3 +10,5 @@ export default ({ svgId, classes, ...props }) => {
     </svg>
   );
 };
+
+export default Icon;
