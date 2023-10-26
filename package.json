@@ -55,7 +55,7 @@
 	"devDependencies": {
 		"change-case": "^4.1.1",
 		"clean-css": "^4.1.11",
-		"eslint": "^8.52.0",
+		"eslint": "^5.16.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-config-semistandard": "^17.0.0",
 		"eslint-config-standard": "^17.1.0",
@@ -105,7 +105,7 @@
 		"write-search-assets": "node scripts/write-search-assets.js",
 		"start": "node server/index.js",
 		"server-dev": "PORT=4002 nodemon server/index.js",
-		"client": "SKIP_PREFLIGHT_CHECK=true PORT=3002 react-scripts start",
+		"client": "DISABLE_ESLINT_PLUGIN=true SKIP_PREFLIGHT_CHECK=true PORT=3002 react-scripts start",
 		"test": "react-scripts test --env=jsdom",
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
