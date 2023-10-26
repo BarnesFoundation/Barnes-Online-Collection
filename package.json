@@ -105,7 +105,7 @@
 		"write-search-assets": "node scripts/write-search-assets.js",
 		"start": "node server/index.js",
 		"server-dev": "PORT=4002 nodemon server/index.js",
-		"client": "PORT=3002 react-scripts start",
+		"client": "SKIP_PREFLIGHT_CHECK=true PORT=3002 react-scripts start",
 		"test": "react-scripts test --env=jsdom",
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
