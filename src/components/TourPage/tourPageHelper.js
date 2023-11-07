@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import parse from "html-react-parser";
 import { getRoomName } from "../../ensembleIndex";
-import { parseObject } from "../../objectDataUtils";
+import { parseObject } from "../../shared/utils";
 import { getObjectMetaDataHtml } from "../ArtObjectPageComponents/PanelVisuallyRelated";
 
 /**

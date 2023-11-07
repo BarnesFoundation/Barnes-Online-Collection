@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
 import './zoom.css';
+import { ui } from '../../shared/config';
 
-const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL;
+const IMAGE_BASE_URL = ui.imageBaseURL;
 
 /**
  * Monkey patch OSD to replace default with color.

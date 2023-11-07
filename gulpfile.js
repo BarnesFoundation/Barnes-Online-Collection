@@ -14,6 +14,9 @@ function build() {
       "scripts/**",
       "src/artObjectTitles.json",
       "src/ensembleIndexes.js",
+      
+      // We need the shared folder available from `src`
+      "src/shared/**",
       ".ebextensions/**",
     ],
     { base: "./" }

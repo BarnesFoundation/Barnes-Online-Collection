@@ -1,8 +1,6 @@
-// todo: deduplicate #imgUrlLogic
-const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET;
-const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX;
-const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `//s3.amazonaws.com/${AWS_BUCKET}`;
-const imageUrlBase = IMAGES_PREFIX ? `${IMAGE_BASE_URL}/${IMAGES_PREFIX}` : IMAGE_BASE_URL;
+const { ui } = require('../config');
+
+const imageUrlBase = ui.imagesPrefix ? `${ui.imageBaseURL}/${ui.imagesPrefix}` : ui.imageBaseURL;
 
 const generateObjectImageUrls = (object) => {
   // temp fix for imageSecret missing on some images
@@ -40,9 +38,14 @@ const sanitizeEnsembleIndex = (object) => {
   return object;
 }
 
-export const parseObject = (object) => {
+const parseObject = (object) => {
   object = generateObjectImageUrls(object);
   object = sanitizeEnsembleIndex(object);
 
   return object;
 }
+
+module.exports = {
+  generateObjectImageUrls,
+  parseObject
+};

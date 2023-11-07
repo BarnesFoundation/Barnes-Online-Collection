@@ -1,5 +1,5 @@
 import * as ActionTypes from '../constants';
-import { parseObject } from '../objectDataUtils';
+import { parseObject } from '../shared/utils';
 
 const object = (state = {}, action) => {
   switch(action.type) {

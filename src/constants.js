@@ -1,3 +1,5 @@
+import { ui, meta } from "./shared/config";
+
 // objects
 export const SET_OBJECTS = 'SET_OBJECTS';
 export const APPEND_OBJECTS = 'APPEND_OBJECTS';
@@ -76,16 +78,16 @@ export const MODAL_HIDE = 'MODAL_HIDE';
 export const MODAL_SET_PARENT_STATE = 'MODAL_SET_PARENT_STATE';
 
 // urls
-export const MAIN_WEBSITE_DOMAIN = process.env.REACT_APP_WWW_URL || '//www.barnesfoundation.org';
-export const CANONICAL_ROOT = process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org';
-export const NEWSLETTER_URL = process.env.REACT_APP_NEWSLETTER_URL;
+export const MAIN_WEBSITE_DOMAIN = ui.mainWebsiteURL;
+export const CANONICAL_ROOT = ui.canonicalRoot;
+export const NEWSLETTER_URL = ui.newsletterURL;
 
 // meta tag content
-export const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online';
-export const META_IMAGE = process.env.REACT_APP_META_IMAGE || '';
-export const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || '';
-export const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || '';
-export const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object';
+export const META_TITLE = meta.metaTitle;
+export const META_IMAGE = meta.metaImage;
+export const META_DESCRIPTION = meta.metaDescription;
+export const META_PLACENAME = meta.metaPlaceName;
+export const DEFAULT_TITLE_URL = meta.defaultTitleURL;
 
 // breakpoints
 export const BREAKPOINTS = {
