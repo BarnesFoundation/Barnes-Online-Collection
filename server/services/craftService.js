@@ -1,7 +1,7 @@
 const axios = require('axios');
 const memoryCache = require('memory-cache')
 const esClient = require('../utils/esClient');
-const { ui } = require('../../shared/config')
+const { ui } = require('../../src/shared/config')
 
 let craftRequestConfig = {
 	baseURL: ui.mainWebsiteURL,

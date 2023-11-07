@@ -15,8 +15,8 @@ const s3 = new AWS.S3()
 const googleUA = require('universal-analytics')
 
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
-const { ui, meta } = require('../shared/config')
-const { generateObjectImageUrls } = require('../shared/utils')
+const { ui, meta } = require('../src/shared/config')
+const { generateObjectImageUrls } = require('../src/shared/utils')
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
