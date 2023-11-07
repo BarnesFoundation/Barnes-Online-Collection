@@ -1,3 +1,4 @@
+import { ui } from "../../../shared/config";
 
 export const sharePlatforms = {
 	FACEBOOK: 'FACEBOOK',
@@ -26,7 +27,7 @@ export const createShareForPlatform = (artist, artworkTitle, id, platform, image
  * @param {string} id - the id of the object 
  */
 const createObjectUrl = (id) => {
-	return `${process.env.REACT_APP_CANONICAL_ROOT}/objects/${id}`;
+	return `${ui.canonicalRoot}/objects/${id}`;
 }
 
 
