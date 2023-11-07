@@ -1,9 +1,10 @@
 const axios = require('axios');
 const memoryCache = require('memory-cache')
 const esClient = require('../utils/esClient');
+const { ui } = require('../../shared/config')
 
 let craftRequestConfig = {
-	baseURL: process.env.REACT_APP_WWW_URL,
+	baseURL: ui.mainWebsiteURL,
 	method: 'get'
 };
 

@@ -15,19 +15,20 @@ const s3 = new AWS.S3()
 const googleUA = require('universal-analytics')
 
 const htpasswdFilePath = path.resolve(__dirname, '../.htpasswd')
+const { ui, meta } = require('../shared/config')
+const { generateObjectImageUrls } = require('../shared/utils')
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
 const Handlebars = require('handlebars')
-const canonicalRoot = (process.env.REACT_APP_CANONICAL_ROOT || '')
+const canonicalRoot = ui.canonicalRoot
 const imageTrackBaseUrl = `/track/image-download/`
 
-// todo #switchImportToRequire - consolidate with constants (can't use import yet.)
-const META_TITLE = process.env.REACT_APP_META_TITLE || 'Barnes Collection Online'
-const META_PLACENAME = process.env.REACT_APP_META_PLACENAME || ''
-const META_DESCRIPTION = process.env.REACT_APP_META_DESCRIPTION || ''
-const META_IMAGE = process.env.REACT_APP_META_IMAGE || ''
-const DEFAULT_TITLE_URL = process.env.DEFAULT_TITLE_URL || 'barnes-collection-object'
+const META_TITLE = meta.metaTitle
+const META_PLACENAME = meta.metaPlaceName
+const META_DESCRIPTION = meta.metaDescription
+const META_IMAGE = meta.metaImage
+const DEFAULT_TITLE_URL = meta.defaultTitleURL
 
 const clamp = (num, min, max) => Math.max(min, Math.min(max, num))
 
@@ -80,36 +81,6 @@ const relatedCache = (req, res, next) => {
       }
     })
   }
-}
-
-// todo #switchImportToRequire - consolidate with src/objectDataUtils.js
-const generateObjectImageUrls = (object) => {
-  // todo: deduplicate #imgUrlLogic
-  const AWS_BUCKET = process.env.REACT_APP_AWS_BUCKET
-  const IMAGES_PREFIX = process.env.REACT_APP_IMAGES_PREFIX
-  const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || `//s3.amazonaws.com/${AWS_BUCKET}`;
-  const imageUrlBase = IMAGES_PREFIX ? `${IMAGE_BASE_URL}/${IMAGES_PREFIX}` : IMAGE_BASE_URL;
-
-  if (!object) {
-    return {}
-  }
-
-  if (!object.imageSecret) {
-    return object
-  }
-
-  const imageIdReg = `${object.id}_${object.imageSecret}`
-  const imageIdOrig = `${object.id}_${object.imageOriginalSecret}`
-  const newObject = Object.assign({}, object)
-  const canonicalRootNoProt = canonicalRoot.replace(/^https?\:\/\//i, '')
-
-  // Have it send through this tracking url which will then redirect to the image url
-  newObject.imageUrlForWufoo = `${canonicalRootNoProt}${imageTrackBaseUrl}${imageIdOrig}`
-  newObject.imageUrlSmall = `${imageUrlBase}/${imageIdReg}_n.jpg`
-  newObject.imageUrlOriginal = `${imageUrlBase}/${imageIdOrig}_o.jpg`
-  newObject.imageUrlLarge = `${imageUrlBase}/${imageIdReg}_b.jpg`
-
-  return newObject
 }
 
 const getIndexHtmlPromise = () => {
