@@ -1,5 +1,5 @@
 // Environment variables prefixed with `REACT_APP`
-export default {
+module.exports = {
     // URLs related to main website and collection host
     mainWebsiteURL:  process.env.REACT_APP_WWW_URL || '//www.barnesfoundation.org',
     canonicalRoot: process.env.REACT_APP_CANONICAL_ROOT || 'https://collection.barnesfoundation.org',

@@ -1,7 +1,10 @@
-import meta from './meta';
-import ui from './ui'
+/* import meta from './meta';
+import ui from './ui' */
 
-export {
+const meta = require('./meta');
+const ui = require('./ui');
+
+module.exports = {
     meta,
     ui
 }

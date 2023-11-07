@@ -1,8 +1,8 @@
-import { ui } from '../config';
+const { ui } = require('../config');
 
 const imageUrlBase = ui.imagesPrefix ? `${ui.imageBaseURL}/${ui.imagesPrefix}` : ui.imageBaseURL;
 
-export const generateObjectImageUrls = (object) => {
+const generateObjectImageUrls = (object) => {
   // temp fix for imageSecret missing on some images
   if (!object) {
     return {};
@@ -38,9 +38,14 @@ const sanitizeEnsembleIndex = (object) => {
   return object;
 }
 
-export const parseObject = (object) => {
+const parseObject = (object) => {
   object = generateObjectImageUrls(object);
   object = sanitizeEnsembleIndex(object);
 
   return object;
 }
+
+module.exports = {
+  generateObjectImageUrls,
+  parseObject
+};
