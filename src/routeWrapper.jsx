@@ -1,6 +1,6 @@
 import React from 'react';
 import CommonWrap from './CommonWrap';
-import { ui } from '../shared/config';
+import { ui } from './shared/config';
 
 const ReactGA = require('react-ga');
 

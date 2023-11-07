@@ -1,4 +1,4 @@
-import { ui } from "../../../shared/config";
+import { ui } from "../../shared/config";
 
 export const sharePlatforms = {
 	FACEBOOK: 'FACEBOOK',

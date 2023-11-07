@@ -1,5 +1,5 @@
 import * as ActionTypes from '../constants';
-import { parseObject } from '../../shared/utils';
+import { parseObject } from '../shared/utils';
 
 export const ensembleObjects = (state = [], action) => {
   switch(action.type) {

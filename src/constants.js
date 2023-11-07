@@ -1,4 +1,4 @@
-import { ui, meta } from "../shared/config";
+import { ui, meta } from "./shared/config";
 
 // objects
 export const SET_OBJECTS = 'SET_OBJECTS';

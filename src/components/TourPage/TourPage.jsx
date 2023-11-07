@@ -10,7 +10,7 @@ import {
   META_DESCRIPTION,
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
-import { parseObject } from "../../../shared/utils";
+import { parseObject } from "../../shared/utils";
 import { formatTourData, languageToLocale, localeToLanguage } from "./tourPageHelper";
 import NotFound from "../NotFound/notFound";
 import Spinner from "../Spinner/Spinner";

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import OpenSeadragon from 'openseadragon';
 import './zoom.css';
-import { ui } from '../../../shared/config';
+import { ui } from '../../shared/config';
 
 const IMAGE_BASE_URL = ui.imageBaseURL;
 
