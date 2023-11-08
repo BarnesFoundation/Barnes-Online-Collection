@@ -55,6 +55,7 @@
 	"devDependencies": {
 		"change-case": "^4.1.1",
 		"clean-css": "^4.1.11",
+		"eslint": "^5.16.0",
 		"eslint-utils": "^1.4.2",
 		"flickity": "^2.0.10",
 		"gulp": "^4.0.2",
