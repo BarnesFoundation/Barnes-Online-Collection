@@ -1,8 +1,8 @@
-import bodybuilder from 'bodybuilder';
-import { BARNES_SETTINGS } from './barnesSettings';
-import { META_TITLE, META_DESCRIPTION } from './constants';
+import bodybuilder from "bodybuilder";
+import { BARNES_SETTINGS } from "./barnesSettings";
+import { META_TITLE, META_DESCRIPTION } from "./constants";
 
-const slugify = require('slugify');
+const slugify = require("slugify");
 
 export const getArtObjectUrlFromId = (objectId, objectTitle, panelSlug) => {
   // this can happen while the data is loading
@@ -12,10 +12,10 @@ export const getArtObjectUrlFromId = (objectId, objectTitle, panelSlug) => {
 
   const titleSlug = slugify(objectTitle);
 
-  panelSlug = panelSlug || '';
+  panelSlug = panelSlug || "";
 
   return `/objects/${objectId}/${titleSlug}/${panelSlug}`;
-}
+};
 
 export const getMetaTagsFromObject = (object) => {
   const artistOrCulture = object.culture || object.people;
@@ -32,33 +32,31 @@ export const getMetaTagsFromObject = (object) => {
     image: metaImage,
     description: metaDescription,
   };
-}
+};
 
 export const getObjectRequestBody = (object) => {
-  let body = bodybuilder()
-    .filter('exists', 'imageSecret')
-    .from(0).size(25);
+  let body = bodybuilder().filter("exists", "imageSecret").from(0).size(25);
 
   return body;
-}
+};
 
 export const getObjectsRequestBody = (fromIndex = 0, isLocation = false) => {
   let body = bodybuilder()
-    .sort('_score', 'desc')
-    .filter('exists', 'imageSecret')
+    .sort("_score", "desc")
+    .filter("exists", "imageSecret")
     .from(fromIndex)
     .size(isLocation ? 10000 : BARNES_SETTINGS.size);
   return body;
-}
+};
 
 export const getQueryUrl = (qtype, qval) => {
   return `/objects/?qtype=${qtype}&qval=${qval}`;
-}
+};
 
 export const getQueryKeywordUrl = (qval) => {
-  return getQueryUrl('keyword', qval);
-}
+  return getQueryUrl("keyword", qval);
+};
 
 export const getQueryFilterUrl = (qval) => {
-  return getQueryUrl('filter', qval);
-}
+  return getQueryUrl("filter", qval);
+};

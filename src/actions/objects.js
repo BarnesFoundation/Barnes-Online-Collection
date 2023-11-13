@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { getObjectsRequestBody } from '../helpers';
+import axios from "axios";
+import { getObjectsRequestBody } from "../helpers";
 import {
   RESET_MOBILE_FILTERS,
   SET_OBJECTS,
@@ -8,81 +8,107 @@ import {
   OBJECTS_QUERY_SET_IS_PENDING,
   OBJECTS_QUERY_SET_LAST_INDEX,
   OBJECTS_QUERY_CURRENT_INDEX,
-} from '../constants';
-import { BARNES_SETTINGS, SEARCH_FIELDS } from '../barnesSettings';
-import { DEV_LOG } from '../devLogging';
-import { DROPDOWN_TERMS } from '../components/SearchInput/Dropdowns/Dropdowns';
-import { uniqBy } from 'lodash';
+} from "../constants";
+import { BARNES_SETTINGS, SEARCH_FIELDS } from "../barnesSettings";
+import { DEV_LOG } from "../devLogging";
+import { DROPDOWN_TERMS } from "../components/SearchInput/Dropdowns/Dropdowns";
+import { uniqBy } from "lodash";
 
 const RAW_OPTION = [
-  'id',
-  'title',
-  'people',
-  'medium',
-  'imageOriginalSecret',
-  'imageSecret',
-  'ensembleIndex',
-  'visualDescription',
+  "id",
+  "title",
+  "people",
+  "medium",
+  "imageOriginalSecret",
+  "imageSecret",
+  "ensembleIndex",
+  "visualDescription",
 ];
 
 const resetMobileFilters = () => ({ type: RESET_MOBILE_FILTERS });
-const setObjects = objects => ({ type: SET_OBJECTS, payload: objects });
-const appendObjects = objects => ({ type: APPEND_OBJECTS, payload: objects });
-const setHasMoreResults = hasMoreResults => ({ type: OBJECTS_QUERY_SET_HAS_MORE_RESULTS, hasMoreResults });
-const setIsPending = isPending => ({ type: OBJECTS_QUERY_SET_IS_PENDING, isPending });
-const setLastIndex = lastIndex => ({ type: OBJECTS_QUERY_SET_LAST_INDEX, lastIndex });
-const setCurrentIndex = currentIndex => ({ type: OBJECTS_QUERY_CURRENT_INDEX, currentIndex });
+const setObjects = (objects) => ({ type: SET_OBJECTS, payload: objects });
+const appendObjects = (objects) => ({ type: APPEND_OBJECTS, payload: objects });
+const setHasMoreResults = (hasMoreResults) => ({
+  type: OBJECTS_QUERY_SET_HAS_MORE_RESULTS,
+  hasMoreResults,
+});
+const setIsPending = (isPending) => ({
+  type: OBJECTS_QUERY_SET_IS_PENDING,
+  isPending,
+});
+const setLastIndex = (lastIndex) => ({
+  type: OBJECTS_QUERY_SET_LAST_INDEX,
+  lastIndex,
+});
+const setCurrentIndex = (currentIndex) => ({
+  type: OBJECTS_QUERY_CURRENT_INDEX,
+  currentIndex,
+});
 
 const addHighlightsFilter = (body) => {
   const highlightFilter = {
-    "bool": {
-      "must": [{
-        "exists": {
-          "field": "imageSecret"
-        }
-      }, {
-        "match": {
-          "highlight": "true"
-        }
-      }]
-    }
+    bool: {
+      must: [
+        {
+          exists: {
+            field: "imageSecret",
+          },
+        },
+        {
+          match: {
+            highlight: "true",
+          },
+        },
+      ],
+    },
   };
 
-  return body
-    // note: These random_score values were mostly copy-pasted from this example:
-    // https://www.elastic.co/guide/en/elasticsearch/reference/5.3/query-dsl-function-score-query.html#function-random
-    // These values seem to work better than other adjustments, so I just left them.
-    .query("function_score", {
-      "query": {
-        "match_all": {}
-      },
-      // value from 5.3 example
-      "boost": "5",
-      "functions": [{
-        "filter": highlightFilter,
-        // This should default to the current timestamp and add randomness.
-        "random_score": {},
+  return (
+    body
+      // note: These random_score values were mostly copy-pasted from this example:
+      // https://www.elastic.co/guide/en/elasticsearch/reference/5.3/query-dsl-function-score-query.html#function-random
+      // These values seem to work better than other adjustments, so I just left them.
+      .query("function_score", {
+        query: {
+          match_all: {},
+        },
         // value from 5.3 example
-        "weight": 23
-      }],
-      // value and modes from 5.3 example
-      "max_boost": 42,
-      "score_mode": "max",
-      "boost_mode": "multiply"
-    });
+        boost: "5",
+        functions: [
+          {
+            filter: highlightFilter,
+            // This should default to the current timestamp and add randomness.
+            random_score: {},
+            // value from 5.3 example
+            weight: 23,
+          },
+        ],
+        // value and modes from 5.3 example
+        max_boost: 42,
+        score_mode: "max",
+        boost_mode: "multiply",
+      })
+  );
 };
 
-const mapObjects = (objects) => (
-  uniqBy(objects, '_id').map(object => Object.assign({}, object._source, { highlight: object.highlight } , { id: object._id }))
-);
+const mapObjects = (objects) =>
+  uniqBy(objects, "_id").map((object) =>
+    Object.assign(
+      {},
+      object._source,
+      { highlight: object.highlight },
+      { id: object._id }
+    )
+  );
 
 const fetchResults = async (body, dispatch, options = {}) => {
   if (!options.append) dispatch(setIsPending(true));
 
   try {
-    const res = await axios.post('/api/search', { body: body });
+    const res = await axios.post("/api/search", { body: body });
 
-    const lastIndex = (res.data.hits && res.data.hits.total) ? res.data.hits.total.value : 0;
+    const lastIndex =
+      res.data.hits && res.data.hits.total ? res.data.hits.total.value : 0;
     const objects = res.data.hits ? mapObjects(res.data.hits.hits) : [];
     const maxHits = res.data.hits ? res.data.hits.total : 0;
     const hasMoreResults = maxHits > lastIndex;
@@ -91,21 +117,21 @@ const fetchResults = async (body, dispatch, options = {}) => {
     // dispatch(setCurrentIndex(getState().objectsQuery.currentIndex + 50))
     dispatch(setHasMoreResults(hasMoreResults));
 
-    if (options.barnesify && (maxHits >= BARNES_SETTINGS.size)) {
+    if (options.barnesify && maxHits >= BARNES_SETTINGS.size) {
       await barnesifyObjects(objects, dispatch, options); // note, dispatch(setObjects(barnesifiedObjects)) is called from within barnesifyObjects
     } else {
-      options.append ? dispatch(appendObjects(objects)) : dispatch(setObjects(objects));
+      options.append
+        ? dispatch(appendObjects(objects))
+        : dispatch(setObjects(objects));
       dispatch(resetMobileFilters());
     }
-    
   } catch (e) {
     console.error(e);
-    console.error('Error fetching results.');
+    console.error("Error fetching results.");
   } finally {
     if (!options.append) dispatch(setIsPending(false));
   }
 };
-
 
 const shuffleObjects = (objects) => {
   let i = 0;
@@ -120,62 +146,88 @@ const shuffleObjects = (objects) => {
   }
 
   return objects;
-}
+};
 
 const barnesifyObjects = (objects, dispatch, options) => {
-  DEV_LOG('Beginning Barnesification process...');
+  DEV_LOG("Beginning Barnesification process...");
 
   let barnesObjects = BARNES_SETTINGS.objectsTemplate;
 
   const updateBarnesObjects = (objects, type) => {
     barnesObjects[type].push(...objects);
-  }
+  };
 
   const getBarnsifiedObjects = () => {
-    DEV_LOG('Compiling Barnesified object set...');
+    DEV_LOG("Compiling Barnesified object set...");
 
     let ratios = {
-      '2D': 0,
+      "2D": 0,
       metalworks: 0,
-      '3D': 0,
+      "3D": 0,
       knickknacks: 0,
-      total: 0
+      total: 0,
     };
 
-    let refinedBarnesObjects = barnesObjects.twoD.slice(0, BARNES_SETTINGS.min2D);
-    ratios['2D'] = refinedBarnesObjects.length;
+    let refinedBarnesObjects = barnesObjects.twoD.slice(
+      0,
+      BARNES_SETTINGS.min2D
+    );
+    ratios["2D"] = refinedBarnesObjects.length;
 
-    let metalworks = barnesObjects.metalworks.slice(0, BARNES_SETTINGS.minMetalworks);
+    let metalworks = barnesObjects.metalworks.slice(
+      0,
+      BARNES_SETTINGS.minMetalworks
+    );
     refinedBarnesObjects.push(...metalworks);
-    ratios['metalworks'] = metalworks.length;
+    ratios["metalworks"] = metalworks.length;
 
     let metalworksDiff = BARNES_SETTINGS.minMetalworks - metalworks.length;
 
-    let threeD = barnesObjects.threeD.slice(0, (BARNES_SETTINGS.min3D + metalworksDiff));
+    let threeD = barnesObjects.threeD.slice(
+      0,
+      BARNES_SETTINGS.min3D + metalworksDiff
+    );
     refinedBarnesObjects.push(...threeD);
-    ratios['3D'] = threeD.length;
+    ratios["3D"] = threeD.length;
 
-    let knickknacks = barnesObjects.knickknacks.slice(0, (BARNES_SETTINGS.size - refinedBarnesObjects.length));
+    let knickknacks = barnesObjects.knickknacks.slice(
+      0,
+      BARNES_SETTINGS.size - refinedBarnesObjects.length
+    );
     refinedBarnesObjects.push(...knickknacks);
-    ratios['knickknacks'] = knickknacks.length;
+    ratios["knickknacks"] = knickknacks.length;
 
-    ratios['total'] = refinedBarnesObjects.length;
+    ratios["total"] = refinedBarnesObjects.length;
 
     // TODO: @rachel, mapObjects now dedupes objects, so let's consider whether
     // we need to calc these ratios above after the deduping?
     let mappedObjects = mapObjects(shuffleObjects(refinedBarnesObjects));
 
-    DEV_LOG('Total objects: '+ratios.total);
-    DEV_LOG('2D: '+ratios['2D']+' objects / '+ratios['2D']/ratios.total);
-    DEV_LOG('metalworks: '+ratios['metalworks']+' objects / '+ratios['metalworks']/ratios.total);
-    DEV_LOG('3D: '+ratios['3D']+' objects / '+ratios['3D']/ratios.total);
-    DEV_LOG('Knick Knacks: '+ratios['knickknacks']+' objects / '+ratios['knickknacks']/ratios.total);
+    DEV_LOG("Total objects: " + ratios.total);
+    DEV_LOG(
+      "2D: " + ratios["2D"] + " objects / " + ratios["2D"] / ratios.total
+    );
+    DEV_LOG(
+      "metalworks: " +
+        ratios["metalworks"] +
+        " objects / " +
+        ratios["metalworks"] / ratios.total
+    );
+    DEV_LOG(
+      "3D: " + ratios["3D"] + " objects / " + ratios["3D"] / ratios.total
+    );
+    DEV_LOG(
+      "Knick Knacks: " +
+        ratios["knickknacks"] +
+        " objects / " +
+        ratios["knickknacks"] / ratios.total
+    );
 
     return mappedObjects;
-  }
+  };
 
   const params = (terms) => {
-    let body = getObjectsRequestBody().query('terms', 'classification', terms);
+    let body = getObjectsRequestBody().query("terms", "classification", terms);
 
     if (options.highlights) body = addHighlightsFilter(body);
     if (options.queries) body = assembleDisMaxQuery(body, options.queries);
@@ -183,7 +235,7 @@ const barnesifyObjects = (objects, dispatch, options) => {
     body = body.build();
 
     return { params: { body: body } };
-  }
+  };
 
   const checkBarnesificationPossible = () => {
     if (barnesObjects.twoD.length >= BARNES_SETTINGS.min2D) {
@@ -191,58 +243,71 @@ const barnesifyObjects = (objects, dispatch, options) => {
         if (barnesObjects.threeD.length >= BARNES_SETTINGS.min3D) {
           return true;
         } else {
-          return (barnesObjects.threeD.length + barnesObjects.knickknacks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks);
+          return (
+            barnesObjects.threeD.length + barnesObjects.knickknacks.length >=
+            BARNES_SETTINGS.min3D + BARNES_SETTINGS.minKnickKnacks
+          );
         }
       } else {
-        return (barnesObjects.threeD.length + barnesObjects.metalworks.length) >= (BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks);
+        return (
+          barnesObjects.threeD.length + barnesObjects.metalworks.length >=
+          BARNES_SETTINGS.min3D + BARNES_SETTINGS.minMetalworks
+        );
       }
     } else {
       return false;
     }
-  }
+  };
 
-  const get2DObjects = () => axios.get('/api/search', params(BARNES_SETTINGS.terms2D));
-  const getMetalworks = () => axios.get('/api/search', params(BARNES_SETTINGS.termsMetalworks));
-  const get3DObjects = () => axios.get('/api/search', params(BARNES_SETTINGS.terms3D));
-  const getKnickKnacks = () => axios.get('/api/search', params(BARNES_SETTINGS.termsKnickKnacks));
+  const get2DObjects = () =>
+    axios.get("/api/search", params(BARNES_SETTINGS.terms2D));
+  const getMetalworks = () =>
+    axios.get("/api/search", params(BARNES_SETTINGS.termsMetalworks));
+  const get3DObjects = () =>
+    axios.get("/api/search", params(BARNES_SETTINGS.terms3D));
+  const getKnickKnacks = () =>
+    axios.get("/api/search", params(BARNES_SETTINGS.termsKnickKnacks));
 
-  return axios.all([
-    get2DObjects(),
-    getMetalworks(),
-    get3DObjects(),
-    getKnickKnacks()
-  ]).then(axios.spread((twoD, metalworks, threeD, knickknacks) => {
-    let retObjects = objects;
+  return axios
+    .all([get2DObjects(), getMetalworks(), get3DObjects(), getKnickKnacks()])
+    .then(
+      axios.spread((twoD, metalworks, threeD, knickknacks) => {
+        let retObjects = objects;
 
-    updateBarnesObjects(twoD.data.hits.hits, 'twoD');
-    updateBarnesObjects(metalworks.data.hits.hits, 'metalworks');
-    updateBarnesObjects(threeD.data.hits.hits, 'threeD');
-    updateBarnesObjects(knickknacks.data.hits.hits, 'knickknacks');
+        updateBarnesObjects(twoD.data.hits.hits, "twoD");
+        updateBarnesObjects(metalworks.data.hits.hits, "metalworks");
+        updateBarnesObjects(threeD.data.hits.hits, "threeD");
+        updateBarnesObjects(knickknacks.data.hits.hits, "knickknacks");
 
-    DEV_LOG('Retrieved '+twoD.data.hits.total+' 2D objects.');
-    DEV_LOG('Retrieved '+metalworks.data.hits.total+' metalworks.');
-    DEV_LOG('Retrieved '+threeD.data.hits.total+' 3D objects.');
-    DEV_LOG('Retrieved '+knickknacks.data.hits.total+' knickknacks.');
+        DEV_LOG("Retrieved " + twoD.data.hits.total + " 2D objects.");
+        DEV_LOG("Retrieved " + metalworks.data.hits.total + " metalworks.");
+        DEV_LOG("Retrieved " + threeD.data.hits.total + " 3D objects.");
+        DEV_LOG("Retrieved " + knickknacks.data.hits.total + " knickknacks.");
 
-    if (checkBarnesificationPossible()) {
-      retObjects = getBarnsifiedObjects();
-    }
+        if (checkBarnesificationPossible()) {
+          retObjects = getBarnsifiedObjects();
+        }
 
-    dispatch(setObjects(retObjects));
-  }));
+        dispatch(setObjects(retObjects));
+      })
+    );
 };
 
-export const getNextObjects = (currentNumberofObjects) => ((dispatch, getState) => {
-  const state = getState();
+export const getNextObjects =
+  (currentNumberofObjects) => (dispatch, getState) => {
+    const state = getState();
 
-  const { currentIndex } = state.objectsQuery;
-  const filters = state.filters;
+    const { currentIndex } = state.objectsQuery;
+    const filters = state.filters;
 
-  if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
-    findFilteredObjects(filters, currentIndex + BARNES_SETTINGS.size)(dispatch);
-    dispatch(setCurrentIndex(currentIndex + BARNES_SETTINGS.size));
-  }
-});
+    if (currentNumberofObjects > currentIndex + BARNES_SETTINGS.size) {
+      findFilteredObjects(
+        filters,
+        currentIndex + BARNES_SETTINGS.size
+      )(dispatch);
+      dispatch(setCurrentIndex(currentIndex + BARNES_SETTINGS.size));
+    }
+  };
 
 export const getAllObjects = (fromIndex = 0) => {
   let body = getObjectsRequestBody(fromIndex);
@@ -254,11 +319,8 @@ export const getAllObjects = (fromIndex = 0) => {
     highlights: true,
     append: Boolean(fromIndex),
   };
-  
 
-  body = body
-    .rawOption('_source', RAW_OPTION)
-    .build();
+  body = body.rawOption("_source", RAW_OPTION).build();
 
   getSalt({}); // Reset salt on getAllObjects.
 
@@ -267,7 +329,6 @@ export const getAllObjects = (fromIndex = 0) => {
     fetchResults(body, dispatch, options);
   };
 };
-
 
 /** Closure to keep track of if a new salt is to be generated. */
 const getSalt = (() => {
@@ -278,37 +339,38 @@ const getSalt = (() => {
   let salt = calcSalt(); // Cached salt.
 
   /**
-   * Function to get salt, 
+   * Function to get salt,
    * @param {@see filters.js} newFilters - filters to compare against variables in outer scope.
    * @return {string} salt to be passed to elasticsearch.
    */
   return (newFilters) => {
-    
     // If the filters match our cache filters, just return same salt.
     if (JSON.stringify(newFilters) === JSON.stringify(filters)) {
       return salt;
 
-    // If filters are different then what we currently have in cache,
-    // return new salt and update closure variables.
+      // If filters are different then what we currently have in cache,
+      // return new salt and update closure variables.
     } else {
       filters = newFilters;
       salt = calcSalt();
       return salt;
     }
-  }
+  };
 })();
 
 export const findFilteredObjects = (filters, fromIndex = 0) => {
   // If there is now no filter.
   if (
-      (
-        !filters.ordered ||
-        filters.ordered.length === 0 || // Higher-level filters
-        (filters.ordered.length === 1 && filters.ordered[0].name === 'all types')
-      ) && 
-      !Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // If there is any advanced filter
-    ) {
-    return dispatch => getAllObjects(fromIndex)(dispatch);
+    (!filters.ordered ||
+      filters.ordered.length === 0 || // Higher-level filters
+      (filters.ordered.length === 1 &&
+        filters.ordered[0].name === "all types")) &&
+    !Object.values(filters.advancedFilters).reduce(
+      (acc, advancedFilter) => acc + Object.keys(advancedFilter).length,
+      0
+    ) // If there is any advanced filter
+  ) {
+    return (dispatch) => getAllObjects(fromIndex)(dispatch);
   }
 
   const queries = buildQueriesFromFilters(filters.ordered);
@@ -316,18 +378,20 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
   const options = {
     queries: queries,
     barnesify: !fromIndex,
-    append: Boolean(fromIndex)
+    append: Boolean(fromIndex),
   };
 
   let body = getObjectsRequestBody(
     fromIndex,
     Boolean(
       filters.advancedFilters[DROPDOWN_TERMS.ROOM] &&
-      Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length
+        Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ROOM]).length
     )
   );
 
-  if (filters.ordered.filter(filter => filter.filterType !== 'search').length) {
+  if (
+    filters.ordered.filter((filter) => filter.filterType !== "search").length
+  ) {
     body = assembleDisMaxQuery(body, queries);
   }
 
@@ -337,203 +401,224 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
    * @see Dropdowns.jsx for DROPDOWN_TERMS.
    */
   Object.entries(filters.advancedFilters)
-    .filter(([, appliedFilters]) => appliedFilters && Object.keys(appliedFilters).length) // Filter out {}.
+    .filter(
+      ([, appliedFilters]) =>
+        appliedFilters && Object.keys(appliedFilters).length
+    ) // Filter out {}.
     .forEach(([filterType, appliedFilters]) => {
-      switch(filterType) {
+      switch (filterType) {
         case DROPDOWN_TERMS.CULTURE: {
           // Map over terms, place into single array like ["American", "French"].
           Object.values(appliedFilters).forEach(({ term, culturesMap }) => {
             if (culturesMap) {
-              culturesMap.forEach(term => {
-                body.orQuery('multi_match', {
-					fields: ['culture', 'nationality^10'],
-                    query: term,
-                    operator: 'and',
+              culturesMap.forEach((term) => {
+                body.orQuery("multi_match", {
+                  fields: ["culture", "nationality^10"],
+                  query: term,
+                  operator: "and",
                 });
               });
             } else {
               // body.orQuery('query_string', { 'query': `culture: *${term}*`, operator: 'and' });
               // body.orQuery('query_string', { 'query': `culture: *${term}*` });
-              body.orQuery('multi_match', {
-				fields: ['culture', 'nationality^10'],
-				query: term,
-				operator: 'and',
-			});
+              body.orQuery("multi_match", {
+                fields: ["culture", "nationality^10"],
+                query: term,
+                operator: "and",
+              });
             }
           });
           body.queryMinimumShouldMatch(1, true); // Override minimium_should_match for should.
           break;
         }
         case DROPDOWN_TERMS.YEAR: {
-          const { dateRange: { term: { beginDate, endDate }}} = appliedFilters;
+          const {
+            dateRange: {
+              term: { beginDate, endDate },
+            },
+          } = appliedFilters;
 
           body
-            .query('range', 'beginDate', { 'gte': beginDate })
-            .query('range', 'endDate', { 'lte': endDate });
+            .query("range", "beginDate", { gte: beginDate })
+            .query("range", "endDate", { lte: endDate });
           break;
         }
         case DROPDOWN_TERMS.CATEGORY: {
           // Map over terms, place into single array like ["Charcoal on brown wove paper", "Pen and brown ink on brown wove paper"].
-          body.query('terms', { 'classification': Object.values(appliedFilters).map(({ term }) => term) });
+          body.query("terms", {
+            classification: Object.values(appliedFilters).map(
+              ({ term }) => term
+            ),
+          });
           break;
         }
         case DROPDOWN_TERMS.ROOM: {
           // Flatmap over all locations then parseInt flattened Array, placing all ensembleIndexes into single array like [77, 78, 79, 80, 81...].
-          body.query(
-            'terms',
-            { ensembleIndex: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
-          );
+          body.query("terms", {
+            ensembleIndex: Object.values(appliedFilters).flatMap(
+              ({ indexes }) => indexes
+            ),
+          });
           break;
         }
         case DROPDOWN_TERMS.COPYRIGHT: {
           // Map over terms, place into single array like ["copyrightA", "copyRightB"].
-          body.query(
-            'terms',
-            { objRightsTypeId: Object.values(appliedFilters).flatMap(({ indexes }) => indexes) }
-          );
+          body.query("terms", {
+            objRightsTypeId: Object.values(appliedFilters).flatMap(
+              ({ indexes }) => indexes
+            ),
+          });
           break;
         }
         case DROPDOWN_TERMS.ARTIST: {
           // Map over terms, place into single array like ["Pablo Picasso", "Amedeo Modigliani"].
-          body.query('terms', { 'people.text': Object.values(appliedFilters).map(({ term }) => term) });
-          body.sort('endDate', 'asc');
+          body.query("terms", {
+            "people.text": Object.values(appliedFilters).map(
+              ({ term }) => term
+            ),
+          });
+          body.sort("endDate", "asc");
           break;
         }
         default: {
           console.error(`Missing filter type: ${filterType}.`);
         }
       }
-  });
+    });
 
-  body.rawOption('_source', RAW_OPTION);
+  body.rawOption("_source", RAW_OPTION);
   body = body.build();
-  
 
-  body.highlight = { 'fields': {} };
-	body.highlight.fields = {
-		...(SEARCH_FIELDS.reduce((acc, sf) => {
-			acc[sf] = {}
-			return acc;
-		}, {}))
-	};
+  body.highlight = { fields: {} };
+  body.highlight.fields = {
+    ...SEARCH_FIELDS.reduce((acc, sf) => {
+      acc[sf] = {};
+      return acc;
+    }, {}),
+  };
 
-  if (filters.search) {    
+  if (filters.search) {
     const query = {
-      'multi_match': {
+      multi_match: {
         query: filters.search.value || filters.search,
         fields: SEARCH_FIELDS,
       },
     };
 
-    if (Array.isArray(body.query.bool['must'])) {
-      body.query.bool['must'] = [
-        ...body.query.bool['must'],
-        query,
-      ];
-    } else if (body.query.bool['must']) {
-      body.query.bool['must'] = [
-        body.query.bool['must'],
-        query,
-      ];
+    if (Array.isArray(body.query.bool["must"])) {
+      body.query.bool["must"] = [...body.query.bool["must"], query];
+    } else if (body.query.bool["must"]) {
+      body.query.bool["must"] = [body.query.bool["must"], query];
     } else {
-      body.query.bool['must'] = [query];
+      body.query.bool["must"] = [query];
     }
   }
 
-  // If not filtering on artists, let's apply a random sort to our query. We'll need to generate that salt and persist it elsewhere. 
+  // If not filtering on artists, let's apply a random sort to our query. We'll need to generate that salt and persist it elsewhere.
   // The salt should be "renewed" when the filter parameters of your search change at all -- even if you select for example "American" from culture, view some artworks, unselect "American", and then reselect "American".
   // The results should differ upon each new search.
   if (
     (!filters.advancedFilters[DROPDOWN_TERMS.ARTIST] ||
-    Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length === 0) &&
+      Object.keys(filters.advancedFilters[DROPDOWN_TERMS.ARTIST]).length ===
+        0) &&
     !filters.search
-    ) {
-    body.sort = [{
-      _script: {
-        type: 'number',
-        script: {
-          lang: 'painless',
-          source: "(doc['_id'].value + params.salt).hashCode()",
-          params: { salt: getSalt(filters) },
-          // params: { salt:  Math.random().toString(36).substring(2, 15) }
+  ) {
+    body.sort = [
+      {
+        _script: {
+          type: "number",
+          script: {
+            lang: "painless",
+            source: "(doc['_id'].value + params.salt).hashCode()",
+            params: { salt: getSalt(filters) },
+            // params: { salt:  Math.random().toString(36).substring(2, 15) }
+          },
+          order: "desc",
         },
-        'order': 'desc'
-      }
-    }];
+      },
+    ];
   }
 
-  return dispatch => fetchResults(body, dispatch, options);
-}
+  return (dispatch) => fetchResults(body, dispatch, options);
+};
 
 const buildQueriesFromFilters = (filters) => {
   let queries = [];
 
   filters.forEach((filter) => {
     switch (filter.filterType) {
-      case 'colors':
+      case "colors":
         filter.queries.forEach((query) => {
           queries.push(buildColorQuery(query));
-        })
+        });
         break;
-      case 'lines_composition':
-        queries.push(buildRangeQuery(filter.name, { 'gte': BARNES_SETTINGS.line_threshhold }));
+      case "lines_composition":
+        queries.push(
+          buildRangeQuery(filter.name, { gte: BARNES_SETTINGS.line_threshhold })
+        );
         break;
-      case 'lines_linearity':
+      case "lines_linearity":
         switch (filter.name) {
-          case 'unbroken':
-            queries.push(buildRangeQuery('line', { 'lte': BARNES_SETTINGS.broken_threshhold }));
+          case "unbroken":
+            queries.push(
+              buildRangeQuery("line", {
+                lte: BARNES_SETTINGS.broken_threshhold,
+              })
+            );
             break;
-          case 'broken':
-            queries.push(buildRangeQuery('line', { 'gte': BARNES_SETTINGS.broken_threshhold }));
+          case "broken":
+            queries.push(
+              buildRangeQuery("line", {
+                gte: BARNES_SETTINGS.broken_threshhold,
+              })
+            );
             break;
-          case 'all types':
+          case "all types":
             break;
           default:
-            throw new Error('unexpected filterType');
+            throw new Error("unexpected filterType");
         }
 
         break;
-      case 'light':
-        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
+      case "light":
+        queries.push(
+          buildRangeQuery(filter.name, { lte: filter.value / 100 + 0.01 })
+        );
         break;
-      case 'space':
-        queries.push(buildRangeQuery(filter.name, { 'lte': ((filter.value/100) + .01) }));
+      case "space":
+        queries.push(
+          buildRangeQuery(filter.name, { lte: filter.value / 100 + 0.01 })
+        );
         break;
       default:
         break;
     }
   });
 
-
-
   return queries;
-}
+};
 
 const buildColorQuery = (query) => {
   return {
-    'multi_match': {
+    multi_match: {
       query: query,
-      fields: [
-        'color.palette-*',
-        'color.average-*',
-      ]
-    }
+      fields: ["color.palette-*", "color.average-*"],
+    },
   };
-}
+};
 
 const buildRangeQuery = (field, query) => {
   let queryObject = { range: {} };
-  queryObject['range'][field] = query;
+  queryObject["range"][field] = query;
   return queryObject;
-}
+};
 
 const assembleDisMaxQuery = (body, queries) => {
-  return body
-    .query('dis_max', {
-      'queries': queries,
-      'tie_breaker': '0.5'
-    });
-}
+  return body.query("dis_max", {
+    queries: queries,
+    tie_breaker: "0.5",
+  });
+};
 
 export const searchObjects = (term, fromIndex = 0) => {
   return (dispatch) => {
@@ -546,22 +631,22 @@ export const searchObjects = (term, fromIndex = 0) => {
     let body = getObjectsRequestBody(fromIndex).build();
 
     const query = {
-      'query': term,
-      'fields': SEARCH_FIELDS
+      query: term,
+      fields: SEARCH_FIELDS,
     };
-    
+
     // Add the search fields to the highlight -- so we know what field caused an object to show up on search
-    body.highlight = { 'fields': {} };
+    body.highlight = { fields: {} };
     body.highlight.fields = {
-      ...(SEARCH_FIELDS.reduce((acc, sf) => {
-        acc[sf] = {}
+      ...SEARCH_FIELDS.reduce((acc, sf) => {
+        acc[sf] = {};
         return acc;
-      }, {}))
-    }
-    
-    body.query.bool['must'] = [{ 'multi_match': query }];
+      }, {}),
+    };
+
+    body.query.bool["must"] = [{ multi_match: query }];
     if (fromIndex >= 50) options.append = true;
 
     fetchResults(body, dispatch, options);
-  }
-}
+  };
+};
