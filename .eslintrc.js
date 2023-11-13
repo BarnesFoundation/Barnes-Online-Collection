@@ -1,7 +1,7 @@
 module.exports = {
     parserOptions: {
         sourceType: "module",
-        ecmaVersion: 8,
+        ecmaVersion: 9,
         ecmaFeatures: {
             jsx: true,
         },
@@ -20,6 +20,7 @@ module.exports = {
         "no-mixed-spaces-and-tabs": "off",
         "react/no-unescaped-entities": "off",
         "no-control-regex": "off",
+        "no-console": "off",
         "react/no-deprecated": "off",
         "prettier/prettier": [
             "error",
