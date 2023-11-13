@@ -56,6 +56,9 @@
 		"change-case": "^4.1.1",
 		"clean-css": "^4.1.11",
 		"eslint": "^5.16.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-prettier": "^5.0.1",
+		"eslint-plugin-react": "^7.33.2",
 		"eslint-utils": "^1.4.2",
 		"flickity": "^2.0.10",
 		"gulp": "^4.0.2",
@@ -100,7 +103,8 @@
 		"test": "react-scripts test --env=jsdom",
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
-		"watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
+		"watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+		"lint": "eslint"
 	},
 	"proxy": "http://localhost:4002",
 	"browserslist": {
