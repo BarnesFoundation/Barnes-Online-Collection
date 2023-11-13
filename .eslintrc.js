@@ -12,15 +12,21 @@ module.exports = {
         node: true,
         es6: true,
     },
-    extends: ["eslint:recommended", "plugin:react/recommended"],
-    plugins: ["react"],
+    extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
+    plugins: ["react", "prettier"],
     rules: {
         "react/prop-types": "off",
         "no-unused-vars": "off",
         "no-mixed-spaces-and-tabs": "off",
         "react/no-unescaped-entities": "off",
         "no-control-regex": "off",
-        "react/no-deprecated": "off"
+        "react/no-deprecated": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                endOfLine: "auto",
+            },
+        ],
     },
     settings: {
         react: { version: "detect" },
