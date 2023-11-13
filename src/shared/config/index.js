@@ -1,7 +1,7 @@
-const meta = require('./meta');
-const ui = require('./ui');
+const meta = require("./meta");
+const ui = require("./ui");
 
 module.exports = {
-    meta,
-    ui
-}
+  meta,
+  ui,
+};
