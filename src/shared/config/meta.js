@@ -2,8 +2,6 @@
  * as well as backend, since the backend uses it for some templating engine when a page is navigated to directly
  */
 module.exports = {
-  // These should static values instead of environment variables since a rebuild of the frontend would be needed anyway
-  // Additionally, these values are utilitized by the backend server for some page rendering, somehow
   metaTitle: "Barnes Collection Online",
   metaPlaceName: "Barnes Foundation",
   metaDescription:
