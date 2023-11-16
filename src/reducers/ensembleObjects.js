@@ -1,11 +1,11 @@
-import * as ActionTypes from '../constants';
-import { parseObject } from '../objectDataUtils';
+import * as ActionTypes from "../constants";
+import { parseObject } from "../shared/utils";
 
 export const ensembleObjects = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SET_ENSEMBLE_OBJECTS:
-      return action.payload.map(object => {
-        return parseObject(object)
+      return action.payload.map((object) => {
+        return parseObject(object);
       });
     default:
       return state;

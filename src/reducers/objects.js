@@ -1,24 +1,25 @@
-import * as ActionTypes from '../constants';
-import { parseObject } from '../objectDataUtils';
+import * as ActionTypes from "../constants";
+import { parseObject } from "../shared/utils";
 
 const dedupeObjects = (objects) => {
   let hashTable = {};
 
-  return objects.filter(function(object) {
+  return objects.filter(function (object) {
     let key = object.id;
     let match = Boolean(hashTable[key]);
 
-    return (match ? false : hashTable[key] = true);
+    return match ? false : (hashTable[key] = true);
   });
-}
+};
 
 const getObjectsPayload = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SET_OBJECTS:
-      return action.payload.map(object => parseObject(object));
-    case ActionTypes.APPEND_OBJECTS:
-      const newObjects = action.payload.map(object => parseObject(object));
+      return action.payload.map((object) => parseObject(object));
+    case ActionTypes.APPEND_OBJECTS: {
+      const newObjects = action.payload.map((object) => parseObject(object));
       return dedupeObjects(state.concat(newObjects));
+    }
     default:
       return state;
   }

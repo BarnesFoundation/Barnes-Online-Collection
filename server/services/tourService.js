@@ -4,9 +4,9 @@ const graphQLClient = require("../utils/graphCmsClient");
 
 const formatSearchBody = (tour) => {
   const body = {
-    "from": 0,
-    "size": 25,
-    "_source": [
+    from: 0,
+    size: 25,
+    _source: [
       "id",
       "title",
       "people",
@@ -33,40 +33,42 @@ const formatSearchBody = (tour) => {
       "longDescription",
       "bibliography",
       "exhHistory",
-      "publishedProvenance"
+      "publishedProvenance",
     ],
-    "query": { "bool": { "filter": { "terms": { "invno": [] } } } }
-  }
-  const invNums = tour.collectionObjects.map(object => object.inventoryNumber.toLowerCase())
+    query: { bool: { filter: { terms: { invno: [] } } } },
+  };
+  const invNums = tour.collectionObjects.map((object) =>
+    object.inventoryNumber.toLowerCase()
+  );
   body.query.bool.filter.terms.invno = invNums;
-  return body
-}
+  return body;
+};
 
 const getTourObjects = async (tourId, tourData) => {
   // Return the tour data except for the test tour
   if (tourId !== "test-tour" && tourId !== "test") {
-    const body = formatSearchBody(tourData)
-    const esRes = await elasticSearchService.performSearch(body)
-    const objects = esRes.hits.hits
-    const tour = { tourData, objects }
-    return tour
+    const body = formatSearchBody(tourData);
+    const esRes = await elasticSearchService.performSearch(body);
+    const objects = esRes.hits.hits;
+    const tour = { tourData, objects };
+    return tour;
     // Return test tour if it is not production environment
   } else if (
-    process.env.NODE_ENV.toLowerCase() !== "production"
-    && (tourId === "test-tour" || tourId === "test")
+    process.env.NODE_ENV.toLowerCase() !== "production" &&
+    (tourId === "test-tour" || tourId === "test")
   ) {
-    return tours[tourId]
+    return tours[tourId];
     // Otherwise, this tour does not exist
   } else {
-    return false
+    return false;
   }
-}
+};
 
 /** Retrieves the tour with the provided slug */
 const getTour = async (request, response) => {
   // Get the full tour path and remove /api from the slug
   const slug = request.url.slice(5);
-  const tourId = slug.split("/")[1]
+  const tourId = slug.split("/")[1];
 
   try {
     // Get tour content from GraphCMS
@@ -121,15 +123,15 @@ const getTour = async (request, response) => {
         }
       }
       `,
-      { "slug": slug }
-    )
+      { slug: slug }
+    );
 
     // Get data for tour objects
     const tourData = await getTourObjects(tourId, tour);
 
     // // If tour object is truthy, a tour exists
     if (tourData) {
-      return response.status(200).json(tourData)
+      return response.status(200).json(tourData);
       // Otherwise, the tour does not exist
     } else {
       return response
@@ -138,7 +140,7 @@ const getTour = async (request, response) => {
     }
   } catch (e) {
     console.log(e);
-    response.status(500).json(e)
+    response.status(500).json(e);
   }
 };
 

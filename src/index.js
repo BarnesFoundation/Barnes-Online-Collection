@@ -1,21 +1,17 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React from "react";
+import { render } from "react-dom";
 // import { AppContainer } from 'react-hot-loader';
 
-import App from './App';
-import { configureStore } from './store';
-import { unregister as unregisterServiceWorker } from './registerServiceWorker';
+import App from "./App";
+import { configureStore } from "./store";
+import { unregister as unregisterServiceWorker } from "./registerServiceWorker";
 // import registerServiceWorker from './registerServiceWorker';
-import './focus';
+import "./focus";
 
 const store = configureStore(window.__INITIAL_STATE__);
-const mountApp = document.getElementById('root');
+const mountApp = document.getElementById("root");
 
-
-render(
-  <App store={store} />,
-  mountApp
-);
+render(<App store={store} />, mountApp);
 
 // if (module.hot) {
 //   module.hot.accept('./App', () => {
