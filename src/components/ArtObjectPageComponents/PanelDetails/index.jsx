@@ -288,7 +288,7 @@ class PanelDetails extends Component {
       try {
         const response = await axios({
           method: 'GET',
-          url: `/api/objects/${this.props.object.id}/assets`
+          url: `/api/objects/${this.props.object.invno}/assets`
         });
   
         this.setState({...this.state, renditions: response.data || []})
