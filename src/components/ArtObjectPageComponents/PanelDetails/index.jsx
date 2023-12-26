@@ -14,9 +14,7 @@ import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
 
-// For now, renditions are not enabled
-const ENABLE_ADDITIONAL_RENDITIONS = false;
-
+const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
 const getTabList = (artObjectProps) => (
@@ -282,8 +280,8 @@ class PanelDetails extends Component {
   }
 
 
-  /** Async method to fetch possible additional renditions for this object */
   async componentDidUpdate() {
+      /** Fetch possible additional renditions for this object - only when enabled */
     if (ENABLE_ADDITIONAL_RENDITIONS && this.props.object.id && this.state.renditions === null) {
       try {
         const response = await axios({
