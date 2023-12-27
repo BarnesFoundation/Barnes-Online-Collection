@@ -214,10 +214,9 @@ class Image extends Component {
 
     // We'll render the image from the object renditions itself 
     if (renditionsExist) {
-      const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
-        return proxy.name === 'Preview'
-      });
-      imageUrlToRender = `${ui.netxBaseURL}${imageThumbnailPreview.file.url}/`;
+      // We have to build the image URL from the asset information
+      const asset = renditions[activeImageIndex];
+      imageUrlToRender = `${ui.netxBaseURL}/api/file/asset/${asset.id}/${asset.fileName}`;
     }  
     
     // Otherwise, no renditions exist so we'll render the default image
