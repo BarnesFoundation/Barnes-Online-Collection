@@ -6,9 +6,9 @@ const {
   generateGetAssetsByFolderQuery,
 } = require("./generateGetAssetsByFolderQuery");
 
-const NETX_BASE_URL = process.env.NETX_BASE_URL;
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
-const NETX_ENABLED = process.env.NETX_ENABLED || false;
+const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
+const NETX_ENABLED = process.env.REACT_APP_NETX_ENABLED || false;
 
 async function makeNetXRequest(query) {
   const response = await axios({
