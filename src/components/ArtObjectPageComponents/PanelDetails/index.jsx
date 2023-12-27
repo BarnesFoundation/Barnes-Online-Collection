@@ -13,6 +13,7 @@ import * as PrintActions from '../../../actions/prints';
 import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
+import { ui } from "../../../shared/config";
 
 const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED;
 const DEFAULT_THUMBNAIL_COUNT = 5;
@@ -66,7 +67,7 @@ class Thumbnail extends Component {
       return proxy.name === 'Thumbnail'
     });
 
-    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`;
+    const imageSourceUrl = `${ui.netxBaseURL}${imageThumbnailProxy.file.url}/`;
     const renditionCaption = rendition.attributes['Artwork Caption (TMS)'] || '';
     
     // Set up classNames, if selected add BEM modifier.
