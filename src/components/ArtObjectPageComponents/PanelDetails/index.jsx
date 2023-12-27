@@ -224,9 +224,6 @@ class Image extends Component {
       imageUrlToRender = object.imageUrlLarge;
     }
 
-    console.log('activeImageIndex', activeImageIndex);
-    console.log('imageUrlToRender', imageUrlToRender);
-
     return (
       <div>
         <div className='image-art-object'>

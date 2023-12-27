@@ -27,7 +27,6 @@ async function makeNetXRequest(query) {
 
 async function getAssetByObjectNumber(objectNumber) {
   // In case we want to disable interaction with NetX for now
-  console.log(NETX_ENABLED === false);
   if (NETX_ENABLED === false) {
     return [];
   }
@@ -46,9 +45,8 @@ async function getAssetByObjectNumber(objectNumber) {
 
   // Otherwise, the assets are existent at the path
   // So we can use the `getAssetsByFolder` query to retrieve the assets
-  const { id } = result;
   const assetQueryResponse = await makeNetXRequest(
-    generateGetAssetsByFolderQuery(id)
+    generateGetAssetsByFolderQuery(result.id)
   );
 
   const assets = assetQueryResponse.data.result.results;
