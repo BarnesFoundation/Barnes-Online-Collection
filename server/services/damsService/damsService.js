@@ -8,7 +8,8 @@ const {
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
-const NETX_ENABLED = process.env.REACT_APP_NETX_ENABLED || false;
+const NETX_ENABLED =
+  process.env.REACT_APP_NETX_ENABLED === "false" ? false : true || false;
 
 async function makeNetXRequest(query) {
   const response = await axios({
@@ -26,6 +27,7 @@ async function makeNetXRequest(query) {
 
 async function getAssetByObjectNumber(objectNumber) {
   // In case we want to disable interaction with NetX for now
+  console.log(NETX_ENABLED === false);
   if (NETX_ENABLED === false) {
     return [];
   }

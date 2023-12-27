@@ -15,7 +15,7 @@ import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
 import { ui } from "../../../shared/config";
 
-const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED;
+const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED === 'true' ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
 const getTabList = (artObjectProps) => (
