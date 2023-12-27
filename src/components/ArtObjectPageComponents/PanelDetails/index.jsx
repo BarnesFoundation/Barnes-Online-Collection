@@ -217,7 +217,7 @@ class Image extends Component {
       const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
         return proxy.name === 'Preview'
       });
-      imageUrlToRender = `https://barnesfoundation.netx.net${imageThumbnailPreview.file.url}/`;
+      imageUrlToRender = `${ui.netxBaseURL}${imageThumbnailPreview.file.url}/`;
     }  
     
     // Otherwise, no renditions exist so we'll render the default image
