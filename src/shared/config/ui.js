@@ -7,6 +7,9 @@ module.exports = {
     "https://collection.barnesfoundation.org",
   newsletterURL: process.env.REACT_APP_NEWSLETTER_URL,
 
+  // NetX instance url
+  netxBaseURL: process.env.REACT_APP_NETX_BASE_URL || "",
+
   // Image related values
   awsBucket: process.env.REACT_APP_AWS_BUCKET || "",
   imagesPrefix: process.env.REACT_APP_IMAGES_PREFIX || "",
