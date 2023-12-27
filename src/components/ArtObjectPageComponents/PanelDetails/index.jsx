@@ -149,7 +149,10 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
           </ul>
         </div>
       </div>
-      <div className={panelButtonClassNames}>
+      {/** We only need to render the "View More/View Less" section when we have more 
+       *  renditions than our default count. At that point, we need to expand the thumbnail row
+       */}
+      {renditions?.length >  DEFAULT_THUMBNAIL_COUNT  ? <div className={panelButtonClassNames}>
         <div
           className='panel-button__content'
           onClick={toggleOpen}
@@ -161,7 +164,8 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
             {!isOpen ? 'View More' : 'View Less'}
           </span>
         </div>
-      </div>
+      </div> : null
+}
     </div>
   ); 
 };
@@ -196,29 +200,33 @@ class Image extends Component {
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const showZoomImageView = Boolean(!didCatchFailure && object.id && activeImageIndex === 0);
     const renditionsExist = renditions?.length > 0;
+    const showZoomImageView = Boolean(!didCatchFailure && object.id && !renditionsExist && activeImageIndex === 0);
 
     let additionalStyle = {};
     let imageUrlToRender = '';
 
     // If we encountered failure during rendering of the Zoom component, we'll hide it
     // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
-    if (!didCatchFailure && activeImageIndex === 0) {
+    if (!didCatchFailure && !renditionsExist && activeImageIndex === 0) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
 
-    // We'll render the image from the object itself 
-    if (activeImageIndex === 0) {
-      imageUrlToRender = object.imageUrlLarge
-    }  // Otherwise, one of the renditions was clicked. So we need to render that image
-    else {
+    // We'll render the image from the object renditions itself 
+    if (renditionsExist) {
       const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
         return proxy.name === 'Preview'
       });
       imageUrlToRender = `https://barnesfoundation.netx.net${imageThumbnailPreview.file.url}/`;
+    }  
+    
+    // Otherwise, no renditions exist so we'll render the default image
+    else {
+      imageUrlToRender = object.imageUrlLarge;
     }
 
+    console.log('activeImageIndex', activeImageIndex);
+    console.log('imageUrlToRender', imageUrlToRender);
 
     return (
       <div>
