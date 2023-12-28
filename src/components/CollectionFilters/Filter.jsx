@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import ColorFilter from './ColorFilter';
-import LineFilter from './LineFilter';
-import LightFilter from './LightFilter';
-import SpaceFilter from './SpaceFilter';
+import ColorFilter from "./ColorFilter";
+import LineFilter from "./LineFilter";
+import LightFilter from "./LightFilter";
+import SpaceFilter from "./SpaceFilter";
 
-import * as FiltersActions from '../../actions/filters';
-import * as FilterSetsActions from '../../actions/filterSets';
+import * as FiltersActions from "../../actions/filters";
+import * as FilterSetsActions from "../../actions/filterSets";
 
 class Filter extends Component {
   constructor(props) {
@@ -19,9 +19,11 @@ class Filter extends Component {
   }
 
   isFilterApplied() {
-    return this.props.filters.ordered.filter((filter) => {
-      return filter.slug === this.props.filter.slug;
-    }).length > 0;
+    return (
+      this.props.filters.ordered.filter((filter) => {
+        return filter.slug === this.props.filter.slug;
+      }).length > 0
+    );
   }
 
   handleButtonFilter() {
@@ -43,17 +45,17 @@ class Filter extends Component {
   getClasses() {
     const filter = this.props.filter;
     // todo: this is kind of a quick fix. Maybe this should be defined in a more structured way.
-    const isRadioStyle = filter.filterGroup === 'linearity';
+    const isRadioStyle = filter.filterGroup === "linearity";
 
-    let classes = 'btn btn-filter ';
-    classes += filter.filterType + '-filter';
+    let classes = "btn btn-filter ";
+    classes += filter.filterType + "-filter";
 
-    switch(filter.filterType) {
-      case 'colors':
-        classes += ' color-filter__' + filter.name;
+    switch (filter.filterType) {
+      case "colors":
+        classes += " color-filter__" + filter.name;
         break;
-      case 'line':
-        classes += ' font-smallprint';
+      case "line":
+        classes += " font-smallprint";
 
         break;
       default:
@@ -61,11 +63,11 @@ class Filter extends Component {
     }
 
     if (isRadioStyle) {
-      classes += ' filter-style-radio';
+      classes += " filter-style-radio";
     }
 
     if (this.isFilterApplied()) {
-      classes += ' is-applied';
+      classes += " is-applied";
     }
 
     return classes;
@@ -73,58 +75,70 @@ class Filter extends Component {
 
   buildFilter() {
     switch (this.props.filter.filterType) {
-      case 'colors':
-        return <ColorFilter
-          handleClick={this.handleButtonFilter}
-          style={{background: this.props.filter.color}}
-          classes={this.getClasses()}
-          />;
-      case 'lines_composition':
-      case 'lines_linearity':
-        return <LineFilter
-          handleClick={this.handleButtonFilter}
-          classes={this.getClasses()}
-          slug={this.props.filter.slug}
-          name={this.props.filter.name}
-          svgId={this.props.filter.svgId}
-        />;
-      case 'light':
-        return <LightFilter
-          handleChange={this.handleSliderFilter}
-          svgId={this.props.filter.svgId}
-          slug={this.props.filter.slug}
-          name={this.props.filter.name}
-          value={this.props.filters.light ? this.props.filters.light.value : null}
-        />;
-      case 'space':
-        return <SpaceFilter
-          handleChange={this.handleSliderFilter}
-          svgId={this.props.filter.svgId}
-          slug={this.props.filter.slug}
-          name={this.props.filter.name}
-          value={this.props.filters.space ? this.props.filters.space.value : null}
-        />;
+      case "colors":
+        return (
+          <ColorFilter
+            handleClick={this.handleButtonFilter}
+            style={{ background: this.props.filter.color }}
+            classes={this.getClasses()}
+          />
+        );
+      case "lines_composition":
+      case "lines_linearity":
+        return (
+          <LineFilter
+            handleClick={this.handleButtonFilter}
+            classes={this.getClasses()}
+            slug={this.props.filter.slug}
+            name={this.props.filter.name}
+            svgId={this.props.filter.svgId}
+          />
+        );
+      case "light":
+        return (
+          <LightFilter
+            handleChange={this.handleSliderFilter}
+            svgId={this.props.filter.svgId}
+            slug={this.props.filter.slug}
+            name={this.props.filter.name}
+            value={
+              this.props.filters.light ? this.props.filters.light.value : null
+            }
+          />
+        );
+      case "space":
+        return (
+          <SpaceFilter
+            handleChange={this.handleSliderFilter}
+            svgId={this.props.filter.svgId}
+            slug={this.props.filter.slug}
+            name={this.props.filter.name}
+            value={
+              this.props.filters.space ? this.props.filters.space.value : null
+            }
+          />
+        );
       default:
         return null;
     }
   }
 
   render() {
-    return (this.buildFilter());
+    return this.buildFilter();
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     filters: state.filters,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    FiltersActions,
-    FilterSetsActions,
-  ), dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, FiltersActions, FilterSetsActions),
+    dispatch
+  );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

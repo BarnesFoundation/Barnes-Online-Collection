@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-export default ({ svgId, classes, ...props }) => {
+const Icon = ({ svgId, classes, ...props }) => {
   let className = `icon icon-${svgId}`;
   if (classes) className = `${className} ${classes}`;
 
@@ -9,4 +9,6 @@ export default ({ svgId, classes, ...props }) => {
       <use xlinkHref={`#icon-${svgId}`}></use>
     </svg>
   );
-}
+};
+
+export default Icon;

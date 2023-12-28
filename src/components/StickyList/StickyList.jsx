@@ -16,15 +16,25 @@ export default class StickyList extends Component {
       sections,
       languages,
       selectedLanguage,
-      handleSelectLanguage
+      handleSelectLanguage,
     } = this.props;
 
     return (
       <div className="sticky-list">
-        <div className="sticky-list__hero" style={heroImageStyle && heroImageStyle.container}>
-          <div className="sticky-list__hero__overlay" style={heroImageStyle && heroImageStyle.overlay}>
-          </div>
-          <img className="sticky-list__hero__image" src={heroImageSrc} style={heroImageStyle && heroImageStyle.img} alt="" />
+        <div
+          className="sticky-list__hero"
+          style={heroImageStyle && heroImageStyle.container}
+        >
+          <div
+            className="sticky-list__hero__overlay"
+            style={heroImageStyle && heroImageStyle.overlay}
+          ></div>
+          <img
+            className="sticky-list__hero__image"
+            src={heroImageSrc}
+            style={heroImageStyle && heroImageStyle.img}
+            alt=""
+          />
           <div className="sticky-list__hero__text">
             <h2 className="sticky-list__hero__text-title">{title}</h2>
             {subtitle && subtitle.length && (
@@ -36,7 +46,9 @@ export default class StickyList extends Component {
           className={classnames("sticky-list__description", {
             hidden: !description.length,
           })}
-        >{parse(description)}</div>
+        >
+          {parse(description)}
+        </div>
 
         <p className="sticky-list__mobile">
           <i>This interactive guide is best viewed on a mobile device.</i>
@@ -44,7 +56,7 @@ export default class StickyList extends Component {
 
         {languages && (
           <div className="sticky-list__language">
-            <DropDownSelector 
+            <DropDownSelector
               options={languages}
               selectedItem={selectedLanguage}
               handleSelectItem={handleSelectLanguage}

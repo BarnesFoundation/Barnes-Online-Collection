@@ -1,21 +1,25 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router'
-import queryString from 'query-string';
-import { getAllObjects } from '../../actions/objects';
-import { addSearchTerm } from '../../actions/search';
-import { setFilters } from '../../actions/filters';
-import { closeFilterSet } from '../../actions/filterSets';
-import { getMetaTagsFromObject, getQueryKeywordUrl, getQueryFilterUrl} from '../../helpers';
-import { SiteHeader } from '../SiteHeader/SiteHeader';
-import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
-import HtmlClassManager from '../HtmlClassManager';
-import CollectionFilters from '../CollectionFilters/CollectionFilters';
-import ArtObjectGrid from '../ArtObjectGrid/ArtObjectGrid';
-import { Footer } from '../Footer/Footer';
-import { heroes } from './HeroImages';
-import './landingPage.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { withRouter } from "react-router";
+import queryString from "query-string";
+import { getAllObjects } from "../../actions/objects";
+import { addSearchTerm } from "../../actions/search";
+import { setFilters } from "../../actions/filters";
+import { closeFilterSet } from "../../actions/filterSets";
+import {
+  getMetaTagsFromObject,
+  getQueryKeywordUrl,
+  getQueryFilterUrl,
+} from "../../helpers";
+import { SiteHeader } from "../SiteHeader/SiteHeader";
+import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
+import HtmlClassManager from "../HtmlClassManager";
+import CollectionFilters from "../CollectionFilters/CollectionFilters";
+import ArtObjectGrid from "../ArtObjectGrid/ArtObjectGrid";
+import { Footer } from "../Footer/Footer";
+import { heroes } from "./HeroImages";
+import "./landingPage.css";
 
 const HEIGHT_SCALE_FACTOR = 1.25;
 
@@ -64,7 +68,7 @@ class LandingPageHeader extends Component {
 
       styles: { opacity: 0 },
     });
-  }
+  };
 
   /** Set up image interval and text STO inside of interval. */
   setIntervalsAndTimeouts = () => {
@@ -82,11 +86,14 @@ class LandingPageHeader extends Component {
       }, TEXT_TIMEOUT);
 
       this.setState(
-        ({ imageIndex }) => ({ imageIndex: (imageIndex + 1) % heroes.length, textShowing: true }),
+        ({ imageIndex }) => ({
+          imageIndex: (imageIndex + 1) % heroes.length,
+          textShowing: true,
+        }),
         () => this.triggerImageTranslation()
-      )
+      );
     }, INTERVAL_TIMEOUT);
-  }
+  };
 
   /**
    * Reset animation state on focus out.
@@ -96,11 +103,11 @@ class LandingPageHeader extends Component {
   handleVisibilityChange = () => {
     const { imageIndex } = this.state;
 
-    if (document.visibilityState === 'visible') {
+    if (document.visibilityState === "visible") {
       // This will effectively reset the image montage with the next index on re-viewing a page.
       this.setState(
         {
-          styles: { opacity: 1, transition: 'none' },
+          styles: { opacity: 1, transition: "none" },
           isInit: false,
           imageIndex: (imageIndex + 1) % heroes.length,
         },
@@ -112,13 +119,12 @@ class LandingPageHeader extends Component {
       // Reset ref setters, passing option to recalculate sizing for both ref children.
       this.setWrapperRef(this.wrapperRef, true);
       this.setFontRef(this.fontRef, true);
-
     } else {
       if (this.sto) clearTimeout(this.sto);
       if (this.si) clearInterval(this.si);
       if (this.textSto) clearTimeout(this.textSto);
     }
-  }
+  };
 
   /**
    * On resize, prevent any further animation.
@@ -127,17 +133,14 @@ class LandingPageHeader extends Component {
     if (this.resizeSto) {
       clearTimeout(this.resizeSto);
     }
-    
 
     this.resizeSto = setTimeout(() => {
       // Only trigger if width is different.
       // This is to prevent triggering on iOS every time there is a scroll.
       if (
         window.innerWidth !== this.windowWidth ||
-        (
-          window.innerHeight !== this.windowHeight &&
-          Math.abs(window.innerHeight - this.windowHeight) > 200
-        )
+        (window.innerHeight !== this.windowHeight &&
+          Math.abs(window.innerHeight - this.windowHeight) > 200)
       ) {
         if (this.sto) clearTimeout(this.sto);
         if (this.si) clearInterval(this.si);
@@ -150,7 +153,7 @@ class LandingPageHeader extends Component {
         this.handleVisibilityChange();
       }
     }, 500);
-  }
+  };
 
   /**
    * Set up wrapper ref to calculate image height.
@@ -164,50 +167,52 @@ class LandingPageHeader extends Component {
     if (!this.wrapperRef || isReset) {
       this.wrapperRef = ref;
 
-      const {
-        offsetWidth: wrapperWidth,
-        offsetHeight: wrapperHeight
-      } = this.wrapperRef;
+      const { offsetWidth: wrapperWidth, offsetHeight: wrapperHeight } =
+        this.wrapperRef;
 
       const imageDimensions = [
-        ...this.wrapperRef.children // Spread children to array
-      ].map(({
-        offsetWidth: childWidth,
-        offsetHeight: childHeight,
-        style: childStyle,
-      }) => {
-        // See if any of the children are smaller than parent according to width or height
-        // or if style has already been applied to child.
-        // HEIGHT_SCALE_FACTOR is needed here for wider devices.
-        if (
+        ...this.wrapperRef.children, // Spread children to array
+      ].map(
+        ({
+          offsetWidth: childWidth,
+          offsetHeight: childHeight,
+          style: childStyle,
+        }) => {
+          // See if any of the children are smaller than parent according to width or height
+          // or if style has already been applied to child.
+          // HEIGHT_SCALE_FACTOR is needed here for wider devices.
+          if (
             childWidth < wrapperWidth ||
             childHeight < wrapperHeight * HEIGHT_SCALE_FACTOR ||
-            (childStyle.width || childStyle.height)
-        ) {          
-          const widthPercentageChange = wrapperWidth/childWidth;
-          const heightPercentageChange = (wrapperHeight * HEIGHT_SCALE_FACTOR)/childHeight;
+            childStyle.width ||
+            childStyle.height
+          ) {
+            const widthPercentageChange = wrapperWidth / childWidth;
+            const heightPercentageChange =
+              (wrapperHeight * HEIGHT_SCALE_FACTOR) / childHeight;
 
-          // Scale according to whichever way will size the image proportionally to meet the boundaries
-          // of its parent.
-          const scaleFactor = widthPercentageChange > heightPercentageChange
-            ? widthPercentageChange
-            : heightPercentageChange;
-          
-          return {
-            width: childWidth * scaleFactor,
-            height: childHeight * scaleFactor,
-          };
+            // Scale according to whichever way will size the image proportionally to meet the boundaries
+            // of its parent.
+            const scaleFactor =
+              widthPercentageChange > heightPercentageChange
+                ? widthPercentageChange
+                : heightPercentageChange;
 
-        } else {
-          // Return {} rather than undefined or null, as this allows destructuring and less logic in
-          // the render method.
-          return {};
+            return {
+              width: childWidth * scaleFactor,
+              height: childHeight * scaleFactor,
+            };
+          } else {
+            // Return {} rather than undefined or null, as this allows destructuring and less logic in
+            // the render method.
+            return {};
+          }
         }
-      });
+      );
 
       this.setState({ imageDimensions });
     }
-  }
+  };
 
   /**
    * Set up ref to calculate max font size of hero texts.
@@ -223,8 +228,8 @@ class LandingPageHeader extends Component {
         const defaultFontSize = parseInt(
           window
             .getComputedStyle(ref.children[0].children[0])
-            .getPropertyValue('font-size'),
-          10,
+            .getPropertyValue("font-size"),
+          10
         );
 
         this.defaultFontSize = defaultFontSize; // Set to object property so this can be referenced later.
@@ -242,23 +247,22 @@ class LandingPageHeader extends Component {
 
       // We want text to fill at most up to top 30px of parent container.
       if (largestChildHeight > parentHeight - 70) {
-        const proportion = (parentHeight - 70)/largestChildHeight;
+        const proportion = (parentHeight - 70) / largestChildHeight;
 
         this.setState(({ fontSize }) => ({
           fontSize: fontSize
             ? fontSize * proportion
-            : this.defaultFontSize * proportion
+            : this.defaultFontSize * proportion,
         }));
       }
     }
-  }
+  };
 
   // Set up event listeners and intervals..
   componentDidMount() {
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
-    document.addEventListener('onpageshow', this.handleVisibilityChange);
-    window.addEventListener('resize', this.resizeChange);
-
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+    document.addEventListener("onpageshow", this.handleVisibilityChange);
+    window.addEventListener("resize", this.resizeChange);
 
     // Trigger is init after mount, this will cause animation to play.
     this.sto = setTimeout(() => {
@@ -270,14 +274,17 @@ class LandingPageHeader extends Component {
 
   // Cleanup event listener, sto, and interval on unmount.
   componentWillUnmount() {
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    document.removeEventListener('onpageshow', this.handleVisibilityChange);
-    window.removeEventListener('resize', this.resizeChange);
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
+    document.removeEventListener("onpageshow", this.handleVisibilityChange);
+    window.removeEventListener("resize", this.resizeChange);
 
     if (this.sto) clearTimeout(this.sto);
     if (this.si) clearTimeout(this.si);
     if (this.textSto) clearTimeout(this.textSto);
-    if (this.resizeSto) clearTimeout(this.resizeSto)
+    if (this.resizeSto) clearTimeout(this.resizeSto);
   }
 
   render() {
@@ -290,26 +297,24 @@ class LandingPageHeader extends Component {
       fontSize,
     } = this.state;
 
-     // Copy styling.
-     let copyStyle;
-     if (fontSize) {
-       copyStyle = { ...copyStyle, fontSize };
-     }
+    // Copy styling.
+    let copyStyle;
+    if (fontSize) {
+      copyStyle = { ...copyStyle, fontSize };
+    }
 
     return (
-      <div className='o-hero o-hero--landing-page'>
-        <div className='o-hero__inner'>
-          <div className='o-hero__overlay'></div>
-          <div
-            className='container o-hero__container'
-            ref={this.setFontRef}
-          >
-            <div className='o-hero__copy'>
+      <div className="o-hero o-hero--landing-page">
+        <div className="o-hero__inner">
+          <div className="o-hero__overlay"></div>
+          <div className="container o-hero__container" ref={this.setFontRef}>
+            <div className="o-hero__copy">
               {heroes.map(({ text }, index) => {
                 const isActiveImage = index === imageIndex;
 
-                let supportingClassNames = 'o-hero__supporting';
-                if (!isActiveImage || !textShowing) supportingClassNames = `${supportingClassNames} o-hero__supporting--hidden`;
+                let supportingClassNames = "o-hero__supporting";
+                if (!isActiveImage || !textShowing)
+                  supportingClassNames = `${supportingClassNames} o-hero__supporting--hidden`;
 
                 return (
                   <p
@@ -324,10 +329,7 @@ class LandingPageHeader extends Component {
             </div>
           </div>
         </div>
-        <div
-          className='o-hero__image-wrapper'
-          ref={this.setWrapperRef}
-        >
+        <div className="o-hero__image-wrapper" ref={this.setWrapperRef}>
           {heroes.map(({ src }, index) => {
             const isActiveImage = index === imageIndex;
 
@@ -345,7 +347,7 @@ class LandingPageHeader extends Component {
               style = {
                 ...style,
                 height: height || null,
-                width: width || null
+                width: width || null,
               };
             }
 
@@ -355,7 +357,10 @@ class LandingPageHeader extends Component {
             // Make sure next image appears beneath active image.
             if (isActiveImage && isInit) {
               imageClassName = `${imageClassName} o-hero__image--active o-hero__image--${index}--active`;
-            } else if ((index === (imageIndex + 1) % heroes.length) || (isActiveImage && !isInit)) {
+            } else if (
+              index === (imageIndex + 1) % heroes.length ||
+              (isActiveImage && !isInit)
+            ) {
               imageClassName = `${imageClassName} o-hero__image--start o-hero__image--${index}--start`;
             }
 
@@ -365,13 +370,13 @@ class LandingPageHeader extends Component {
                 className={imageClassName}
                 src={src}
                 style={{ ...style }}
-                alt='Barnes Museum Ensemble.'
+                alt="Barnes Museum Ensemble."
               />
             );
           })}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -388,24 +393,24 @@ class LandingPage extends Component {
    * Parse JSON from querystring and set up search, filters, and advanced filters.
    */
   componentDidMount() {
-    const { qtype, qval, } = queryString.parse(this.props.location.search); // Destructure querystring.
+    const { qtype, qval } = queryString.parse(this.props.location.search); // Destructure querystring.
 
     // If there is a querystring, run filtered search.
     if (qval && qval.length) {
       // For filters
-      if (qtype === 'filter') {
+      if (qtype === "filter") {
         let filterSelection = {};
-  
+
         try {
           filterSelection = JSON.parse(qval);
         } catch (e) {
-          console.error('Invalid JSON in filter.');
+          console.error("Invalid JSON in filter.");
         }
-  
+
         this.props.setFilters(filterSelection);
 
-      // For search
-      } else if (qtype === 'keyword') {
+        // For search
+      } else if (qtype === "keyword") {
         this.props.addSearchTerm(qval);
       }
     } else {
@@ -422,36 +427,45 @@ class LandingPage extends Component {
     const {
       search,
       filters,
-      history: { location: { state: newState }}, // For detecting if a modal is open.
+      history: {
+        location: { state: newState },
+      }, // For detecting if a modal is open.
       modalIsOpen,
     } = this.props;
     const { resetTruncateThreshold } = this.state;
 
     // Detect if we just opened a modal. If so, just return.
     if (newState && newState.isModal) return;
-    if (
-      JSON.stringify(prevProps.filters) === JSON.stringify(filters)
-    ) {
+    if (JSON.stringify(prevProps.filters) === JSON.stringify(filters)) {
       return;
     }
 
     if (resetTruncateThreshold) resetTruncateThreshold();
 
-    const { qtype: queryType, qval: queryVal } = queryString.parse(this.props.location.search);
+    const { qtype: queryType, qval: queryVal } = queryString.parse(
+      this.props.location.search
+    );
 
     if (search.length) {
-      if (search !== queryVal) this.props.history.push(getQueryKeywordUrl(search));
+      if (search !== queryVal)
+        this.props.history.push(getQueryKeywordUrl(search));
     } else if (
-      (filters.ordered && filters.ordered.length) // If there are ordered filters
-      || Object.values(filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0) // Or advanced filters.
-      ) {
-
+      (filters.ordered && filters.ordered.length) || // If there are ordered filters
+      Object.values(filters.advancedFilters).reduce(
+        (acc, advancedFilter) => acc + Object.keys(advancedFilter).length,
+        0
+      ) // Or advanced filters.
+    ) {
       // Reduce and stringify filter state to compare with queryVal.
       const filtersVal = JSON.stringify({
         // Convert ordered array into object for higher ordered filters.
-        ...filters.ordered.reduce((acc, filter) => ({
-          ...acc, [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
-        }), {}),
+        ...filters.ordered.reduce(
+          (acc, filter) => ({
+            ...acc,
+            [filter.filterType]: filter.value || filter.name, // For lines and colors we just use the name and for space and light we use the value.
+          }),
+          {}
+        ),
 
         // Stringify advanced filters
         advancedFilters: filters.advancedFilters,
@@ -462,15 +476,20 @@ class LandingPage extends Component {
       }
     } else if (queryType) {
       // Else if there is querytype but no filters or search, reset URL to /.
-      this.props.history.push('');
+      this.props.history.push("");
     }
   }
 
   render() {
-    const { object, objectsQuery, objects: liveObjects, modalIsOpen } = this.props;
+    const {
+      object,
+      objectsQuery,
+      objects: liveObjects,
+      modalIsOpen,
+    } = this.props;
     const metaTags = getMetaTagsFromObject(object);
     const isSearchPending = Boolean(objectsQuery && objectsQuery.isPending);
-    const pageType = 'landing';
+    const pageType = "landing";
 
     // If filters are active, apply 50% opacity on search results.
     // let isBackgroundActiveClasses = 'shaded-background__tint';
@@ -478,24 +497,24 @@ class LandingPage extends Component {
 
     return (
       <div
-        className='app app-landing-page'
+        className="app app-landing-page"
         style={{
-          visibility: !modalIsOpen ? 'visible' : 'hidden'
+          visibility: !modalIsOpen ? "visible" : "hidden",
         }}
       >
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
         <SiteHeader />
 
-        <div className='landing-page'>
+        <div className="landing-page">
           {/* Prevent FOUC on mount. */}
-          <div style={{ minHeight: '100vh' }}>
+          <div style={{ minHeight: "100vh" }}>
             <LandingPageHeader />
 
-            <div className='m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap'>
+            <div className="m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap">
               <CollectionFilters />
             </div>
-            <div className='shaded-background'>
+            <div className="shaded-background">
               {/** Shaded background. */}
               {/* <div
                 className={isBackgroundActiveClasses}
@@ -504,19 +523,21 @@ class LandingPage extends Component {
                   closeFilterSet()
                 }}>  
               </div> */}
-              <div className='container'>
+              <div className="container">
                 <ArtObjectGrid
-                  gridStyle='full-size'
+                  gridStyle="full-size"
                   shouldLinksUseModal
-                  modalPreviousLocation='/'
+                  modalPreviousLocation="/"
                   isSearchPending={isSearchPending}
                   liveObjects={liveObjects}
                   pageType={pageType}
                   hasMoreResults
-                  setResetTruncateThreshold={resetTruncateThreshold => this.setState({ resetTruncateThreshold })}
+                  setResetTruncateThreshold={(resetTruncateThreshold) =>
+                    this.setState({ resetTruncateThreshold })
+                  }
                 />
               </div>
-              <Footer hasHours/>
+              <Footer hasHours />
             </div>
           </div>
         </div>
@@ -540,19 +561,24 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign(
-    {},
-    {
-      //Objects
-      getAllObjects, 
-      // Search
-      addSearchTerm,
-      // Filters
-      setFilters,
-      // FilterSet
-      closeFilterSet
-    },
-  ), dispatch);
+  return bindActionCreators(
+    Object.assign(
+      {},
+      {
+        //Objects
+        getAllObjects,
+        // Search
+        addSearchTerm,
+        // Filters
+        setFilters,
+        // FilterSet
+        closeFilterSet,
+      }
+    ),
+    dispatch
+  );
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LandingPage));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(LandingPage)
+);

@@ -53,6 +53,7 @@
 		"xmlbuilder": "^9.0.1"
 	},
 	"devDependencies": {
+		"@babel/eslint-parser": "^7.23.3",
 		"change-case": "^4.1.1",
 		"clean-css": "^4.1.11",
 		"eslint": "^5.16.0",
@@ -105,7 +106,7 @@
 		"build-css": "node-sass-chokidar src/ -o src/",
 		"sass-lint": "sass-lint -c ./.sass-lint.yml '**/*.scss' -v -q",
 		"watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-		"lint": "eslint"
+		"lint": "eslint src --ext .js,.jsx --fix"
 	},
 	"proxy": "http://localhost:4002",
 	"browserslist": {

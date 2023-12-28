@@ -1,67 +1,97 @@
-import React, { Component } from 'react';
-import { getRoomAndTitleText } from '../../../ensembleIndex';
-import { getArtObjectUrlFromId } from '../../../helpers';
-import '../../../components/SummaryTable/index.css';
+import React, { Component } from "react";
+import { getRoomAndTitleText } from "../../../ensembleIndex";
+import { getArtObjectUrlFromId } from "../../../helpers";
+import "../../../components/SummaryTable/index.css";
 
-const getArtistLink = artistName => `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{%22${artistName}%22:{%22filterType%22:%22Artist%22,%22value%22:%22${artistName}%22,%22term%22:%22${artistName}%22,%22index%22:1}}}}`
-const getCultureLink = cultureName => `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{},%22Culture%22:{%22${cultureName}%22:{%22filterType%22:%22Culture%22,%22value%22:%22${cultureName}%22,%22term%22:%22${cultureName}%22,%22index%22:1}}}}`
+const getArtistLink = (artistName) =>
+  `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{%22${artistName}%22:{%22filterType%22:%22Artist%22,%22value%22:%22${artistName}%22,%22term%22:%22${artistName}%22,%22index%22:1}}}}`;
+const getCultureLink = (cultureName) =>
+  `/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{},%22Culture%22:{%22${cultureName}%22:{%22filterType%22:%22Culture%22,%22value%22:%22${cultureName}%22,%22term%22:%22${cultureName}%22,%22index%22:1}}}}`;
 
 class SummaryTable extends Component {
-
-  /** Generates the text for the artist line */	
+  /** Generates the text for the artist line */
   generateArtist = () => {
-	const { people, nationality, birthDate, deathDate, artistPrefix, artistSuffix } = this.props;
-	const unidentified = people.toLowerCase().includes('unidentified');
+    const {
+      people,
+      nationality,
+      birthDate,
+      deathDate,
+      artistPrefix,
+      artistSuffix,
+    } = this.props;
+    const unidentified = people.toLowerCase().includes("unidentified");
 
-	let artistString = `${people}`;
+    let artistString = `${people}`;
 
-	// Add prefix and suffix to artist string
-	if (artistPrefix) { artistString = `${artistPrefix} ${artistString}`; }
-	if (artistSuffix) { artistString += (artistSuffix[0] === ',') ? artistSuffix : ` ${artistSuffix}`; }
+    // Add prefix and suffix to artist string
+    if (artistPrefix) {
+      artistString = `${artistPrefix} ${artistString}`;
+    }
+    if (artistSuffix) {
+      artistString +=
+        artistSuffix[0] === "," ? artistSuffix : ` ${artistSuffix}`;
+    }
 
-	// If not unidentified, progressively add nationality, birth date, death date
-	if (!unidentified && (nationality || birthDate)) {
-		let aString = '';
+    // If not unidentified, progressively add nationality, birth date, death date
+    if (!unidentified && (nationality || birthDate)) {
+      let aString = "";
 
-		if (nationality) { aString += nationality; }
-		if (nationality && birthDate) { aString += ', '; }
-		if (birthDate) { aString += `${birthDate}`; }
-		if (deathDate) { aString += ` - ${deathDate}`; }
+      if (nationality) {
+        aString += nationality;
+      }
+      if (nationality && birthDate) {
+        aString += ", ";
+      }
+      if (birthDate) {
+        aString += `${birthDate}`;
+      }
+      if (deathDate) {
+        aString += ` - ${deathDate}`;
+      }
 
-		artistString = `${artistString} (${aString})`;
-	}
-	return `${artistString}`
-  }
+      artistString = `${artistString} (${aString})`;
+    }
+    return `${artistString}`;
+  };
 
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
-    const ensembleUrl = getArtObjectUrlFromId(this.props.id, this.props.title, 'ensemble');
-    const roomAndTitleText = this.props.onview && (getRoomAndTitleText(this.props.ensembleIndex) || '');
-    const curatorialApproval = (this.props.curatorialApproval === 'true') ? true : false;
+    const ensembleUrl = getArtObjectUrlFromId(
+      this.props.id,
+      this.props.title,
+      "ensemble"
+    );
+    const roomAndTitleText =
+      this.props.onview &&
+      (getRoomAndTitleText(this.props.ensembleIndex) || "");
+    const curatorialApproval =
+      this.props.curatorialApproval === "true" ? true : false;
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
         <div className="table-row">
           <div className="text">Location</div>
           <div className="text color-light">
-          {this.props.onview &&
-              <span>On View: <a href={ensembleUrl}>{roomAndTitleText}</a></span>
-          }
-          {!this.props.onview &&
-              <span>Off View</span>
-          }
+            {this.props.onview && (
+              <span>
+                On View: <a href={ensembleUrl}>{roomAndTitleText}</a>
+              </span>
+            )}
+            {!this.props.onview && <span>Off View</span>}
           </div>
         </div>
-        {this.props.people &&
+        {this.props.people && (
           <div className="table-row">
             <div className="text">Artist</div>
             <div className="text color-light">
-              <a href={getArtistLink(this.props.people)}>{this.generateArtist()}</a>
+              <a href={getArtistLink(this.props.people)}>
+                {this.generateArtist()}
+              </a>
             </div>
           </div>
-        }
-        {this.props.culture &&
+        )}
+        {this.props.culture && (
           <div className="table-row">
             <div className="text">Culture</div>
             <div className="text color-light">
@@ -70,7 +100,7 @@ class SummaryTable extends Component {
               </a>
             </div>
           </div>
-        }
+        )}
         <div className="table-row">
           <div className="text">Year</div>
           <div className="text color-light">{this.props.displayDate}</div>
@@ -87,40 +117,46 @@ class SummaryTable extends Component {
           <div className="text">Dimensions</div>
           <div className="text color-light">{this.props.dimensions}</div>
         </div>
-        <div className='table-row'>
+        <div className="table-row">
           <div className="text">Viewing Status</div>
-          <div className="text color-light">{(this.props.onview && this.props.onview === "1") ? 'Currently on view': 'Currently not on view'}</div>
+          <div className="text color-light">
+            {this.props.onview && this.props.onview === "1"
+              ? "Currently on view"
+              : "Currently not on view"}
+          </div>
         </div>
         <div className="table-row">
           <div className="text">Copyright Status</div>
           <div className="text color-light">
-            {
-              copyrightLink ?
-                <a
-                  className="a-brand-link"
-                  href={copyrightLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {copyrightCopy}
-                </a>
-              :
+            {copyrightLink ? (
+              <a
+                className="a-brand-link"
+                href={copyrightLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copyrightCopy}
+              </a>
+            ) : (
               <span>{copyrightCopy}</span>
-            }
+            )}
           </div>
         </div>
-        {this.props.creditLine &&
-        <div className="table-row">
-          <div className="text"></div>
-          <div className="text color-light">{this.props.creditLine}</div>
-        </div>
-        }
-        {!curatorialApproval &&
+        {this.props.creditLine && (
+          <div className="table-row">
+            <div className="text"></div>
+            <div className="text color-light">{this.props.creditLine}</div>
+          </div>
+        )}
+        {!curatorialApproval && (
           <div className="table-row">
             <div className="text">Disclaimer</div>
-            <div className="text color-light">Please note that not all records are complete as research on the collection is ongoing.</div>
+            <div className="text color-light">
+              Please note that not all records are complete as research on the
+              collection is ongoing.
+            </div>
           </div>
-        }
+        )}
       </div>
     );
   }
