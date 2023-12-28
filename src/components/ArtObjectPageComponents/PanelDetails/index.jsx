@@ -39,11 +39,16 @@ const getTabList = (artObjectProps) => (
   ].filter(({ tabContent }) => tabContent) // Filter out tabs with no content.
 );
 
-function getCaptionFromArtworkRendition(rendition) {
-  const isArchiveRendition =  rendition.attributes['Sync Type'] && rendition.attributes['Sync Type'][0] === 'Archives Sync';
-  const caption = isArchiveRendition ? rendition.attributes['Archives Correspondence Caption'][0] : rendition.attributes['Artwork Caption (TMS)'][0];
+function getCaptionFromArtworkRendition(rendition, object = {}) {
+  let caption = '';
 
-  return caption || '';
+  if (rendition) {
+    const isArchiveRendition =  rendition.attributes['Sync Type'] && rendition.attributes['Sync Type'][0] === 'Archives Sync';
+    caption = isArchiveRendition ? rendition.attributes['Archives Correspondence Caption'][0] : rendition.attributes['Artwork Caption (TMS)'][0];
+  }
+
+  // If caption is still falsey by now, we'll fallback to the default caption schema
+  return caption ? caption : object.people ? `${object.people}. ${object.title}, ${object.displayDate}. ${object.invno}. ${object.creditLine}` : '';
 }
 
 class Thumbnail extends Component {
@@ -228,13 +233,13 @@ class Image extends Component {
         return proxy.name === 'Preview'
       });
       imageUrlToRender = `${ui.netxBaseURL}${imagePreview.file.url}/`;
-      captionToRender = getCaptionFromArtworkRendition(renditions[activeImageIndex]);
+      captionToRender = getCaptionFromArtworkRendition(renditions[activeImageIndex], object);
     }  
     
     // Otherwise, no renditions exist so we'll render the default image
     else {
       imageUrlToRender = object.imageUrlLarge;
-      captionToRender = object.people ? `${object.people}. ${object.title}, ${object.displayDate}. ${object.invno}. ${object.creditLine}` : '';
+      captionToRender = getCaptionFromArtworkRendition(null, object);
     }
 
     return (
