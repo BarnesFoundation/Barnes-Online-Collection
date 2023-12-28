@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router'
-import * as ObjectActions from '../../actions/object';
-import {getMetaTagsFromObject} from '../../helpers';
-import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
-import SiteHtmlHelmetHead from '../SiteHtmlHelmetHead';
-import HtmlClassManager from '../HtmlClassManager';
-import ArtObjectPageShell from '../ArtObjectPageComponents/ArtObjectPageShell';
-import Footer from '../Footer/Footer';
-import './artObjectPage.css';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { withRouter } from "react-router";
+import * as ObjectActions from "../../actions/object";
+import { getMetaTagsFromObject } from "../../helpers";
+import { SiteHeader } from "../../components/SiteHeader/SiteHeader";
+import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
+import HtmlClassManager from "../HtmlClassManager";
+import ArtObjectPageShell from "../ArtObjectPageComponents/ArtObjectPageShell";
+import Footer from "../Footer/Footer";
+import "./artObjectPage.css";
 
 class ArtObjectPage extends Component {
   constructor(props) {
@@ -20,11 +20,11 @@ class ArtObjectPage extends Component {
 
   getState(nextProps) {
     const requestObjectId = parseInt(nextProps.match.params.id, 10);
-    const panelSlug = nextProps.match.params.panel || '';
+    const panelSlug = nextProps.match.params.panel || "";
 
     return {
       panelSlug: panelSlug,
-      requestObjectId: requestObjectId
+      requestObjectId: requestObjectId,
     };
   }
 
@@ -42,7 +42,7 @@ class ArtObjectPage extends Component {
       <div className="app app-art-object-page">
         <SiteHtmlHelmetHead metaTags={metaTags} />
         <HtmlClassManager />
-        <SiteHeader isArtObject/>
+        <SiteHeader isArtObject />
         <ArtObjectPageShell
           slug={this.state.panelSlug}
           requestObjectId={this.state.requestObjectId}
@@ -60,11 +60,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign(
-    {},
-    ObjectActions,
-  ), dispatch);
+  return bindActionCreators(Object.assign({}, ObjectActions), dispatch);
 }
 
 const compWithRouter = withRouter(ArtObjectPage);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(compWithRouter));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(compWithRouter)
+);

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import FilterTag from './FilterTag';
+import FilterTag from "./FilterTag";
 
 class FilterTagSetGeneric extends Component {
   filterTags() {
@@ -8,22 +8,14 @@ class FilterTagSetGeneric extends Component {
     if (!filters) {
       return null;
     } else {
-      return filters.map((filter, index) =>
-        <FilterTag
-          key={index}
-          index={index}
-          filter={filter}
-        />
-      );
+      return filters.map((filter, index) => (
+        <FilterTag key={index} index={index} filter={filter} />
+      ));
     }
   }
 
   render() {
-    return (
-      <div className="filter-tag-set">
-        {this.filterTags()}
-      </div>
-    );
+    return <div className="filter-tag-set">{this.filterTags()}</div>;
   }
 }
 

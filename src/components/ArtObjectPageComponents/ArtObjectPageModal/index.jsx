@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import ArtObjectPageShell from '../ArtObjectPageShell';
-import Modal from '../../Modal';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as ModalActions from '../../../actions/modal';
+import React, { Component } from "react";
+import ArtObjectPageShell from "../ArtObjectPageShell";
+import Modal from "../../Modal";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as ModalActions from "../../../actions/modal";
 
-import './index.css';
+import "./index.css";
 
 class ModalArtObjectPage extends Component {
   constructor(props) {
@@ -16,11 +16,11 @@ class ModalArtObjectPage extends Component {
 
   getState(nextProps) {
     const requestObjectId = parseInt(nextProps.match.params.id, 10);
-    const panelSlug = nextProps.match.params.panel || '';
+    const panelSlug = nextProps.match.params.panel || "";
 
     return {
       panelSlug: panelSlug,
-      requestObjectId: requestObjectId
+      requestObjectId: requestObjectId,
     };
   }
 
@@ -29,9 +29,9 @@ class ModalArtObjectPage extends Component {
   }
 
   componentWillUnmount() {
-    if (this.props.history.action === 'POP') {
+    if (this.props.history.action === "POP") {
       this.props.modalHide();
-    } 
+    }
   }
 
   componentWillUpdate(nextProps) {
@@ -58,9 +58,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},
-    ModalActions,
-  ), dispatch);
+  return bindActionCreators(Object.assign({}, ModalActions), dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalArtObjectPage);

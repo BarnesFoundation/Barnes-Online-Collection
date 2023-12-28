@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class ArtObjectImage extends Component {
   constructor(props) {
@@ -23,8 +23,8 @@ class ArtObjectImage extends Component {
     // replace the original smallImageURL with a largeImageURL.
     if (
       this.ref &&
-      this.ref.getBoundingClientRect().width > (this.ref.naturalWidth * 1.75) &&
-      backupSrc && 
+      this.ref.getBoundingClientRect().width > this.ref.naturalWidth * 1.75 &&
+      backupSrc &&
       !didLoad
     ) {
       this.setState({

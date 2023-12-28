@@ -11,7 +11,11 @@ import {
   DEFAULT_ROOM_ORDER,
 } from "../../constants";
 import { parseObject } from "../../shared/utils";
-import { formatTourData, languageToLocale, localeToLanguage } from "./tourPageHelper";
+import {
+  formatTourData,
+  languageToLocale,
+  localeToLanguage,
+} from "./tourPageHelper";
 import NotFound from "../NotFound/notFound";
 import Spinner from "../Spinner/Spinner";
 
@@ -40,16 +44,27 @@ export default class TourPage extends React.Component {
       try {
         const tourResponse = await axios.get(`/api${slug}`);
         const { tourData, objects } = tourResponse.data;
-        const languages = tourData.localizations.map(data => localeToLanguage(data.locale));
+        const languages = tourData.localizations.map((data) =>
+          localeToLanguage(data.locale)
+        );
 
         const roomOrder = tourData.roomOrder.length
-          ? tourData.roomOrder.map(r => r.room.replaceAll("_", " "))
+          ? tourData.roomOrder.map((r) => r.room.replaceAll("_", " "))
           : DEFAULT_ROOM_ORDER;
 
-        const heroImageInvno = tourData.collectionObjects.find(obj => obj.heroImage).inventoryNumber;
-        const object = objects.find((obj) => obj._source.invno.toLowerCase() === heroImageInvno.toLowerCase());
+        const heroImageInvno = tourData.collectionObjects.find(
+          (obj) => obj.heroImage
+        ).inventoryNumber;
+        const object = objects.find(
+          (obj) =>
+            obj._source.invno.toLowerCase() === heroImageInvno.toLowerCase()
+        );
         const parsedObject = parseObject(object._source);
-        const sections = formatTourData(roomOrder, objects, tourData.collectionObjects)
+        const sections = formatTourData(
+          roomOrder,
+          objects,
+          tourData.collectionObjects
+        );
 
         this.setState({
           title: tourData.title,
@@ -81,11 +96,15 @@ export default class TourPage extends React.Component {
 
   // Handles updating the copy based on the selected language
   handleSelectLanguage(language) {
-    const { tourData, roomOrder, objects } = this.state
-    const requestedLocale = languageToLocale(language)
+    const { tourData, roomOrder, objects } = this.state;
+    const requestedLocale = languageToLocale(language);
 
     if (requestedLocale === "en") {
-      const sections = formatTourData(roomOrder, objects, tourData.collectionObjects)
+      const sections = formatTourData(
+        roomOrder,
+        objects,
+        tourData.collectionObjects
+      );
 
       this.setState({
         ...this.state,
@@ -94,24 +113,32 @@ export default class TourPage extends React.Component {
         description: tourData.description,
         sections: sections,
         selectedLanguage: language,
-      })
+      });
     } else {
       // get collection objects from localization
-      const localization = tourData.localizations.find(data => data.locale === requestedLocale)
-      const collectionObjects = localization.collectionObjects.map(collectionObj => {
-        const locale = collectionObj.localizations.find(data => data.locale === requestedLocale)
-        return { ...collectionObj, ...locale }
-      })
-      const sections = formatTourData(roomOrder, objects, collectionObjects)
+      const localization = tourData.localizations.find(
+        (data) => data.locale === requestedLocale
+      );
+      const collectionObjects = localization.collectionObjects.map(
+        (collectionObj) => {
+          const locale = collectionObj.localizations.find(
+            (data) => data.locale === requestedLocale
+          );
+          return { ...collectionObj, ...locale };
+        }
+      );
+      const sections = formatTourData(roomOrder, objects, collectionObjects);
 
       this.setState({
         ...this.state,
         title: localization.title || tourData.title,
         subtitle: localization.subtitle || tourData.subtitle,
-        description: (localization.description && localization.description.html) || tourData.description.html,
+        description:
+          (localization.description && localization.description.html) ||
+          tourData.description.html,
         sections,
         selectedLanguage: language,
-      })
+      });
     }
   }
 
@@ -127,12 +154,7 @@ export default class TourPage extends React.Component {
   }
 
   render() {
-    const {
-      slug,
-      title,
-      sections,
-      loading,
-    } = this.state;
+    const { slug, title, sections, loading } = this.state;
 
     if (loading) {
       return (
@@ -146,28 +168,26 @@ export default class TourPage extends React.Component {
           </div>
           <Footer />
         </div>
-      )
+      );
     }
 
-    return (
-      slug && title && sections ? (
-        <div className="app app-tour-page">
-          <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
-          <HtmlClassManager />
-          <SiteHeader isTour />
-          {/* Display the tour if it was located */}
-          <div>
-            <StickyList
-              {...this.state}
-              handleSelectLanguage={(this.handleSelectLanguage).bind(this)}
-            />
-          </div>
-          <Footer />
+    return slug && title && sections ? (
+      <div className="app app-tour-page">
+        <SiteHtmlHelmetHead metaTags={this.getMetaTags(title)} />
+        <HtmlClassManager />
+        <SiteHeader isTour />
+        {/* Display the tour if it was located */}
+        <div>
+          <StickyList
+            {...this.state}
+            handleSelectLanguage={this.handleSelectLanguage.bind(this)}
+          />
         </div>
-      ) : (
-        // Otherwise, no tour found for that id
-        <NotFound />
-      )
+        <Footer />
+      </div>
+    ) : (
+      // Otherwise, no tour found for that id
+      <NotFound />
     );
   }
 }

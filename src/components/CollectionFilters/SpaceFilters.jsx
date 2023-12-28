@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import Filter from './Filter';
-import MediaQuery from 'react-responsive';
-import { BREAKPOINTS } from '../../constants';
+import Filter from "./Filter";
+import MediaQuery from "react-responsive";
+import { BREAKPOINTS } from "../../constants";
 
 class SpaceFilters extends Component {
   buildFilter() {
@@ -15,7 +15,7 @@ class SpaceFilters extends Component {
 
   render() {
     return (
-      <div className='space-filters-container'>
+      <div className="space-filters-container">
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <div className="mobile-filters-section">
             <h6 className="mobile-filters-header font-zeta">Space</h6>
@@ -30,15 +30,14 @@ class SpaceFilters extends Component {
   }
 }
 
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    filterSets: state.filterSets
-  }
-}
+    filterSets: state.filterSets,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpaceFilters);

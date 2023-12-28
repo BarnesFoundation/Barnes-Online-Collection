@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Icon from '../Icon';
+import Icon from "../Icon";
 
 class LineFilter extends Component {
   constructor(props) {
@@ -15,11 +15,8 @@ class LineFilter extends Component {
 
   render() {
     return (
-      <button
-        onClick={this.handleClick}
-        className={this.props.classes}
-      >
-        <Icon svgId={this.props.svgId} classes='collection-filter-icon' />
+      <button onClick={this.handleClick} className={this.props.classes}>
+        <Icon svgId={this.props.svgId} classes="collection-filter-icon" />
         {this.props.name}
       </button>
     );
