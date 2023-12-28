@@ -1,8 +1,3 @@
-const axios = require("axios");
-
-const NETX_BASE_URL = process.env.NETX_BASE_URL;
-const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
-
 function generateGetAssetQuery(objectId) {
   return {
     jsonrpc: "2.0",
@@ -49,22 +44,6 @@ function generateGetAssetQuery(objectId) {
   };
 }
 
-/** Function that receives an Object ID parameter and
- *  returns the available assets from the DAMS for it */
-async function getAssetByObjectId(objectId) {
-  const response = await axios({
-    baseURL: NETX_BASE_URL,
-    url: "/api/rpc",
-    method: "POST",
-    headers: {
-      Authorization: `apiToken ${NETX_API_TOKEN}`,
-    },
-    data: generateGetAssetQuery(objectId),
-  });
-
-  return response.data.result.results;
-}
-
 module.exports = {
-  getAssetByObjectId,
+  generateGetAssetQuery,
 };

@@ -576,7 +576,11 @@ app.get("/api/eye-spy/:id", tourService.getTour);
 
 /** Endpoint for retrieving asset information from the NetX DAMS */
 app.get("/api/objects/:id/assets", async (request, response) => {
-  const result = await damsService.getAssetByObjectId(request.params.id);
+  // The object number needs to go from a schema of "01.02.09" to "01_02_09"
+  // to conform with the DAMS naming schema for rendition names
+  const objectNumber = request.params.id.replace(/\./g, "_");
+  const result = await damsService.getAssetByObjectNumber(objectNumber);
+
   response.json(result);
 });
 

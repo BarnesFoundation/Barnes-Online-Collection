@@ -13,8 +13,9 @@ import * as PrintActions from '../../../actions/prints';
 import { getObjectCopyright } from '../../../copyrightMap';
 import { ShareDialog } from '../../ShareDialog/ShareDialog';
 import './index.css';
+import { ui } from "../../../shared/config";
 
-const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED;
+const ENABLE_ADDITIONAL_RENDITIONS = process.env.REACT_APP_NETX_ENABLED === 'true' ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
 const getTabList = (artObjectProps) => (
@@ -66,7 +67,7 @@ class Thumbnail extends Component {
       return proxy.name === 'Thumbnail'
     });
 
-    const imageSourceUrl = `https://barnesfoundation.netx.net${imageThumbnailProxy.file.url}/`;
+    const imageSourceUrl = `${ui.netxBaseURL}${imageThumbnailProxy.file.url}/`;
     const renditionCaption = rendition.attributes['Artwork Caption (TMS)'] || '';
     
     // Set up classNames, if selected add BEM modifier.
@@ -148,7 +149,10 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
           </ul>
         </div>
       </div>
-      <div className={panelButtonClassNames}>
+      {/** We only need to render the "View More/View Less" section when we have more 
+       *  renditions than our default count. At that point, we need to expand the thumbnail row
+       */}
+      {renditions?.length >  DEFAULT_THUMBNAIL_COUNT  ? <div className={panelButtonClassNames}>
         <div
           className='panel-button__content'
           onClick={toggleOpen}
@@ -160,7 +164,8 @@ const Thumbnails = ({ activeImageIndex, setActiveImageIndex, object, isOpen, tog
             {!isOpen ? 'View More' : 'View Less'}
           </span>
         </div>
-      </div>
+      </div> : null
+}
     </div>
   ); 
 };
@@ -195,29 +200,29 @@ class Image extends Component {
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const showZoomImageView = Boolean(!didCatchFailure && object.id && activeImageIndex === 0);
     const renditionsExist = renditions?.length > 0;
+    const showZoomImageView = Boolean(!didCatchFailure && object.id && !renditionsExist && activeImageIndex === 0);
 
     let additionalStyle = {};
     let imageUrlToRender = '';
 
     // If we encountered failure during rendering of the Zoom component, we'll hide it
     // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
-    if (!didCatchFailure && activeImageIndex === 0) {
+    if (!didCatchFailure && !renditionsExist && activeImageIndex === 0) {
       additionalStyle = { ...additionalStyle, display: 'none' };
     };
 
-    // We'll render the image from the object itself 
-    if (activeImageIndex === 0) {
-      imageUrlToRender = object.imageUrlLarge
-    }  // Otherwise, one of the renditions was clicked. So we need to render that image
+    // We'll render the image from the object renditions itself 
+    if (renditionsExist) {
+      // We have to build the image URL from the asset information
+      const asset = renditions[activeImageIndex];
+      imageUrlToRender = `${ui.netxBaseURL}/api/file/asset/${asset.id}/${asset.fileName}`;
+    }  
+    
+    // Otherwise, no renditions exist so we'll render the default image
     else {
-      const imageThumbnailPreview = renditions[activeImageIndex].proxies.find((proxy) => {
-        return proxy.name === 'Preview'
-      });
-      imageUrlToRender = `https://barnesfoundation.netx.net${imageThumbnailPreview.file.url}/`;
+      imageUrlToRender = object.imageUrlLarge;
     }
-
 
     return (
       <div>
@@ -286,7 +291,7 @@ class PanelDetails extends Component {
       try {
         const response = await axios({
           method: 'GET',
-          url: `/api/objects/${this.props.object.id}/assets`
+          url: `/api/objects/${this.props.object.invno}/assets`
         });
   
         this.setState({...this.state, renditions: response.data || []})
