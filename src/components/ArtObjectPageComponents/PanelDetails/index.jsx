@@ -39,6 +39,18 @@ const getTabList = (artObjectProps) => (
   ].filter(({ tabContent }) => tabContent) // Filter out tabs with no content.
 );
 
+function getCaptionFromArtworkRendition(rendition, object = {}) {
+  let caption = '';
+
+  if (rendition) {
+    const isArchiveRendition =  rendition.attributes['Sync Type'] && rendition.attributes['Sync Type'][0] === 'Archives Sync';
+    caption = isArchiveRendition ? rendition.attributes['Archives Correspondence Caption'][0] : rendition.attributes['Artwork Caption (TMS)'][0];
+  }
+
+  // If caption is still falsey by now, we'll fallback to the default caption schema
+  return caption ? caption : object.people ? `${object.people}. ${object.title}, ${object.displayDate}. ${object.invno}. ${object.creditLine}` : '';
+}
+
 class Thumbnail extends Component {
   constructor(props) {
     super(props);
@@ -62,13 +74,14 @@ class Thumbnail extends Component {
 
   render() {
     const { isLandscapeThumbnail } = this.state;
-    const { onClick, isActive, src, alt, rendition } = this.props;
+    const { onClick, isActive, alt, rendition } = this.props;
+    
     const imageThumbnailProxy = rendition.proxies.find((proxy) => {
       return proxy.name === 'Thumbnail'
     });
 
     const imageSourceUrl = `${ui.netxBaseURL}${imageThumbnailProxy.file.url}/`;
-    const renditionCaption = rendition.attributes['Artwork Caption (TMS)'] || '';
+    const renditionCaption = getCaptionFromArtworkRendition(rendition);
     
     // Set up classNames, if selected add BEM modifier.
     let gridImageClassName = 'masonry-grid-element thumbnails__grid-image';
@@ -205,6 +218,7 @@ class Image extends Component {
 
     let additionalStyle = {};
     let imageUrlToRender = '';
+    let captionToRender = '';
 
     // If we encountered failure during rendering of the Zoom component, we'll hide it
     // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
@@ -219,11 +233,13 @@ class Image extends Component {
         return proxy.name === 'Preview'
       });
       imageUrlToRender = `${ui.netxBaseURL}${imagePreview.file.url}/`;
+      captionToRender = getCaptionFromArtworkRendition(renditions[activeImageIndex], object);
     }  
     
     // Otherwise, no renditions exist so we'll render the default image
     else {
       imageUrlToRender = object.imageUrlLarge;
+      captionToRender = getCaptionFromArtworkRendition(null, object);
     }
 
     return (
@@ -262,11 +278,11 @@ class Image extends Component {
           </div>}
         </div>
         <div className='image-caption'>
-          {object.people && <div
+          {captionToRender && <div
             className='font-smallprint color-medium image-caption__content'
             style={{ width: (this.ref && this.ref.width > 100) ? this.ref.width : '100%' }}
           >
-            {object.people}. {object.title}, {object.displayDate}. {object.invno}. {object.creditLine}
+           {captionToRender}
           </div>}
         </div>
       </div>
