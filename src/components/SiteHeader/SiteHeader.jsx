@@ -218,12 +218,6 @@ class SiteHeader extends Component {
 
     let gHeaderNavClassNames = 'g-header__nav';
 
-    // Get year to determine whether to use centennial logo or original logo
-    const today = new Date()
-    const isCentennial = true;
-    // const isCentennial = today.getFullYear() === 2022;
-    
-
     return (
       <div className={isArtObjectClassNames}>
         <header
@@ -233,7 +227,7 @@ class SiteHeader extends Component {
           role="banner"
         >
           <div className={`container ${isNotFoundClassNames}`}>
-            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} isCentennial={isCentennial} />
+            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} isCentennial={false} />
             <nav className={gHeaderNavClassNames}>
               <a
                 className='g-header__nav__link'
