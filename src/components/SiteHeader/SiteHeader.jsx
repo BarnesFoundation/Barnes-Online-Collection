@@ -44,14 +44,18 @@ const logo100Sizes = [
   { size: "xl", width: 200, height: 150, logo: "100" },
 ];
 
-const Logos = ({ ref, tabIndex }) => (
+const Logos = ({ ref, tabIndex, isCentennial }) => (
   <a
     className="a-logo g-header__logo"
     href={MAIN_WEBSITE_DOMAIN}
     tabIndex={tabIndex}
     ref={ref}
   >
-    logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
+    {isCentennial ? (
+      logo100Sizes.map((logo => <Logo key={logo.size} {...logo} className="a-logo__svg--100" />))
+    ) : (
+      logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
+    )}
   </a>
 );
 
@@ -217,7 +221,7 @@ class SiteHeader extends Component {
       ((!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.LOCKED) ||
         (!isGlobalSearchHeader && isHeaderHidden === HEADER_HIDDEN.DEFAULT) ||
         (isGlobalSearchHeader && isGlobalSearchActive)) &&
-      !isSideMenuOpen
+        !isSideMenuOpen
         ? 0
         : -1;
 
@@ -259,7 +263,7 @@ class SiteHeader extends Component {
           role="banner"
         >
           <div className={`container ${isNotFoundClassNames}`}>
-            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} />
+            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} isCentennial={false} />
             <nav className={gHeaderNavClassNames}>
               <a
                 className="g-header__nav__link"
