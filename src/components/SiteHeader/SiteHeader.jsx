@@ -44,18 +44,14 @@ const logo100Sizes = [
   { size: "xl", width: 200, height: 150, logo: "100" },
 ];
 
-const Logos = ({ ref, tabIndex, isCentennial }) => (
+const Logos = ({ ref, tabIndex }) => (
   <a
     className="a-logo g-header__logo"
     href={MAIN_WEBSITE_DOMAIN}
     tabIndex={tabIndex}
     ref={ref}
   >
-    {isCentennial
-      ? logo100Sizes.map((logo) => (
-          <Logo key={logo.size} {...logo} className="a-logo__svg--100" />
-        ))
-      : logoSizes.map((logo) => <Logo key={logo.size} {...logo} />)}
+    logoSizes.map((logo => <Logo key={logo.size} {...logo} />))
   </a>
 );
 
@@ -254,11 +250,6 @@ class SiteHeader extends Component {
 
     let gHeaderNavClassNames = "g-header__nav";
 
-    // Get year to determine whether to use centennial logo or original logo
-    const today = new Date();
-    const isCentennial = true;
-    // const isCentennial = today.getFullYear() === 2022;
-
     return (
       <div className={isArtObjectClassNames}>
         <header
@@ -268,11 +259,7 @@ class SiteHeader extends Component {
           role="banner"
         >
           <div className={`container ${isNotFoundClassNames}`}>
-            <Logos
-              ref={(ref) => (this.startRef = ref)}
-              tabIndex={tabIndex}
-              isCentennial={isCentennial}
-            />
+            <Logos ref={ref => this.startRef = ref} tabIndex={tabIndex} />
             <nav className={gHeaderNavClassNames}>
               <a
                 className="g-header__nav__link"
