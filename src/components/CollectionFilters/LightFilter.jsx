@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Slider from '../Slider/Slider';
+import Slider from "../Slider/Slider";
 
 class LightFilter extends Component {
   constructor(props) {

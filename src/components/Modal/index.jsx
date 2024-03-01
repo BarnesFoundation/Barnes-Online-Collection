@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as ModalActions from '../../actions/modal'
-import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
-import Icon from '../Icon.jsx';
-import { Footer } from '../Footer/Footer';
-import { CLASSNAME_MODAL_OPEN } from '../../constants';
-import { withRouter } from 'react-router'
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as ModalActions from "../../actions/modal";
+import * as HtmlClassManagerActions from "../../actions/htmlClassManager";
+import Icon from "../Icon.jsx";
+import { Footer } from "../Footer/Footer";
+import { CLASSNAME_MODAL_OPEN } from "../../constants";
+import { withRouter } from "react-router";
 
-import './index.css';
+import "./index.css";
 
 class Modal extends Component {
   constructor(props) {
@@ -45,15 +45,17 @@ class Modal extends Component {
     return (
       <div
         className="component-modal"
-        ref={(div) => { this.el = div; }}
+        ref={(div) => {
+          this.el = div;
+        }}
       >
         <div className="close-container">
           <div className="container close-container__content">
-            <button
-              className="btn-close"
-              onClick={this.handleClickBtnClose}
-            >
-              <Icon svgId='-icon_close' classes='icon-cross-page btn-close__icon' />
+            <button className="btn-close" onClick={this.handleClickBtnClose}>
+              <Icon
+                svgId="-icon_close"
+                classes="icon-cross-page btn-close__icon"
+              />
             </button>
           </div>
         </div>
@@ -72,10 +74,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},
-    ModalActions,
-    HtmlClassManagerActions
-  ), dispatch);
+  return bindActionCreators(
+    Object.assign({}, ModalActions, HtmlClassManagerActions),
+    dispatch
+  );
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Modal));

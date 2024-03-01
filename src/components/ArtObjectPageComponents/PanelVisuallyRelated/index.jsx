@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import './index.css';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as RelatedObjectsActions from '../../../actions/relatedObjects';
-import ArtObjectGrid from '../../../components/ArtObjectGrid/ArtObjectGrid';
-import Slider from '../../../components/Slider/Slider.jsx';
-import FilterTagSetGeneric from '../../../components/CollectionFilters/FilterTagSetGeneric.jsx';
-import { BARNES_SETTINGS } from '../../../barnesSettings';
-import { SLIDER_FILTERS, LINE_FILTERS } from '../../../filterSettings';
-import { getObjectCopyright } from '../../../copyrightMap';
-import { ShareDialog } from '../../ShareDialog/ShareDialog';
+import React, { Component } from "react";
+import "./index.css";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as RelatedObjectsActions from "../../../actions/relatedObjects";
+import ArtObjectGrid from "../../../components/ArtObjectGrid/ArtObjectGrid";
+import Slider from "../../../components/Slider/Slider.jsx";
+import FilterTagSetGeneric from "../../../components/CollectionFilters/FilterTagSetGeneric.jsx";
+import { BARNES_SETTINGS } from "../../../barnesSettings";
+import { SLIDER_FILTERS, LINE_FILTERS } from "../../../filterSettings";
+import { getObjectCopyright } from "../../../copyrightMap";
+import { ShareDialog } from "../../ShareDialog/ShareDialog";
 
 export const getObjectMetaDataHtml = (object) => {
   const objectCopyright = getObjectCopyright(object);
@@ -19,20 +19,17 @@ export const getObjectMetaDataHtml = (object) => {
   }
 
   // Check if the artist/maker is unidentified. Generate culture line based on that
-  const unidentified = object.people.toLowerCase().includes('unidentified');
-  const culture = (unidentified && object.culture) ? `, ${object.culture}` : '';
+  const unidentified = object.people.toLowerCase().includes("unidentified");
+  const culture = unidentified && object.culture ? `, ${object.culture}` : "";
 
   const metaData = (
     <p>
       <span>{`${object.people}${culture}. `}</span>
       <span>{`${object.title}, ${object.displayDate}. `}</span>
       <span>{`${object.medium}, ${object.dimensions}. `}</span>
-	  <span>{`Barnes Foundation ${object.invno}. `}</span>
+      <span>{`Barnes Foundation ${object.invno}. `}</span>
       <span>{`${objectCopyright.copy}. `}</span>
-      {
-        object.creditLine &&
-        <span>{`${object.creditLine}. `}</span>
-      }
+      {object.creditLine && <span>{`${object.creditLine}. `}</span>}
     </p>
   );
 
@@ -40,7 +37,6 @@ export const getObjectMetaDataHtml = (object) => {
 };
 
 const getArtObjectFilters = (object) => {
-
   const getLinePills = (object) => {
     return LINE_FILTERS.composition.filter((filter) => {
       const value = object[filter.name] || 0;
@@ -59,10 +55,12 @@ const getArtObjectFilters = (object) => {
     }
 
     // there's only one
-    return [{
-      color: object.color['average-closest'],
-      filterType: 'colors',
-    }];
+    return [
+      {
+        color: object.color["average-closest"],
+        filterType: "colors",
+      },
+    ];
   };
 
   const getSliderPills = (object) => {
@@ -72,7 +70,7 @@ const getArtObjectFilters = (object) => {
     }).map((filter) => {
       const value = object[filter.name];
       // shift from -1<>1 to 0<>100. Round to nearest int.
-      const percValue = Math.round((value * 50) + 50);
+      const percValue = Math.round(value * 50 + 50);
 
       return Object.assign({}, filter, {
         value: percValue,
@@ -84,13 +82,8 @@ const getArtObjectFilters = (object) => {
   const colorPills = getColorPills(object);
   const sliderPills = getSliderPills(object);
 
-  return [
-    ...linePills,
-    ...colorPills,
-    ...sliderPills,
-  ];
+  return [...linePills, ...colorPills, ...sliderPills];
 };
-
 
 class PanelVisuallyRelated extends Component {
   constructor(props) {
@@ -119,7 +112,7 @@ class PanelVisuallyRelated extends Component {
   componentDidMount() {
     const objectId = this.props.object.id;
 
-    if (typeof objectId !== 'undefined') {
+    if (typeof objectId !== "undefined") {
       this.fetchObjects(objectId);
     }
   }
@@ -136,8 +129,8 @@ class PanelVisuallyRelated extends Component {
     const queryState = this.props.relatedObjectsQuery || {};
     const isSearchPending = queryState.isPending;
 
-    const liveObjects=this.props.relatedObjects;
-    const pageType = 'visually-related';
+    const liveObjects = this.props.relatedObjects;
+    const pageType = "visually-related";
 
     return (
       <div className="m-block m-block--shallow">
@@ -164,12 +157,12 @@ class PanelVisuallyRelated extends Component {
           </div>
           <div className="m-block__column m-block__column--page-col">
             <Slider
-              labelLeft='More similar'
-              labelRight='More surprising'
+              labelLeft="More similar"
+              labelRight="More surprising"
               handleChange={this.getRelatedObjects}
               defaultValue={50}
             />
-            {/* Don't allow for the view more button on visually related tab. */ }
+            {/* Don't allow for the view more button on visually related tab. */}
             <ArtObjectGrid
               modalPreviousLocation={this.props.modalPreviousLocation}
               isSearchPending={isSearchPending}
@@ -192,9 +185,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Object.assign({},
-    RelatedObjectsActions,
-  ), dispatch);
+  return bindActionCreators(Object.assign({}, RelatedObjectsActions), dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PanelVisuallyRelated);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PanelVisuallyRelated);

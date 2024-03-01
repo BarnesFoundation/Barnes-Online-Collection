@@ -1,6 +1,12 @@
-import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
-import { META_TITLE, META_DESCRIPTION, CANONICAL_ROOT, META_IMAGE, META_PLACENAME} from '../../constants';
+import React, { Component } from "react";
+import { Helmet } from "react-helmet";
+import {
+  META_TITLE,
+  META_DESCRIPTION,
+  CANONICAL_ROOT,
+  META_IMAGE,
+  META_PLACENAME,
+} from "../../constants";
 
 class SiteHtmlHelmetHead extends Component {
   render() {

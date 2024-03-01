@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import ArtObjectCaption from './ArtObjectCaption';
+import ArtObjectCaption from "./ArtObjectCaption";
 
 class ArtObjectOverlay extends Component {
   render() {

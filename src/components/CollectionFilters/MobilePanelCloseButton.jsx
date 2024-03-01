@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import Icon from '../Icon';
+import Icon from "../Icon";
 
-import * as MobileFiltersActions from '../../actions/mobileFilters';
-import * as MobileSearchActions from '../../actions/mobileSearch';
+import * as MobileFiltersActions from "../../actions/mobileFilters";
+import * as MobileSearchActions from "../../actions/mobileSearch";
 
 class MobilePanelCloser extends Component {
   constructor(props) {
@@ -29,16 +29,15 @@ class MobilePanelCloser extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-  }
-}
+const mapStateToProps = (state) => {
+  return {};
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    MobileFiltersActions,
-    MobileSearchActions,
-  ), dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, MobileFiltersActions, MobileSearchActions),
+    dispatch
+  );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobilePanelCloser);

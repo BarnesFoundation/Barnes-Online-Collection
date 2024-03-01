@@ -1,8 +1,8 @@
-import React from 'react';
-import CommonWrap from './CommonWrap';
-import { ui } from './shared/config';
+import React from "react";
+import CommonWrap from "./CommonWrap";
+import { ui } from "./shared/config";
 
-const ReactGA = require('react-ga');
+const ReactGA = require("react-ga");
 
 ReactGA.initialize(ui.googleAnalyticsID);
 

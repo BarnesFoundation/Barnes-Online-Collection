@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import SearchInput from '../SearchInput/SearchInput';
+import SearchInput from "../SearchInput/SearchInput";
 
 class MobileFiltersMenu extends Component {
   render() {
@@ -15,15 +15,14 @@ class MobileFiltersMenu extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     search: state.search,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-  ), dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(Object.assign({}), dispatch);
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersMenu);

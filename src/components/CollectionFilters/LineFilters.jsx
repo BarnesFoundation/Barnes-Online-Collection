@@ -1,37 +1,32 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import MediaQuery from 'react-responsive';
-import { BREAKPOINTS } from '../../constants';
+import MediaQuery from "react-responsive";
+import { BREAKPOINTS } from "../../constants";
 
-import Filter from './Filter';
+import Filter from "./Filter";
 
 class LineFilters extends Component {
   buildFilters(type) {
     const filters = this.props.filterSets.sets.lines.options[type];
 
-
-    return (
-      filters.map((option, index) => {
-        option.filterGroup = type;
-        return (
-          <Filter
-            key={index}
-            index={index}
-            filter={option}
-          />
-        );
-      })
-    );
+    return filters.map((option, index) => {
+      option.filterGroup = type;
+      return <Filter key={index} index={index} filter={option} />;
+    });
   }
 
   getLineFilters() {
     return (
       <div className="line-filters-container">
-        <div className="line-filters-group">{this.buildFilters('composition')}</div>
-        <div className="line-filters-group">{this.buildFilters('linearity')}</div>
+        <div className="line-filters-group">
+          {this.buildFilters("composition")}
+        </div>
+        <div className="line-filters-group">
+          {this.buildFilters("linearity")}
+        </div>
       </div>
     );
   }
@@ -43,7 +38,9 @@ class LineFilters extends Component {
           {this.getLineFilters()}
         </MediaQuery>
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
-          <h6 className="font-zeta mobile-filters-header mobile-filters-header--scrollable">Lines</h6>
+          <h6 className="font-zeta mobile-filters-header mobile-filters-header--scrollable">
+            Lines
+          </h6>
           <div className="mobile-filters-section mobile-filters-section--scrollable">
             {this.getLineFilters()}
           </div>
@@ -53,15 +50,14 @@ class LineFilters extends Component {
   }
 }
 
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    filterSets: state.filterSets
-  }
-}
+    filterSets: state.filterSets,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LineFilters);
