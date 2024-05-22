@@ -215,6 +215,7 @@ class Image extends Component {
       activeImageIndex,
       setActiveImageIndex,
       renditions,
+      renditionsLoaded,
     } = this.props;
 
     // This indicates that there was an error with rendering the Zoom component
@@ -242,7 +243,7 @@ class Image extends Component {
       // We have to build the image URL from the asset information
       const imagePreview = renditions[activeImageIndex].proxies.find(
         (proxy) => {
-          return proxy.name === "Preview";
+          return proxy.name === "Zoom";
         }
       );
       imageUrlToRender = `${ui.netxBaseURL}${imagePreview.file.url}/`;
@@ -256,6 +257,15 @@ class Image extends Component {
     else {
       imageUrlToRender = object.imageUrlLarge;
       captionToRender = getCaptionFromArtworkRendition(null, object);
+    }
+
+    // we won't render any image until we know renditions were finished loading
+    // At that point, we've either got the following
+    // 1. Image renditions from NetX, including the Primary Display Image
+    // 2. We fallback to our existing artwork image repository for when renditions
+    //    do not yet exist in NetX
+    if (renditionsLoaded === false) {
+      return <></>;
     }
 
     return (
@@ -329,7 +339,10 @@ class PanelDetails extends Component {
       imageLoaded: false,
       activeImageIndex: 0,
       thumbnailsOpen: false,
-      renditions: null,
+
+      // Keep track of renditions and whether or not we loaded them
+      renditions: [],
+      renditionsLoaded: false,
     };
   }
 
@@ -338,7 +351,7 @@ class PanelDetails extends Component {
     if (
       ENABLE_ADDITIONAL_RENDITIONS &&
       this.props.object.id &&
-      this.state.renditions === null
+      this.state.renditionsLoaded === false
     ) {
       try {
         const response = await axios({
@@ -346,7 +359,11 @@ class PanelDetails extends Component {
           url: `/api/objects/${this.props.object.invno}/assets`,
         });
 
-        this.setState({ ...this.state, renditions: response.data || [] });
+        this.setState({
+          ...this.state,
+          renditions: response.data || [],
+          renditionsLoaded: true,
+        });
       } catch (error) {
         console.error(`An error occurred fetching renditions`, error);
       }
@@ -381,8 +398,13 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, thumbnailsOpen, renditions } =
-      this.state;
+    const {
+      imageLoaded,
+      activeImageIndex,
+      thumbnailsOpen,
+      renditions,
+      renditionsLoaded,
+    } = this.state;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -402,6 +424,7 @@ class PanelDetails extends Component {
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
             renditions={renditions}
+            renditionsLoaded={renditionsLoaded}
           />
           {/** Uncomment this once we have thumbnail data. */}
           {Boolean(imageLoaded) && renditions?.length ? (
