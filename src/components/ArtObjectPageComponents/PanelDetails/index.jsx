@@ -19,8 +19,17 @@ const ENABLE_ADDITIONAL_RENDITIONS =
   process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
-const getTabList = (artObjectProps) =>
-  [
+const getTabList = (artObjectProps, renditions) => {
+  // Get the attributes from the primary rendition
+  const artworkAttributes = renditions[0]?.attributes;
+  const publishedProvenance = artworkAttributes
+    ? artworkAttributes["Published Provenance (TMS)"][0]
+    : "";
+  const publishedArchivesReference = artworkAttributes
+    ? artworkAttributes["Published Archives Reference (TMS)"][0]
+    : "";
+
+  return [
     {
       title: "Long Description",
       tabContent: artObjectProps.longDescription,
@@ -35,9 +44,14 @@ const getTabList = (artObjectProps) =>
     },
     {
       title: "Provenance",
-      tabContent: artObjectProps.publishedProvenance,
+      tabContent: publishedProvenance,
     },
-  ].filter(({ tabContent }) => tabContent); // Filter out tabs with no content.
+    {
+      title: "Archives Reference",
+      tabContent: publishedArchivesReference,
+    },
+  ].filter(({ tabContent }) => tabContent);
+}; // Filter out tabs with no content.
 
 function getCaptionFromArtworkRendition(rendition, object = {}) {
   let caption = "";
@@ -346,7 +360,15 @@ class PanelDetails extends Component {
     };
   }
 
+  async componentDidMount() {
+    await this.loadArtworkRenditions();
+  }
+
   async componentDidUpdate() {
+    await this.loadArtworkRenditions();
+  }
+
+  loadArtworkRenditions = async () => {
     /** Fetch possible additional renditions for this object - only when enabled */
     if (
       ENABLE_ADDITIONAL_RENDITIONS &&
@@ -368,7 +390,7 @@ class PanelDetails extends Component {
         console.error(`An error occurred fetching renditions`, error);
       }
     }
-  }
+  };
 
   /** On child image loading, update this state. */
   onLoad = () => this.setState({ imageLoaded: true });
@@ -409,7 +431,7 @@ class PanelDetails extends Component {
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
     const objectCopyrightDetails = getObjectCopyright(object);
-    const accordionTabList = getTabList(object);
+    const accordionTabList = getTabList(object, renditions);
 
     const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
