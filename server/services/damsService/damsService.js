@@ -9,12 +9,12 @@ const {
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
 const NETX_ENABLED =
-  process.env.REACT_APP_NETX_ENABLED === "false" ? false : true || false;
+  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
 const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
 const SYNC_TYPE_FIELD = "Sync Type";
-const SYNC_TYPE_VALUE = "Archives Sync";
+const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
 
 async function makeNetXRequest(query) {
   const response = await axios({
@@ -67,14 +67,10 @@ function sortAssets(assets) {
   // We'll search through the results and put the Primary Display Image first
   // Look for the primary image. It is possible there is none specified
   const primaryImageIndex = assets.findIndex((asset) => {
-    const primaryDisplayImageList =
-      asset.attributes && asset.attributes[PRIMARY_DISPLAY_IMAGE_TMS_FIELD]
-        ? asset.attributes[PRIMARY_DISPLAY_IMAGE_TMS_FIELD]
-        : [];
-    const primaryDisplayImageValue =
-      primaryDisplayImageList && primaryDisplayImageList.length
-        ? primaryDisplayImageList[0]
-        : "";
+    const primaryDisplayImageValue = getValueFromNetXAttribute(
+      PRIMARY_DISPLAY_IMAGE_TMS_FIELD,
+      asset
+    );
 
     return primaryDisplayImageValue === PRIMARY_DISPLAY_IMAGE_VALUE;
   });
@@ -89,26 +85,36 @@ function sortAssets(assets) {
   // Let's check if there's any Archive Correspondence and shift it to the end
   const { artworks, archives } = sortedAssets.reduce(
     (acc, asset) => {
-      const syncTypeList =
-        asset.attributes && asset.attributes[SYNC_TYPE_FIELD]
-          ? asset.attributes[SYNC_TYPE_FIELD]
-          : [];
-      const syncTypeValue =
-        syncTypeList && syncTypeList.length ? syncTypeList[0] : "";
+      const syncTypeValue = getValueFromNetXAttribute(SYNC_TYPE_FIELD, asset);
 
-      if (syncTypeValue === SYNC_TYPE_VALUE) {
+      // It's an archive
+      if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
         acc.archives.push(asset);
-      } else {
-        acc.artworks.push(asset);
+        return acc;
       }
 
+      // Otherwise, it's an artwork
+      acc.artworks.push(asset);
       return acc;
     },
     { artworks: [], archives: [] }
   );
 
   // Combine the two lists with the Archival Correspondences to the end
-  return [...artworks, ...archives];
+  return artworks.concat(archives);
+}
+
+function getValueFromNetXAttribute(attributeName, asset) {
+  const attributeValueList =
+    asset.attributes && asset.attributes[attributeName]
+      ? asset.attributes[attributeName]
+      : [];
+  const attributeValue =
+    attributeValueList && attributeValueList.length
+      ? attributeValueList[0]
+      : "";
+
+  return attributeValue;
 }
 
 module.exports = {
