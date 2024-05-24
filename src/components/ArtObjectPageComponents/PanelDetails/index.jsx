@@ -22,12 +22,14 @@ const DEFAULT_THUMBNAIL_COUNT = 5;
 const getTabList = (artObjectProps, renditions) => {
   // Get the attributes from the primary rendition
   const artworkAttributes = renditions[0]?.attributes;
-  const publishedProvenance = artworkAttributes
-    ? artworkAttributes["Published Provenance (TMS)"][0]
-    : "";
-  const publishedArchivesReference = artworkAttributes
-    ? artworkAttributes["Published Archives Reference (TMS)"][0]
-    : "";
+  const publishedProvenance =
+    artworkAttributes && artworkAttributes["Published Provenance (TMS)"]
+      ? artworkAttributes["Published Provenance (TMS)"][0]
+      : "";
+  const publishedArchivesReference =
+    artworkAttributes && artworkAttributes["Published Archives Reference (TMS)"]
+      ? artworkAttributes["Published Archives Reference (TMS)"][0]
+      : "";
 
   return [
     {
