@@ -1,3 +1,6 @@
+/** Service responsible for fetching from the NetX DAMS to retrieve asset information for
+ * artwork and archival objects in the Barnes Collection
+ */
 const axios = require("axios");
 const {
   generateGetFolderByPathQuery,
