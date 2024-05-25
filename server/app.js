@@ -38,7 +38,7 @@ const buildSearchAssets = require("../scripts/build-search-assets");
 const craftService = require("./services/craftService");
 const tourService = require("./services/tourService");
 const elasticSearchService = require("./services/elasticSearchService");
-const damsService = require("./services/damsService");
+const objectAssetService = require("./services/objectAssetService");
 const {
   BARNES_SETTINGS,
   ALL_MORE_LIKE_THIS_FIELDS,
@@ -579,7 +579,7 @@ app.get("/api/objects/:id/assets", async (request, response) => {
   // The object number needs to go from a schema of "01.02.09" to "01_02_09"
   // to conform with the DAMS naming schema for rendition names
   const objectNumber = request.params.id.replace(/\./g, "_");
-  const result = await damsService.getAssetByObjectNumber(objectNumber);
+  const result = await objectAssetService.getAssetByObjectNumber(objectNumber);
 
   response.json(result);
 });
