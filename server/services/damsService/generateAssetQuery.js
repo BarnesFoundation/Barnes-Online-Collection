@@ -1,7 +1,18 @@
-function generateGetAssetQuery(objectId) {
+const COLLECTION_WEBSITE_API_FOLDER = 646;
+function generateGetAssetsByQuery(objectIdList) {
+  const orObjectIdQueries = objectIdList.map((objectId) => {
+    return {
+      operator: "or",
+      exact: {
+        attribute: "ObjectID (TMS)",
+        value: objectId,
+      },
+    };
+  });
+
   return {
     jsonrpc: "2.0",
-    id: `GET_ASSETS_BY_QUERY_${objectId}`,
+    id: `GET_ASSETS_BY_QUERY_OBJECT_IDS${Date.now()}`,
     method: "getAssetsByQuery",
     params: [
       {
@@ -10,17 +21,11 @@ function generateGetAssetQuery(objectId) {
           {
             operator: "and",
             folder: {
-              folderId: 646,
-              recursive: false,
+              folderId: COLLECTION_WEBSITE_API_FOLDER,
+              recursive: true,
             },
           },
-          {
-            operator: "and",
-            exact: {
-              attribute: "ObjectID (TMS)",
-              value: objectId,
-            },
-          },
+          ...orObjectIdQueries,
         ],
       },
       {
@@ -30,7 +35,7 @@ function generateGetAssetQuery(objectId) {
         },
         page: {
           startIndex: 0,
-          size: 10,
+          size: 200,
         },
         data: [
           "asset.id",
@@ -45,5 +50,5 @@ function generateGetAssetQuery(objectId) {
 }
 
 module.exports = {
-  generateGetAssetQuery,
+  generateGetAssetsByQuery,
 };

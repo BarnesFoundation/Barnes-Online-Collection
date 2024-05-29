@@ -8,6 +8,7 @@ const {
 const {
   generateGetAssetsByFolderQuery,
 } = require("./generateGetAssetsByFolderQuery");
+const { generateGetAssetsByQuery } = require("./generateAssetQuery");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -16,6 +17,7 @@ const NETX_ENABLED =
 
 const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
 const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
+const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
 const SYNC_TYPE_FIELD = "Sync Type";
 const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
 
@@ -58,6 +60,15 @@ async function getAssetByObjectNumber(objectNumber) {
   );
 
   const assets = sortAssets(assetQueryResponse.data.result.results);
+  return assets;
+}
+
+async function getAssetsByObjectIds(objectIds) {
+  const assetQueryResponse = await makeNetXRequest(
+    generateGetAssetsByQuery(objectIds)
+  );
+
+  const assets = groupAssets(assetQueryResponse.data.result.results);
   return assets;
 }
 
@@ -107,6 +118,39 @@ function sortAssets(assets) {
   return artworks.concat(archives);
 }
 
+function groupAssets(assets) {
+  const groupedAssets = assets.reduce((collector, asset) => {
+    const { attributes } = asset;
+    if (!attributes) {
+      return collector;
+    }
+
+    const objectId = getValueFromNetXAttribute(OBJECT_ID_TMS_FIELD, asset);
+    if (!objectId) {
+      return collector;
+    }
+
+    // Store this asset in a list under the Object ID of the asset
+    if (!collector[objectId]) {
+      collector[objectId] = [];
+    }
+    collector[objectId].push(asset);
+
+    return collector;
+  }, {});
+
+  // Now that we have all the assets, let's sort the primary image to be first
+  const sortedGroupedAssets = Object.entries(groupedAssets).reduce(
+    (collector, [objectId, assets]) => {
+      collector[objectId] = sortAssets(assets);
+      return collector;
+    },
+    {}
+  );
+
+  return sortedGroupedAssets;
+}
+
 function getValueFromNetXAttribute(attributeName, asset) {
   const attributeValueList =
     asset.attributes && asset.attributes[attributeName]
@@ -122,4 +166,5 @@ function getValueFromNetXAttribute(attributeName, asset) {
 
 module.exports = {
   getAssetByObjectNumber,
+  getAssetsByObjectIds,
 };
