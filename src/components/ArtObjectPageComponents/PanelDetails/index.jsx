@@ -19,9 +19,11 @@ const ENABLE_ADDITIONAL_RENDITIONS =
   process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
-const getTabList = (artObjectProps, renditions) => {
+const getTabList = (artObjectProps) => {
   // Get the attributes from the primary rendition
-  const artworkAttributes = renditions[0]?.attributes;
+  const artworkAttributes = artObjectProps?.renditions?.length
+    ? artObjectProps.renditions[0]?.attributes
+    : null;
   const publishedProvenance =
     artworkAttributes && artworkAttributes["Published Provenance (TMS)"]
       ? artworkAttributes["Published Provenance (TMS)"][0]
@@ -150,8 +152,8 @@ const Thumbnails = ({
   object,
   isOpen,
   toggleOpen,
-  renditions,
 }) => {
+  const { renditions } = object;
   const images = renditions.map((rendition, i) => (
     <Thumbnail
       key={i}
@@ -224,15 +226,9 @@ class Image extends Component {
   };
 
   render() {
-    const {
-      onLoad,
-      isLoaded,
-      object,
-      activeImageIndex,
-      setActiveImageIndex,
-      renditions,
-      renditionsLoaded,
-    } = this.props;
+    const { onLoad, isLoaded, object, activeImageIndex, setActiveImageIndex } =
+      this.props;
+    const { renditions } = object;
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
@@ -273,15 +269,6 @@ class Image extends Component {
     else {
       imageUrlToRender = object.imageUrlLarge;
       captionToRender = getCaptionFromArtworkRendition(null, object);
-    }
-
-    // we won't render any image until we know renditions were finished loading
-    // At that point, we've either got the following
-    // 1. Image renditions from NetX, including the Primary Display Image
-    // 2. We fallback to our existing artwork image repository for when renditions
-    //    do not yet exist in NetX
-    if (renditionsLoaded === false) {
-      return <></>;
     }
 
     return (
@@ -355,44 +342,8 @@ class PanelDetails extends Component {
       imageLoaded: false,
       activeImageIndex: 0,
       thumbnailsOpen: false,
-
-      // Keep track of renditions and whether or not we loaded them
-      renditions: [],
-      renditionsLoaded: false,
     };
   }
-
-  async componentDidMount() {
-    await this.loadArtworkRenditions();
-  }
-
-  async componentDidUpdate() {
-    await this.loadArtworkRenditions();
-  }
-
-  loadArtworkRenditions = async () => {
-    /** Fetch possible additional renditions for this object - only when enabled */
-    if (
-      ENABLE_ADDITIONAL_RENDITIONS &&
-      this.props.object.id &&
-      this.state.renditionsLoaded === false
-    ) {
-      try {
-        const response = await axios({
-          method: "GET",
-          url: `/api/objects/${this.props.object.invno}/assets`,
-        });
-
-        this.setState({
-          ...this.state,
-          renditions: response.data || [],
-          renditionsLoaded: true,
-        });
-      } catch (error) {
-        console.error(`An error occurred fetching renditions`, error);
-      }
-    }
-  };
 
   /** On child image loading, update this state. */
   onLoad = () => this.setState({ imageLoaded: true });
@@ -402,7 +353,7 @@ class PanelDetails extends Component {
    * If max is > DEFAULT_THUMBNAIL_COUNT, automatically open accordion.
    */
   setActiveImageIndex = (index) => {
-    const { renditions } = this.state;
+    const { renditions } = this.props.object;
     if (renditions?.length) {
       const nextIndex =
         index < 0 ? renditions.length - 1 : index % renditions.length;
@@ -422,13 +373,8 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const {
-      imageLoaded,
-      activeImageIndex,
-      thumbnailsOpen,
-      renditions,
-      renditionsLoaded,
-    } = this.state;
+    const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
+    const { renditions } = object;
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -447,8 +393,6 @@ class PanelDetails extends Component {
             object={object}
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
-            renditions={renditions}
-            renditionsLoaded={renditionsLoaded}
           />
           {/** Uncomment this once we have thumbnail data. */}
           {Boolean(imageLoaded) && renditions?.length ? (
@@ -458,7 +402,6 @@ class PanelDetails extends Component {
               object={object}
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
-              renditions={renditions}
             />
           ) : null}
         </div>
