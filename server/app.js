@@ -39,12 +39,15 @@ const craftService = require("./services/craftService");
 const tourService = require("./services/tourService");
 const elasticSearchService = require("./services/elasticSearchService");
 const objectAssetService = require("./services/objectAssetService");
+const damsService = require("./services/damsService");
 const {
   BARNES_SETTINGS,
   ALL_MORE_LIKE_THIS_FIELDS,
   MORE_LIKE_THIS_FIELDS,
   BASIC_FIELDS,
 } = require("./constants/fields");
+const NETX_ENABLED =
+  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -163,8 +166,34 @@ app.get("/api/latestIndex", (req, res) => {
   res.json(esIndex);
 });
 
-app.get("/api/objects/:object_id", elasticSearchService.getObjectById);
-app.use("/api/search", elasticSearchService.search);
+app.get("/api/objects/:object_id", async (req, res) => {
+  const objectId = req.params.object_id;
+  const objectResponse = await elasticSearchService.getObjectById(objectId);
+
+  return res.json(objectResponse);
+});
+app.use("/api/search", async (req, res) => {
+  // Get the body from a GET or POST request
+  const searchQuery = req.method === "GET" ? req.query.body : req.body.body;
+  const searchResponse = await elasticSearchService.search(searchQuery);
+
+  // In case we want to disable interaction with NetX for now
+  if (NETX_ENABLED === false) {
+    return searchResponse;
+  }
+
+  const artworkAssetsMap = await objectAssetService.getAssetsForObjectsArtworks(
+    searchResponse.hits.hits
+  );
+
+  // We'll store renditions into the `__source` field
+  searchResponse.hits.hits = searchResponse.hits.hits.map((artwork) => {
+    artwork._source["renditions"] = artworkAssetsMap[artwork._source.id] || [];
+    return artwork;
+  });
+
+  return res.json(searchResponse);
+});
 
 function getObjectDescriptors(objectID) {
   let body = bodybuilder()
