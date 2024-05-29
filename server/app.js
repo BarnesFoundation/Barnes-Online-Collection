@@ -17,7 +17,6 @@ const googleUA = require("universal-analytics");
 const htpasswdFilePath = path.resolve(__dirname, "../.htpasswd");
 const { ui, meta } = require("../src/shared/config");
 const { generateObjectImageUrls } = require("../src/shared/utils");
-const { transformInvno } = require("./utils/transformInvno");
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
@@ -40,7 +39,6 @@ const craftService = require("./services/craftService");
 const tourService = require("./services/tourService");
 const elasticSearchService = require("./services/elasticSearchService");
 const objectAssetService = require("./services/objectAssetService");
-const damsService = require("./services/damsService");
 const {
   BARNES_SETTINGS,
   ALL_MORE_LIKE_THIS_FIELDS,
@@ -183,7 +181,7 @@ app.use("/api/search", async (req, res) => {
     return searchResponse;
   }
 
-  const artworkAssetsMap = await objectAssetService.getAssetsForObjectsArtworks(
+  const artworkAssetsMap = await objectAssetService.getAssetsForArtworks(
     searchResponse.hits.hits
   );
 

@@ -5,6 +5,7 @@
 const damsService = require("./damsService");
 const memoryCache = require("memory-cache");
 const { oneWeek } = require("../constants/times");
+const { transformInvno } = require("../utils/transformInvno");
 
 const OBJECT_CACHE = "OBJECT_CACHE";
 
@@ -31,16 +32,42 @@ async function getAssetByObjectNumber(objectNumber) {
   return objectAsset;
 }
 
-async function getAssetsForObjectsArtworks(artworks) {
-  const objectIds = artworks.map((result) => {
-    return result._source.id;
+async function getAssetsForArtworks(artworks) {
+  const artworksInformation = artworks.map((result) => {
+    return {
+      objectId: result._source.id,
+      objectNumber: result._source.invno
+        ? transformInvno(result._source.invno)
+        : null,
+    };
   });
 
-  const objectIdAssets = await damsService.getAssetsByObjectIds(objectIds);
-  return objectIdAssets;
+  if (artworksInformation.length === 0) {
+    return {};
+  }
+
+  // If we're fetching multiple artworks - then we typically do not need
+  // archival renditions to be included in our response. So we're fine
+  // with just this general assets call
+  if (artworksInformation.length > 1) {
+    const objectIds = artworksInformation
+      .map(({ objectId }) => objectId)
+      .filter((objectId) => objectId);
+    const artworkAssetsById = await damsService.getAssetsByObjectIds(objectIds);
+
+    return artworkAssetsById;
+  }
+
+  // Otherwise, we're fetching a single artwork object's renditions
+  // so we do need archival renditions as part of our list
+  // and need some extra work to do so
+  const { objectNumber, objectId } = artworksInformation[0];
+  const artworkAssets = await getAssetByObjectNumber(objectNumber);
+
+  return { [objectId]: artworkAssets };
 }
 
 module.exports = {
   getAssetByObjectNumber,
-  getAssetsForObjectsArtworks,
+  getAssetsForArtworks,
 };
