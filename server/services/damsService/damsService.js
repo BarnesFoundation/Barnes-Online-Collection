@@ -8,7 +8,9 @@ const {
 const {
   generateGetAssetsByFolderQuery,
 } = require("./generateGetAssetsByFolderQuery");
-const { generateGetAssetsByQuery } = require("./generateAssetQuery");
+const {
+  generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
+} = require("./generateAssetQuery");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -65,7 +67,7 @@ async function getAssetByObjectNumber(objectNumber) {
 
 async function getAssetsByObjectIds(objectIds) {
   const assetQueryResponse = await makeNetXRequest(
-    generateGetAssetsByQuery(objectIds)
+    generateGetAssetsBySearchQuery(objectIds)
   );
 
   const assets = groupAssets(assetQueryResponse.data.result.results);

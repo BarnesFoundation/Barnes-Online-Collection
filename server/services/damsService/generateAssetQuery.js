@@ -1,8 +1,12 @@
 const COLLECTION_WEBSITE_API_FOLDER = 646;
 function generateGetAssetsByQuery(objectIdList) {
-  const orObjectIdQueries = objectIdList.map((objectId) => {
+  const objectIdQueries = objectIdList.map((objectId) => {
     return {
-      operator: "or",
+      // If we're only requested one specific Object ID, we're
+      // fine to use the "and" operator for an exact match
+      // Otherwise, we want multiple Object IDs in our request
+      // so we have to use the "or" operator to allow that
+      operator: objectIdList.length === 1 ? "and" : "or",
       exact: {
         attribute: "ObjectID (TMS)",
         value: objectId,
@@ -17,6 +21,7 @@ function generateGetAssetsByQuery(objectIdList) {
     params: [
       {
         query: [
+          ...objectIdQueries,
           // Query statement is to scope the search within our "Collection Website API" folder in NetX
           {
             operator: "and",
@@ -25,7 +30,6 @@ function generateGetAssetsByQuery(objectIdList) {
               recursive: true,
             },
           },
-          ...orObjectIdQueries,
         ],
       },
       {
@@ -43,6 +47,7 @@ function generateGetAssetsByQuery(objectIdList) {
           "asset.attributes",
           "asset.file",
           "asset.proxies",
+          "asset.folders",
         ],
       },
     ],
