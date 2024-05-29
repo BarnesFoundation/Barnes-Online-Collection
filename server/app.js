@@ -604,16 +604,6 @@ app.get("/api/advancedSearchSuggest", craftService.getAutoSuggestions);
 app.get("/api/tour/:slug", tourService.getTour);
 app.get("/api/eye-spy/:id", tourService.getTour);
 
-/** Endpoint for retrieving asset information from the NetX DAMS */
-app.get("/api/objects/:id/assets", async (request, response) => {
-  // The object number needs to go from a schema of "01.02.09" to "01_02_09"
-  // to conform with the DAMS naming schema for rendition names
-  const objectNumber = transformInvno(request.params.id);
-  const result = await objectAssetService.getAssetByObjectNumber(objectNumber);
-
-  response.json(result);
-});
-
 app.use(function (req, res) {
   res.status(404).send("Error 404: Page not Found");
 });
