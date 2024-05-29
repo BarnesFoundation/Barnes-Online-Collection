@@ -17,6 +17,7 @@ const googleUA = require("universal-analytics");
 const htpasswdFilePath = path.resolve(__dirname, "../.htpasswd");
 const { ui, meta } = require("../src/shared/config");
 const { generateObjectImageUrls } = require("../src/shared/utils");
+const { transformInvno } = require("./utils/transformInvno");
 
 // using this instead of ejs to template from the express routes after we fetch object data.
 // because the webpack compiler is already using ejs.
@@ -607,7 +608,7 @@ app.get("/api/eye-spy/:id", tourService.getTour);
 app.get("/api/objects/:id/assets", async (request, response) => {
   // The object number needs to go from a schema of "01.02.09" to "01_02_09"
   // to conform with the DAMS naming schema for rendition names
-  const objectNumber = request.params.id.replace(/\./g, "_");
+  const objectNumber = transformInvno(request.params.id);
   const result = await objectAssetService.getAssetByObjectNumber(objectNumber);
 
   response.json(result);
