@@ -31,6 +31,16 @@ async function getAssetByObjectNumber(objectNumber) {
   return objectAsset;
 }
 
+async function getAssetsForObjectsArtworks(artworks) {
+  const objectIds = artworks.map((result) => {
+    return result._source.id;
+  });
+
+  const objectIdAssets = await damsService.getAssetsByObjectIds(objectIds);
+  return objectIdAssets;
+}
+
 module.exports = {
   getAssetByObjectNumber,
+  getAssetsForObjectsArtworks,
 };
