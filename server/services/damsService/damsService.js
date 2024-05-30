@@ -11,6 +11,7 @@ const {
 const {
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
 } = require("./generateAssetQuery");
+const { transformInvno } = require("../../utils/transformInvno");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -37,11 +38,15 @@ async function makeNetXRequest(query) {
   return response;
 }
 
-async function getAssetByObjectNumber(objectNumber) {
+async function getAssetByObjectNumber(rawObjectNumber) {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
     return [];
   }
+
+  // We need to transform the object number because it is formatted
+  // differently in the folder paths in NetX
+  const objectNumber = transformInvno(rawObjectNumber);
 
   // We'll check to see if we there exists a sub-folder
   // for this Object Number at the below folder path

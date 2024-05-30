@@ -5,7 +5,6 @@
 const damsService = require("./damsService");
 const memoryCache = require("memory-cache");
 const { oneWeek } = require("../constants/times");
-const { transformInvno } = require("../utils/transformInvno");
 
 const OBJECT_CACHE = "OBJECT_CACHE";
 
@@ -40,9 +39,7 @@ async function getAssetsForArtworks(artworks) {
   const artworksInformation = artworks.map((result) => {
     return {
       objectId: result._source.id,
-      objectNumber: result._source.invno
-        ? transformInvno(result._source.invno)
-        : null,
+      objectNumber: result._source.invno ? result._source.invno : null,
     };
   });
 
