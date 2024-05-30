@@ -21,13 +21,35 @@ function generateGetAssetsByQuery(objectIdList) {
     params: [
       {
         query: [
-          ...objectIdQueries,
           // Query statement is to scope the search within our "Collection Website API" folder in NetX
           {
             operator: "and",
             folder: {
               folderId: COLLECTION_WEBSITE_API_FOLDER,
               recursive: true,
+            },
+          },
+          // We only want primary images
+          {
+            operator: "and",
+            exact: {
+              attribute: "Primary Display Image (TMS)",
+              value: "Primary Display Image",
+            },
+          },
+          // We only want jpgs
+          {
+            operator: "and",
+            exact: {
+              field: "fileType",
+              value: "jpg",
+            },
+          },
+          // Subquery to only get the Object IDs we want
+          {
+            operator: "and",
+            subquery: {
+              query: objectIdQueries,
             },
           },
         ],
@@ -39,7 +61,7 @@ function generateGetAssetsByQuery(objectIdList) {
         },
         page: {
           startIndex: 0,
-          size: 200,
+          size: 3000,
         },
         data: [
           "asset.id",
