@@ -181,15 +181,10 @@ app.use("/api/search", async (req, res) => {
     return searchResponse;
   }
 
-  const artworkAssetsMap = await objectAssetService.getAssetsForArtworks(
+  // Get information from the DAMS and store it into the response
+  searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
     searchResponse.hits.hits
   );
-
-  // We'll store renditions into the `__source` field
-  searchResponse.hits.hits = searchResponse.hits.hits.map((artwork) => {
-    artwork._source["renditions"] = artworkAssetsMap[artwork._source.id] || [];
-    return artwork;
-  });
 
   return res.json(searchResponse);
 });

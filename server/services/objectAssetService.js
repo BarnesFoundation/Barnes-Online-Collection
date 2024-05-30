@@ -33,6 +33,10 @@ async function getAssetByObjectNumber(objectNumber) {
 }
 
 async function getAssetsForArtworks(artworks) {
+  if (artworks.length === 0) {
+    return artworks;
+  }
+
   const artworksInformation = artworks.map((result) => {
     return {
       objectId: result._source.id,
@@ -42,10 +46,6 @@ async function getAssetsForArtworks(artworks) {
     };
   });
 
-  if (artworksInformation.length === 0) {
-    return {};
-  }
-
   // If we're fetching multiple artworks - then we typically do not need
   // archival renditions to be included in our response. So we're fine
   // with just this general assets call
@@ -53,9 +53,13 @@ async function getAssetsForArtworks(artworks) {
     const objectIds = artworksInformation
       .map(({ objectId }) => objectId)
       .filter((objectId) => objectId);
-    const artworkAssetsById = await damsService.getAssetsByObjectIds(objectIds);
+    const artworkAssetsMap = await damsService.getAssetsByObjectIds(objectIds);
 
-    return artworkAssetsById;
+    return artworks.map((artwork) => {
+      artwork._source["renditions"] =
+        artworkAssetsMap[artwork._source.id] || [];
+      return artwork;
+    });
   }
 
   // Otherwise, we're fetching a single artwork object's renditions
@@ -64,7 +68,10 @@ async function getAssetsForArtworks(artworks) {
   const { objectNumber, objectId } = artworksInformation[0];
   const artworkAssets = await getAssetByObjectNumber(objectNumber);
 
-  return { [objectId]: artworkAssets };
+  return artworks.map((artwork) => {
+    artwork._source["renditions"] = artworkAssets || [];
+    return artwork;
+  });
 }
 
 module.exports = {
