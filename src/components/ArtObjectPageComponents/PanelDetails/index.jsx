@@ -20,19 +20,6 @@ const ENABLE_ADDITIONAL_RENDITIONS =
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
 const getTabList = (artObjectProps) => {
-  // Get the attributes from the primary rendition
-  const artworkAttributes = artObjectProps?.renditions?.length
-    ? artObjectProps.renditions[0]?.attributes
-    : null;
-  const publishedProvenance =
-    artworkAttributes && artworkAttributes["Published Provenance (TMS)"]
-      ? artworkAttributes["Published Provenance (TMS)"][0]
-      : "";
-  const publishedArchivesReference =
-    artworkAttributes && artworkAttributes["Published Archives Reference (TMS)"]
-      ? artworkAttributes["Published Archives Reference (TMS)"][0]
-      : "";
-
   return [
     {
       title: "Long Description",
@@ -48,11 +35,11 @@ const getTabList = (artObjectProps) => {
     },
     {
       title: "Provenance",
-      tabContent: publishedProvenance,
+      tabContent: artObjectProps.publishedProvenance,
     },
     {
       title: "Archives Reference",
-      tabContent: publishedArchivesReference,
+      tabContent: artObjectProps.publishedArchivesReference,
     },
   ].filter(({ tabContent }) => tabContent);
 }; // Filter out tabs with no content.

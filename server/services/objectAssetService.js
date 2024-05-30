@@ -65,11 +65,26 @@ async function getAssetsForArtworks(artworks) {
   // Otherwise, we're fetching a single artwork object's renditions
   // so we do need archival renditions as part of our list
   // and need some extra work to do so
-  const { objectNumber, objectId } = artworksInformation[0];
+  const { objectNumber } = artworksInformation[0];
   const artworkAssets = await getAssetByObjectNumber(objectNumber);
 
+  // We store the renditions but also aditional fields needed
+  // for single artwork rendering
   return artworks.map((artwork) => {
-    artwork._source["renditions"] = artworkAssets || [];
+    const renditions = artworkAssets || [];
+    const rendition = renditions[0];
+
+    artwork._source["renditions"] = renditions;
+    artwork._source["publishedProvenance"] = rendition
+      ? damsService.getValueFromAsset("Published Provenance (TMS)", rendition)
+      : "";
+    artwork._source["publishedArchivesReference"] = rendition
+      ? damsService.getValueFromAsset(
+          "Published Archives Reference (TMS)",
+          rendition
+        )
+      : "";
+
     return artwork;
   });
 }
