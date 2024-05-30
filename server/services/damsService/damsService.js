@@ -169,4 +169,5 @@ function getValueFromNetXAttribute(attributeName, asset) {
 module.exports = {
   getAssetByObjectNumber,
   getAssetsByObjectIds,
+  getValueFromAsset: getValueFromNetXAttribute,
 };
