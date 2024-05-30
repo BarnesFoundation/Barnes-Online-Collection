@@ -178,7 +178,7 @@ app.use("/api/search", async (req, res) => {
 
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
-    return searchResponse;
+    return res.json(searchResponse);
   }
 
   // Get information from the DAMS and store it into the response
