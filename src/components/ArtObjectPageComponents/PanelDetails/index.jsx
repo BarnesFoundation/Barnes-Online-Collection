@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,6 +13,7 @@ import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import "./index.css";
 import { ui } from "../../../shared/config";
+import { getImageURLFromRendition } from "../../../helpers";
 
 const ENABLE_ADDITIONAL_RENDITIONS =
   process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
@@ -89,11 +89,7 @@ class Thumbnail extends Component {
     const { isLandscapeThumbnail } = this.state;
     const { onClick, isActive, alt, rendition } = this.props;
 
-    const imageThumbnailProxy = rendition.proxies.find((proxy) => {
-      return proxy.name === "Thumbnail";
-    });
-
-    const imageSourceUrl = `${ui.netxBaseURL}${imageThumbnailProxy.file.url}/`;
+    const imageSourceUrl = getImageURLFromRendition(rendition, "Thumbnail");
     const renditionCaption = getCaptionFromArtworkRendition(rendition);
 
     // Set up classNames, if selected add BEM modifier.
@@ -236,14 +232,11 @@ class Image extends Component {
     }
 
     // We'll render the image from the object renditions itself
-    if (renditionsExist) {
-      // We have to build the image URL from the asset information
-      const imagePreview = renditions[activeImageIndex].proxies.find(
-        (proxy) => {
-          return proxy.name === "Zoom";
-        }
+    if (renditionsExist && renditions[activeImageIndex]) {
+      imageUrlToRender = getImageURLFromRendition(
+        renditions[activeImageIndex],
+        "Zoom"
       );
-      imageUrlToRender = `${ui.netxBaseURL}${imagePreview.file.url}/`;
       captionToRender = getCaptionFromArtworkRendition(
         renditions[activeImageIndex],
         object
