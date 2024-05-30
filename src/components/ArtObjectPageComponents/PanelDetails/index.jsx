@@ -12,11 +12,8 @@ import * as PrintActions from "../../../actions/prints";
 import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import "./index.css";
-import { ui } from "../../../shared/config";
-import { getImageURLFromRendition } from "../../../helpers";
+import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
 
-const ENABLE_ADDITIONAL_RENDITIONS =
-  process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
 const getTabList = (artObjectProps) => {
@@ -213,7 +210,7 @@ class Image extends Component {
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const renditionsExist = renditions?.length > 0;
+    const renditionsExist = NETX_ENABLED && renditions?.length > 0;
     const showZoomImageView = Boolean(
       !didCatchFailure &&
         object.id &&

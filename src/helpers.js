@@ -74,3 +74,9 @@ export const getImageURLFromRendition = (rendition, imageType) => {
 
   return `${ui.netxBaseURL}${imageProxy.file.url}/`;
 };
+
+/** Determines if renditions from NetX should be rendered
+ * TODO - Move to config file
+ */
+export const NETX_ENABLED =
+  process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
