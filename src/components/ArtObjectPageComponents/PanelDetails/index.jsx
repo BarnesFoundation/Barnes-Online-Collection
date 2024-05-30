@@ -140,13 +140,11 @@ const Thumbnails = ({
   isOpen,
   toggleOpen,
 }) => {
-  const { renditions } = object;
-  const images = renditions.map((rendition, i) => (
+  const images = object.renditions.map((rendition, i) => (
     <Thumbnail
       key={i}
       onClick={() => setActiveImageIndex(i)}
       isActive={activeImageIndex === i}
-      src={object.imageUrlSmall}
       alt={object.title}
       rendition={rendition}
     />
@@ -178,7 +176,7 @@ const Thumbnails = ({
       {/** We only need to render the "View More/View Less" section when we have more
        *  renditions than our default count. At that point, we need to expand the thumbnail row
        */}
-      {renditions?.length > DEFAULT_THUMBNAIL_COUNT ? (
+      {object.renditions?.length > DEFAULT_THUMBNAIL_COUNT ? (
         <div className={panelButtonClassNames}>
           <div className="panel-button__content" onClick={toggleOpen}>
             <div className="panel-button__icon">
@@ -366,7 +364,7 @@ class PanelDetails extends Component {
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
     const objectCopyrightDetails = getObjectCopyright(object);
-    const accordionTabList = getTabList(object, renditions);
+    const accordionTabList = getTabList(object);
 
     const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
