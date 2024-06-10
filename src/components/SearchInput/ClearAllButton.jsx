@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as SearchActions from '../../actions/search';
-import * as FiltersActions from '../../actions/filters';
-import * as ObjectsActions from '../../actions/objects';
+import * as SearchActions from "../../actions/search";
+import * as FiltersActions from "../../actions/filters";
+import * as ObjectsActions from "../../actions/objects";
 
 class ClearAllButton extends Component {
   constructor(props) {
@@ -22,26 +22,22 @@ class ClearAllButton extends Component {
 
   render() {
     return (
-      <div
-        onClick={this.handleClick}
-        className="btn btn-no-style clear-all"
-      >Clear all
+      <div onClick={this.handleClick} className="btn btn-no-style clear-all">
+        Clear all
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {};
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(Object.assign({},
-    SearchActions,
-    FiltersActions,
-    ObjectsActions
-  ), dispatch);
-}
+  return bindActionCreators(
+    Object.assign({}, SearchActions, FiltersActions, ObjectsActions),
+    dispatch
+  );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClearAllButton);
-

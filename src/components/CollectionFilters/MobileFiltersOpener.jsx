@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import Icon from '../Icon';
+import Icon from "../Icon";
 
-import * as MobileFiltersActions from '../../actions/mobileFilters';
-import * as MobileSearchActions from '../../actions/mobileSearch';
+import * as MobileFiltersActions from "../../actions/mobileFilters";
+import * as MobileSearchActions from "../../actions/mobileSearch";
 
 class MobileFiltersOpener extends Component {
   constructor(props) {
@@ -29,10 +29,13 @@ class MobileFiltersOpener extends Component {
 
     return (
       <div className="mobile-buttons-set">
-        <button onClick={this.handleClickFilterBtn} className="btn-mobile btn-open-mobile-filters font-zeta color-light">
-          <Icon svgId='filters' classes='icon collection-filter-icon' />
+        <button
+          onClick={this.handleClickFilterBtn}
+          className="btn-mobile btn-open-mobile-filters font-zeta color-light"
+        >
+          <Icon svgId="filters" classes="icon collection-filter-icon" />
           <span className="label">
-            Filter{ filterCount > 0 && ` (${filterCount})` }
+            Filter{filterCount > 0 && ` (${filterCount})`}
           </span>
         </button>
         <button
@@ -40,27 +43,29 @@ class MobileFiltersOpener extends Component {
           className="btn-mobile btn-open-mobile-search font-zeta color-light"
           aria-label="Search"
         >
-          <Icon svgId='search' classes='icon collection-search-icon' />
+          <Icon svgId="search" classes="icon collection-search-icon" />
         </button>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     filterSets: state.filterSets,
     filters: state.filters,
     mobileFilters: state.mobileFilters,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign(
-    {},
-    MobileFiltersActions,
-    MobileSearchActions,
-  ), dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign({}, MobileFiltersActions, MobileSearchActions),
+    dispatch
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MobileFiltersOpener);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MobileFiltersOpener);

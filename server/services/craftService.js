@@ -113,7 +113,7 @@ const getAutoSuggestions = async (request, response) => {
 };
 
 /** Stores the entries from Craft in a cache */
-const entryCacher = async (request, response) => {
+const entryCacher = async (_, response) => {
   const key = `__cache__api_craft__entries`;
   const body = memoryCache.get(key);
 

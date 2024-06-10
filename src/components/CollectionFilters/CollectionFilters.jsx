@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { CLASSNAME_MOBILE_PANEL_OPEN, BREAKPOINTS } from '../../constants';
-import CollectionFiltersMenu from './CollectionFiltersMenu';
-import CollectionFiltersSet from './CollectionFiltersSet';
-import SearchInput from '../SearchInput/SearchInput';
-import * as FiltersActions from '../../actions/filters';
-import * as SearchActions from '../../actions/search';
-import * as FilterSetsActions from '../../actions/filterSets';
-import * as MobileFiltersActions from '../../actions/mobileFilters';
-import * as MobileSearchActions from '../../actions/mobileSearch';
-import * as ObjectsActions from '../../actions/objects';
-import * as HtmlClassManagerActions from '../../actions/htmlClassManager';
-import MediaQuery from 'react-responsive';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { CLASSNAME_MOBILE_PANEL_OPEN, BREAKPOINTS } from "../../constants";
+import CollectionFiltersMenu from "./CollectionFiltersMenu";
+import CollectionFiltersSet from "./CollectionFiltersSet";
+import SearchInput from "../SearchInput/SearchInput";
+import * as FiltersActions from "../../actions/filters";
+import * as SearchActions from "../../actions/search";
+import * as FilterSetsActions from "../../actions/filterSets";
+import * as MobileFiltersActions from "../../actions/mobileFilters";
+import * as MobileSearchActions from "../../actions/mobileSearch";
+import * as ObjectsActions from "../../actions/objects";
+import * as HtmlClassManagerActions from "../../actions/htmlClassManager";
+import MediaQuery from "react-responsive";
 // import MobileFiltersMenu from './MobileFiltersMenu';
 // import MobileSearchMenu from './MobileSearchMenu';
 // import MobileFiltersOpener from './MobileFiltersOpener';
 // import MobilePanelCloser from './MobilePanelCloser';
-import './collectionFilters.css';
-import { ClickTracker } from '../SearchInput/Dropdowns/ClickTracker';
+import "./collectionFilters.css";
+import { ClickTracker } from "../SearchInput/Dropdowns/ClickTracker";
 
 class CollectionFilters extends Component {
   constructor(props) {
@@ -29,19 +29,21 @@ class CollectionFilters extends Component {
   }
 
   hasBeenReset(props) {
-    const hasNothingSet = !props.search.length
-      && !props.filters.ordered.length
-      && !Object.values(props.filters.advancedFilters).reduce((acc, advancedFilter) => acc + Object.keys(advancedFilter).length, 0);
+    const hasNothingSet =
+      !props.search.length &&
+      !props.filters.ordered.length &&
+      !Object.values(props.filters.advancedFilters).reduce(
+        (acc, advancedFilter) => acc + Object.keys(advancedFilter).length,
+        0
+      );
 
     const searchHasChanged = props.search !== this.props.search;
-    const filtersHaveChanged = (
+    const filtersHaveChanged =
       props.filters.ordered !== this.props.filters.ordered ||
-      JSON.stringify(props.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)
-    );
-    
-    return hasNothingSet && (
-      searchHasChanged || filtersHaveChanged
-    );
+      JSON.stringify(props.filters.advancedFilters) !==
+        JSON.stringify(this.props.filters.advancedFilters);
+
+    return hasNothingSet && (searchHasChanged || filtersHaveChanged);
   }
 
   /**
@@ -50,13 +52,11 @@ class CollectionFilters extends Component {
   keyListener = (e) => {
     const {
       selectFilterSet,
-      filterSets: {
-        isArtistMenuToggled
-      }
+      filterSets: { isArtistMenuToggled },
     } = this.props;
 
     if (
-      e.key === 'Escape' &&
+      e.key === "Escape" &&
       this.ref &&
       document.activeElement &&
       this.ref.contains(document.activeElement) &&
@@ -64,16 +64,16 @@ class CollectionFilters extends Component {
     ) {
       selectFilterSet(null);
     }
-  }
+  };
 
   // Set up event listener for escape key.
   componentDidMount() {
-    document.addEventListener('keydown', this.keyListener);
+    document.addEventListener("keydown", this.keyListener);
   }
 
   // On unmount, remove event listener for escape key.
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keyListener);
+    document.removeEventListener("keydown", this.keyListener);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -120,8 +120,6 @@ class CollectionFilters extends Component {
 
       // if we are closing the mobile filters
       if (!mobileFiltersWillBeOpen) {
-
-
         // Note: We're showing filters on the main page now,
         // and we're not setup to store both two states in order to revert to
         // the last state... So for now, just apply the changes every time.
@@ -130,19 +128,18 @@ class CollectionFilters extends Component {
         //   return;
         // }
 
-         // if no changes are pending, do nothing
+        // if no changes are pending, do nothing
         if (!this.props.mobileFilters.filtersPending) {
           return;
 
-        // if there are changes pending
+          // if there are changes pending
         } else {
-
           // if they're added filters, find the filtered objects
           if (nextProps.filters.ordered.length) {
             this.props.findFilteredObjects(nextProps.filters);
             this.props.clearSearchTerm();
 
-          // if they're cleared filters, get everything
+            // if they're cleared filters, get everything
           } else {
             this.props.getAllObjects();
           }
@@ -157,11 +154,11 @@ class CollectionFilters extends Component {
       return;
     }
 
-    
     // otherwise, we're not in mobile search land, handle the new filter
     if (
-      (nextProps.filters.ordered !== this.props.filters.ordered) || // High-level filters
-      (JSON.stringify(nextProps.filters.advancedFilters) !== JSON.stringify(this.props.filters.advancedFilters)) // Advanced Filters
+      nextProps.filters.ordered !== this.props.filters.ordered || // High-level filters
+      JSON.stringify(nextProps.filters.advancedFilters) !==
+        JSON.stringify(this.props.filters.advancedFilters) // Advanced Filters
     ) {
       this.props.findFilteredObjects(nextProps.filters, 0);
       this.props.clearSearchTerm();
@@ -171,27 +168,26 @@ class CollectionFilters extends Component {
   }
 
   render() {
-    const { filterSets: { visibleFilterSet }, selectFilterSet} = this.props;
+    const {
+      filterSets: { visibleFilterSet },
+      selectFilterSet,
+    } = this.props;
 
     return (
       <div
-        className='container collection-filters-wrap__container'
-        ref={ref => {
-            if (!this.ref) {
-              this.ref = ref;
-              this.forceUpdate();
-            }
+        className="container collection-filters-wrap__container"
+        ref={(ref) => {
+          if (!this.ref) {
+            this.ref = ref;
+            this.forceUpdate();
           }
-        }
+        }}
       >
         <MediaQuery maxWidth={BREAKPOINTS.tablet_max}>
           <CollectionFiltersMenu parentContainer={this.ref} />
         </MediaQuery>
         <MediaQuery minWidth={BREAKPOINTS.tablet_max + 1}>
-          <CollectionFiltersMenu
-            parentContainer={this.ref}
-            hasScroll
-          />
+          <CollectionFiltersMenu parentContainer={this.ref} hasScroll />
         </MediaQuery>
         <MediaQuery maxDeviceWidth={BREAKPOINTS.tablet_max}>
           <ClickTracker
@@ -199,17 +195,21 @@ class CollectionFilters extends Component {
             resetFunction={() => selectFilterSet(null)}
           >
             <div className="m-block m-block--flush applied-filters">
-              {visibleFilterSet === 'search'
-                ? <SearchInput isCollectionAdvancedSearch/>
-                : <CollectionFiltersSet />}
+              {visibleFilterSet === "search" ? (
+                <SearchInput isCollectionAdvancedSearch />
+              ) : (
+                <CollectionFiltersSet />
+              )}
             </div>
           </ClickTracker>
         </MediaQuery>
         <MediaQuery minDeviceWidth={BREAKPOINTS.tablet_max + 1}>
           <div className="m-block m-block--flush applied-filters">
-            {visibleFilterSet === 'search'
-              ? <SearchInput isCollectionAdvancedSearch/>
-              : <CollectionFiltersSet />}
+            {visibleFilterSet === "search" ? (
+              <SearchInput isCollectionAdvancedSearch />
+            ) : (
+              <CollectionFiltersSet />
+            )}
           </div>
         </MediaQuery>
       </div>
@@ -217,27 +217,30 @@ class CollectionFilters extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     filterSets: state.filterSets,
     mobileFilters: state.mobileFilters,
     mobileSearch: state.mobileSearch,
     filters: state.filters,
     search: state.search,
-  }
-}
+  };
+};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(Object.assign({},
-    FiltersActions,
-    SearchActions,
-    FilterSetsActions,
-    MobileFiltersActions,
-    MobileSearchActions,
-    ObjectsActions,
-    HtmlClassManagerActions,
-  ),
-  dispatch);
-}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    Object.assign(
+      {},
+      FiltersActions,
+      SearchActions,
+      FilterSetsActions,
+      MobileFiltersActions,
+      MobileSearchActions,
+      ObjectsActions,
+      HtmlClassManagerActions
+    ),
+    dispatch
+  );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionFilters);

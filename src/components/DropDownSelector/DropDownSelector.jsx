@@ -18,11 +18,11 @@ export default class DropDownSelector extends Component {
     super(props);
 
     this.state = {
-      listVisible: false
+      listVisible: false,
     };
   }
 
-  onClick = item => {
+  onClick = (item) => {
     this.props.handleSelectItem(item);
   };
 
@@ -36,7 +36,7 @@ export default class DropDownSelector extends Component {
     document.removeEventListener("click", this.hide);
   };
 
-  getDropdownIcon = dir => {
+  getDropdownIcon = (dir) => {
     if (this.props.isStoryItemDropDown) {
       return dir === DROP_UP ? up_white : down_white;
     } else {
@@ -47,7 +47,12 @@ export default class DropDownSelector extends Component {
   render = () => {
     return (
       <div className="dd-wrapper">
-        <div className="dd-header" aria-haspopup="true" id={this.props.id} onClick={this.show}>
+        <div
+          className="dd-header"
+          aria-haspopup="true"
+          id={this.props.id}
+          onClick={this.show}
+        >
           <div className="dd-header-title" aria-labelledby={this.props.id}>
             {this.props.selectedItem}
           </div>
@@ -63,14 +68,19 @@ export default class DropDownSelector extends Component {
         </div>
         {this.state.listVisible && (
           <ul className="dd-list">
-            {this.props.options.map(item => (
+            {this.props.options.map((item) => (
               <li
                 className="dd-list-item"
                 key={item}
                 onClick={() => this.onClick(item)}
               >
                 <span className="select-s">{item}</span>
-                {item === this.props.selectedItem && <img src={check} alt="Gray checkmark indicating current selection"/>}
+                {item === this.props.selectedItem && (
+                  <img
+                    src={check}
+                    alt="Gray checkmark indicating current selection"
+                  />
+                )}
               </li>
             ))}
           </ul>

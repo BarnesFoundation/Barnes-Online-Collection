@@ -1,57 +1,55 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import ColorFilters from './ColorFilters';
-import LineFilters from './LineFilters';
-import LightFilters from './LightFilters';
-import SpaceFilters from './SpaceFilters';
+import ColorFilters from "./ColorFilters";
+import LineFilters from "./LineFilters";
+import LightFilters from "./LightFilters";
+import SpaceFilters from "./SpaceFilters";
 
 class CollectionFiltersSet extends Component {
   filterSet() {
     const slug = this.props.filterSets.visibleFilterSet;
 
     switch (slug) {
-      case 'colors':
-        return <ColorFilters filter={slug}/>;
-      case 'lines':
-        return <LineFilters filter={slug}/>;
-      case 'light':
-        return <LightFilters filter={slug}/>;
-      case 'space':
-        return <SpaceFilters filter={slug}/>;
+      case "colors":
+        return <ColorFilters filter={slug} />;
+      case "lines":
+        return <LineFilters filter={slug} />;
+      case "light":
+        return <LightFilters filter={slug} />;
+      case "space":
+        return <SpaceFilters filter={slug} />;
       default:
         return null;
     }
   }
 
   getClasses() {
-    let classes = 'collection-filters-set';
+    let classes = "collection-filters-set";
     if (this.props.filterSets.visibleFilterSet) {
-      classes += ' collection-filters-set--is-open';
+      classes += " collection-filters-set--is-open";
     }
     return classes;
   }
 
   render() {
-    return (
-      <div className={this.getClasses()}>
-        {this.filterSet()}
-      </div>
-    );
+    return <div className={this.getClasses()}>{this.filterSet()}</div>;
   }
 }
 
-
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    filterSets: state.filterSets
-  }
-}
+    filterSets: state.filterSets,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}), dispatch);
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionFiltersSet);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CollectionFiltersSet);

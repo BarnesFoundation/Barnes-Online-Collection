@@ -1,6 +1,7 @@
 import bodybuilder from "bodybuilder";
 import { BARNES_SETTINGS } from "./barnesSettings";
 import { META_TITLE, META_DESCRIPTION } from "./constants";
+import { ui } from "./shared/config";
 
 const slugify = require("slugify");
 
@@ -60,3 +61,22 @@ export const getQueryKeywordUrl = (qval) => {
 export const getQueryFilterUrl = (qval) => {
   return getQueryUrl("filter", qval);
 };
+
+/** Gets the URL for rendering the specified image type from the rendition */
+export const getImageURLFromRendition = (rendition, imageType) => {
+  const imageProxy = rendition.proxies.find(
+    (proxy) => proxy.name === imageType
+  );
+
+  if (!imageProxy) {
+    return "";
+  }
+
+  return `${ui.netxBaseURL}${imageProxy.file.url}/`;
+};
+
+/** Determines if renditions from NetX should be rendered
+ * TODO - Move to config file
+ */
+export const NETX_ENABLED =
+  process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
