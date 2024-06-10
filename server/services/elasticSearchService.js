@@ -11,31 +11,30 @@ const performSearch = async (body) => {
   });
 };
 
-const search = async (req, res) => {
-  // Get the body from a get or post request
-  const body = req.method === "GET" ? req.query.body : req.body.body;
+const search = async (searchQuery) => {
   try {
-    const esRes = await performSearch(body);
-    res.json(esRes);
-  } catch (e) {
-    res.json(e);
+    const searchResponse = await performSearch(searchQuery);
+    return searchResponse;
+  } catch (error) {
+    return error;
   }
 };
 
-const getObjectById = async (req, res) => {
+const getObjectById = async (objectId) => {
   const options = {
     index: esIndex,
     type: "object",
-    id: req.params.object_id,
+    id: objectId,
   };
 
-  esClient.get(options, function (error, esRes) {
-    if (error) {
-      console.error(`[error] esClient: ${error.message}`);
-      res.json(error);
-    } else {
-      res.json(esRes._source);
-    }
+  return await new Promise((resolve) => {
+    esClient.get(options, function (error, esRes) {
+      if (error) {
+        console.error(`[error] esClient: ${error.message}`);
+        return resolve(error);
+      }
+      return resolve(esRes._source);
+    });
   });
 };
 

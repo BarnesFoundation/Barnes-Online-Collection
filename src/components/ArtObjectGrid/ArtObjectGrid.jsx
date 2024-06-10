@@ -8,7 +8,11 @@ import SpinnerLoader from "./SpinnerLoader";
 import CollectionFiltersApplied from "../CollectionFilters/CollectionFiltersApplied";
 import { clearObject } from "../../actions/object";
 import { getNextObjects } from "../../actions/objects";
-import { getArtObjectUrlFromId } from "../../helpers";
+import {
+  NETX_ENABLED,
+  getArtObjectUrlFromId,
+  getImageURLFromRendition,
+} from "../../helpers";
 import ensembleIndexes from "../../ensembleIndexes";
 import { ART_OBJECT_GRID_INCREMENT } from "../../constants";
 import { DROPDOWN_TERMS } from "../SearchInput/Dropdowns/Dropdowns";
@@ -64,6 +68,16 @@ const GridListElement = ({
   let gridListElementClassNames = "masonry-grid-element";
   if (isFilterResult)
     gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
+  const renditions =
+    NETX_ENABLED && object.renditions ? object.renditions : null;
+  const primaryRendition = renditions?.length ? renditions[0] : null;
+
+  const artworkRenditionThumbnailUrl = primaryRendition
+    ? getImageURLFromRendition(primaryRendition, "Thumbnail")
+    : null;
+  const artworkRenditionPreviewUrl = primaryRendition
+    ? getImageURLFromRendition(primaryRendition, "Preview")
+    : null;
 
   return (
     <li className={gridListElementClassNames}>
@@ -90,8 +104,8 @@ const GridListElement = ({
           title={object.title}
           people={object.people}
           medium={object.medium}
-          imageUrlSmall={object.imageUrlSmall}
-          imageUrlLarge={object.imageUrlLarge}
+          imageUrlSmall={artworkRenditionThumbnailUrl || object.imageUrlSmall}
+          imageUrlLarge={artworkRenditionPreviewUrl || object.imageUrlLarge}
           // Only pass highlight if this is for search results.
           highlight={isSearchResult ? object.highlight : null}
         />

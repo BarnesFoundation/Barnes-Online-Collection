@@ -12,6 +12,7 @@ function generateGetAssetsByFolderQuery(folderId) {
           "asset.attributes",
           "asset.file",
           "asset.proxies",
+          "asset.views",
         ],
       },
     ],

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -13,14 +12,12 @@ import * as PrintActions from "../../../actions/prints";
 import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import "./index.css";
-import { ui } from "../../../shared/config";
+import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
 
-const ENABLE_ADDITIONAL_RENDITIONS =
-  process.env.REACT_APP_NETX_ENABLED === "true" ? true : false;
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
-const getTabList = (artObjectProps) =>
-  [
+const getTabList = (artObjectProps) => {
+  return [
     {
       title: "Long Description",
       tabContent: artObjectProps.longDescription,
@@ -37,7 +34,12 @@ const getTabList = (artObjectProps) =>
       title: "Provenance",
       tabContent: artObjectProps.publishedProvenance,
     },
-  ].filter(({ tabContent }) => tabContent); // Filter out tabs with no content.
+    {
+      title: "Archives Reference",
+      tabContent: artObjectProps.publishedArchivesReference,
+    },
+  ].filter(({ tabContent }) => tabContent);
+}; // Filter out tabs with no content.
 
 function getCaptionFromArtworkRendition(rendition, object = {}) {
   let caption = "";
@@ -84,11 +86,7 @@ class Thumbnail extends Component {
     const { isLandscapeThumbnail } = this.state;
     const { onClick, isActive, alt, rendition } = this.props;
 
-    const imageThumbnailProxy = rendition.proxies.find((proxy) => {
-      return proxy.name === "Thumbnail";
-    });
-
-    const imageSourceUrl = `${ui.netxBaseURL}${imageThumbnailProxy.file.url}/`;
+    const imageSourceUrl = getImageURLFromRendition(rendition, "Thumbnail");
     const renditionCaption = getCaptionFromArtworkRendition(rendition);
 
     // Set up classNames, if selected add BEM modifier.
@@ -134,14 +132,12 @@ const Thumbnails = ({
   object,
   isOpen,
   toggleOpen,
-  renditions,
 }) => {
-  const images = renditions.map((rendition, i) => (
+  const images = object.renditions.map((rendition, i) => (
     <Thumbnail
       key={i}
       onClick={() => setActiveImageIndex(i)}
       isActive={activeImageIndex === i}
-      src={object.imageUrlSmall}
       alt={object.title}
       rendition={rendition}
     />
@@ -173,7 +169,7 @@ const Thumbnails = ({
       {/** We only need to render the "View More/View Less" section when we have more
        *  renditions than our default count. At that point, we need to expand the thumbnail row
        */}
-      {renditions?.length > DEFAULT_THUMBNAIL_COUNT ? (
+      {object.renditions?.length > DEFAULT_THUMBNAIL_COUNT ? (
         <div className={panelButtonClassNames}>
           <div className="panel-button__content" onClick={toggleOpen}>
             <div className="panel-button__icon">
@@ -208,18 +204,13 @@ class Image extends Component {
   };
 
   render() {
-    const {
-      onLoad,
-      isLoaded,
-      object,
-      activeImageIndex,
-      setActiveImageIndex,
-      renditions,
-    } = this.props;
+    const { onLoad, isLoaded, object, activeImageIndex, setActiveImageIndex } =
+      this.props;
+    const { renditions } = object;
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const renditionsExist = renditions?.length > 0;
+    const renditionsExist = NETX_ENABLED && renditions?.length > 0;
     const showZoomImageView = Boolean(
       !didCatchFailure &&
         object.id &&
@@ -238,14 +229,11 @@ class Image extends Component {
     }
 
     // We'll render the image from the object renditions itself
-    if (renditionsExist) {
-      // We have to build the image URL from the asset information
-      const imagePreview = renditions[activeImageIndex].proxies.find(
-        (proxy) => {
-          return proxy.name === "Preview";
-        }
+    if (renditionsExist && renditions[activeImageIndex]) {
+      imageUrlToRender = getImageURLFromRendition(
+        renditions[activeImageIndex],
+        "Zoom"
       );
-      imageUrlToRender = `${ui.netxBaseURL}${imagePreview.file.url}/`;
       captionToRender = getCaptionFromArtworkRendition(
         renditions[activeImageIndex],
         object
@@ -329,28 +317,7 @@ class PanelDetails extends Component {
       imageLoaded: false,
       activeImageIndex: 0,
       thumbnailsOpen: false,
-      renditions: null,
     };
-  }
-
-  async componentDidUpdate() {
-    /** Fetch possible additional renditions for this object - only when enabled */
-    if (
-      ENABLE_ADDITIONAL_RENDITIONS &&
-      this.props.object.id &&
-      this.state.renditions === null
-    ) {
-      try {
-        const response = await axios({
-          method: "GET",
-          url: `/api/objects/${this.props.object.invno}/assets`,
-        });
-
-        this.setState({ ...this.state, renditions: response.data || [] });
-      } catch (error) {
-        console.error(`An error occurred fetching renditions`, error);
-      }
-    }
   }
 
   /** On child image loading, update this state. */
@@ -361,7 +328,7 @@ class PanelDetails extends Component {
    * If max is > DEFAULT_THUMBNAIL_COUNT, automatically open accordion.
    */
   setActiveImageIndex = (index) => {
-    const { renditions } = this.state;
+    const { renditions } = this.props.object;
     if (renditions?.length) {
       const nextIndex =
         index < 0 ? renditions.length - 1 : index % renditions.length;
@@ -381,8 +348,12 @@ class PanelDetails extends Component {
 
   render() {
     const { object, prints } = this.props;
-    const { imageLoaded, activeImageIndex, thumbnailsOpen, renditions } =
-      this.state;
+    const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
+
+    // Filter out renditions for now
+    object.renditions = object.renditions?.filter(
+      (rendition) => rendition.fileName.includes(".tif") === false
+    );
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -401,17 +372,15 @@ class PanelDetails extends Component {
             object={object}
             activeImageIndex={activeImageIndex}
             setActiveImageIndex={this.setActiveImageIndex}
-            renditions={renditions}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {Boolean(imageLoaded) && renditions?.length ? (
+          {Boolean(imageLoaded) && object.renditions?.length ? (
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
               object={object}
               isOpen={thumbnailsOpen}
               toggleOpen={this.toggleThumbnailOpenStatus}
-              renditions={renditions}
             />
           ) : null}
         </div>

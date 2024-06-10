@@ -38,13 +38,15 @@ const buildSearchAssets = require("../scripts/build-search-assets");
 const craftService = require("./services/craftService");
 const tourService = require("./services/tourService");
 const elasticSearchService = require("./services/elasticSearchService");
-const damsService = require("./services/damsService");
+const objectAssetService = require("./services/objectAssetService");
 const {
   BARNES_SETTINGS,
   ALL_MORE_LIKE_THIS_FIELDS,
   MORE_LIKE_THIS_FIELDS,
   BASIC_FIELDS,
 } = require("./constants/fields");
+const NETX_ENABLED =
+  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -163,8 +165,29 @@ app.get("/api/latestIndex", (req, res) => {
   res.json(esIndex);
 });
 
-app.get("/api/objects/:object_id", elasticSearchService.getObjectById);
-app.use("/api/search", elasticSearchService.search);
+app.get("/api/objects/:object_id", async (req, res) => {
+  const objectId = req.params.object_id;
+  const objectResponse = await elasticSearchService.getObjectById(objectId);
+
+  return res.json(objectResponse);
+});
+app.use("/api/search", async (req, res) => {
+  // Get the body from a GET or POST request
+  const searchQuery = req.method === "GET" ? req.query.body : req.body.body;
+  const searchResponse = await elasticSearchService.search(searchQuery);
+
+  // In case we want to disable interaction with NetX for now
+  if (NETX_ENABLED === false) {
+    return res.json(searchResponse);
+  }
+
+  // Get information from the DAMS and store it into the response
+  searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
+    searchResponse.hits.hits
+  );
+
+  return res.json(searchResponse);
+});
 
 function getObjectDescriptors(objectID) {
   let body = bodybuilder()
@@ -573,16 +596,6 @@ app.get("/api/advancedSearchSuggest", craftService.getAutoSuggestions);
 /** Endpoint for retrieving tour data */
 app.get("/api/tour/:slug", tourService.getTour);
 app.get("/api/eye-spy/:id", tourService.getTour);
-
-/** Endpoint for retrieving asset information from the NetX DAMS */
-app.get("/api/objects/:id/assets", async (request, response) => {
-  // The object number needs to go from a schema of "01.02.09" to "01_02_09"
-  // to conform with the DAMS naming schema for rendition names
-  const objectNumber = request.params.id.replace(/\./g, "_");
-  const result = await damsService.getAssetByObjectNumber(objectNumber);
-
-  response.json(result);
-});
 
 app.use(function (req, res) {
   res.status(404).send("Error 404: Page not Found");

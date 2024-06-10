@@ -1,3 +1,6 @@
+/** Service responsible for fetching from the NetX DAMS to retrieve asset information for
+ * artwork and archival objects in the Barnes Collection
+ */
 const axios = require("axios");
 const {
   generateGetFolderByPathQuery,
@@ -5,16 +8,21 @@ const {
 const {
   generateGetAssetsByFolderQuery,
 } = require("./generateGetAssetsByFolderQuery");
+const {
+  generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
+} = require("./generateAssetQuery");
+const { transformInvno } = require("../../utils/transformInvno");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
 const NETX_ENABLED =
-  process.env.REACT_APP_NETX_ENABLED === "false" ? false : true || false;
+  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
 const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
+const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
 const SYNC_TYPE_FIELD = "Sync Type";
-const SYNC_TYPE_VALUE = "Archives Sync";
+const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
 
 async function makeNetXRequest(query) {
   const response = await axios({
@@ -30,11 +38,15 @@ async function makeNetXRequest(query) {
   return response;
 }
 
-async function getAssetByObjectNumber(objectNumber) {
+async function getAssetByObjectNumber(rawObjectNumber) {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
     return [];
   }
+
+  // We need to transform the object number because it is formatted
+  // differently in the folder paths in NetX
+  const objectNumber = transformInvno(rawObjectNumber);
 
   // We'll check to see if we there exists a sub-folder
   // for this Object Number at the below folder path
@@ -58,6 +70,15 @@ async function getAssetByObjectNumber(objectNumber) {
   return assets;
 }
 
+async function getAssetsByObjectIds(objectIds) {
+  const assetQueryResponse = await makeNetXRequest(
+    generateGetAssetsBySearchQuery(objectIds)
+  );
+
+  const assets = groupAssets(assetQueryResponse.data.result.results);
+  return assets;
+}
+
 function sortAssets(assets) {
   if (assets.length === 0) {
     return assets;
@@ -67,14 +88,10 @@ function sortAssets(assets) {
   // We'll search through the results and put the Primary Display Image first
   // Look for the primary image. It is possible there is none specified
   const primaryImageIndex = assets.findIndex((asset) => {
-    const primaryDisplayImageList =
-      asset.attributes && asset.attributes[PRIMARY_DISPLAY_IMAGE_TMS_FIELD]
-        ? asset.attributes[PRIMARY_DISPLAY_IMAGE_TMS_FIELD]
-        : [];
-    const primaryDisplayImageValue =
-      primaryDisplayImageList && primaryDisplayImageList.length
-        ? primaryDisplayImageList[0]
-        : "";
+    const primaryDisplayImageValue = getValueFromNetXAttribute(
+      PRIMARY_DISPLAY_IMAGE_TMS_FIELD,
+      asset
+    );
 
     return primaryDisplayImageValue === PRIMARY_DISPLAY_IMAGE_VALUE;
   });
@@ -89,28 +106,73 @@ function sortAssets(assets) {
   // Let's check if there's any Archive Correspondence and shift it to the end
   const { artworks, archives } = sortedAssets.reduce(
     (acc, asset) => {
-      const syncTypeList =
-        asset.attributes && asset.attributes[SYNC_TYPE_FIELD]
-          ? asset.attributes[SYNC_TYPE_FIELD]
-          : [];
-      const syncTypeValue =
-        syncTypeList && syncTypeList.length ? syncTypeList[0] : "";
+      const syncTypeValue = getValueFromNetXAttribute(SYNC_TYPE_FIELD, asset);
 
-      if (syncTypeValue === SYNC_TYPE_VALUE) {
+      // It's an archive
+      if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
         acc.archives.push(asset);
-      } else {
-        acc.artworks.push(asset);
+        return acc;
       }
 
+      // Otherwise, it's an artwork
+      acc.artworks.push(asset);
       return acc;
     },
     { artworks: [], archives: [] }
   );
 
   // Combine the two lists with the Archival Correspondences to the end
-  return [...artworks, ...archives];
+  return artworks.concat(archives);
+}
+
+function groupAssets(assets) {
+  const groupedAssets = assets.reduce((collector, asset) => {
+    const { attributes } = asset;
+    if (!attributes) {
+      return collector;
+    }
+
+    const objectId = getValueFromNetXAttribute(OBJECT_ID_TMS_FIELD, asset);
+    if (!objectId) {
+      return collector;
+    }
+
+    // Store this asset in a list under the Object ID of the asset
+    if (!collector[objectId]) {
+      collector[objectId] = [];
+    }
+    collector[objectId].push(asset);
+
+    return collector;
+  }, {});
+
+  // Now that we have all the assets, let's sort the primary image to be first
+  const sortedGroupedAssets = Object.entries(groupedAssets).reduce(
+    (collector, [objectId, assets]) => {
+      collector[objectId] = sortAssets(assets);
+      return collector;
+    },
+    {}
+  );
+
+  return sortedGroupedAssets;
+}
+
+function getValueFromNetXAttribute(attributeName, asset) {
+  const attributeValueList =
+    asset.attributes && asset.attributes[attributeName]
+      ? asset.attributes[attributeName]
+      : [];
+  const attributeValue =
+    attributeValueList && attributeValueList.length
+      ? attributeValueList[0]
+      : "";
+
+  return attributeValue;
 }
 
 module.exports = {
   getAssetByObjectNumber,
+  getAssetsByObjectIds,
+  getValueFromAsset: getValueFromNetXAttribute,
 };

@@ -16,6 +16,7 @@ import { uniqBy } from "lodash";
 
 const RAW_OPTION = [
   "id",
+  "invno",
   "title",
   "people",
   "medium",
