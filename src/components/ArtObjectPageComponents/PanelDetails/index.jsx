@@ -349,7 +349,11 @@ class PanelDetails extends Component {
   render() {
     const { object, prints } = this.props;
     const { imageLoaded, activeImageIndex, thumbnailsOpen } = this.state;
-    const { renditions } = object;
+
+    // Filter out renditions for now
+    object.renditions = object.renditions?.filter(
+      (rendition) => rendition.fileName.includes(".tif") === false
+    );
 
     const printAvailable = prints.find(({ id }) => id === object.invno);
 
@@ -370,7 +374,7 @@ class PanelDetails extends Component {
             setActiveImageIndex={this.setActiveImageIndex}
           />
           {/** Uncomment this once we have thumbnail data. */}
-          {Boolean(imageLoaded) && renditions?.length ? (
+          {Boolean(imageLoaded) && object.renditions?.length ? (
             <Thumbnails
               activeImageIndex={activeImageIndex}
               setActiveImageIndex={this.setActiveImageIndex}
