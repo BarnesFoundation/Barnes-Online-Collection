@@ -72,7 +72,7 @@ export const getImageURLFromRendition = (rendition, imageType) => {
     return "";
   }
 
-  return `${ui.netxBaseURL}${imageProxy.file.url}/`;
+  return `${ui.netxBaseURL}${imageProxy.file.url}`;
 };
 
 /** Determines if renditions from NetX should be rendered

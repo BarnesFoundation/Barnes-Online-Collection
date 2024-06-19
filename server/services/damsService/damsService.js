@@ -12,6 +12,7 @@ const {
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
 } = require("./generateAssetQuery");
 const { transformInvno } = require("../../utils/transformInvno");
+const { ajaxSettings } = require("jquery");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -23,6 +24,7 @@ const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
 const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
 const SYNC_TYPE_FIELD = "Sync Type";
 const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
+const POSSIBLE_ARCHIVAL_IMAGE_STRING = "AR-";
 
 async function makeNetXRequest(query) {
   const response = await axios({
@@ -79,44 +81,73 @@ async function getAssetsByObjectIds(objectIds) {
   return assets;
 }
 
+/** This function sorts the primary display image, in an assets list, to the front of the list */
 function sortAssets(assets) {
   if (assets.length === 0) {
     return assets;
   }
   const sortedAssets = [...assets];
+  const archivalImageViews = [];
 
   // We'll search through the results and put the Primary Display Image first
   // Look for the primary image. It is possible there is none specified
   const primaryImageIndex = assets.findIndex((asset) => {
-    const primaryDisplayImageValue = getValueFromNetXAttribute(
-      PRIMARY_DISPLAY_IMAGE_TMS_FIELD,
-      asset
-    );
-
-    return primaryDisplayImageValue === PRIMARY_DISPLAY_IMAGE_VALUE;
+    return isAssetPrimaryDisplayImage(asset);
   });
 
-  // Shift the primary image to the front
+  // Shift the primary image to the front by removing it from where
+  // it currently exists, and inserting it at the start
   if (primaryImageIndex > -1) {
     const primaryResultItem = sortedAssets.splice(primaryImageIndex, 1)[0];
     sortedAssets.unshift(primaryResultItem);
+
+    // Collect the archival images from the views list
+    primaryResultItem.views.forEach((view) => {
+      if (view.name.includes(POSSIBLE_ARCHIVAL_IMAGE_STRING)) {
+        archivalImageViews.push(view);
+      }
+    }, []);
   }
 
   // By now, we've sorted the primary image to the front, if one existed
   // Let's check if there's any Archive Correspondence and shift it to the end
   const { artworks, archives } = sortedAssets.reduce(
-    (acc, asset) => {
+    (collector, asset) => {
       const syncTypeValue = getValueFromNetXAttribute(SYNC_TYPE_FIELD, asset);
 
       // It's an archive
       if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
-        acc.archives.push(asset);
-        return acc;
+        const matchingArchivalImageOverride = archivalImageViews.find(
+          (view) => {
+            return view.name === asset.name;
+          }
+        );
+
+        // This means there's an archival image stored in the "views" list
+        // of the Primary Display Image. So we need to render the image URL located
+        // in that file instead of the URL of the "Zoom" proxy - since it has the permissions
+        // problem. This below code adjusts the proxies list to replace the URL
+        if (matchingArchivalImageOverride) {
+          const updatedAssetProxiesList = asset.proxies.slice(0, -1);
+          updatedAssetProxiesList.push({
+            name: "Zoom",
+            file: matchingArchivalImageOverride.file,
+          });
+          collector.archives.push({
+            ...asset,
+            proxies: updatedAssetProxiesList,
+          });
+          return collector;
+        }
+
+        // Otherwise, no matching archival image - so no need
+        // to do any adjustments of image URLs
+        collector.archives.push(asset);
+        return collector;
       }
 
-      // Otherwise, it's an artwork
-      acc.artworks.push(asset);
-      return acc;
+      collector.artworks.push(asset);
+      return collector;
     },
     { artworks: [], archives: [] }
   );
@@ -125,6 +156,7 @@ function sortAssets(assets) {
   return artworks.concat(archives);
 }
 
+/** This function groups a flat list of assets by Object ID and returns the mapped object */
 function groupAssets(assets) {
   const groupedAssets = assets.reduce((collector, asset) => {
     const { attributes } = asset;
@@ -146,7 +178,8 @@ function groupAssets(assets) {
     return collector;
   }, {});
 
-  // Now that we have all the assets, let's sort the primary image to be first
+  // Now that we have all the assets grouped by Object ID
+  // For each object, let's sort the primary image to be first in its asset list
   const sortedGroupedAssets = Object.entries(groupedAssets).reduce(
     (collector, [objectId, assets]) => {
       collector[objectId] = sortAssets(assets);
@@ -169,6 +202,15 @@ function getValueFromNetXAttribute(attributeName, asset) {
       : "";
 
   return attributeValue;
+}
+
+function isAssetPrimaryDisplayImage(asset) {
+  const primaryDisplayImageValue = getValueFromNetXAttribute(
+    PRIMARY_DISPLAY_IMAGE_TMS_FIELD,
+    asset
+  );
+
+  return primaryDisplayImageValue === PRIMARY_DISPLAY_IMAGE_VALUE;
 }
 
 module.exports = {
