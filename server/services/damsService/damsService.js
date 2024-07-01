@@ -44,6 +44,11 @@ async function getAssetByObjectNumber(rawObjectNumber) {
     return [];
   }
 
+  // Handle some edge-case where the object number is not valid
+  if (!rawObjectNumber) {
+    return [];
+  }
+
   // We need to transform the object number because it is formatted
   // differently in the folder paths in NetX
   const objectNumber = transformInvno(rawObjectNumber);
