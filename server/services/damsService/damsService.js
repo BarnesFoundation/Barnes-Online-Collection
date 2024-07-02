@@ -86,7 +86,7 @@ async function getAssetsByObjectIds(objectIds) {
   } catch (error) {
     console.error(
       `[DAMSService][getAssetsByObjectIds] Failed with grouping assets
-      assetQueryResponse: ${JSON.stringify(assetQueryResponse)}
+      assetQueryResponse: ${JSON.stringify(assetQueryResponse.data)}
       objectIds: ${JSON.stringify(objectIds)}
       `,
       error
