@@ -80,8 +80,19 @@ async function getAssetsByObjectIds(objectIds) {
     generateGetAssetsBySearchQuery(objectIds)
   );
 
-  const assets = groupAssets(assetQueryResponse.data.result.results);
-  return assets;
+  try {
+    const assets = groupAssets(assetQueryResponse.data.result.results);
+    return assets;
+  } catch (error) {
+    console.error(
+      `[DAMSService][getAssetsByObjectIds] Failed with grouping assets
+      assetQueryResponse: ${JSON.stringify(assetQueryResponse)}
+      objectIds: ${JSON.stringify(objectIds)}
+      `,
+      error
+    );
+    return {};
+  }
 }
 
 function sortAssets(assets) {
