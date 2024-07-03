@@ -12,6 +12,7 @@ const {
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
 } = require("./generateAssetQuery");
 const { transformInvno } = require("../../utils/transformInvno");
+const { splitArray } = require("../../utils/splitArray");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -44,6 +45,11 @@ async function getAssetByObjectNumber(rawObjectNumber) {
     return [];
   }
 
+  // Handle some edge-case where the object number is not valid
+  if (!rawObjectNumber) {
+    return [];
+  }
+
   // We need to transform the object number because it is formatted
   // differently in the folder paths in NetX
   const objectNumber = transformInvno(rawObjectNumber);
@@ -71,11 +77,39 @@ async function getAssetByObjectNumber(rawObjectNumber) {
 }
 
 async function getAssetsByObjectIds(objectIds) {
-  const assetQueryResponse = await makeNetXRequest(
-    generateGetAssetsBySearchQuery(objectIds)
+  /** Inner function for allowing for chunking of the requests
+   * to NetX for fetching assets by search query - since it currently
+   * seems like anything more than 100 object ids requested in a single
+   * query causes NetX to error out
+   */
+  async function getAssetsByObjectIdsInner(objectIdChunk) {
+    try {
+      const assetQueryResponse = await makeNetXRequest(
+        generateGetAssetsBySearchQuery(objectIdChunk)
+      );
+
+      return assetQueryResponse.data.result.results;
+    } catch (error) {
+      console.error(
+        `[DAMSService][getAssetsByObjectIdsInner] Failed getting assets by search query
+      objectIds: ${JSON.stringify(objectIds)}
+      `,
+        error
+      );
+
+      return [];
+    }
+  }
+
+  // Split the object ids list into lists of 100 and process those chunks
+  const objectIdChunks = splitArray(objectIds, 100);
+  const assetPromises = objectIdChunks.map((chunk) =>
+    getAssetsByObjectIdsInner(chunk)
   );
 
-  const assets = groupAssets(assetQueryResponse.data.result.results);
+  // Group all these assets but from a flat list
+  const assetResults = await Promise.all(assetPromises);
+  const assets = groupAssets(assetResults.flat());
   return assets;
 }
 
