@@ -94,8 +94,6 @@ class RouteSwitcher extends Component {
     const primaryRouteLocation =
       this.primaryRouteLocation || this.props.location;
 
-    console.log("primary route location", primaryRouteLocation);
-
     return (
       <div>
         <Switch location={primaryRouteLocation}>
