@@ -486,8 +486,8 @@ app.get("/objects", (req, res, next) => {
 
 app.get("/objects/:id", (req, res, next) => {
   const titleSlug = getTitleSlug(req.params.id);
-  // account for slash at end
-  const newUrl = req.url.replace(/[/]*$/i, `/${titleSlug}/`);
+  const url = new URL(req.url, process.env.REACT_APP_CANONICAL_ROOT);
+  const newUrl = url.pathname + "/" + titleSlug + url.search;
 
   return res.redirect(301, newUrl);
 });

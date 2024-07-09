@@ -94,11 +94,14 @@ class RouteSwitcher extends Component {
     const primaryRouteLocation =
       this.primaryRouteLocation || this.props.location;
 
+    console.log("primary route location", primaryRouteLocation);
+
     return (
       <div>
         <Switch location={primaryRouteLocation}>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/objects/" component={LandingPage} />
+          <Route exact path="/objects/:id" component={ArtObjectPage} />
           <Route exact path="/objects/:id/:title" component={ArtObjectPage} />
           <Route
             exact
