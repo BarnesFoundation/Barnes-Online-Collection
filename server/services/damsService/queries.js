@@ -113,8 +113,58 @@ function generateGetFolderByPathQuery(objectNumberWithUnderscores) {
   };
 }
 
+const COLLECTION_WEBSITE_ENSEMBLES_API_FOLDER = 34173;
+function generateGetAssetsByFileNameQuery(fileName) {
+  return {
+    jsonrpc: "2.0",
+    id: `GET_ASSETS_BY_QUERY_FILE_NAME${Date.now()}`,
+    method: "getAssetsByQuery",
+    params: [
+      {
+        query: [
+          // Query statement is to scope the search within our "Collection Website API" folder in NetX
+          {
+            operator: "and",
+            folder: {
+              folderId: COLLECTION_WEBSITE_ENSEMBLES_API_FOLDER,
+              recursive: true,
+            },
+          },
+          // We only want jpgs
+          {
+            operator: "and",
+            exact: {
+              field: "fileName",
+              value: fileName,
+            },
+          },
+        ],
+      },
+      {
+        sort: {
+          field: "name",
+          order: "asc",
+        },
+        page: {
+          startIndex: 0,
+          size: 2,
+        },
+        data: [
+          "asset.id",
+          "asset.base",
+          "asset.attributes",
+          "asset.file",
+          "asset.proxies",
+          "asset.folders",
+        ],
+      },
+    ],
+  };
+}
+
 module.exports = {
   generateGetAssetsByQuery,
   generateGetAssetsByFolderQuery,
   generateGetFolderByPathQuery,
+  generateGetAssetsByFileNameQuery,
 };

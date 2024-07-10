@@ -7,6 +7,7 @@ const {
   generateGetAssetsByFolderQuery,
   generateGetFolderByPathQuery,
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
+  generateGetAssetsByFileNameQuery,
 } = require("./queries");
 
 const { transformInvno } = require("../../utils/transformInvno");
@@ -15,6 +16,8 @@ const {
   sortAssets,
   groupAssets,
   getValueFromNetXAttribute,
+  getAssetFileNameForDAMS,
+  getImageURLFromRendition,
 } = require("./utils");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
@@ -110,8 +113,38 @@ async function getAssetsByObjectIds(objectIds) {
   return assets;
 }
 
+async function getEnsembleImageUrl(ensembleIndex) {
+  // In case we want to disable interaction with NetX for now
+  if (NETX_ENABLED === false) {
+    return null;
+  }
+
+  const assetFileName = getAssetFileNameForDAMS(ensembleIndex);
+  if (!assetFileName) {
+    return null;
+  }
+
+  const fileNameQuery = generateGetAssetsByFileNameQuery(assetFileName);
+  const searchQueryResponse = await makeNetXRequest(fileNameQuery);
+
+  // Our query ended up with empty results - so no ensemble image url is possible
+  const results = searchQueryResponse.data.result.results;
+  if (!results.length) {
+    return null;
+  }
+
+  const ensembleImageResult = results[0];
+  const ensembleImageUrl = getImageURLFromRendition(
+    ensembleImageResult,
+    "Zoom"
+  );
+
+  return ensembleImageUrl;
+}
+
 module.exports = {
   getAssetByObjectNumber,
   getAssetsByObjectIds,
   getValueFromAsset: getValueFromNetXAttribute,
+  getEnsembleImageUrl,
 };
