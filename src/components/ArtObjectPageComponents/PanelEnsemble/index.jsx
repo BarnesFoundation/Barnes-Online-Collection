@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   getRoomAndTitleText,
+  getAssetFileNameForDAMS,
   ENSEMBLE_IMAGE_URL,
 } from "../../../ensembleIndex";
 import ArtObjectGrid from "../../../components/ArtObjectGrid/ArtObjectGrid";
@@ -44,6 +45,7 @@ class PanelEnsemble extends Component {
     }
 
     const roomAndTitleText = getRoomAndTitleText(ensembleIndex);
+    const assetFileName = getAssetFileNameForDAMS(ensembleIndex);
 
     return (
       <div className="art-object-page__panel-ensemble">
