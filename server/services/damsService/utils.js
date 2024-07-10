@@ -35,7 +35,8 @@ function sortAssets(assets) {
 
       // It's an archive
       if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
-        acc.archives.push(asset);
+        // TODO - Remove the below commentation once we fix archive image rendering
+        // acc.archives.push(asset);
         return acc;
       }
 
