@@ -74,6 +74,8 @@ export const getAssetFileNameForDAMS = (ensembleIndex) => {
 
   const { roomTitle, wallTitle } = ensembleInfo;
 
+  // For the below ensemble indices, we can construct the file name using the room and wall
+
   // Handle "Main Room", since all other room titles are "Room [X]"
   // Ensemble indexes 1, 2, 3, 4 are "Main Room", which is Room 1
   let roomNumber;
