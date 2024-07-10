@@ -7,11 +7,15 @@ const memoryCache = require("memory-cache");
 const { oneWeek } = require("../constants/times");
 
 const OBJECT_CACHE = "OBJECT_CACHE";
+const ENSEMBLE_CACHE = "ENSEMBLE_CACHE";
 
 function makeObjectCacheKey(objectNumber) {
   return `${OBJECT_CACHE}_${objectNumber}`;
 }
 
+function makeEnsembleCacheKey(ensembleIndex) {
+  return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
+}
 async function getAssetByObjectNumber(objectNumber) {
   const objectCacheKey = makeObjectCacheKey(objectNumber);
   const objectAsset = memoryCache.get(objectCacheKey);
@@ -68,6 +72,25 @@ async function getAssetsForArtworks(artworks) {
   return [artworkWithDAMSInformation];
 }
 
+async function getEnsembleImageUrl(ensembleIndex) {
+  const ensembleCacheKey = makeEnsembleCacheKey(ensembleIndex);
+  const ensembleImageUrl = memoryCache.get(ensembleCacheKey);
+
+  // If we don't have a cached version of this ensemble image url
+  // let's fetch it live, store it, then return it
+  if (!ensembleImageUrl) {
+    const liveEnsembleImageUrl = await damsService.getEnsembleImageUrl(
+      ensembleIndex
+    );
+    memoryCache.put(ensembleCacheKey, liveEnsembleImageUrl, oneWeek);
+
+    return liveEnsembleImageUrl;
+  }
+
+  // Otherwise, we have the cached version
+  return ensembleImageUrl;
+}
+
 /** Utility function to integrate new fields into the artwork object
  * using information provided by rendition assets from the DAMS
  *
@@ -89,7 +112,7 @@ async function addAssetFields(artwork) {
 
   // Get the ensemble image url to use from the DAMS
   const ensembleImageUrl = artwork._source.ensembleIndex
-    ? await damsService.getEnsembleImageUrl(artwork._source.ensembleIndex)
+    ? await getEnsembleImageUrl(artwork._source.ensembleIndex)
     : null;
 
   // Add new fields based on information from the DAMS
