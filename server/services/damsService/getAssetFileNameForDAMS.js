@@ -15,14 +15,13 @@ const GALLERY_FOYER_INDICES = ["101", "102", "103", "104"];
 const LOWER_LOBBY_INDICES = ["105", "106", "107", "108"];
 const LE_BONHEUR_INDEX = "93";
 
-
 /** Handles accepting an Ensemble Index and returning the asset file name
  * using the Room Name and Wall Title
- * 
+ *
  * This doesn't apply for all ensemble indices, and as seen with the above special indices
  * we don't always generate the asset file name using the Room Name and Wall Title.
  * For some indices, we just return a static string.
- * 
+ *
  * This is a best-attempt right - we could possibly end up storing the Asset ID for each
  * ensemble image asset from NetX in a map, but that means we always have to update the map
  * whenever the Asset is replaced or modified, which this current implementation at least allow us
