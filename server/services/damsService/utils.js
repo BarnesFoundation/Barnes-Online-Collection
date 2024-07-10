@@ -4,6 +4,10 @@ const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
 const SYNC_TYPE_FIELD = "Sync Type";
 const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
 
+/** Sorts a list of assets to resulting in the Primary Display Image being
+ * shown first in the asset list, followed by non-Primary Display Images
+ * and lastly, Archive Images being placed at the end of list
+ */
 function sortAssets(assets) {
   if (assets.length === 0) {
     return assets;
@@ -51,6 +55,9 @@ function sortAssets(assets) {
   return artworks.concat(archives);
 }
 
+/** Groups a flat list of assets to a map of `{ [objectId: string]: Array<asset>} `
+ * where a list of several asset images can belong to each object id
+ */
 function groupAssets(assets) {
   const groupedAssets = assets.reduce((collector, asset) => {
     const { attributes } = asset;
