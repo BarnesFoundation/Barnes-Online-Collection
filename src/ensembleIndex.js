@@ -57,9 +57,8 @@ export const getAssetFileNameForDAMS = (ensembleIndex) => {
     return `${ENSEMBLE_IMAGE_PREFIX} joy of life n${ENSEMBLE_IMAGE_POSTFIX}`;
   }
 
-  // TODO - Fix Mezzanine file names. FOr now, we'll return null
   if (MEZZANINE_INDICES.includes(ensembleIndex)) {
-    return null;
+    return `${ENSEMBLE_IMAGE_PREFIX} mezzanine 3qtr right${ENSEMBLE_IMAGE_POSTFIX}`;
   }
 
   // TODO - Fix Gallery Foyer file names. FOr now, we'll return null
@@ -67,9 +66,8 @@ export const getAssetFileNameForDAMS = (ensembleIndex) => {
     return null;
   }
 
-  // TODO - Fix Lower Lobby file names. FOr now, we'll return null
   if (LOWER_LOBBY_INDICES.includes(ensembleIndex)) {
-    return null;
+    return `lower level cases.jpg`;
   }
 
   const { roomTitle, wallTitle } = ensembleInfo;
