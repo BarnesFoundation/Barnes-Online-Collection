@@ -1,3 +1,6 @@
+const { ui } = require("../../../src/shared/config");
+const { getAssetFileNameForDAMS } = require("./getAssetFileNameForDAMS");
+
 const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
 const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
 const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
@@ -104,8 +107,23 @@ function getValueFromNetXAttribute(attributeName, asset) {
   return attributeValue;
 }
 
+/** Gets the URL for rendering the specified image type from the rendition
+ * Somehow consolidate with the FE counterpart
+ */
+const getImageURLFromRendition = (asset, imageType) => {
+  const imageProxy = asset.proxies.find((proxy) => proxy.name === imageType);
+
+  if (!imageProxy) {
+    return "";
+  }
+
+  return `${ui.netxBaseURL}${imageProxy.file.url}/`;
+};
+
 module.exports = {
   sortAssets,
   groupAssets,
   getValueFromNetXAttribute,
+  getAssetFileNameForDAMS,
+  getImageURLFromRendition,
 };
