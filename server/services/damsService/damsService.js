@@ -2,28 +2,25 @@
  * artwork and archival objects in the Barnes Collection
  */
 const axios = require("axios");
-const {
-  generateGetFolderByPathQuery,
-} = require("./generateGetFolderByPathQuery");
+
 const {
   generateGetAssetsByFolderQuery,
-} = require("./generateGetAssetsByFolderQuery");
-const {
+  generateGetFolderByPathQuery,
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
-} = require("./generateAssetQuery");
+} = require("./queries");
+
 const { transformInvno } = require("../../utils/transformInvno");
 const { splitArray } = require("../../utils/splitArray");
+const {
+  sortAssets,
+  groupAssets,
+  getValueFromNetXAttribute,
+} = require("./utils");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
 const NETX_ENABLED =
   (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
-
-const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
-const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
-const OBJECT_ID_TMS_FIELD = "ObjectID (TMS)";
-const SYNC_TYPE_FIELD = "Sync Type";
-const ARCHIVE_SYNC_TYPE_VALUE = "Archives Sync";
 
 async function makeNetXRequest(query) {
   const response = await axios({
@@ -111,98 +108,6 @@ async function getAssetsByObjectIds(objectIds) {
   const assetResults = await Promise.all(assetPromises);
   const assets = groupAssets(assetResults.flat());
   return assets;
-}
-
-function sortAssets(assets) {
-  if (assets.length === 0) {
-    return assets;
-  }
-  const sortedAssets = [...assets];
-
-  // We'll search through the results and put the Primary Display Image first
-  // Look for the primary image. It is possible there is none specified
-  const primaryImageIndex = assets.findIndex((asset) => {
-    const primaryDisplayImageValue = getValueFromNetXAttribute(
-      PRIMARY_DISPLAY_IMAGE_TMS_FIELD,
-      asset
-    );
-
-    return primaryDisplayImageValue === PRIMARY_DISPLAY_IMAGE_VALUE;
-  });
-
-  // Shift the primary image to the front
-  if (primaryImageIndex > -1) {
-    const primaryResultItem = sortedAssets.splice(primaryImageIndex, 1)[0];
-    sortedAssets.unshift(primaryResultItem);
-  }
-
-  // By now, we've sorted the primary image to the front, if one existed
-  // Let's check if there's any Archive Correspondence and shift it to the end
-  const { artworks, archives } = sortedAssets.reduce(
-    (acc, asset) => {
-      const syncTypeValue = getValueFromNetXAttribute(SYNC_TYPE_FIELD, asset);
-
-      // It's an archive
-      if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
-        acc.archives.push(asset);
-        return acc;
-      }
-
-      // Otherwise, it's an artwork
-      acc.artworks.push(asset);
-      return acc;
-    },
-    { artworks: [], archives: [] }
-  );
-
-  // Combine the two lists with the Archival Correspondences to the end
-  return artworks.concat(archives);
-}
-
-function groupAssets(assets) {
-  const groupedAssets = assets.reduce((collector, asset) => {
-    const { attributes } = asset;
-    if (!attributes) {
-      return collector;
-    }
-
-    const objectId = getValueFromNetXAttribute(OBJECT_ID_TMS_FIELD, asset);
-    if (!objectId) {
-      return collector;
-    }
-
-    // Store this asset in a list under the Object ID of the asset
-    if (!collector[objectId]) {
-      collector[objectId] = [];
-    }
-    collector[objectId].push(asset);
-
-    return collector;
-  }, {});
-
-  // Now that we have all the assets, let's sort the primary image to be first
-  const sortedGroupedAssets = Object.entries(groupedAssets).reduce(
-    (collector, [objectId, assets]) => {
-      collector[objectId] = sortAssets(assets);
-      return collector;
-    },
-    {}
-  );
-
-  return sortedGroupedAssets;
-}
-
-function getValueFromNetXAttribute(attributeName, asset) {
-  const attributeValueList =
-    asset.attributes && asset.attributes[attributeName]
-      ? asset.attributes[attributeName]
-      : [];
-  const attributeValue =
-    attributeValueList && attributeValueList.length
-      ? attributeValueList[0]
-      : "";
-
-  return attributeValue;
 }
 
 module.exports = {

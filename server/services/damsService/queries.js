@@ -76,6 +76,45 @@ function generateGetAssetsByQuery(objectIdList) {
   };
 }
 
+function generateGetAssetsByFolderQuery(folderId) {
+  return {
+    id: "13576991614322",
+    method: "getAssetsByFolder",
+    params: [
+      folderId,
+      false,
+      {
+        data: [
+          "asset.id",
+          "asset.base",
+          "asset.attributes",
+          "asset.file",
+          "asset.proxies",
+          "asset.views",
+        ],
+      },
+    ],
+    jsonrpc: "2.0",
+  };
+}
+
+const COLLECTION_WEBSITE_API_FOLDER_NAME = "Collection Website API";
+function generateGetFolderByPathQuery(objectNumberWithUnderscores) {
+  return {
+    id: "13576991614322",
+    method: "getFolderByPath",
+    params: [
+      `${COLLECTION_WEBSITE_API_FOLDER_NAME}/${objectNumberWithUnderscores}`,
+      {
+        data: ["folder.id", "folder.base", "folder.children"],
+      },
+    ],
+    jsonrpc: "2.0",
+  };
+}
+
 module.exports = {
   generateGetAssetsByQuery,
+  generateGetAssetsByFolderQuery,
+  generateGetFolderByPathQuery,
 };
