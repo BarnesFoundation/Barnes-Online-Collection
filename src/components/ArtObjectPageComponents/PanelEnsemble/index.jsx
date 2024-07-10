@@ -46,6 +46,7 @@ class PanelEnsemble extends Component {
 
     const roomAndTitleText = getRoomAndTitleText(ensembleIndex);
     const assetFileName = getAssetFileNameForDAMS(ensembleIndex);
+    console.log(`assetFileName`, assetFileName);
 
     return (
       <div className="art-object-page__panel-ensemble">

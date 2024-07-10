@@ -28,6 +28,7 @@ export const getRoomName = (ensembleIndex) => {
 
 const ENSEMBLE_IMAGE_PREFIX = "bfp";
 const ENSEMBLE_IMAGE_POSTFIX = "_clean.jpg";
+
 const MAIN_ROOM_INDICES = ["1", "2", "3", "4"];
 const BALCONY_MAP = {
   ["94"]: `${ENSEMBLE_IMAGE_PREFIX} balcony east${ENSEMBLE_IMAGE_POSTFIX}`,
@@ -36,6 +37,9 @@ const BALCONY_MAP = {
 };
 
 const MEZZANINE_INDICES = ["97", "98", "99", "100"];
+const GALLERY_FOYER_INDICES = ["101", "102", "103", "104"];
+const LOWER_LOBBY_INDICES = ["105", "106", "107", "108"];
+const LE_BONHEUR_INDEX = "93";
 
 export const getAssetFileNameForDAMS = (ensembleIndex) => {
   const ensembleInfo = ENSEMBLE[ensembleIndex];
@@ -47,8 +51,24 @@ export const getAssetFileNameForDAMS = (ensembleIndex) => {
     return BALCONY_MAP[ensembleIndex];
   }
 
+  // Handle special case for Joy of Life asset file name
+  // since the file name does not contain a room number
+  if (ensembleIndex === LE_BONHEUR_INDEX) {
+    return `${ENSEMBLE_IMAGE_PREFIX} joy of life n${ENSEMBLE_IMAGE_POSTFIX}`;
+  }
+
   // TODO - Fix Mezzanine file names. FOr now, we'll return null
   if (MEZZANINE_INDICES.includes(ensembleIndex)) {
+    return null;
+  }
+
+  // TODO - Fix Gallery Foyer file names. FOr now, we'll return null
+  if (GALLERY_FOYER_INDICES.includes(ensembleIndex)) {
+    return null;
+  }
+
+  // TODO - Fix Lower Lobby file names. FOr now, we'll return null
+  if (LOWER_LOBBY_INDICES.includes(ensembleIndex)) {
     return null;
   }
 
@@ -72,8 +92,6 @@ export const getAssetFileNameForDAMS = (ensembleIndex) => {
   const assetFileName = ENSEMBLE_IMAGE_PREFIX.concat(roomNumber)
     .concat(wallCharacter.toLowerCase())
     .concat(ENSEMBLE_IMAGE_POSTFIX);
-
-  console.log(`assetFileName`, assetFileName);
 
   return assetFileName;
 };
