@@ -44,6 +44,8 @@ class PanelEnsemble extends Component {
     }
 
     const roomAndTitleText = getRoomAndTitleText(ensembleIndex);
+    const ensembleImageUrl =
+      this.props.object.ensembleImageUrl || ENSEMBLE_IMAGE_URL(ensembleIndex);
 
     return (
       <div className="art-object-page__panel-ensemble">
@@ -51,7 +53,7 @@ class PanelEnsemble extends Component {
           <div className="">
             <img
               className="art-object__image-page-centered"
-              src={ENSEMBLE_IMAGE_URL(ensembleIndex)}
+              src={ensembleImageUrl}
               alt={roomAndTitleText}
             />
           </div>
