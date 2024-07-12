@@ -1,3 +1,7 @@
+/** Map of [ensembleIndex] to a
+ * - Room title to be displayed
+ * - Wall title to be displayed
+ */
 const ENSEMBLE = {
   1: {
     roomTitle: "Main Room",
