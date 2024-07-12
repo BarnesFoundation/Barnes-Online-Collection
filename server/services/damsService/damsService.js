@@ -16,7 +16,6 @@ const {
   sortAssets,
   groupAssets,
   getValueFromNetXAttribute,
-  getAssetFileNameForDAMS,
   getImageURLFromRendition,
 } = require("./utils");
 
@@ -119,12 +118,7 @@ async function getEnsembleImageUrl(ensembleIndex) {
     return null;
   }
 
-  const assetFileName = getAssetFileNameForDAMS(ensembleIndex);
-  if (!assetFileName) {
-    return null;
-  }
-
-  const fileNameQuery = generateGetAssetsByFileNameQuery(assetFileName);
+  const fileNameQuery = generateGetAssetsByFileNameQuery(ensembleIndex);
   const searchQueryResponse = await makeNetXRequest(fileNameQuery);
 
   // Our query ended up with empty results - so no ensemble image url is possible

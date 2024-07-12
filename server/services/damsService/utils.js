@@ -1,5 +1,4 @@
 const { ui } = require("../../../src/shared/config");
-const { getAssetFileNameForDAMS } = require("./getAssetFileNameForDAMS");
 
 const PRIMARY_DISPLAY_IMAGE_TMS_FIELD = "Primary Display Image (TMS)";
 const PRIMARY_DISPLAY_IMAGE_VALUE = "Primary Display Image";
@@ -42,8 +41,7 @@ function sortAssets(assets) {
 
       // It's an archive
       if (syncTypeValue === ARCHIVE_SYNC_TYPE_VALUE) {
-        // TODO - Remove the below commentation once we fix archive image rendering
-        // acc.archives.push(asset);
+        acc.archives.push(asset);
         return acc;
       }
 
@@ -124,6 +122,5 @@ module.exports = {
   sortAssets,
   groupAssets,
   getValueFromNetXAttribute,
-  getAssetFileNameForDAMS,
   getImageURLFromRendition,
 };

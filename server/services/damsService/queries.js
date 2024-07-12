@@ -114,7 +114,7 @@ function generateGetFolderByPathQuery(objectNumberWithUnderscores) {
 }
 
 const COLLECTION_WEBSITE_ENSEMBLES_API_FOLDER = 34173;
-function generateGetAssetsByFileNameQuery(fileName) {
+function generateGetAssetsByFileNameQuery(ensembleIndex) {
   return {
     jsonrpc: "2.0",
     id: `GET_ASSETS_BY_QUERY_FILE_NAME${Date.now()}`,
@@ -130,12 +130,12 @@ function generateGetAssetsByFileNameQuery(fileName) {
               recursive: true,
             },
           },
-          // We only want jpgs
+          // We only want this ensemble index image
           {
             operator: "and",
             exact: {
-              field: "fileName",
-              value: fileName,
+              attribute: "API Ensemble Index",
+              value: ensembleIndex,
             },
           },
         ],
