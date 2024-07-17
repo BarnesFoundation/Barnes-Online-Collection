@@ -15,14 +15,16 @@ const IMPORTANT_LINKS = [
 const REGULAR_LINKS = [
   { href: MAIN_WEBSITE_DOMAIN + "/about", text: "About" },
   { href: MAIN_WEBSITE_DOMAIN + "/support", text: "Support" },
-  { href: MAIN_WEBSITE_DOMAIN + "/teachers", text: "Teachers" },
+  { href: MAIN_WEBSITE_DOMAIN + "/school-programs", text: "School Programs" },
   {
     href: MAIN_WEBSITE_DOMAIN + "/about/careers-and-volunteering",
     text: "Careers",
   },
+  { href: MAIN_WEBSITE_DOMAIN + "/research", text: "Research" },
   { href: MAIN_WEBSITE_DOMAIN + "/press", text: "Press" },
   { href: "https://shop.barnesfoundation.org/", text: "Shop" },
   { href: MAIN_WEBSITE_DOMAIN + "/host-an-event", text: "Host an Event" },
+  { href: MAIN_WEBSITE_DOMAIN + "/plan-your-visit/group-visits", text: "Group Visits" },
   { href: MAIN_WEBSITE_DOMAIN + "/whats-on/arboretum", text: "Arboretum" },
 ];
 
