@@ -282,7 +282,7 @@ export const Footer = ({ hasHours }) => {
                   <span className="region">PA</span>{" "}
                   <span className="postcode">19130</span>
                   <br />
-                  Phone: <span className="tel">215-278-7000</span>
+                  <span className="tel">215.278.7000</span>
                   <a
                     className="a-brand-link g-footer__address__link"
                     href="https://www.google.com/maps?cid=5415126767940621792"
@@ -298,6 +298,7 @@ export const Footer = ({ hasHours }) => {
                   <br />
                   Members: 10am – 5pm
                   <br />
+                  Closed July 4, Thanksgiving, and Christmas 
                 </p>
               </div>
               <Newsletter />
