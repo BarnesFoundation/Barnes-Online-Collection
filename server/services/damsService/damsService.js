@@ -100,8 +100,8 @@ async function getAssetsByObjectIds(objectIds) {
     }
   }
 
-  // Split the object ids list into lists of 100 and process those chunks
-  const objectIdChunks = splitArray(objectIds, 100);
+  // Split the object ids list into lists of 75 and process those chunks
+  const objectIdChunks = splitArray(objectIds, 75);
   const assetPromises = objectIdChunks.map((chunk) =>
     getAssetsByObjectIdsInner(chunk)
   );
