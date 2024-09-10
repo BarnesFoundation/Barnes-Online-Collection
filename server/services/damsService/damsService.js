@@ -100,8 +100,8 @@ async function getAssetsByObjectIds(objectIds) {
     }
   }
 
-  // Split the object ids list into lists of 100 and process those chunks
-  const objectIdChunks = splitArray(objectIds, 100);
+  // Split the object ids list into lists of 75 and process those chunks
+  const objectIdChunks = splitArray(objectIds, 75);
   const assetPromises = objectIdChunks.map((chunk) =>
     getAssetsByObjectIdsInner(chunk)
   );
@@ -122,8 +122,9 @@ async function getEnsembleImageUrl(ensembleIndex) {
   const searchQueryResponse = await makeNetXRequest(fileNameQuery);
 
   // Our query ended up with empty results - so no ensemble image url is possible
-  const results = searchQueryResponse.data.result.results;
-  if (!results.length) {
+  const results =
+    searchQueryResponse.data.result && searchQueryResponse.data.result.results;
+  if (!results || !results.length) {
     return null;
   }
 
