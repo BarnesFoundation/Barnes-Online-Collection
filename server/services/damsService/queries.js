@@ -134,7 +134,7 @@ function generateGetAssetsByFileNameQuery(ensembleIndex) {
           {
             operator: "and",
             exact: {
-              attribute: "API Ensemble Index",
+              attribute: "API Ensemble Index (TMS)",
               value: ensembleIndex,
             },
           },

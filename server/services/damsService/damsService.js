@@ -122,8 +122,9 @@ async function getEnsembleImageUrl(ensembleIndex) {
   const searchQueryResponse = await makeNetXRequest(fileNameQuery);
 
   // Our query ended up with empty results - so no ensemble image url is possible
-  const results = searchQueryResponse.data.result.results;
-  if (!results.length) {
+  const results =
+    searchQueryResponse.data.result && searchQueryResponse.data.result.results;
+  if (!results || !results.length) {
     return null;
   }
 
