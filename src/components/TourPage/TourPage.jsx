@@ -32,6 +32,7 @@ export default class TourPage extends React.Component {
       heroImgSrc: null,
       metaImgUrl: null,
       loading: true,
+      includeRoomNumbers: true,
     };
   }
 
@@ -78,6 +79,7 @@ export default class TourPage extends React.Component {
           tourData,
           objects,
           roomOrder,
+          includeRoomNumbers: tourData.includeRoomNumbers,
         });
       } catch (error) {
         console.log(

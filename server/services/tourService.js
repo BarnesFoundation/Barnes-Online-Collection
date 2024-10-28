@@ -86,6 +86,7 @@ const getTour = async (request, response) => {
           slug
           subtitle
           title
+          includeRoomNumbers
           collectionObjects {
             heroImage
             id
