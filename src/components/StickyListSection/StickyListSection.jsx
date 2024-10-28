@@ -38,19 +38,22 @@ export class StickyListSection extends Component {
           this.section = section;
         }}
       >
-        <div
-          className={classnames("sticky-list-section__header", {
-            fixed: this.state.isFixed,
-            absolute: this.state.isAbsolute,
-          })}
-          ref={(header) => {
-            this.header = header;
-          }}
-        >
-          <div className="sticky-list-section__header-text">
-            {this.props.header}
+        {this.props.header && (
+          <div
+            className={classnames("sticky-list-section__header", {
+              fixed: this.state.isFixed,
+              absolute: this.state.isAbsolute,
+            })}
+            ref={(header) => {
+              this.header = header;
+            }}
+          >
+            <div className="sticky-list-section__header-text">
+              {this.props.header}
+            </div>
           </div>
-        </div>
+        )}
+
         <div className="sticky-list-section__content">
           {this.props.content.map((obj) => {
             return <ObjectCard object={obj} key={obj.id} />;
