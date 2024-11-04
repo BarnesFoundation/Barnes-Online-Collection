@@ -32,6 +32,7 @@ describe("formatTourData", () => {
   it("should properly format room data object", () => {
     expect(tourData[0].header).toBe("Main Room");
     expect(tourData[0].content.length).toBe(1);
+    expect(tourData.length).toBe(5);
   });
 
   it("should not include rooms without objects", () => {
@@ -45,5 +46,12 @@ describe("formatTourData", () => {
         "Second Floor Balcony West (Room 24)",
       ])
     );
+  });
+
+  it("should properly format room data object when room numbers are not included", () => {
+    const tourData = formatTourData(DEFAULT_ROOM_ORDER, objects, objectsCopy, false);
+    expect(tourData[0].header).toBe(undefined);
+    expect(tourData[0].content.length).toBe(8);
+    expect(tourData.length).toBe(1);
   });
 });

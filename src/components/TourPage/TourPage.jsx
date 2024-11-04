@@ -32,6 +32,7 @@ export default class TourPage extends React.Component {
       heroImgSrc: null,
       metaImgUrl: null,
       loading: true,
+      includeRoomNumbers: true,
     };
   }
 
@@ -63,7 +64,8 @@ export default class TourPage extends React.Component {
         const sections = formatTourData(
           roomOrder,
           objects,
-          tourData.collectionObjects
+          tourData.collectionObjects,
+          tourData.includeRoomNumbers
         );
 
         this.setState({
@@ -78,6 +80,7 @@ export default class TourPage extends React.Component {
           tourData,
           objects,
           roomOrder,
+          includeRoomNumbers: tourData.includeRoomNumbers,
         });
       } catch (error) {
         console.log(
@@ -96,14 +99,15 @@ export default class TourPage extends React.Component {
 
   // Handles updating the copy based on the selected language
   handleSelectLanguage(language) {
-    const { tourData, roomOrder, objects } = this.state;
+    const { tourData, roomOrder, objects, includeRoomNumbers } = this.state;
     const requestedLocale = languageToLocale(language);
 
     if (requestedLocale === "en") {
       const sections = formatTourData(
         roomOrder,
         objects,
-        tourData.collectionObjects
+        tourData.collectionObjects,
+        includeRoomNumbers
       );
 
       this.setState({
@@ -127,7 +131,12 @@ export default class TourPage extends React.Component {
           return { ...collectionObj, ...locale };
         }
       );
-      const sections = formatTourData(roomOrder, objects, collectionObjects);
+      const sections = formatTourData(
+        roomOrder,
+        objects,
+        collectionObjects,
+        includeRoomNumbers
+      );
 
       this.setState({
         ...this.state,
