@@ -82,22 +82,46 @@ export const sortObjectsByRoom = (objects, objectsCopy) => {
  * Given an array with the room numbers in order and an array of art objects,
  * returns an array of room objects with the section header and art object content.
  */
-export const formatTourData = (roomOrder, objects, objectsCopy) => {
+export const formatTourData = (
+  roomOrder,
+  objects,
+  objectsCopy,
+  includeRoomNumbers = true
+) => {
   const tourData = [];
-  // Get dictionary of art objects organized by room number
-  const objByRoom = sortObjectsByRoom(objects, objectsCopy);
-  // TODO: handle when not all rooms are included
-  // console.log(objByRoom)
-  for (const room of roomOrder) {
-    // If the dictionary has a key for that room, add it to the tourData array
-    if (objByRoom[room]) {
-      // Set the header and content for each tour section
-      const roomData = {
-        header: room,
-        content: objByRoom[room],
-      };
-      tourData.push(roomData);
+
+  if (includeRoomNumbers) {
+    // Get dictionary of art objects organized by room number
+    const objByRoom = sortObjectsByRoom(objects, objectsCopy);
+    // TODO: handle when not all rooms are included
+    for (const room of roomOrder) {
+      // If the dictionary has a key for that room, add it to the tourData array
+      if (objByRoom[room]) {
+        // Set the header and content for each tour section
+        const roomData = {
+          header: room,
+          content: objByRoom[room],
+        };
+        tourData.push(roomData);
+      }
     }
+  } else {
+    const content = [];
+
+    for (const object of objects) {
+      // Find the associated copy
+      const objectCopy = objectsCopy.find(
+        (copy) =>
+          object._source.invno.toLowerCase() ===
+          copy.inventoryNumber.toLowerCase()
+      );
+      // Parse the object to set required attributes
+      const parsedObject = parseTourObject(object._source, objectCopy);
+      // Add object to room array
+      content.push(parsedObject);
+    }
+
+    tourData.push({ header: undefined, content });
   }
 
   return tourData;
