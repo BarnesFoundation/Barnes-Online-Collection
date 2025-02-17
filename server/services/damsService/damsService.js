@@ -38,25 +38,30 @@ async function makeNetXRequest(query) {
   return response;
 }
 
-async function getAssetByObjectNumber(rawObjectNumber) {
+/** Retrieves the asset images related to a provided object number from NetX
+ * This includes the Primary Display Image, other non-primary images, and archive rendition images
+ *
+ * @param objectNumber - The normal object number for the artwork
+ */
+async function getAssetByObjectNumber(objectNumber) {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
     return [];
   }
 
   // Handle some edge-case where the object number is not valid
-  if (!rawObjectNumber) {
+  if (!objectNumber) {
     return [];
   }
 
   // We need to transform the object number because it is formatted
   // differently in the folder paths in NetX
-  const objectNumber = transformInvno(rawObjectNumber);
+  const netxObjectNumber = transformInvno(objectNumber);
 
   // We'll check to see if we there exists a sub-folder
   // for this Object Number at the below folder path
   const folderQueryResponse = await makeNetXRequest(
-    generateGetFolderByPathQuery(objectNumber)
+    generateGetFolderByPathQuery(netxObjectNumber)
   );
   const result = folderQueryResponse.data.result || null;
 
@@ -75,6 +80,13 @@ async function getAssetByObjectNumber(rawObjectNumber) {
   return assets;
 }
 
+/** Given a list of object ids, this function retrieves the assets for each object id from NetX by doing the following
+ * 1. Splits the total list of requested object ids into sub-arrays of 75 items in length
+ * 2. Requests out to NetX to retrieve the asset information for each object id
+ * 3. Returns a map of the object ids to the asset information for each object id
+ *
+ * @param objectIds - The list of object ids to retrieve asset information for from NetX
+ */
 async function getAssetsByObjectIds(objectIds) {
   /** Inner function for allowing for chunking of the requests
    * to NetX for fetching assets by search query - since it currently
