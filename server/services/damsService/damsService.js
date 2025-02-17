@@ -112,6 +112,13 @@ async function getAssetsByObjectIds(objectIds) {
   return assets;
 }
 
+/** For a provided ensemble index number, this function makes a
+ * request out to NetX to retrieve the image URL for the
+ * image assigned to that particular ensemble index.
+ *
+ * It will return null if no image is defined for the ensemble index.
+ * @param ensembleIndex - The number index assigned to a room/wall - i.e. to represent the ensemble
+ */
 async function getEnsembleImageUrl(ensembleIndex) {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
