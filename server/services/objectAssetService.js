@@ -10,16 +10,16 @@ const OBJECT_CACHE = "OBJECT_CACHE";
 const ENSEMBLE_CACHE = "ENSEMBLE_CACHE";
 
 /** Creates the cache key for the given object number
- * @param objectNumber - The object number of the artwork
- * @returns The cache key for the artwork
+ * @param {string} objectNumber - The object number of the artwork
+ * @returns {string} The cache key for the artwork
  */
 function makeObjectCacheKey(objectNumber) {
   return `${OBJECT_CACHE}_${objectNumber}`;
 }
 
 /** Creates the cache key for the given ensemble index
- * @param ensembleIndex - The ensemble index
- * @returns The cache key for the ensemble index
+ * @param {number} ensembleIndex - The ensemble index
+ * @returns {string} The cache key for the ensemble index
  */
 function makeEnsembleCacheKey(ensembleIndex) {
   return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
@@ -31,7 +31,7 @@ function makeEnsembleCacheKey(ensembleIndex) {
  * If the assets are available in the cache, then they're pulled from there. Otherwise, a fresh
  * request is made to NetX to retrieve the assets, after which they're placed into the cache
  *
- * @param objectNumber - The object number of the artwork to retrieve assets for
+ * @param {string} objectNumber - The object number of the artwork to retrieve assets for
  * @returns The assets for the artwork, pulled from either the cache or NetX directly
  */
 async function getAssetByObjectNumber(objectNumber) {
@@ -90,6 +90,15 @@ async function getAssetsForArtworks(artworks) {
   return [artworkWithDAMSInformation];
 }
 
+/** Higher-level function for retrieving the ensemble image URL for a given ensemble index
+ * but with caching functionality implemented.
+ *
+ * If the ensemble image information is available in the cache, then they're pulled from there.
+ * Otherwise, a fresh request is made to NetX to retrieve the information, after which it is cached
+ *
+ * @param {number} ensembleIndex - The ensemble index to retrieve the image information for
+ * @returns {string} The information for the image associated with the ensemble index
+ */
 async function getEnsembleImageUrl(ensembleIndex) {
   const ensembleCacheKey = makeEnsembleCacheKey(ensembleIndex);
   const ensembleImageUrl = memoryCache.get(ensembleCacheKey);
