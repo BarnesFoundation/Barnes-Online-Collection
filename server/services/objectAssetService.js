@@ -9,13 +9,31 @@ const { oneWeek } = require("../constants/times");
 const OBJECT_CACHE = "OBJECT_CACHE";
 const ENSEMBLE_CACHE = "ENSEMBLE_CACHE";
 
+/** Creates the cache key for the given object number
+ * @param objectNumber - The object number of the artwork
+ * @returns The cache key for the artwork
+ */
 function makeObjectCacheKey(objectNumber) {
   return `${OBJECT_CACHE}_${objectNumber}`;
 }
 
+/** Creates the cache key for the given ensemble index
+ * @param ensembleIndex - The ensemble index
+ * @returns The cache key for the ensemble index
+ */
 function makeEnsembleCacheKey(ensembleIndex) {
   return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
 }
+
+/** Higher-level function for retrieving the NetX assets for an artwork given its object number
+ * but with caching functionality implemented.
+ *
+ * If the assets are available in the cache, then they're pulled from there. Otherwise, a fresh
+ * request is made to NetX to retrieve the assets, after which they're placed into the cache
+ *
+ * @param objectNumber - The object number of the artwork to retrieve assets for
+ * @returns The assets for the artwork, pulled from either the cache or NetX directly
+ */
 async function getAssetByObjectNumber(objectNumber) {
   const objectCacheKey = makeObjectCacheKey(objectNumber);
   const objectAsset = memoryCache.get(objectCacheKey);
@@ -40,10 +58,10 @@ async function getAssetsForArtworks(artworks) {
     return artworks;
   }
 
-  const artworksInformation = artworks.map((result) => {
+  const artworksInformation = artworks.map((artwork) => {
     return {
-      objectId: result._source.id,
-      objectNumber: result._source.invno ? result._source.invno : null,
+      objectId: artwork._source.id,
+      objectNumber: artwork._source.invno ? artwork._source.invno : null,
     };
   });
 
