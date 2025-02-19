@@ -11,6 +11,11 @@ const performSearch = async (body) => {
   });
 };
 
+const getCount = async () => {
+  const countResponse = await esClient.count({ index: esIndex });
+  return countResponse.count;
+};
+
 const search = async (searchQuery) => {
   try {
     const searchResponse = await performSearch(searchQuery);
@@ -42,4 +47,5 @@ module.exports = {
   search,
   getObjectById,
   performSearch,
+  getCount,
 };
