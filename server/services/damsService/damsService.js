@@ -39,7 +39,8 @@ async function makeNetXRequest(query) {
 }
 
 /** Retrieves the asset images related to a provided object number from NetX
- * This includes the Primary Display Image, other non-primary images, and archive rendition images
+ * This includes the Primary Display Image, other non-primary images, and
+ * most importantly, any archive rendition images for the object
  *
  * @param objectNumber - The normal object number for the artwork
  */

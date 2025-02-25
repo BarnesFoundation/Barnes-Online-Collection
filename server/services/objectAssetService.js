@@ -137,10 +137,9 @@ async function getAssetsForArtworks(artworks) {
   // archival renditions to be included in our response. So we're fine
   // with just this general assets call to get the display image
   if (artworks.length > 1) {
-    const artworkAssetsMap = await getAssetByObjectIds(artworksInformation);
-
     // We iterate through each artwork from the original list and provide its renditions
     // by looking them up in the artwork assets map using the Object ID
+    const artworkAssetsMap = await getAssetByObjectIds(artworksInformation);
     const artworksWithAssets = artworks.map((artwork) => {
       // Get the assets for this artwork and store them in our cache for later reuse
       const artworkAssets = artworkAssetsMap[artwork._source.id];
