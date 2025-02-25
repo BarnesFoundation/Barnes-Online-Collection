@@ -25,6 +25,10 @@ function makeEnsembleCacheKey(ensembleIndex) {
   return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
 }
 
+function setArtworkInCache(objectCacheKey, objectAsset) {
+  memoryCache.put(objectCacheKey, objectAsset, oneWeek);
+}
+
 /** Higher-level function for retrieving the NetX assets for an artwork given its object number
  * but with caching functionality implemented.
  *
@@ -44,7 +48,7 @@ async function getAssetByObjectNumber(objectNumber) {
     const liveObjectAsset = await damsService.getAssetByObjectNumber(
       objectNumber
     );
-    memoryCache.put(objectCacheKey, liveObjectAsset, oneWeek);
+    setArtworkInCache(objectCacheKey, liveObjectAsset);
 
     return liveObjectAsset;
   }
@@ -53,32 +57,98 @@ async function getAssetByObjectNumber(objectNumber) {
   return objectAsset;
 }
 
+/** Higher-level function for retrieving the NetX assets for multiple artworks given a list of artwork objects
+ * but with caching functionality implemented.
+ *
+ * If the assets are available in the cache, then they're pulled from there. Otherwise, a fresh
+ * request is made to NetX to retrieve the assets, after which they're placed into the cache
+ *
+ * @param {Array<{objectId: string, objectNumber: string}>} artworksInformation - The object number of the artwork to retrieve assets for
+ * @returns The assets for the artwork, pulled from either the cache or NetX directly
+ */
+async function getAssetByObjectIds(artworksInformation) {
+  const artworkAssetsMap = {};
+  const artworksToRequest = [];
+
+  // Collect the requested artwork information from the cache, or identify as needing to be requested
+  artworksInformation.forEach((artwork) => {
+    const objectCacheKey = makeObjectCacheKey(artwork.objectNumber);
+    const cachedObject = memoryCache.get(objectCacheKey);
+
+    // We have the cached version of the object, so let's persist it
+    if (cachedObject) {
+      artworkAssetsMap[artwork.objectId] = cachedObject;
+    }
+    // Otherwise, we need to request it from the DAMS
+    else {
+      console.debug(
+        `[getAssetByObjectIds] Object Number ${artwork.objectNumber} do not yet exist in cache`
+      );
+      artworksToRequest.push(artwork);
+    }
+  });
+
+  const retrievedArtworkAssetsMap = await damsService.getAssetsByObjectIds(
+    artworksToRequest.map(({ objectId }) => objectId)
+  );
+
+  // We've retrieved the necessary artworks from the DAMS. Let's iterate through them
+  // to add them to the artwork assets map, but more importantly, cache them for the next request
+  artworksToRequest.forEach((artwork) => {
+    const objectCacheKey = makeObjectCacheKey(artwork.objectNumber);
+    const artworkAsset = retrievedArtworkAssetsMap[artwork.objectId];
+
+    if (artworkAsset) {
+      artworkAssetsMap[artwork.objectId] = artworkAsset;
+      setArtworkInCache(objectCacheKey, artworkAsset);
+    } else {
+      console.warn(
+        `[getAssetByObjectIds] Unable to fetch artwork assets from the DAMS for Object Number ${artwork.objectNumber}`
+      );
+
+      // We'll set an empty array to keep type-safetiness, but also to help ensure
+      // we don't continue to request out for artwork assets that do not exist
+      artworkAssetsMap[artwork.objectId] = [];
+      setArtworkInCache(objectCacheKey, []);
+    }
+  });
+
+  return artworkAssetsMap;
+}
+
 async function getAssetsForArtworks(artworks) {
   if (artworks.length === 0) {
     return artworks;
   }
 
-  const artworksInformation = artworks.map((artwork) => {
-    return {
-      objectId: artwork._source.id,
-      objectNumber: artwork._source.invno ? artwork._source.invno : null,
-    };
-  });
+  // The provided artworks are typically the full ElasticSearch response records
+  // We normalize them here to just contain the objectId and objectNumber
+  const artworksInformation = artworks.reduce((collector, artwork) => {
+    if (artwork._source.id) {
+      collector.push({
+        objectId: artwork._source.id,
+        objectNumber: artwork._source.invno ? artwork._source.invno : null,
+      });
+    }
+    return collector;
+  }, []);
 
   // If we're fetching multiple artworks - then we typically do not need
   // archival renditions to be included in our response. So we're fine
-  // with just this general assets call
+  // with just this general assets call to get the display image
   if (artworks.length > 1) {
-    const objectIds = artworksInformation
-      .map(({ objectId }) => objectId)
-      .filter((objectId) => objectId);
-    const artworkAssetsMap = await damsService.getAssetsByObjectIds(objectIds);
+    const artworkAssetsMap = await getAssetByObjectIds(artworksInformation);
 
-    return artworks.map((artwork) => {
-      artwork._source["renditions"] =
-        artworkAssetsMap[artwork._source.id] || [];
+    // We iterate through each artwork from the original list and provide its renditions
+    // by looking them up in the artwork assets map using the Object ID
+    const artworksWithAssets = artworks.map((artwork) => {
+      // Get the assets for this artwork and store them in our cache for later reuse
+      const artworkAssets = artworkAssetsMap[artwork._source.id];
+      artwork._source["renditions"] = artworkAssets;
       return artwork;
     });
+
+    return artworksWithAssets;
   }
 
   // Otherwise, we're fetching a single artwork object's renditions
