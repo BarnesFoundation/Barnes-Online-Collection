@@ -25,8 +25,23 @@ function makeEnsembleCacheKey(ensembleIndex) {
   return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
 }
 
-function setArtworkInCache(objectCacheKey, objectAsset) {
-  memoryCache.put(objectCacheKey, objectAsset, oneWeek);
+/** Sets the provided artwork asset into the cache
+ * @param {string} objectNumber - The object number for the artwork
+ * @returns {string} The cache key for the artwork, based on the object number
+ */
+function setArtworkInCache(objectNumber, artworkAsset) {
+  const objectCacheKey = makeObjectCacheKey(objectNumber);
+  memoryCache.put(objectCacheKey, artworkAsset, oneWeek);
+  return objectCacheKey;
+}
+
+/** Get the requested artwork asset from the artwork cache
+ * @param {string} objectNumber - The object number for the artwork
+ * @returns {} The artwork asset from the cache
+ */
+function getArtworkFromCache(objectNumber) {
+  const objectCacheKey = makeObjectCacheKey(objectNumber);
+  return memoryCache.get(objectCacheKey);
 }
 
 /** Higher-level function for retrieving the NetX assets for an artwork given its object number
@@ -39,22 +54,21 @@ function setArtworkInCache(objectCacheKey, objectAsset) {
  * @returns The assets for the artwork, pulled from either the cache or NetX directly
  */
 async function getAssetByObjectNumber(objectNumber) {
-  const objectCacheKey = makeObjectCacheKey(objectNumber);
-  const objectAsset = memoryCache.get(objectCacheKey);
+  const artworkAsset = getArtworkFromCache(objectNumber);
 
   // If we don't have a cached version of this object asset
   // let's fetch it live, store it, then return it
-  if (!objectAsset) {
+  if (!artworkAsset) {
     const liveObjectAsset = await damsService.getAssetByObjectNumber(
       objectNumber
     );
-    setArtworkInCache(objectCacheKey, liveObjectAsset);
+    setArtworkInCache(objectNumber, liveObjectAsset);
 
     return liveObjectAsset;
   }
 
   // Otherwise, we have the cached version
-  return objectAsset;
+  return artworkAsset;
 }
 
 /** Higher-level function for retrieving the NetX assets for multiple artworks given a list of artwork objects
@@ -72,44 +86,45 @@ async function getAssetByObjectIds(artworksInformation) {
 
   // Collect the requested artwork information from the cache, or identify as needing to be requested
   artworksInformation.forEach((artwork) => {
-    const objectCacheKey = makeObjectCacheKey(artwork.objectNumber);
-    const cachedObject = memoryCache.get(objectCacheKey);
+    const cachedArtwork = getArtworkFromCache(artwork.objectNumber);
 
     // We have the cached version of the object, so let's persist it
-    if (cachedObject) {
-      artworkAssetsMap[artwork.objectId] = cachedObject;
+    if (cachedArtwork) {
+      artworkAssetsMap[artwork.objectId] = cachedArtwork;
     }
     // Otherwise, we need to request it from the DAMS
     else {
       console.debug(
-        `[getAssetByObjectIds] Object Number ${artwork.objectNumber} do not yet exist in cache`
+        `[getAssetByObjectIds] Object Number ${artwork.objectNumber} does not yet exist in cache`
       );
       artworksToRequest.push(artwork);
     }
   });
 
+  const objectIds = artworksToRequest.map(({ objectId }) => objectId);
   const retrievedArtworkAssetsMap = await damsService.getAssetsByObjectIds(
-    artworksToRequest.map(({ objectId }) => objectId)
+    objectIds
   );
 
   // We've retrieved the necessary artworks from the DAMS. Let's iterate through them
   // to add them to the artwork assets map, but more importantly, cache them for the next request
   artworksToRequest.forEach((artwork) => {
-    const objectCacheKey = makeObjectCacheKey(artwork.objectNumber);
     const artworkAsset = retrievedArtworkAssetsMap[artwork.objectId];
 
     if (artworkAsset) {
       artworkAssetsMap[artwork.objectId] = artworkAsset;
-      setArtworkInCache(objectCacheKey, artworkAsset);
-    } else {
+      setArtworkInCache(artwork.objectNumber, artworkAsset);
+    }
+    // This means we did not receive assets we needed for an artwork, so we should log that
+    else {
       console.warn(
-        `[getAssetByObjectIds] Unable to fetch artwork assets from the DAMS for Object Number ${artwork.objectNumber}`
+        `[getAssetByObjectIds] Could not find artwork assets from the DAMS for Object Number ${artwork.objectNumber}`
       );
 
       // We'll set an empty array to keep type-safetiness, but also to help ensure
       // we don't continue to request out for artwork assets that do not exist
       artworkAssetsMap[artwork.objectId] = [];
-      setArtworkInCache(objectCacheKey, []);
+      setArtworkInCache(artwork.objectNumber, []);
     }
   });
 
@@ -144,6 +159,7 @@ async function getAssetsForArtworks(artworks) {
       // Get the assets for this artwork and store them in our cache for later reuse
       const artworkAssets = artworkAssetsMap[artwork._source.id];
       artwork._source["renditions"] = artworkAssets;
+
       return artwork;
     });
 
@@ -151,10 +167,17 @@ async function getAssetsForArtworks(artworks) {
   }
 
   // Otherwise, we're fetching a single artwork object's renditions
-  // so we do need archival renditions as part of our list
-  // and need some extra work to do so
+  // so we do need archive renditions as part of our asset information
+  // We make this copy of the artwork object to not mutate existing objects
   const artwork = { ...artworks[0] };
-  const artworkWithDAMSInformation = await addAssetFields(artwork);
+  const objectNumber = artwork._source.invno ? artwork._source.invno : null;
+
+  // Get the assets for this object number and use that to populate the fields
+  const artworkAssets = await getAssetByObjectNumber(objectNumber);
+  const artworkWithDAMSInformation = await addAssetFields(
+    artwork,
+    artworkAssets
+  );
 
   return [artworkWithDAMSInformation];
 }
@@ -196,11 +219,7 @@ async function getEnsembleImageUrl(ensembleIndex) {
  * - Published Provenance text
  * - Published Archives Reference text
  */
-async function addAssetFields(artwork) {
-  // Fetch the related asset from the DAMS
-  const objectNumber = artwork._source.invno ? artwork._source.invno : null;
-  const artworkAssets = await getAssetByObjectNumber(objectNumber);
-
+async function addAssetFields(artwork, artworkAssets) {
   // We store the renditions but also aditional fields needed
   // for single artwork rendering
   const renditions = artworkAssets || [];
