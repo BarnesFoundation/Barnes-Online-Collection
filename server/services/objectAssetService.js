@@ -2,7 +2,7 @@
  *  and caching the responses to avoid refetching object information that is needed frequently
  *
  */
-const damsService = require("./damsService");
+const { DAMSService } = require("./damsService");
 const memoryCache = require("memory-cache");
 const { oneWeek } = require("../constants/times");
 
@@ -59,7 +59,7 @@ async function getAssetByObjectNumber(objectNumber) {
   // If we don't have a cached version of this object asset
   // let's fetch it live, store it, then return it
   if (!artworkAsset) {
-    const liveObjectAsset = await damsService.getAssetByObjectNumber(
+    const liveObjectAsset = await DAMSService.getFullAssetByObjectNumber(
       objectNumber
     );
     setArtworkInCache(objectNumber, liveObjectAsset);
@@ -101,9 +101,9 @@ async function getAssetByObjectIds(artworksInformation) {
     }
   });
 
-  const objectIds = artworksToRequest.map(({ objectId }) => objectId);
-  const retrievedArtworkAssetsMap = await damsService.getAssetsByObjectIds(
-    objectIds
+  const objectIdsToRequest = artworksToRequest.map(({ objectId }) => objectId);
+  const retrievedArtworkAssetsMap = await DAMSService.getAssetsByObjectIds(
+    objectIdsToRequest
   );
 
   // We've retrieved the necessary artworks from the DAMS. Let's iterate through them
@@ -198,7 +198,7 @@ async function getEnsembleImageUrl(ensembleIndex) {
   // If we don't have a cached version of this ensemble image url
   // let's fetch it live, store it, then return it
   if (!ensembleImageUrl) {
-    const liveEnsembleImageUrl = await damsService.getEnsembleImageUrl(
+    const liveEnsembleImageUrl = await DAMSService.getEnsembleImageUrl(
       ensembleIndex
     );
     memoryCache.put(ensembleCacheKey, liveEnsembleImageUrl, oneWeek);
@@ -234,10 +234,10 @@ async function addAssetFields(artwork, artworkAssets) {
   artwork._source["ensembleImageUrl"] = ensembleImageUrl;
   artwork._source["renditions"] = renditions;
   artwork._source["publishedProvenance"] = rendition
-    ? damsService.getValueFromAsset("Published Provenance (TMS)", rendition)
+    ? DAMSService.getValueFromAsset("Published Provenance (TMS)", rendition)
     : "";
   artwork._source["publishedArchivesReference"] = rendition
-    ? damsService.getValueFromAsset(
+    ? DAMSService.getValueFromAsset(
         "Published Archives Reference (TMS)",
         rendition
       )

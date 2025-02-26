@@ -1,13 +1,4 @@
-const {
-  getAssetByObjectNumber,
-  getAssetsByObjectIds,
-  getValueFromAsset,
-  getEnsembleImageUrl,
-} = require("./damsService");
-
+const { DAMSService } = require("./damsService");
 module.exports = {
-  getAssetByObjectNumber,
-  getAssetsByObjectIds,
-  getValueFromAsset,
-  getEnsembleImageUrl,
+  DAMSService,
 };

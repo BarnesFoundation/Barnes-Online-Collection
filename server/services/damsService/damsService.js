@@ -44,7 +44,7 @@ async function makeNetXRequest(query) {
  *
  * @param objectNumber - The normal object number for the artwork
  */
-async function getAssetByObjectNumber(objectNumber) {
+async function getFullAssetByObjectNumber(objectNumber) {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
     return [];
@@ -87,6 +87,7 @@ async function getAssetByObjectNumber(objectNumber) {
  * 3. Returns a map of the object ids to the asset information for each object id
  *
  * @param objectIds - The list of object ids to retrieve asset information for from NetX
+ * @returns {{}} - A map of the Object IDs to their asset list
  */
 async function getAssetsByObjectIds(objectIds) {
   /** Inner function for allowing for chunking of the requests
@@ -157,9 +158,30 @@ async function getEnsembleImageUrl(ensembleIndex) {
   return ensembleImageUrl;
 }
 
-module.exports = {
-  getAssetByObjectNumber,
+/** Retrieves all archive assets from NetX. Archives are objects in NetX that have "Object Type (TMS)" set to "Archive Asset"
+ * As of the present, there are about 82 archive assets in NetX, though they may each be associated with 1-or-more artwork assets.
+ * This relation can be seen in the "folders" field of the archive assets response.
+ *
+ * This function will query NetX to retrieve all archive assets - not filtering for any particular Object Number/Object Id
+ * It will return the archive assets in a map with the identified Object Number and the archives associated to that
+ *
+ * @returns {{}} - A map of the Object IDs to their asset list
+ */
+async function getAllArchiveAssets() {
+  // In case we want to disable interaction with NetX for now
+  if (NETX_ENABLED === false) {
+    return {};
+  }
+}
+
+/** DAMS Service object to interact with the above functions */
+const DAMSService = {
+  getFullAssetByObjectNumber,
   getAssetsByObjectIds,
   getValueFromAsset: getValueFromNetXAttribute,
   getEnsembleImageUrl,
+};
+
+module.exports = {
+  DAMSService,
 };
