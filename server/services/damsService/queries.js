@@ -1,4 +1,7 @@
 const COLLECTION_WEBSITE_API_FOLDER = 646;
+const COLLECTION_WEBSITE_API_FOLDER_NAME = "Collection Website API";
+const COLLECTION_WEBSITE_ENSEMBLES_API_FOLDER = 34173;
+
 function generateGetAssetsByQuery(objectIdList) {
   const objectIdQueries = objectIdList.map((objectId) => {
     return {
@@ -98,7 +101,6 @@ function generateGetAssetsByFolderQuery(folderId) {
   };
 }
 
-const COLLECTION_WEBSITE_API_FOLDER_NAME = "Collection Website API";
 function generateGetFolderByPathQuery(objectNumberWithUnderscores) {
   return {
     id: "13576991614322",
@@ -113,7 +115,6 @@ function generateGetFolderByPathQuery(objectNumberWithUnderscores) {
   };
 }
 
-const COLLECTION_WEBSITE_ENSEMBLES_API_FOLDER = 34173;
 function generateGetAssetsByFileNameQuery(ensembleIndex) {
   return {
     jsonrpc: "2.0",
@@ -162,9 +163,63 @@ function generateGetAssetsByFileNameQuery(ensembleIndex) {
   };
 }
 
+function generateGetArchiveAssetsQuery() {
+  return {
+    jsonrpc: "2.0",
+    id: "GET_ASSETS_BY_QUERY_OBJECT_IDS",
+    method: "getAssetsByQuery",
+    params: [
+      {
+        query: [
+          {
+            operator: "and",
+            exact: {
+              attribute: "Object Type (TMS)",
+              value: "Archive Asset",
+            },
+          },
+          {
+            operator: "and",
+            exact: {
+              field: "fileType",
+              value: "jpg",
+            },
+          },
+          {
+            operator: "and",
+            folder: {
+              folderId: COLLECTION_WEBSITE_API_FOLDER,
+              recursive: true,
+            },
+          },
+        ],
+      },
+      {
+        sort: {
+          field: "name",
+          order: "asc",
+        },
+        page: {
+          startIndex: 0,
+          size: 3000,
+        },
+        data: [
+          "asset.id",
+          "asset.base",
+          "asset.attributes",
+          "asset.file",
+          "asset.proxies",
+          "asset.folders",
+        ],
+      },
+    ],
+  };
+}
+
 module.exports = {
   generateGetAssetsByQuery,
   generateGetAssetsByFolderQuery,
   generateGetFolderByPathQuery,
   generateGetAssetsByFileNameQuery,
+  generateGetArchiveAssetsQuery,
 };

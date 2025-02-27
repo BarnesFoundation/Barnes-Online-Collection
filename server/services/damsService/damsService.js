@@ -8,6 +8,7 @@ const {
   generateGetFolderByPathQuery,
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
   generateGetAssetsByFileNameQuery,
+  generateGetArchiveAssetsQuery,
 } = require("./queries");
 
 const { transformInvno } = require("../../utils/transformInvno");
@@ -18,6 +19,8 @@ const {
   getValueFromNetXAttribute,
   getImageURLFromRendition,
 } = require("./utils");
+
+const { transformNetXObjectNumber } = require("../../utils/transformInvno");
 
 const NETX_API_TOKEN = process.env.NETX_API_TOKEN;
 const NETX_BASE_URL = process.env.REACT_APP_NETX_BASE_URL;
@@ -165,11 +168,50 @@ async function getEnsembleImageUrl(ensembleIndex) {
  * This function will query NetX to retrieve all archive assets - not filtering for any particular Object Number/Object Id
  * It will return the archive assets in a map with the identified Object Number and the archives associated to that
  *
- * @returns {{}} - A map of the Object IDs to their asset list
+ * @returns {Promise<{}>} - A map of the Object IDs to their asset list
  */
 async function getAllArchiveAssets() {
   // In case we want to disable interaction with NetX for now
   if (NETX_ENABLED === false) {
+    return {};
+  }
+
+  try {
+    const archiveAssetQueryResponse = await makeNetXRequest(
+      generateGetArchiveAssetsQuery()
+    );
+
+    const archiveAssets = archiveAssetQueryResponse.data.result.results;
+    const archiveAssetsMap = archiveAssets.reduce((collector, archiveAsset) => {
+      const parentArtworkObjectFolders = archiveAsset.folders.filter(
+        (folder) => folder.parentId === 646
+      );
+
+      // Assuming we've found the information for this assets location in the Collection Website API folder
+      // We'll iterate through each parent artwork object folder, get the object number from the folder path
+      // and then store this archive asset to that object number, in the archive assets map
+      parentArtworkObjectFolders.forEach((collectionWebsiteFolder) => {
+        const [, damsObjectNumber] = collectionWebsiteFolder.path.split("/");
+        const objectNumber = transformNetXObjectNumber(damsObjectNumber);
+
+        // Initialize an empty array into the map for this object number
+        if (collector[objectNumber] === undefined) {
+          collector[objectNumber] = [];
+        }
+
+        collector[objectNumber].push(archiveAsset);
+      });
+
+      return collector;
+    }, {});
+
+    return archiveAssetsMap;
+  } catch (error) {
+    console.error(
+      `[DAMSService][getAllArchiveAssets] Failed to retrieve archive assets`,
+      error
+    );
+
     return {};
   }
 }
@@ -180,6 +222,7 @@ const DAMSService = {
   getAssetsByObjectIds,
   getValueFromAsset: getValueFromNetXAttribute,
   getEnsembleImageUrl,
+  getAllArchiveAssets,
 };
 
 module.exports = {
