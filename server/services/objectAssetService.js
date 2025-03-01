@@ -139,10 +139,10 @@ async function getAssetsForArtworks(artworks) {
   // The provided artworks are typically the full ElasticSearch response records
   // We normalize them here to just contain the objectId and objectNumber
   const artworksInformation = artworks.reduce((collector, artwork) => {
-    if (artwork._source.id) {
+    if (artwork._source.id && artwork._source.invno) {
       collector.push({
         objectId: artwork._source.id,
-        objectNumber: artwork._source.invno ? artwork._source.invno : null,
+        objectNumber: artwork._source.invno,
       });
     }
     return collector;
@@ -249,4 +249,8 @@ async function addAssetFields(artwork, artworkAssets) {
 module.exports = {
   getAssetByObjectNumber,
   getAssetsForArtworks,
+
+  // Cache related functions, mainly to be used by the NetX Sync Job
+  getArtworkFromCache,
+  setArtworkInCache,
 };
