@@ -47,6 +47,7 @@ const BASIC_FIELDS = [
   "medium",
   "imageOriginalSecret",
   "imageSecret",
+  "invno",
 ];
 
 module.exports = {

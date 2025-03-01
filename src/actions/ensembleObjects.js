@@ -68,6 +68,7 @@ export const getEnsembleObjects = (ensembleIndex) => {
       "imageOriginalSecret",
       "imageSecret",
       "ensembleIndex",
+      "invno",
     ])
     .build();
 
