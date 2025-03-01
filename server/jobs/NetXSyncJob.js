@@ -1,8 +1,10 @@
 const ElasticSearchService = require("../services/elasticSearchService");
+const ObjectAssetService = require("../services/objectAssetService");
+const { DAMSService } = require("../services/damsService");
 
 const LOG_PREFIX = `[NetXSyncJob]`;
 
-function generateQueryInput({ start, end }) {
+function generateQueryInput({ start, size }) {
   return {
     body: {
       sort: [
@@ -12,8 +14,8 @@ function generateQueryInput({ start, end }) {
           },
         },
       ],
-      from: 0,
-      size: 100,
+      from: start,
+      size: size,
       _source: ["_id", "id", "invno", "imageOriginalSecret", "imageSecret"],
       query: {
         bool: {
@@ -39,23 +41,54 @@ function generateQueryInput({ start, end }) {
  */
 async function main() {
   const totalRecordCount = await ElasticSearchService.getCount();
-  console.debug(`
+  console.log(`
     ${LOG_PREFIX} There are a total of ${totalRecordCount} records in ElasticSearch
     `);
 
   const recordBatchSize = 250;
   const numberOfBatches = Math.ceil(totalRecordCount / recordBatchSize);
-  console.debug(
+  console.log(
     `Job will process ${recordBatchSize} in ${numberOfBatches} batches `
   );
 
-  for (let i = 0; i <= recordBatchSize; i++) {
+  for (let i = 0; i <= numberOfBatches; i++) {
     const offset = i * recordBatchSize;
-    const queryForSet = generateQueryInput({ start: i, end: offset }).body;
+    const queryForSet = generateQueryInput({
+      start: offset,
+      size: recordBatchSize,
+    }).body;
+
+    // Query ElasticSearch for this set of artwork records
     const esResponse = await ElasticSearchService.search(queryForSet);
-    const artworkRecords = esResponse.hits.hits.map((item) => item._source);
-    console.log(artworkRecords);
+    const artworkRecords = esResponse.hits.hits;
+
+    // Call the `ObjectAssetService.getAssetsForArtworks` call. This will ensure we're
+    // retrieving the assets for the artworks from NetX, and caching them for the next time
+    // we need to access them
+    await ObjectAssetService.getAssetsForArtworks(artworkRecords);
   }
+  console.log(`Completed caching of ${totalRecordCount} artwork records`);
+
+  // Get the archive assets - there's less than a couple hundred of them
+  const archiveAssetsMap = await DAMSService.getAllArchiveAssets();
+  console.log(
+    `Beginning caching of ${
+      Object.keys(archiveAssetsMap).length
+    } archive assets into the artwork cache`
+  );
+
+  // Iterate through the map using the Object Number the asset is for
+  // Find the current cached artwork list and add the archive assets to it
+  Object.entries(archiveAssetsMap).forEach(([objectNumber, archiveAssets]) => {
+    // Look up the pre-existing assets for the object number
+    const cachedArtwork = ObjectAssetService.getArtworkFromCache(objectNumber);
+    const artworksWithArchiveAssets = [...cachedArtwork, ...archiveAssets];
+    ObjectAssetService.setArtworkInCache(
+      objectNumber,
+      artworksWithArchiveAssets
+    );
+  });
+  console.log(`Completed addition of archive assets into artwork cache`);
 }
 
 const NetXSyncJob = {
