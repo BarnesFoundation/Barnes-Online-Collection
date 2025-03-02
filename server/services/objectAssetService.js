@@ -134,6 +134,14 @@ async function getAssetByObjectIds(artworksInformation) {
   return artworkAssetsMap;
 }
 
+/** Retrieves information for the provided list of artworks, adding information about the artworks from the DAMS
+ * including archives information and a few additional fields.
+ *
+ * Caching functionality is implemented with this function to pull from cache, or pull live from the DAMS and caching them
+ *
+ * @param {Array<{objectId: string, objectNumber: string}>} artworks - The list of artworks as returned by ElasticSearch
+ * @returns The list of artworks with additional rendtions information from the DAMS
+ */
 async function getAssetsForArtworks(artworks) {
   if (artworks.length === 0) {
     return artworks;
@@ -253,7 +261,6 @@ async function addAssetFields(artwork, artworkAssets) {
 }
 
 module.exports = {
-  getAssetByObjectNumber,
   getAssetsForArtworks,
 
   // Cache related functions, mainly to be used by the NetX Sync Job
