@@ -59,6 +59,9 @@ async function getAssetByObjectNumber(objectNumber) {
   // If we don't have a cached version of this object asset
   // let's fetch it live, store it, then return it
   if (!artworkAsset) {
+    console.debug(
+      `[ObjectAssetService][getAssetByObjectNumber] Object number ${objectNumber} will be retrieved from DAMS`
+    );
     const liveObjectAsset = await DAMSService.getFullAssetByObjectNumber(
       objectNumber
     );
@@ -95,7 +98,7 @@ async function getAssetByObjectIds(artworksInformation) {
     // Otherwise, we need to request it from the DAMS
     else {
       console.debug(
-        `[getAssetByObjectIds] Object Number ${artwork.objectNumber} does not yet exist in cache`
+        `[getAssetByObjectIds] Object Number ${artwork.objectNumber} will be retrieved from the DAMS`
       );
       artworksToRequest.push(artwork);
     }
@@ -198,6 +201,9 @@ async function getEnsembleImageUrl(ensembleIndex) {
   // If we don't have a cached version of this ensemble image url
   // let's fetch it live, store it, then return it
   if (!ensembleImageUrl) {
+    console.debug(
+      `[ObjectAssetService][getEnsembleImageUrl] Ensembe Image URL for ensemble index ${ensembleIndex} will be retrieved from DAMS`
+    );
     const liveEnsembleImageUrl = await DAMSService.getEnsembleImageUrl(
       ensembleIndex
     );

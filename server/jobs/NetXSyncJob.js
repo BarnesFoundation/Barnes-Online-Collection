@@ -80,9 +80,11 @@ async function main() {
   // Iterate through the map using the Object Number the asset is for
   // Find the current cached artwork list and add the archive assets to it
   Object.entries(archiveAssetsMap).forEach(([objectNumber, archiveAssets]) => {
-    // Look up the pre-existing assets for the object number
+    // Look up the pre-existing assets for the object number and augment with archive assets
     const cachedArtwork = ObjectAssetService.getArtworkFromCache(objectNumber);
     const artworksWithArchiveAssets = [...cachedArtwork, ...archiveAssets];
+
+    // Set them into the cache
     ObjectAssetService.setArtworkInCache(
       objectNumber,
       artworksWithArchiveAssets
