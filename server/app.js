@@ -601,7 +601,7 @@ app.get("/api/eye-spy/:id", tourService.getTour);
 /** Endpoint for the NetX Sync Job */
 app.get("/api/job/NetXSyncJob", async (request, response) => {
   await NetXSyncJob.main();
-  response.json("Hello");
+  response.json("Completed run of NetX Sync Job");
 });
 
 app.use(function (req, res) {
