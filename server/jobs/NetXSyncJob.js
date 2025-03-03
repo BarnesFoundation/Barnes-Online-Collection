@@ -40,6 +40,9 @@ function generateQueryInput({ start, size }) {
  * Therefore, it makes sense to retrieve the Object IDs list from there, and then use it to query against NetX
  */
 async function main() {
+  console.log(`${LOG_PREFIX} Clearing Collection cache`);
+  ObjectAssetService.clearCache();
+
   const totalRecordCount = await ElasticSearchService.getCount();
   console.log(`
     ${LOG_PREFIX} There are a total of ${totalRecordCount} records in ElasticSearch

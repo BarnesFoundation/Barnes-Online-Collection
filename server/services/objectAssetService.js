@@ -9,6 +9,14 @@ const { oneWeek } = require("../constants/times");
 const OBJECT_CACHE = "OBJECT_CACHE";
 const ENSEMBLE_CACHE = "ENSEMBLE_CACHE";
 
+/** Clears out all entries from the memory cache including
+ * - Artwork object entries
+ * - Ensemble entries
+ */
+function clearCache() {
+  memoryCache.clear();
+}
+
 /** Creates the cache key for the given object number
  * @param {string} objectNumber - The object number of the artwork
  * @returns {string} The cache key for the artwork
@@ -266,4 +274,5 @@ module.exports = {
   // Cache related functions, mainly to be used by the NetX Sync Job
   getArtworkFromCache,
   setArtworkInCache,
+  clearCache,
 };
