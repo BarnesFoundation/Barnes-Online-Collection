@@ -222,4 +222,7 @@ module.exports = {
   generateGetFolderByPathQuery,
   generateGetAssetsByFileNameQuery,
   generateGetArchiveAssetsQuery,
+
+  // Folder IDs
+  COLLECTION_WEBSITE_API_FOLDER,
 };

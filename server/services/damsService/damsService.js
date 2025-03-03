@@ -9,6 +9,7 @@ const {
   generateGetAssetsByQuery: generateGetAssetsBySearchQuery,
   generateGetAssetsByFileNameQuery,
   generateGetArchiveAssetsQuery,
+  COLLECTION_WEBSITE_API_FOLDER,
 } = require("./queries");
 
 const { transformInvno } = require("../../utils/transformInvno");
@@ -183,8 +184,10 @@ async function getAllArchiveAssets() {
 
     const archiveAssets = archiveAssetQueryResponse.data.result.results;
     const archiveAssetsMap = archiveAssets.reduce((collector, archiveAsset) => {
+      // Get only assets that are in the Collection Website API folder. It's an array so
+      // we do this just to be extra precise about only Collection Website API items
       const parentArtworkObjectFolders = archiveAsset.folders.filter(
-        (folder) => folder.parentId === 646
+        (folder) => folder.parentId === COLLECTION_WEBSITE_API_FOLDER
       );
 
       // Assuming we've found the information for this assets location in the Collection Website API folder
