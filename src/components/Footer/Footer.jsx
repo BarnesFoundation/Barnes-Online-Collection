@@ -209,11 +209,10 @@ export const Footer = ({ hasHours }) => {
             <div className="m-block__column">
               <p className="color-medium">
                 The Barnes Foundation collection online is made possible by
-                generous support <br className="large-only" />
-                from The John S. and James L. Knight Foundation as part of the
+                generous support from the Knight Foundation as part of the
                 Knight Center for Digital Innovation in Audience Engagement at
                 the Barnes. Additional funders of digital initiatives include
-                Betsy Z. and Edward E. Cohen.
+                Betsy Z. and Edward E. Cohen and the Wind Innovation Fund.
               </p>
               <div className="brand-links">
                 <a
