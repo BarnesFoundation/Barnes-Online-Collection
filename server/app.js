@@ -129,11 +129,14 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// redirect http to https
-if (process.env.NODE_ENV === "production") {
+// redirect http to https — gated behind FORCE_HTTPS (off by default). App Runner / CloudFront terminate
+// TLS at the edge and forward HTTP to the container; an unconditional redirect here 301s the platform
+// health check and fails deployment. Leave FORCE_HTTPS unset behind those; the edge already enforces TLS.
+if (process.env.NODE_ENV === "production" && process.env.FORCE_HTTPS === "true") {
   app.enable("trust proxy");
   app.use(function (req, res, next) {
     if (
+      req.path !== "/health" &&
       req.headers["x-forwarded-proto"] &&
       req.headers["x-forwarded-proto"].toLowerCase() === "http"
     ) {
@@ -216,17 +219,15 @@ function getObjectDescriptors(objectID) {
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => {
-      const hits = response.data.hits.hits;
-      const hitSource = hits.length ? hits[0]._source : {};
-
-      return hitSource;
+  // In-process (was self-HTTP to canonicalRoot) — avoids an internet round-trip and works without egress.
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => {
+      const hits = data.hits.hits;
+      return hits.length ? hits[0]._source : {};
     })
     .catch((error) => {
       console.error(`[error] getObjectDescriptors:`, error.message);
-      console.error(error);
     });
 }
 
@@ -249,9 +250,9 @@ function getRelatedObjects(objectID) {
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => response.data.hits.hits)
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => data.hits.hits)
     .catch((error) => console.error(error.message));
 }
 
@@ -394,21 +395,13 @@ const getObject = (id) => {
 
   body = body.query("match", "_id", id).build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, {
-      params: {
-        body: body,
-      },
-    })
-    .then((response) => {
-      const objects = response.data.hits.hits.map((object) =>
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => {
+      const objects = data.hits.hits.map((object) =>
         Object.assign({}, object._source, { id: object._id })
       );
-      const object = objects.find((object) => {
-        return parseInt(object.id, 10) === parseInt(id, 10);
-      });
-
-      return object;
+      return objects.find((object) => parseInt(object.id, 10) === parseInt(id, 10));
     });
 };
 
