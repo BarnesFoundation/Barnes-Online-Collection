@@ -54,6 +54,23 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-522X585');</script>
   <!-- End Google Tag Manager -->
+
+  <!--
+      MyFonts pageview counter (license compliance for the FF Milo Serif webfonts).
+      Previously a render-blocking `@import url("//hello.myfonts.net/count/3399db")` inside the CSS,
+      which stalled first paint whenever the MyFonts endpoint was slow. It is now fired as a
+      deferred, fire-and-forget beacon AFTER window `load`: MyFonts still records the pageview
+      (the GET reaching their server is what counts), but it can never block or delay rendering.
+    -->
+  <script>
+    (function () {
+      function fireMyFontsCount() {
+        try { (new Image()).src = 'https://hello.myfonts.net/count/3399db'; } catch (e) { /* never let the counter affect the page */ }
+      }
+      if (document.readyState === 'complete') fireMyFontsCount();
+      else window.addEventListener('load', fireMyFontsCount, { once: true });
+    })();
+  </script>
 </head>
 
 <body>

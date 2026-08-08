@@ -68,8 +68,11 @@ Try to use classes to determine the size of fonts/headings:
  * © 2017 MyFonts Inc
 */
 
-/* @import must be at top of file, otherwise CSS will not work */
-@import url("//hello.myfonts.net/count/3399db");
+/* MyFonts pageview counter (license compliance) intentionally REMOVED from here.
+ * It used to be `@import url("//hello.myfonts.net/count/3399db");` — but a CSS @import is
+ * render-blocking and synchronous, so when the MyFonts endpoint stalls it stalls first paint.
+ * The counter is now fired as a deferred, fire-and-forget beacon after window `load` in
+ * public/index.html, which pings MyFonts identically without blocking render. */
 
 // #styleguideOverride: the create-react-app restricts relative imports. Use this instead
 // $font_path: '../fonts/';
