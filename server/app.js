@@ -147,6 +147,24 @@ app.get("/health", (req, res) => {
   res.json({ success: true });
 });
 
+// Lightweight in-memory rate limiter (1b guardrail): bounds abusive query volume per client on the
+// search/read API — a resilience backstop against the search-flood class of incident. Fixed window,
+// per App Runner instance. Parameterized SQL + the query-shape allowlist are the primary defenses.
+const rlBuckets = new Map();
+const RL_WINDOW_MS = 60 * 1000;
+const RL_MAX = 150; // requests/min/IP to the query endpoints
+app.use((req, res, next) => {
+  if (!/^\/api\/(search|related|advancedSearchSuggest)/.test(req.path)) return next();
+  const ip = (req.headers["x-forwarded-for"] || req.ip || "unknown").toString().split(",")[0].trim();
+  const now = Date.now();
+  let b = rlBuckets.get(ip);
+  if (!b || now - b.start >= RL_WINDOW_MS) { b = { start: now, count: 0 }; rlBuckets.set(ip, b); }
+  b.count += 1;
+  if (b.count > RL_MAX) return res.status(429).json({ error: "rate limit exceeded" });
+  if (rlBuckets.size > 5000) for (const [k, v] of rlBuckets) if (now - v.start >= RL_WINDOW_MS) rlBuckets.delete(k);
+  next();
+});
+
 // if in production, and .htpasswd file exists, set up authentication
 if (process.env.NODE_ENV === "production" && fs.existsSync(htpasswdFilePath)) {
   const basic = auth.basic({
@@ -572,17 +590,19 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
     .send();
 });
 
-/** Endpoint for locally generating the assets file for the frontend */
-app.use("/api/build-search-assets", async (req, res) => {
-  const result = await buildSearchAssets.generateAndWriteAssets();
-  res.json(result);
-});
-
-/** Endpoint for generating the assets file during deployment */
-app.use("/api/get-search-assets", async (req, res) => {
-  const result = await buildSearchAssets.generateAssets();
-  res.json(result);
-});
+/** Serve the prebuilt search assets (filter dropdown options) from the static file baked at build time
+ * (generated from the Postgres V2 store). Was: regenerated from ElasticSearch aggregations. */
+const SEARCH_ASSETS_PATH = path.resolve(__dirname, "..", "build", "resources", "searchAssets.json");
+const serveSearchAssets = (req, res) => {
+  try {
+    res.type("application/json").send(fs.readFileSync(SEARCH_ASSETS_PATH, "utf8"));
+  } catch (e) {
+    console.error(`[error] searchAssets: ${e.message}`);
+    res.status(500).json({ error: "search assets unavailable" });
+  }
+};
+app.use("/api/build-search-assets", serveSearchAssets);
+app.use("/api/get-search-assets", serveSearchAssets);
 
 /** Endpoint for retrieving entries from the www Craft site */
 app.get("/api/entries", craftService.entryCacher);

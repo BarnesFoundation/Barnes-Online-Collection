@@ -1,3 +1,4 @@
+const pgPool = require("../utils/pgClient");
 const axios = require("axios");
 const memoryCache = require("memory-cache");
 const esClient = require("../utils/esClient");
@@ -59,40 +60,18 @@ const getSuggestions = async (request, response) => {
 const getAutoSuggestions = async (request, response) => {
   const { q: query } = request.query;
 
-  const {
-    aggregations: {
-      people: { buckets },
-    },
-  } = await esClient.search({
-    body: {
-      size: 0,
-      query: {
-        bool: {
-          filter: {
-            exists: {
-              field: "imageSecret",
-            },
-          },
-          must: {
-            multi_match: {
-              query: query,
-              type: "bool_prefix",
-              fields: ["people", "people.text", "people.suggest"],
-            },
-          },
-        },
-      },
-      _source: ["id", "title", "people"],
-      aggregations: {
-        people: {
-          terms: {
-            field: "people.text",
-            size: 200,
-          },
-        },
-      },
-    },
-  });
+  // Postgres-backed (was ES more_like_this/agg): distinct artist names matching the query, with counts.
+  let buckets = [];
+  if (query && query.trim()) {
+    const { rows } = await pgPool.query(
+      `SELECT people AS key, count(*)::int AS doc_count
+         FROM collection_object
+        WHERE image_secret <> '' AND people <> '' AND people ILIKE $1
+        GROUP BY people ORDER BY doc_count DESC LIMIT 200`,
+      [`%${query.trim()}%`]
+    );
+    buckets = rows;
+  }
 
   // Wrap return results in <strong> tags.
   const highlighted = buckets.map(({ key, doc_count }) => {
