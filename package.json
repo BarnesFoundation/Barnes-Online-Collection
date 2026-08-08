@@ -51,7 +51,8 @@
     "universal-analytics": "^0.4.16",
     "xml2js": "^0.4.17",
     "xmlbuilder": "^9.0.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",

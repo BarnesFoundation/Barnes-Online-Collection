@@ -1,0 +1,25 @@
+# Lambda container image (node_modules ~900MB > 250MB zip limit → container is the fit).
+# Build stage matches .nvmrc (Node 12) for the old CRA toolchain; runtime is the AWS Lambda Node 18 base.
+FROM node:12 AS build
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install --no-audit --no-fund
+COPY . .
+ENV CI=false
+ENV NODE_OPTIONS=--max-old-space-size=2048
+ENV REACT_APP_IMAGE_BASE_URL=https://d2r83x5xt28klo.cloudfront.net
+ENV REACT_APP_IMAGES_PREFIX=
+ENV REACT_APP_NETX_ENABLED=false
+RUN npm run build
+
+# ---- Lambda runtime ----
+FROM public.ecr.aws/lambda/nodejs:18
+WORKDIR ${LAMBDA_TASK_ROOT}
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/server ./server
+COPY --from=build /app/src ./src
+COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/build ./build
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/lambda.js ./lambda.js
+CMD ["lambda.handler"]
