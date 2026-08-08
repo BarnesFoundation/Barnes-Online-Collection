@@ -102,7 +102,7 @@ class SummaryTable extends Component {
           </div>
         )}
         <div className="table-row">
-          <div className="text">Year</div>
+          <div className="text">Date</div>
           <div className="text color-light">{this.props.displayDate}</div>
         </div>
         <div className="table-row">
@@ -110,7 +110,7 @@ class SummaryTable extends Component {
           <div className="text color-light">{this.props.medium}</div>
         </div>
         <div className="table-row">
-          <div className="text">Accession Number</div>
+          <div className="text">Object Number</div>
           <div className="text color-light">{this.props.invno}</div>
         </div>
         <div className="table-row">
