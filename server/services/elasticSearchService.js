@@ -111,7 +111,10 @@ function translate(body) {
       }
       case "multi_match": {
         const fields = c.fields || [];
-        const isCulture = fields.some((f) => /^culture|^nationality/.test(f));
+        // Culture ADVANCED FILTER = multi_match over EXACTLY culture/nationality. The GLOBAL keyword
+        // search also lists culture.* among many fields (people.*/title.*/medium.*/…) — so only treat
+        // it as the culture filter when EVERY field is culture/nationality; otherwise it's global search.
+        const isCulture = fields.length > 0 && fields.every((f) => /^culture|^nationality/.test(f));
         if (isCulture) {
           shoulds.push(`(culture ILIKE ${p("%" + c.query + "%")} OR nationality ILIKE ${p("%" + c.query + "%")})`);
         } else {
