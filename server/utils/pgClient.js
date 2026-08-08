@@ -1,6 +1,9 @@
 // Read-only Postgres pool to the V2 store (collection.collection_object).
 // Replaces the ElasticSearch client for the collection search/read path. Uses the SELECT-only
-// `collection_reader` role — the site cannot write by construction. search_path pinned to `collection`.
+// `collection_reader` role — the site cannot write by construction. Queries are SCHEMA-QUALIFIED
+// (`collection.collection_object`) and pgvector lives in `public`, so NO `search_path` startup param
+// is needed — which is required for RDS Proxy compatibility (RDS Proxy for Postgres rejects the
+// `options=-c search_path=...` startup parameter). Works identically against direct RDS.
 const { Pool } = require("pg");
 
 const pool = new Pool({
@@ -12,7 +15,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
   max: 8,
   idleTimeoutMillis: 30000,
-  options: `-c search_path=${process.env.PG_SCHEMA || "collection"},public`,
 });
 
 pool.on("error", (err) => console.error("[pg] idle client error:", err.message));

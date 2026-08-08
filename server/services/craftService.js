@@ -69,7 +69,7 @@ const getAutoSuggestions = async (request, response) => {
   if (query && query.trim()) {
     const { rows } = await pgPool.query(
       `SELECT people AS key, count(*)::int AS doc_count
-         FROM collection_object
+         FROM collection.collection_object
         WHERE image_secret <> '' AND people <> '' AND people ILIKE $1
         GROUP BY people ORDER BY doc_count DESC LIMIT 200`,
       [`%${query.trim()}%`]

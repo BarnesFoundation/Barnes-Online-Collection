@@ -1,7 +1,7 @@
 /**
  * Postgres-backed drop-in for the old ElasticSearch service (strangler-fig: the React front-end is
  * unchanged; only this data layer swaps ES -> the Postgres V2 store). It accepts the exact ES query
- * bodies the client builds (via bodybuilder) and answers them from `collection.collection_object`,
+ * bodies the client builds (via bodybuilder) and answers them from `collection.collection.collection_object`,
  * returning the identical ES response shape: { hits: { total: {value,relation}, hits: [{_index,_type,_id,_source}] } }.
  *
  * Guardrails (per "1b" — bounded/gated global search): parameterized SQL only (no string interpolation
@@ -223,18 +223,18 @@ function translate(body) {
 
   const whereSql = where.length ? "WHERE " + where.join(" AND ") : "";
   const cols = ALL_COLS.join(", ");
-  const sql = `SELECT ${cols} FROM collection_object ${whereSql} ORDER BY ${orderBy} LIMIT ${size} OFFSET ${from}`;
-  const countSql = `SELECT count(*)::int AS n FROM collection_object ${whereSql}`;
+  const sql = `SELECT ${cols} FROM collection.collection_object ${whereSql} ORDER BY ${orderBy} LIMIT ${size} OFFSET ${from}`;
+  const countSql = `SELECT count(*)::int AS n FROM collection.collection_object ${whereSql}`;
   return { sql, countSql, params, projection, moreLikeThisId, size };
 }
 
 /** pgvector "more like this" — replaces ES more_like_this. */
 async function moreLikeThis(id, size, projection) {
   const cols = ALL_COLS.join(", ");
-  const sql = `SELECT ${cols} FROM collection_object
+  const sql = `SELECT ${cols} FROM collection.collection_object
     WHERE image_secret <> '' AND id <> $1 AND embedding IS NOT NULL
-      AND (SELECT embedding FROM collection_object WHERE id = $1) IS NOT NULL
-    ORDER BY embedding <=> (SELECT embedding FROM collection_object WHERE id = $1)
+      AND (SELECT embedding FROM collection.collection_object WHERE id = $1) IS NOT NULL
+    ORDER BY embedding <=> (SELECT embedding FROM collection.collection_object WHERE id = $1)
     LIMIT $2`;
   const { rows } = await pool.query(sql, [id, Math.min(MAX_SIZE, size)]);
   return esResponse(rows, rows.length, projection);
@@ -263,7 +263,7 @@ const search = async (searchQuery) => {
 const getObjectById = async (objectId) => {
   try {
     const cols = ALL_COLS.join(", ");
-    const { rows } = await pool.query(`SELECT ${cols} FROM collection_object WHERE id = $1`, [parseInt(objectId, 10)]);
+    const { rows } = await pool.query(`SELECT ${cols} FROM collection.collection_object WHERE id = $1`, [parseInt(objectId, 10)]);
     return rows[0] ? toSource(rows[0], null) : {};
   } catch (error) {
     console.error(`[error] pg getObjectById: ${error.message}`);
