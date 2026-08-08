@@ -204,7 +204,18 @@ function translate(body) {
   if (!orderBy) {
     const sort = arr(body.sort);
     for (const s of sort) {
-      if (s && s._script) { orderBy = "random()"; break; }            // painless random -> random()
+      if (s && s._script) {
+        // The client's painless sort is a SALTED random: (doc['_id'] + params.salt).hashCode(). The salt is
+        // stable for the session, so pagination ("load more") stays consistent. Reproduce with a deterministic
+        // hash of (id + salt) — plain random() would re-roll each page and duplicate/skip results. Fall back
+        // to random() if no salt is present.
+        // Sanitize to [A-Za-z0-9] and INLINE (not a bind param) — this is ORDER-BY-only, and the count
+        // query shares the params array (WHERE-only), so a bind param here would mismatch its placeholder
+        // count. Strict alphanumeric + wrapped in md5() → no injection.
+        const salt = String(s._script?.script?.params?.salt ?? "").replace(/[^A-Za-z0-9]/g, "");
+        orderBy = salt ? `md5(id::text || '${salt}')` : "random()";
+        break;
+      }
       if (s && s.endDate) { orderBy = "end_date ASC NULLS LAST"; break; } // artist filter
     }
   }
