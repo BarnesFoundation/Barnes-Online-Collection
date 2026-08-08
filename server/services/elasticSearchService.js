@@ -90,6 +90,34 @@ function translate(body) {
   let searchQuery = null;
   let moreLikeThisId = null;
 
+  // ---- artrendex visual descriptors (stored in v2.descriptors) ----
+  const DESC_FLOATS = new Set(["line", "light", "space", "vertical", "diagonal", "horizontal", "curvy"]);
+  const descPath = (f) => `(v2->'descriptors'->>'${f}')::float`;
+  const rangeCond = (field, spec) => {
+    if (!DESC_FLOATS.has(field) || !spec) return null;
+    const parts = [];
+    if (spec.gte != null) parts.push(`${descPath(field)} >= ${p(parseFloat(spec.gte))}`);
+    if (spec.lte != null) parts.push(`${descPath(field)} <= ${p(parseFloat(spec.lte))}`);
+    if (spec.gt != null) parts.push(`${descPath(field)} > ${p(parseFloat(spec.gt))}`);
+    if (spec.lt != null) parts.push(`${descPath(field)} < ${p(parseFloat(spec.lt))}`);
+    return parts.length ? "(" + parts.join(" AND ") + ")" : null;
+  };
+  const colorCond = (hex) => {
+    if (!hex) return null;
+    const h = p(String(hex));
+    return `((v2->'descriptors'->'colorClosest') ? ${h} OR (v2->'descriptors'->'colorPalette') ? ${h}` +
+      ` OR v2->'descriptors'->>'colorAverage' = ${h} OR v2->'descriptors'->>'colorAverageClosest' = ${h})`;
+  };
+  // translate a single visual sub-clause (range on a descriptor float, or a color multi_match) -> SQL cond
+  const visualCond = (clause) => {
+    if (!clause || typeof clause !== "object") return null;
+    const t = Object.keys(clause)[0];
+    const cc = clause[t];
+    if (t === "range") { const f = Object.keys(cc)[0]; return rangeCond(f, cc[f]); }
+    if (t === "multi_match" && (cc.fields || []).length && (cc.fields || []).every((f) => /^color/.test(f))) return colorCond(cc.query);
+    return null;
+  };
+
   const clauses = collectClauses(body.query);
   for (const { where: bucket, clause } of clauses) {
     if (!clause || typeof clause !== "object") continue;
@@ -111,6 +139,12 @@ function translate(body) {
       }
       case "multi_match": {
         const fields = c.fields || [];
+        // COLOR filter = multi_match over color.palette-*/color.average-* with a hex query.
+        if (fields.length && fields.every((f) => /^color/.test(f))) {
+          const cc = colorCond(c.query);
+          if (cc) where.push(cc);
+          break;
+        }
         // Culture ADVANCED FILTER = multi_match over EXACTLY culture/nationality. The GLOBAL keyword
         // search also lists culture.* among many fields (people.*/title.*/medium.*/…) — so only treat
         // it as the culture filter when EVERY field is culture/nationality; otherwise it's global search.
@@ -140,10 +174,16 @@ function translate(body) {
         const spec = c[field];
         if (field === "beginDate" && spec.gte != null) where.push(`begin_date >= ${p(parseInt(spec.gte, 10))}`);
         else if (field === "endDate" && spec.lte != null) where.push(`end_date <= ${p(parseInt(spec.lte, 10))}`);
-        // visual-descriptor ranges (line/light/space/vertical/diagonal/horizontal/curvy) are NOT in V2 -> ignored
+        else { const rc = rangeCond(field, spec); if (rc) where.push(rc); } // artrendex line/light/space/etc.
         break;
       }
-      // dis_max (color/line visual filters), bool nesting, etc. -> ignored (descriptor gap; allowlist)
+      case "dis_max": {
+        // Visual filters (colors + lines/light/space) are assembled into a dis_max (union). Reproduce as
+        // an OR of the translated sub-conditions against v2.descriptors.
+        const conds = (c.queries || []).map(visualCond).filter(Boolean);
+        if (conds.length) where.push("(" + conds.join(" OR ") + ")");
+        break;
+      }
       default:
         break;
     }
