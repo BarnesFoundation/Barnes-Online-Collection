@@ -168,6 +168,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// CloudFront-only gate: CloudFront injects a secret `x-origin-verify` header on the /api origin; reject
+// /api requests that don't carry it, so the (public) Lambda Function URL can't be hit directly. Fail-OPEN
+// when X_ORIGIN_VERIFY is unset (so a missing env can't take /api down); the header approach works for POST,
+// unlike CloudFront OAC SigV4 which is unreliable for request bodies.
+app.use((req, res, next) => {
+  const expected = process.env.X_ORIGIN_VERIFY;
+  if (!expected) return next(); // fail-open if not configured
+  if (!req.path.startsWith("/api")) return next();
+  if (req.headers["x-origin-verify"] === expected) return next();
+  return res.status(403).json({ error: "forbidden" });
+});
+
 // if in production, and .htpasswd file exists, set up authentication
 if (process.env.NODE_ENV === "production" && fs.existsSync(htpasswdFilePath)) {
   const basic = auth.basic({
