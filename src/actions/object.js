@@ -52,6 +52,7 @@ export const getObject = (id) => {
       "bibliography",
       "exhHistory",
       "publishedProvenance",
+      "constituents",
     ])
     .build();
 

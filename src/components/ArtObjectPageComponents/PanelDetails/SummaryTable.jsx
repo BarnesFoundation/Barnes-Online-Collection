@@ -54,6 +54,27 @@ class SummaryTable extends Component {
     return `${artistString}`;
   };
 
+  /** Renders the structured multi-constituent attribution: for each constituent,
+   *  "[prefix ]name[suffix][, nationality, dates]", the name linked to the artist filter,
+   *  joined by "; ". Reproduces the curatorial format (e.g. BF854: "Unidentified artist,
+   *  Brescian School; Formerly attributed to Titian (Tiziano Vecellio), Italian, Venetian,
+   *  c. 1488–1576"). Falls back to generateArtist() when no structured constituents exist. */
+  renderConstituents = () => {
+    return this.props.constituents.map((c, i) => {
+      let tail = "";
+      if (c.suffix) tail += c.suffix[0] === "," ? c.suffix : ` ${c.suffix}`;
+      if (c.displayDate) tail += `, ${c.displayDate}`;
+      return (
+        <React.Fragment key={i}>
+          {i > 0 ? "; " : ""}
+          {c.prefix ? `${c.prefix} ` : ""}
+          {c.name ? <a href={getArtistLink(c.name)}>{c.name}</a> : null}
+          {tail}
+        </React.Fragment>
+      );
+    });
+  };
+
   render() {
     const copyrightLink = this.props.objectCopyrightDetails.link;
     const copyrightCopy = this.props.objectCopyrightDetails.copy;
@@ -81,15 +102,22 @@ class SummaryTable extends Component {
             {!this.props.onview && <span>Off View</span>}
           </div>
         </div>
-        {this.props.people && (
+        {this.props.constituents && this.props.constituents.length > 0 ? (
           <div className="table-row">
             <div className="text">Artist</div>
-            <div className="text color-light">
-              <a href={getArtistLink(this.props.people)}>
-                {this.generateArtist()}
-              </a>
-            </div>
+            <div className="text color-light">{this.renderConstituents()}</div>
           </div>
+        ) : (
+          this.props.people && (
+            <div className="table-row">
+              <div className="text">Artist</div>
+              <div className="text color-light">
+                <a href={getArtistLink(this.props.people)}>
+                  {this.generateArtist()}
+                </a>
+              </div>
+            </div>
+          )
         )}
         {this.props.culture && (
           <div className="table-row">
