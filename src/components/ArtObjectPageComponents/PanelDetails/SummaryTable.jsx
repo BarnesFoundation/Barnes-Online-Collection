@@ -91,17 +91,18 @@ class SummaryTable extends Component {
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
-        <div className="table-row">
-          <div className="text">Location</div>
-          <div className="text color-light">
-            {this.props.onview && (
+        {/* Show the on-view location ONLY when the work is actually on view — the negative "Off View"
+            messaging was flagged as confusing to visitors (doc: remove unless it is on view). */}
+        {this.props.onview && (
+          <div className="table-row">
+            <div className="text">Location</div>
+            <div className="text color-light">
               <span>
                 On View: <a href={ensembleUrl}>{roomAndTitleText}</a>
               </span>
-            )}
-            {!this.props.onview && <span>Off View</span>}
+            </div>
           </div>
-        </div>
+        )}
         {this.props.constituents && this.props.constituents.length > 0 ? (
           <div className="table-row">
             <div className="text">Artist</div>
@@ -145,14 +146,9 @@ class SummaryTable extends Component {
           <div className="text">Dimensions</div>
           <div className="text color-light">{this.props.dimensions}</div>
         </div>
-        <div className="table-row">
-          <div className="text">Viewing Status</div>
-          <div className="text color-light">
-            {this.props.onview && this.props.onview === "1"
-              ? "Currently on view"
-              : "Currently not on view"}
-          </div>
-        </div>
+        {/* "Viewing Status" row removed: it duplicated the Location "On View" line, and its
+            onview === "1" test was always false (onview is a boolean), so it showed "Currently not on
+            view" for EVERY object. On-view status is now shown positively via the Location row above. */}
         <div className="table-row">
           <div className="text">Copyright Status</div>
           <div className="text color-light">
