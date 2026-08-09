@@ -54,6 +54,7 @@ export const getObject = (id) => {
       "publishedProvenance",
       "constituents",
       "onLoan",
+      "images",
     ])
     .build();
 
@@ -75,6 +76,23 @@ export const getObject = (id) => {
           const object = objects.find((object) => {
             return parseInt(object.id, 10) === parseInt(id, 10);
           });
+
+          // Build the carousel renditions from the V2 `images[]` (CloudFront-tiled: primary + alternates
+          // + archival), replacing the legacy live-NetX rendition fetch. Shaped like a NetX rendition so
+          // the existing carousel/caption code works unchanged; `_cf` routes URL building to CloudFront.
+          if (object && object.images && object.images.length) {
+            object.renditions = object.images.map((im) => ({
+              _cf: true,
+              objectId: object.id,
+              secret: im.secret,
+              fileName: `${im.secret}.jpg`,
+              attributes: {
+                "Sync Type": [im.isArchive ? "Archives Sync" : ""],
+                "Archives Correspondence Caption": [im.caption || ""],
+                "Artwork Caption (TMS)": [im.caption || ""],
+              },
+            }));
+          }
 
           dispatch(setObject(object));
         }
