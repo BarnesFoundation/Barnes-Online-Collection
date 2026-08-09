@@ -71,7 +71,7 @@
     "nodemon": "^2.0.2",
     "normalize.css": "^7.0.0",
     "npm-run-all": "^4.0.2",
-    "openseadragon": "^2.4.2",
+    "openseadragon": "^6.1.0",
     "prettier": "^2.8.8",
     "prop-types": "^15.5.10",
     "query-string": "^5.0.1",

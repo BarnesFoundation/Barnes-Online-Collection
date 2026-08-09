@@ -12,7 +12,13 @@ const IMAGE_BASE_URL = ui.imageBaseURL;
 const getTileUrl = OpenSeadragon.IIIFTileSource.prototype.getTileUrl;
 OpenSeadragon.IIIFTileSource.prototype.getTileUrl = function (...args) {
   let res = getTileUrl.call(this, ...args);
-  return res.replace("default", "color");
+  res = res.replace("default", "color");
+  // OSD-version accommodation (2.4.2 → 6): our IIIF tile CDN only serves the WIDTH-ONLY size form
+  // (".../256,/...", IIIF sizeByW) — the form OSD 2.4.2 requested. OSD 6 emits the explicit "W,H" form
+  // (".../256,256/..."), which 403s on this CDN. Rewrite the size segment to width-only so OSD 6 hits the
+  // tiles that exist (the server derives the height from the region aspect). Verified against prod 2.4.2.
+  res = res.replace(/\/(\d+),\d+\/(\d+)\/(color|default)\.jpg(\?.*)?$/i, "/$1,/$2/$3.jpg$4");
+  return res;
 };
 
 class Zoom extends Component {
@@ -104,6 +110,12 @@ class Zoom extends Component {
     if (this.ref) {
       this.osd = OpenSeadragon({
         element: this.ref,
+        // OSD 3+'s canvas/WebGL drawer draws tiles into a canvas, which taints (and rejects) any
+        // cross-origin tile unless it's requested with crossOrigin="anonymous". Our tiles come from
+        // a different host (the IIIF CDN, which sends Access-Control-Allow-Origin: *), so set this —
+        // mirrors VXP-2.0's working OSD config. Harmless on the old 2.4.2 drawer.
+        crossOriginPolicy: "Anonymous",
+        ajaxWithCredentials: false,
         constrainDuringPan: true,
         tileSources: [res],
         navigatorBackground: "#fff",
