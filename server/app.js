@@ -243,7 +243,7 @@ function getObjectDescriptors(objectID) {
     });
 }
 
-function getRelatedObjects(objectID) {
+function getRelatedObjects(objectID, dissimilarPercent = 0) {
   let body = bodybuilder()
     .filter("exists", "imageSecret")
     .from(0)
@@ -258,6 +258,8 @@ function getRelatedObjects(objectID) {
       fields: ALL_MORE_LIKE_THIS_FIELDS,
       min_term_freq: 1,
       minimum_should_match: "10%",
+      // "more similar ↔ more surprising" slider (0-100) → pgvector neighbor offset (elasticSearchService.moreLikeThis)
+      dissimilar_percent: dissimilarPercent,
     })
     .rawOption("_source", BASIC_FIELDS)
     .build();
@@ -318,43 +320,19 @@ const getRelated = (objectID, dissimilarPercent) => {
   if (objectID === undefined) {
     throw new Error(`[error] in getRelated: objectID undefined`);
   }
-  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100);
-  const similarRatio = similarPercent / 100.0;
-
-  return axios
-    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
-    .then(
-      axios.spread((objectDescriptors, relatedObjects) => {
-        const sources = relatedObjects.map((object) => {
-          const _source = object._source;
-          Object.assign(_source, { id: parseInt(object._id) });
-          return _source;
-        });
-
-        const sorted = sources.sort(
-          (a, b) =>
-            getDistance(a, objectDescriptors) -
-            getDistance(b, objectDescriptors)
-        );
-        const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length);
-        const similarItemCount = Math.floor(maxSize * similarRatio);
-        const similarItems = sorted.slice(0, similarItemCount);
-        const dissimilarItems = sorted.slice(-(maxSize - similarItemCount));
-        const objects = similarItems.concat(dissimilarItems).map((object) => ({
-          _index: esIndex,
-          _type: "object",
-          _id: object.id,
-          _source: object,
-        }));
-
-        return {
-          hits: {
-            total: objects.length,
-            hits: objects,
-          },
-        };
-      })
-    );
+  // The pgvector store now handles BOTH similarity and the "more similar ↔ more surprising" slider (via a
+  // neighbor offset — see elasticSearchService.moreLikeThis), so the returned set already reflects
+  // dissimilarPercent and its own distance order. Return it as-is. (The old ES-era descriptor-distance
+  // re-sort + similar/dissimilar split was a no-op on the new fields and never changed the result set.)
+  return getRelatedObjects(objectID, clamp(dissimilarPercent, 0, 100)).then((relatedObjects) => {
+    const objects = (relatedObjects || []).map((object) => ({
+      _index: esIndex,
+      _type: "object",
+      _id: object._id,
+      _source: Object.assign({}, object._source, { id: parseInt(object._id) }),
+    }));
+    return { hits: { total: objects.length, hits: objects } };
+  });
 };
 
 app.get(

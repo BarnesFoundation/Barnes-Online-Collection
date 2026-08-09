@@ -89,6 +89,7 @@ function translate(body) {
   let orderBy = null; // null => default
   let searchQuery = null;
   let moreLikeThisId = null;
+  let moreLikeThisSurprise = 0; // 0 = most similar, 100 = most surprising (the related-objects slider)
 
   // ---- artrendex visual descriptors (stored in v2.descriptors) ----
   const DESC_FLOATS = new Set(["line", "light", "space", "vertical", "diagonal", "horizontal", "curvy"]);
@@ -158,6 +159,7 @@ function translate(body) {
       }
       case "more_like_this":
         moreLikeThisId = parseInt((arr(c.like)[0] || {})._id, 10);
+        if (c.dissimilar_percent != null) moreLikeThisSurprise = parseInt(c.dissimilar_percent, 10) || 0;
         break;
       case "terms": {
         const field = Object.keys(c)[0];
@@ -225,25 +227,30 @@ function translate(body) {
   const cols = ALL_COLS.join(", ");
   const sql = `SELECT ${cols} FROM collection.collection_object ${whereSql} ORDER BY ${orderBy} LIMIT ${size} OFFSET ${from}`;
   const countSql = `SELECT count(*)::int AS n FROM collection.collection_object ${whereSql}`;
-  return { sql, countSql, params, projection, moreLikeThisId, size };
+  return { sql, countSql, params, projection, moreLikeThisId, moreLikeThisSurprise, size };
 }
 
-/** pgvector "more like this" — replaces ES more_like_this. */
-async function moreLikeThis(id, size, projection) {
+/** pgvector "more like this" — replaces ES more_like_this. `surprise` (0-100, from the "more similar ↔
+ * more surprising" slider) OFFSETS into the neighbor ranking: 0 returns the nearest matches; higher values
+ * skip past them to a further, still-related band, so the result set genuinely changes as the slider moves. */
+async function moreLikeThis(id, size, projection, surprise = 0) {
+  const lim = Math.min(MAX_SIZE, size);
+  const s = Math.max(0, Math.min(100, parseInt(surprise, 10) || 0));
+  const offset = Math.round((s / 100) * 3 * lim); // 100% surprise → skip ~3 pages of nearest neighbors
   const cols = ALL_COLS.join(", ");
   const sql = `SELECT ${cols} FROM collection.collection_object
     WHERE image_secret <> '' AND id <> $1 AND embedding IS NOT NULL
       AND (SELECT embedding FROM collection.collection_object WHERE id = $1) IS NOT NULL
     ORDER BY embedding <=> (SELECT embedding FROM collection.collection_object WHERE id = $1)
-    LIMIT $2`;
-  const { rows } = await pool.query(sql, [id, Math.min(MAX_SIZE, size)]);
+    LIMIT $2 OFFSET $3`;
+  const { rows } = await pool.query(sql, [id, lim, offset]);
   return esResponse(rows, rows.length, projection);
 }
 
 const performSearch = async (rawBody) => {
   const body = asString(rawBody) || {};
   const t = translate(body);
-  if (t.moreLikeThisId) return moreLikeThis(t.moreLikeThisId, t.size, t.projection);
+  if (t.moreLikeThisId) return moreLikeThis(t.moreLikeThisId, t.size, t.projection, t.moreLikeThisSurprise);
   const [dataRes, countRes] = await Promise.all([
     pool.query(t.sql, t.params),
     pool.query(t.countSql, t.params),
