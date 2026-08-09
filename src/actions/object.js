@@ -53,6 +53,7 @@ export const getObject = (id) => {
       "exhHistory",
       "publishedProvenance",
       "constituents",
+      "onLoan",
     ])
     .build();
 

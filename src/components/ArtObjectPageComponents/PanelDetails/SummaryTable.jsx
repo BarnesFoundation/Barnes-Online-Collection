@@ -91,17 +91,27 @@ class SummaryTable extends Component {
 
     return (
       <div className="m-block table-flexbox component-summary-table m-block--flush-top m-block--shallow m-block--no-border">
-        {/* Show the on-view location ONLY when the work is actually on view — the negative "Off View"
+        {/* Location row: "Currently on loan" takes precedence (an out-on-loan work is never on view),
+            otherwise show "On View: [room]" only when actually on view. The negative "Off View"
             messaging was flagged as confusing to visitors (doc: remove unless it is on view). */}
-        {this.props.onview && (
+        {this.props.onLoan ? (
           <div className="table-row">
             <div className="text">Location</div>
             <div className="text color-light">
-              <span>
-                On View: <a href={ensembleUrl}>{roomAndTitleText}</a>
-              </span>
+              <span>Currently on loan</span>
             </div>
           </div>
+        ) : (
+          this.props.onview && (
+            <div className="table-row">
+              <div className="text">Location</div>
+              <div className="text color-light">
+                <span>
+                  On View: <a href={ensembleUrl}>{roomAndTitleText}</a>
+                </span>
+              </div>
+            </div>
+          )
         )}
         {this.props.constituents && this.props.constituents.length > 0 ? (
           <div className="table-row">

@@ -28,6 +28,7 @@ const COL_TO_FIELD = {
   period: "period", highlight: "highlight", sorted_name: "sortedName", classification: "classification",
   begin_date: "beginDate", end_date: "endDate", copyright: "copyright",
   constituents: "constituents", // structured multi-constituent array (prefix/name/suffix/role/dates/nationality); additive, V1 `people` unchanged
+  on_loan: "onLoan", // boolean: currently on an approved outgoing loan; additive, enrichLoans.ts
 };
 const ALL_COLS = Object.keys(COL_TO_FIELD);
 const ALWAYS = ["id", "invno", "image_secret", "image_original_secret"];
