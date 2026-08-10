@@ -36,6 +36,8 @@ class ArtObject extends Component {
           alt={this.props.title}
           src={this.props.imageUrlSmall}
           backupSrc={this.props.imageUrlLarge}
+          width={this.props.imageWidth}
+          height={this.props.imageHeight}
           revealArtObject={this.revealArtObject}
         />
         <ArtObjectOverlay {...this.props} />

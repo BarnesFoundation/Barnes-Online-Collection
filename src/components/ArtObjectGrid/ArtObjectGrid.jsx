@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, useCallback, useLayoutEffect, useRef } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import Masonry from "react-masonry-component";
 import ArtObject from "../ArtObject/ArtObject";
 import SpinnerLoader from "./SpinnerLoader";
 import CollectionFiltersApplied from "../CollectionFilters/CollectionFiltersApplied";
@@ -34,19 +33,68 @@ const ViewMoreButton = ({ onClick }) => (
   </div>
 );
 
-/** Masonry grid component. */
-const masonryOptions = { transitionDuration: 0 };
-const MasonryGrid = ({ children }) => (
-  <Masonry
-    className="component-masonry-grid"
-    elementType={"ul"}
-    options={masonryOptions}
-    disableImagesLoaded={false}
-    updateOnEachImageLoad={false}
-  >
-    {children}
-  </Masonry>
-);
+/**
+ * CSS-grid masonry — replaces react-masonry-component. Each tile lives in a real CSS grid
+ * (`grid-auto-rows` + a per-item `grid-row-end: span N`); the span is computed from the tile's
+ * measured height in useLayoutEffect, BEFORE paint. Because the grid <img> carries intrinsic
+ * width/height (V2 image dims), the tile's height is already correct before the image bytes load, so
+ * the spans are right on the first frame → zero CLS, while keeping the packed masonry look and the
+ * hover-overlay captions. Reflows on container resize and when any dimensionless image finishes.
+ * @see artObjectGrid.scss `.css-masonry` (defines --masonry-row / --masonry-gap read below).
+ */
+const CssMasonry = ({ children }) => {
+  const ref = useRef(null);
+  const lastWidth = useRef(-1);
+
+  const relayout = useCallback(() => {
+    const grid = ref.current;
+    if (!grid) return;
+    const cs = getComputedStyle(grid);
+    const row = parseFloat(cs.getPropertyValue("--masonry-row")) || 2;
+    const gap = parseFloat(cs.getPropertyValue("--masonry-gap")) || 4;
+    for (let i = 0; i < grid.children.length; i++) {
+      const el = grid.children[i];
+      const content = el.firstElementChild || el; // natural (un-constrained) tile height
+      const h = content.getBoundingClientRect().height;
+      el.style.gridRowEnd = "span " + Math.max(1, Math.ceil((h + gap) / row));
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    const grid = ref.current;
+    lastWidth.current = grid ? grid.getBoundingClientRect().width : -1;
+    relayout();
+    // Setting row-spans changes the grid's HEIGHT, which would re-fire a naive ResizeObserver in a
+    // loop. Only the column WIDTH affects tile heights, so reflow only when the width actually changes.
+    const onResize = () => {
+      const w = grid ? grid.getBoundingClientRect().width : -1;
+      if (w !== lastWidth.current) {
+        lastWidth.current = w;
+        relayout();
+      }
+    };
+    const ro =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(onResize) : null;
+    if (ro && grid) ro.observe(grid);
+    window.addEventListener("resize", onResize);
+    // dimensionless images (no V2 dims) reserve no box up front — recompute once each loads.
+    const imgs = grid ? Array.from(grid.querySelectorAll("img")) : [];
+    imgs.forEach((img) => {
+      if (!img.complete) img.addEventListener("load", relayout);
+    });
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", onResize);
+      imgs.forEach((img) => img.removeEventListener("load", relayout));
+    };
+  });
+
+  return (
+    <ul ref={ref} className="component-masonry-grid css-masonry">
+      {children}
+    </ul>
+  );
+};
 
 /**
  * Search results grid component.
@@ -106,6 +154,10 @@ const GridListElement = ({
           medium={object.medium}
           imageUrlSmall={artworkRenditionThumbnailUrl || object.imageUrlSmall}
           imageUrlLarge={artworkRenditionPreviewUrl || object.imageUrlLarge}
+          // Intrinsic dims (V2 enrichImageDims) → <img width/height> so CssMasonry can size each
+          // tile's row-span before the image loads (zero CLS).
+          imageWidth={object.imageWidth}
+          imageHeight={object.imageHeight}
           // Only pass highlight if this is for search results.
           highlight={isSearchResult ? object.highlight : null}
         />
@@ -241,15 +293,15 @@ class ArtObjectGrid extends Component {
         ? uncutMasonryElements.slice(0, this.state.truncateThreshold)
         : uncutMasonryElements;
 
-    // Get type of display, if this is the landing page and a search has been submitted, return formatted results.
-    // TODO => This should just return wrapper element, but returning MasonryGrid causes MasonryGrid to only have a single column.
+    // Get type of display: filter/room results use the aligned CSS SearchResultsGrid; everything
+    // else (landing-featured + keyword search) uses the packed CssMasonry.
     const displayGrid =
       isFilterResult || isRoomResult ? (
         <SearchResultsGrid isRoomResult={isRoomResult}>
           {masonryElements}
         </SearchResultsGrid>
       ) : (
-        <MasonryGrid>{masonryElements}</MasonryGrid>
+        <CssMasonry>{masonryElements}</CssMasonry>
       );
 
     let bodyClass = "component-art-object-grid-results";
