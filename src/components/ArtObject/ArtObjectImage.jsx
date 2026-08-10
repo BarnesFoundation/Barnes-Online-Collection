@@ -46,6 +46,19 @@ class ArtObjectImage extends Component {
     // was reverted because the lib's absolute positioning fought the reserved boxes; CSS grid doesn't.)
     const dimProps = width && height ? { width, height } : {};
 
+    // Offer the 320w thumbnail (_n) and the 1024w preview (_b) so the browser serves a resolution
+    // matching the rendered column width × device-pixel-ratio — clears Lighthouse "serves images with
+    // low resolution" on hi-dpi displays. Grid images are lazy + mostly below the fold, so this does
+    // not over-fetch on initial load. `src` stays the fallback for no-srcset browsers.
+    const { backupSrc } = this.props;
+    const resProps =
+      this.props.src && backupSrc
+        ? {
+            srcSet: `${this.props.src} 320w, ${backupSrc} 1024w`,
+            sizes: "(min-width: 1024px) 340px, (min-width: 768px) 33vw, 50vw",
+          }
+        : {};
+
     return (
       <img
         ref={(ref) => {
@@ -56,6 +69,7 @@ class ArtObjectImage extends Component {
         alt={this.props.alt}
         src={src}
         {...dimProps}
+        {...resProps}
         loading="lazy"
         decoding="async"
         onLoad={this.revealImage}
