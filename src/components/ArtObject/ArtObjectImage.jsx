@@ -38,11 +38,13 @@ class ArtObjectImage extends Component {
 
   render() {
     const { src } = this.state;
-    const { width, height } = this.props;
-    // Set intrinsic width/height only when both are known so the browser reserves the correct
-    // aspect box before load (no masonry layout shift / CLS). CSS keeps the rendered width 100%.
-    const dimProps = width && height ? { width, height } : {};
 
+    // NOTE: intrinsic width/height are intentionally NOT set here. V2 carries per-object
+    // image_width/image_height (imageWidth/imageHeight), but this grid is react-masonry-component,
+    // which absolutely-repositions items after measuring — reserving aspect boxes on the <img>
+    // fights that JS layout and measurably WORSENS CLS (0.10 → 0.19, deterministic A/B). It also
+    // silences the minor `unsized-images` diagnostic, but CLS (a Core Web Vital) wins. The right
+    // fix is a CSS columns/grid layout that honors aspect-ratio; then flip these attrs back on.
     return (
       <img
         ref={(ref) => {
@@ -52,7 +54,6 @@ class ArtObjectImage extends Component {
         }}
         alt={this.props.alt}
         src={src}
-        {...dimProps}
         loading="lazy"
         decoding="async"
         onLoad={this.revealImage}

@@ -106,9 +106,6 @@ const GridListElement = ({
           medium={object.medium}
           imageUrlSmall={artworkRenditionThumbnailUrl || object.imageUrlSmall}
           imageUrlLarge={artworkRenditionPreviewUrl || object.imageUrlLarge}
-          // Intrinsic dims (enrichImageDims) let the browser reserve the box before load → no CLS.
-          imageWidth={object.imageWidth}
-          imageHeight={object.imageHeight}
           // Only pass highlight if this is for search results.
           highlight={isSearchResult ? object.highlight : null}
         />
