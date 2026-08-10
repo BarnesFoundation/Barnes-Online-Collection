@@ -15,13 +15,15 @@ import {
 import { SiteHeader } from "../SiteHeader/SiteHeader";
 import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
-// Below-the-hero, lazy-loaded so their JS (esp. CollectionFilters' rc-slider, ~126KB) is split out
-// of the landing's critical bundle — the hero (LCP) then paints without waiting on them to parse.
-const CollectionFilters = lazy(() => import("../CollectionFilters/CollectionFilters"));
-const ArtObjectGrid = lazy(() => import("../ArtObjectGrid/ArtObjectGrid"));
 import { Footer } from "../Footer/Footer";
 import { heroes } from "./HeroImages";
 import "./landingPage.css";
+
+// Below-the-hero, lazy-loaded so their JS (esp. CollectionFilters' rc-slider, ~126KB) is split out
+// of the landing's critical bundle — the hero (LCP) then paints without waiting on them to parse.
+// (Declared after all imports so eslint import/first is satisfied — CRA treats it as a build error.)
+const CollectionFilters = lazy(() => import("../CollectionFilters/CollectionFilters"));
+const ArtObjectGrid = lazy(() => import("../ArtObjectGrid/ArtObjectGrid"));
 
 const HEIGHT_SCALE_FACTOR = 1.25;
 
