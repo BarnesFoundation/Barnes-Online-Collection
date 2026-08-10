@@ -334,7 +334,7 @@ class LandingPageHeader extends Component {
           </div>
         </div>
         <div className="o-hero__image-wrapper" ref={this.setWrapperRef}>
-          {heroes.map(({ src }, index) => {
+          {heroes.map(({ src, srcSet, sizes }, index) => {
             const isActiveImage = index === imageIndex;
 
             // img tag styling.
@@ -373,6 +373,7 @@ class LandingPageHeader extends Component {
                 key={index}
                 className={imageClassName}
                 src={src}
+                {...(srcSet ? { srcSet, sizes } : {})}
                 style={{ ...style }}
                 alt="Barnes Museum Ensemble."
                 // The first hero is the LCP element; prioritize its fetch and let the browser

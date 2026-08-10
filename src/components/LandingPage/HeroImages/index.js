@@ -8,9 +8,14 @@ const room15SouthWall = process.env.PUBLIC_URL + "/heroes/room15.jpg";
 const room13NorthWall = process.env.PUBLIC_URL + "/heroes/room13.jpg";
 const mainRoomWestWall = process.env.PUBLIC_URL + "/heroes/mainroom.jpg";
 
+const PUB = process.env.PUBLIC_URL || "";
 const sceneOne = {
   src: peasants,
   // srcName: 'peasants',
+  // Responsive LCP hero: mobile picks the 1200px WebP (~48KB), desktop the 1675px JPG (~119KB) —
+  // matches the preload + static-hero injector in index.html so React re-renders the same fetch.
+  srcSet: `${PUB}/heroes/peasants-hero-sm.webp 1200w, ${PUB}/heroes/peasants-hero.jpg 1675w`,
+  sizes: "100vw",
   text: "The Barnes Foundation houses one of the world’s great collections of modern European paintings, with numerous works by Renoir, Cézanne, Matisse, Picasso, Van Gogh, and Modigliani.",
 };
 
