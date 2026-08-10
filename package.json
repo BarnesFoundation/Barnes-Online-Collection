@@ -113,9 +113,11 @@
   "proxy": "http://localhost:4002",
   "browserslist": {
     "production": [
-      ">0.2%",
+      ">0.5%",
+      "last 2 versions",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ie 11"
     ],
     "development": [
       "last 1 chrome version",

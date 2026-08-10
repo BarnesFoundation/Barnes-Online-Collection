@@ -12,7 +12,7 @@ import {
 import { BARNES_SETTINGS, SEARCH_FIELDS } from "../barnesSettings";
 import { DEV_LOG } from "../devLogging";
 import { DROPDOWN_TERMS } from "../components/SearchInput/Dropdowns/Dropdowns";
-import { uniqBy } from "lodash";
+import uniqBy from "lodash/uniqBy"; // per-method import — pulls ~5KB, not all ~70KB of lodash
 
 const RAW_OPTION = [
   "id",
