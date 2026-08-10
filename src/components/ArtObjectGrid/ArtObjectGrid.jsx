@@ -164,6 +164,8 @@ const GridListElement = ({
           // tile's row-span before the image loads (zero CLS).
           imageWidth={object.imageWidth}
           imageHeight={object.imageHeight}
+          // Responsive + modern-format (<picture>) sources for the grid tile (objectDataUtils).
+          gridSources={object.gridSources}
           // Only pass highlight if this is for search results.
           highlight={isSearchResult ? object.highlight : null}
         />

@@ -38,28 +38,21 @@ class ArtObjectImage extends Component {
 
   render() {
     const { src } = this.state;
-    const { width, height } = this.props;
-    // Set intrinsic width/height from the V2 image dims (imageWidth/imageHeight) when known. The grid
-    // is now a CSS-grid masonry (CssMasonry) that computes each tile's row-span from its measured
-    // height BEFORE the image bytes load — these attrs reserve the correct aspect box so that
-    // measurement is right on the first frame → zero CLS. (Under the old react-masonry-component this
-    // was reverted because the lib's absolute positioning fought the reserved boxes; CSS grid doesn't.)
+    const { width, height, sources, backupSrc } = this.props;
+    // Intrinsic width/height from the V2 image dims (imageWidth/imageHeight) when known → CssMasonry
+    // computes each tile's row-span from a box that's correct BEFORE the image loads (zero CLS).
     const dimProps = width && height ? { width, height } : {};
+    const sizes = "(min-width: 1024px) 340px, (min-width: 768px) 33vw, 50vw";
 
-    // Offer the 320w thumbnail (_n) and the 1024w preview (_b) so the browser serves a resolution
-    // matching the rendered column width × device-pixel-ratio — clears Lighthouse "serves images with
-    // low resolution" on hi-dpi displays. Grid images are lazy + mostly below the fold, so this does
-    // not over-fetch on initial load. `src` stays the fallback for no-srcset browsers.
-    const { backupSrc } = this.props;
-    const resProps =
-      this.props.src && backupSrc
-        ? {
-            srcSet: `${this.props.src} 320w, ${backupSrc} 1024w`,
-            sizes: "(min-width: 1024px) 340px, (min-width: 768px) 33vw, 50vw",
-          }
-        : {};
+    // The <img> carries the JPG srcset (n/m/b) — the universal fallback. `sources` (from
+    // objectDataUtils.gridSources) adds a full n/m/b set; without it, fall back to the old n/b pair.
+    const jpgSrcset = sources
+      ? sources.jpg
+      : this.props.src && backupSrc
+      ? `${this.props.src} 320w, ${backupSrc} 1024w`
+      : null;
 
-    return (
+    const img = (
       <img
         ref={(ref) => {
           if (!this.ref) {
@@ -69,12 +62,24 @@ class ArtObjectImage extends Component {
         alt={this.props.alt}
         src={src}
         {...dimProps}
-        {...resProps}
+        {...(jpgSrcset ? { srcSet: jpgSrcset, sizes } : {})}
         loading="lazy"
         decoding="async"
         onLoad={this.revealImage}
         onError={this.revealImage}
       />
+    );
+
+    if (!sources) return img;
+
+    // <picture>: the browser picks the smallest FORMAT it supports (AVIF → WebP → the <img> JPG
+    // fallback), then the right SIZE within it. loading/decoding/onLoad stay on the <img>.
+    return (
+      <picture>
+        <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
+        <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
+        {img}
+      </picture>
     );
   }
 }
