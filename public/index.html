@@ -56,21 +56,13 @@
   <!-- End Google Tag Manager -->
 
   <!--
-      MyFonts pageview counter (license compliance for the FF Milo Serif webfonts).
-      Previously a render-blocking `@import url("//hello.myfonts.net/count/3399db")` inside the CSS,
-      which stalled first paint whenever the MyFonts endpoint was slow. It is now fired as a
-      deferred, fire-and-forget beacon AFTER window `load`: MyFonts still records the pageview
-      (the GET reaching their server is what counts), but it can never block or delay rendering.
+      Legacy MyFonts pageview counter REMOVED (2026-08, CTO sign-off). The FF Milo Serif fonts are
+      self-hosted (see src/components-barnes-toolkit/scss/setup/_typography.scss @font-face →
+      /fonts/3399DB_*), so the `hello.myfonts.net/count/3399db` beacon did nothing functional — it
+      only set a third-party Cloudflare cookie (__cf_bm), the sole item flagged by Lighthouse
+      "Uses third-party cookies". Monotype's current self-hosting kits ship without this legacy
+      counter (ours was a 2017 build). Deleting it removes our only third-party cookie.
     -->
-  <script>
-    (function () {
-      function fireMyFontsCount() {
-        try { (new Image()).src = 'https://hello.myfonts.net/count/3399db'; } catch (e) { /* never let the counter affect the page */ }
-      }
-      if (document.readyState === 'complete') fireMyFontsCount();
-      else window.addEventListener('load', fireMyFontsCount, { once: true });
-    })();
-  </script>
 </head>
 
 <body>
