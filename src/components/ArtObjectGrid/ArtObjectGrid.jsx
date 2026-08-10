@@ -52,12 +52,18 @@ const CssMasonry = ({ children }) => {
     const cs = getComputedStyle(grid);
     const row = parseFloat(cs.getPropertyValue("--masonry-row")) || 2;
     const gap = parseFloat(cs.getPropertyValue("--masonry-gap")) || 4;
-    for (let i = 0; i < grid.children.length; i++) {
-      const el = grid.children[i];
+    // Batch all layout READS, then all WRITES — interleaving getBoundingClientRect (read) with
+    // style.gridRowEnd (write) per tile forces a synchronous reflow every iteration (PSI "forced
+    // reflow"). Two passes lets the browser reflow once.
+    const els = Array.prototype.slice.call(grid.children);
+    const spans = els.map((el) => {
       const content = el.firstElementChild || el; // natural (un-constrained) tile height
       const h = content.getBoundingClientRect().height;
-      el.style.gridRowEnd = "span " + Math.max(1, Math.ceil((h + gap) / row));
-    }
+      return Math.max(1, Math.ceil((h + gap) / row));
+    });
+    els.forEach((el, i) => {
+      el.style.gridRowEnd = "span " + spans[i];
+    });
   }, []);
 
   useLayoutEffect(() => {
