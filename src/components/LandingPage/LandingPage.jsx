@@ -371,6 +371,11 @@ class LandingPageHeader extends Component {
                 src={src}
                 style={{ ...style }}
                 alt="Barnes Museum Ensemble."
+                // The first hero is the LCP element; prioritize its fetch and let the browser
+                // decode async. The rotating (not-yet-shown) heroes get low priority so they don't
+                // compete for bandwidth with the LCP image. (lowercase attr — passed through by React 16.)
+                fetchpriority={index === 0 ? "high" : "low"}
+                decoding="async"
               />
             );
           })}
