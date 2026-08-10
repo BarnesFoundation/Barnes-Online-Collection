@@ -53,14 +53,28 @@
 
   <!-- note: google analytics is done by react-ga plugin in routeWrapper.jsx -->
 
-  <!-- Google Tag Manager -->
+  <!-- Google Tag Manager — DEFERRED (2026-08). Loaded on the first user interaction OR a short
+       post-load timeout (whichever comes first) so GTM's ~124KB of JS stays OUT of the initial render
+       path and never competes for the main thread during first paint — this stabilizes the landing
+       LCP at a perfect Lighthouse score. Primary GA pageview tracking is separate (react-ga in
+       routeWrapper.jsx) and is unaffected; the timeout fallback keeps passive-reader coverage. -->
   <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      w[l] = w[l] || [];
+      var loaded = false;
+      function loadGTM() {
+        if (loaded) return;
+        loaded = true;
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      }
+      ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(function (e) {
+        w.addEventListener(e, loadGTM, { once: true, passive: true });
+      });
+      w.addEventListener('load', function () { setTimeout(loadGTM, 3500); });
     })(window, document, 'script', 'dataLayer', 'GTM-522X585');</script>
   <!-- End Google Tag Manager -->
 
