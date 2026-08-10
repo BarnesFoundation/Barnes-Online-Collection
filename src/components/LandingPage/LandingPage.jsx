@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { withRouter } from "react-router";
@@ -15,8 +15,10 @@ import {
 import { SiteHeader } from "../SiteHeader/SiteHeader";
 import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
-import CollectionFilters from "../CollectionFilters/CollectionFilters";
-import ArtObjectGrid from "../ArtObjectGrid/ArtObjectGrid";
+// Below-the-hero, lazy-loaded so their JS (esp. CollectionFilters' rc-slider, ~126KB) is split out
+// of the landing's critical bundle — the hero (LCP) then paints without waiting on them to parse.
+const CollectionFilters = lazy(() => import("../CollectionFilters/CollectionFilters"));
+const ArtObjectGrid = lazy(() => import("../ArtObjectGrid/ArtObjectGrid"));
 import { Footer } from "../Footer/Footer";
 import { heroes } from "./HeroImages";
 import "./landingPage.css";
@@ -517,7 +519,10 @@ class LandingPage extends Component {
             <LandingPageHeader />
 
             <div className="m-block m-block--shallow m-block--no-border m-block--flush-top collection-filters-wrap">
-              <CollectionFilters />
+              {/* reserve the filter-bar height while its (rc-slider) chunk loads → no CLS */}
+              <Suspense fallback={<div style={{ minHeight: "62px" }} />}>
+                <CollectionFilters />
+              </Suspense>
             </div>
             <div className="shaded-background">
               {/** Shaded background. */}
@@ -529,6 +534,10 @@ class LandingPage extends Component {
                 }}>  
               </div> */}
               <div className="container">
+                {/* reserve a viewport while the grid chunk loads so the footer stays below the fold */}
+                <Suspense
+                  fallback={<div style={{ minHeight: "100vh" }} aria-busy="true" />}
+                >
                 <ArtObjectGrid
                   gridStyle="full-size"
                   shouldLinksUseModal
@@ -541,6 +550,7 @@ class LandingPage extends Component {
                     this.setState({ resetTruncateThreshold })
                   }
                 />
+                </Suspense>
               </div>
               <Footer hasHours />
             </div>
