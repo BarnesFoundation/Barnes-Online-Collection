@@ -154,6 +154,14 @@
       width: 100%;
     }
 
+    // The <img> carries width/height attrs (V2 dims) to reserve its aspect box (CLS). WITHOUT this
+    // height:auto the attribute height wins over the aspect-ratio and the image is stretched to that
+    // pixel height (object-fit defaults to fill). height:auto lets the attr-derived aspect-ratio set
+    // the height → correct aspect AND correct reserved box.
+    img {
+      height: auto;
+    }
+
     .grid-list-el {
       &--active,
       &:hover,
