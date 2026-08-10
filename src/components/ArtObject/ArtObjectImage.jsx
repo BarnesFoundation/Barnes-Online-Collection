@@ -72,11 +72,15 @@ class ArtObjectImage extends Component {
 
     if (!sources) return img;
 
-    // <picture>: the browser picks the smallest FORMAT it supports (AVIF → WebP → the <img> JPG
-    // fallback), then the right SIZE within it. loading/decoding/onLoad stay on the <img>.
+    // <picture>: WebP → JPG <img> fallback, each an n/m/b srcset (browser picks the right SIZE).
+    // NOTE: AVIF is intentionally NOT offered for the grid. AVIF gives ~15% more byte savings than
+    // WebP but its DECODE is ~2–3× heavier, and that cost multiplies across ~12 thumbnails on a
+    // CPU-throttled phone — it regressed mobile TBT (~150ms → ~770ms) and Perf (88 → 73). WebP keeps
+    // ~40% of the byte win vs JPG with near-JPEG decode speed. (The _m/_b AVIF derivatives still
+    // exist in S3 — re-add a `<source type="image/avif">` here to use them, e.g. for large hero art
+    // where one decode is cheap relative to the bytes saved.) loading/decoding/onLoad stay on <img>.
     return (
       <picture>
-        <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
         <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
         {img}
       </picture>
