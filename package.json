@@ -97,7 +97,7 @@
   },
   "scripts": {
     "start-dev": "npm-run-all --parallel watch-css server-dev client",
-    "build": "npm run build-css && react-scripts build",
+    "build": "npm run build-css && react-scripts build && node scripts/async-css.js",
     "postbuild": "gulp",
     "build-sitemap": "node scripts/build-sitemap.js",
     "write-search-assets": "node scripts/write-search-assets.js",
