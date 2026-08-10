@@ -31,7 +31,8 @@
   <script>
     (function () {
       function makeHero() {
-        if (!document.body || document.getElementById("static-hero")) return true;
+        if (document.getElementById("static-hero")) return true; // already injected
+        if (!document.body) return false; // <body> not parsed yet — retry (do NOT mark done)
         var img = document.createElement("img");
         img.id = "static-hero";
         img.src = "%PUBLIC_URL%/heroes/peasants-hero.jpg";
