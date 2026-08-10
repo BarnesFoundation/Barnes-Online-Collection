@@ -38,6 +38,10 @@ class ArtObjectImage extends Component {
 
   render() {
     const { src } = this.state;
+    const { width, height } = this.props;
+    // Set intrinsic width/height only when both are known so the browser reserves the correct
+    // aspect box before load (no masonry layout shift / CLS). CSS keeps the rendered width 100%.
+    const dimProps = width && height ? { width, height } : {};
 
     return (
       <img
@@ -48,6 +52,7 @@ class ArtObjectImage extends Component {
         }}
         alt={this.props.alt}
         src={src}
+        {...dimProps}
         loading="lazy"
         decoding="async"
         onLoad={this.revealImage}

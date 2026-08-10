@@ -30,6 +30,7 @@ const COL_TO_FIELD = {
   constituents: "constituents", // structured multi-constituent array (prefix/name/suffix/role/dates/nationality); additive, V1 `people` unchanged
   on_loan: "onLoan", // boolean: currently on an approved outgoing loan; additive, enrichLoans.ts
   images: "images", // carousel: [{secret,isPrimary,isArchive,caption}]; additive, enrichImages.ts (CloudFront-tiled, replaces live-NetX renditions)
+  image_width: "imageWidth", image_height: "imageHeight", // primary-image intrinsic dims; additive, enrichImageDims.ts (grid <img width/height> → CLS)
 };
 const ALL_COLS = Object.keys(COL_TO_FIELD);
 const ALWAYS = ["id", "invno", "image_secret", "image_original_secret"];

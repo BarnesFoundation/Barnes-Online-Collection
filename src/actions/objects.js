@@ -22,6 +22,8 @@ const RAW_OPTION = [
   "medium",
   "imageOriginalSecret",
   "imageSecret",
+  "imageWidth",
+  "imageHeight",
   "ensembleIndex",
   "visualDescription",
 ];
