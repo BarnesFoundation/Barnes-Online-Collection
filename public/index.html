@@ -636,7 +636,23 @@
         </symbol>
       </defs>
     </svg>
-    <div id="root"></div>
+    <div id="root">
+      <!--
+        Static LCP hero. This paints on HTML parse (the image is preloaded in <head> above), BEFORE
+        the React bundle finishes downloading/parsing/executing — so on throttled mobile the Largest
+        Contentful Paint is ~FCP instead of waiting several seconds for React to render the hero. On
+        mount, ReactDOM.render() replaces #root's contents with the app; heroes[0] uses this same
+        /heroes/peasants-hero.jpg (already decoded + cached) and renders at opacity 1, so the swap is
+        seamless. Styling is inline + self-contained so it doesn't depend on the (render-blocking) CSS.
+      -->
+      <img
+        src="%PUBLIC_URL%/heroes/peasants-hero.jpg"
+        alt="The Barnes Foundation collection"
+        fetchpriority="high"
+        decoding="async"
+        style="position:fixed;top:0;left:0;width:100%;height:100vh;object-fit:cover;object-position:center;z-index:0"
+      />
+    </div>
   </div>
   <!--
       This HTML file is a template.
