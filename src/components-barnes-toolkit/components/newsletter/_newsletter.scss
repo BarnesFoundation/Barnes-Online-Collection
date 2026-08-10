@@ -48,7 +48,8 @@ for them.
   border: 2px solid $color__border;
   border-width: 2px 0 2px 2px;
   border-radius: 0;
-  color: $color__copy--light;
+  // a11y: was $color__copy--light (fails WCAG contrast); darkened so typed text + placeholder pass.
+  color: $color__copy--dark;
   display: block;
   font-size: 16px;
   height: 60px;
@@ -58,7 +59,7 @@ for them.
 
   &::placeholder {
     font-size: 20px;
-    color: $color__copy--light;
+    color: $color__copy--dark;
     opacity: 1;
   }
 

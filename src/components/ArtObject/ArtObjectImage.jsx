@@ -48,6 +48,8 @@ class ArtObjectImage extends Component {
         }}
         alt={this.props.alt}
         src={src}
+        loading="lazy"
+        decoding="async"
         onLoad={this.revealImage}
         onError={this.revealImage}
       />
