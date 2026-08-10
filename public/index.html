@@ -12,6 +12,15 @@
   <meta name="theme-color" content="#000000">
 
   <!--
+      LCP optimization: the landing hero (first slide) is React-rendered, so without this the browser
+      can't discover it until the JS bundle executes. Preloading a STABLE public-folder copy starts
+      the fetch during HTML parse (parallel to the bundle) so it's cached by the time React paints it.
+      Must stay in lockstep with heroes[0].src in src/components/LandingPage/HeroImages/index.js.
+    -->
+  <link rel="preload" as="image" href="%PUBLIC_URL%/heroes/peasants-hero.jpg" fetchpriority="high">
+
+
+  <!--
       Notice the use of %PUBLIC_URL% in these tags.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.

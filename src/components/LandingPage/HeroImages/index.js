@@ -1,8 +1,13 @@
-import peasants from "./peasants.jpg";
 import room22SouthWall from "./room22SouthWall.jpg";
 import room15SouthWall from "./room15SouthWall.jpg";
 import room13NorthWall from "./room13NorthWall.jpg";
 import mainRoomWestWall from "./mainRoomWestWall.jpg";
+
+// The first hero is the LCP element. It is served from public/heroes/ (a stable, non-hashed URL) and
+// preloaded in public/index.html so the fetch starts during HTML parse instead of after the JS bundle
+// renders it. Optimized copy: 1675px, mozjpeg q72 (~119KB vs the original 273KB). Keep this path in
+// sync with the <link rel="preload"> in index.html.
+const peasants = process.env.PUBLIC_URL + "/heroes/peasants-hero.jpg";
 
 const sceneOne = {
   src: peasants,
