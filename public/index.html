@@ -19,6 +19,44 @@
     -->
   <link rel="preload" as="image" href="%PUBLIC_URL%/heroes/peasants-hero.jpg" fetchpriority="high">
 
+  <!--
+      Static LCP hero, injected from the <head> (head markup survives react-scripts build; arbitrary
+      body markup does not). We add an <img> of the already-preloaded hero as soon as <body> exists —
+      well before the deferred app bundle downloads/parses/executes — so on throttled mobile the
+      Largest Contentful Paint is ~FCP instead of waiting seconds for React to render the hero. Once
+      React mounts (children appear in #root, rendering heroes[0] = this same cached image at
+      opacity 1), a MutationObserver removes the static <img> — a seamless swap. Inline styles only,
+      so it doesn't depend on the render-blocking CSS.
+    -->
+  <script>
+    (function () {
+      function makeHero() {
+        if (!document.body || document.getElementById("static-hero")) return true;
+        var img = document.createElement("img");
+        img.id = "static-hero";
+        img.src = "%PUBLIC_URL%/heroes/peasants-hero.jpg";
+        img.alt = "The Barnes Foundation collection";
+        img.setAttribute("fetchpriority", "high");
+        img.style.cssText =
+          "position:fixed;top:0;left:0;width:100%;height:100vh;object-fit:cover;object-position:center;z-index:0";
+        document.body.insertBefore(img, document.body.firstChild);
+        var root = document.getElementById("root");
+        if (root && window.MutationObserver) {
+          var mo = new MutationObserver(function () {
+            if (root.childNodes.length) { img.remove(); mo.disconnect(); }
+          });
+          mo.observe(root, { childList: true });
+        }
+        return true;
+      }
+      // Inject the instant <body> is parseable; fall back to DOMContentLoaded.
+      if (!makeHero()) {
+        var iv = setInterval(function () { if (makeHero()) clearInterval(iv); }, 10);
+        document.addEventListener("DOMContentLoaded", function () { makeHero(); clearInterval(iv); });
+      }
+    })();
+  </script>
+
 
   <!--
       Notice the use of %PUBLIC_URL% in these tags.
@@ -636,37 +674,7 @@
         </symbol>
       </defs>
     </svg>
-    <!--
-      Static LCP hero. Paints on HTML parse (the image is preloaded in <head>), BEFORE the React
-      bundle downloads/parses/executes — so on throttled mobile the Largest Contentful Paint is ~FCP
-      instead of waiting seconds for React to render the hero. It sits OUTSIDE #root (CRA's build
-      empties #root's template contents) and is removed the instant React mounts (see script below);
-      heroes[0] renders this same cached /heroes/peasants-hero.jpg at opacity 1, so the swap is
-      seamless. Inline styles = no dependency on the render-blocking CSS.
-    -->
-    <img
-      id="static-hero"
-      src="%PUBLIC_URL%/heroes/peasants-hero.jpg"
-      alt="The Barnes Foundation collection"
-      fetchpriority="high"
-      decoding="async"
-      style="position:fixed;top:0;left:0;width:100%;height:100vh;object-fit:cover;object-position:center;z-index:0"
-    />
     <div id="root"></div>
-    <script>
-      (function () {
-        var root = document.getElementById('root');
-        if (!root || !window.MutationObserver) return;
-        var mo = new MutationObserver(function () {
-          if (root.childNodes.length) {
-            var sh = document.getElementById('static-hero');
-            if (sh) sh.remove();
-            mo.disconnect();
-          }
-        });
-        mo.observe(root, { childList: true });
-      })();
-    </script>
   </div>
   <!--
       This HTML file is a template.
