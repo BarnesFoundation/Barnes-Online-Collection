@@ -26,5 +26,18 @@ html = html.replace(/<link\b[^>]*\brel="stylesheet"[^>]*>/g, (tag) => {
     `<noscript>${tag}</noscript>`
   );
 });
+
+// Defer the external chunk scripts (only ones with a src — leaves the inline runtime, static-hero
+// injector, and GTM loader alone). Parser-blocking scripts fetch at HIGH priority and starve the
+// high-priority hero image on slow-4G; `defer` drops them to low priority + non-blocking, so the
+// hero wins the pipe (lower FCP/LCP) and they still execute in order right after parse (React mounts
+// then — safe, the static hero covers the pre-React paint).
+let d = 0;
+html = html.replace(/<script\b([^>]*\bsrc="[^"]+"[^>]*)><\/script>/g, (tag, attrs) => {
+  if (/\bdefer\b/.test(attrs)) return tag;
+  d += 1;
+  return `<script defer${attrs}></script>`;
+});
+
 fs.writeFileSync(file, html);
-console.log(`[async-css] made ${n} stylesheet link(s) non-render-blocking in build/index.html`);
+console.log(`[async-css] made ${n} stylesheet link(s) non-render-blocking, deferred ${d} script(s) in build/index.html`);
