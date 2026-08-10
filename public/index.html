@@ -41,13 +41,18 @@
         img.style.cssText =
           "position:fixed;top:0;left:0;width:100%;height:100vh;object-fit:cover;object-position:center;z-index:0";
         document.body.insertBefore(img, document.body.firstChild);
-        var root = document.getElementById("root");
-        if (root && window.MutationObserver) {
-          var mo = new MutationObserver(function () {
-            if (root.childNodes.length) { img.remove(); mo.disconnect(); }
-          });
-          mo.observe(root, { childList: true });
-        }
+        // Remove the static hero once React mounts (renders heroes[0], the same cached image). We
+        // poll for #root gaining children rather than observing it directly, because at inject time
+        // (right when <body> opens) #root doesn't exist yet.
+        var poll = setInterval(function () {
+          var root = document.getElementById("root");
+          if (root && root.childNodes.length) {
+            var sh = document.getElementById("static-hero");
+            if (sh) sh.remove();
+            clearInterval(poll);
+          }
+        }, 60);
+        setTimeout(function () { clearInterval(poll); }, 30000);
         return true;
       }
       // Inject the instant <body> is parseable; fall back to DOMContentLoaded.
