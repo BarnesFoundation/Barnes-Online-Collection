@@ -12,7 +12,11 @@ import * as PrintActions from "../../../actions/prints";
 import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import "./index.css";
-import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
+import {
+  NETX_ENABLED,
+  getImageURLFromRendition,
+  getImageA11y,
+} from "../../../helpers";
 
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
@@ -138,7 +142,7 @@ const Thumbnails = ({
       key={i}
       onClick={() => setActiveImageIndex(i)}
       isActive={activeImageIndex === i}
-      alt={object.title}
+      alt={getImageA11y(rendition, object).alt}
       rendition={rendition}
     />
   ));
@@ -236,6 +240,16 @@ class Image extends Component {
     const zoomSecret = activeRendition ? activeRendition.secret : object.imageSecret;
     const showZoomImageView = Boolean(!didCatchFailure && zoomObjectId);
 
+    // Accessibility text alternatives for the active slide (WCAG 1.1.1). `alt` names the image;
+    // `longText` (a letter transcription / archival description) is surfaced visibly below and
+    // associated with the viewer via aria-describedby. Stable ids so association survives re-renders.
+    const a11y = getImageA11y(activeRendition, object);
+    const captionId = `image-caption-${zoomObjectId}-${zoomSecret || "primary"}`;
+    const longTextId = a11y.longText
+      ? `image-longtext-${zoomObjectId}-${zoomSecret || "primary"}`
+      : null;
+    const describedBy = [captionId, longTextId].filter(Boolean).join(" ");
+
     let additionalStyle = {};
     let imageUrlToRender = "";
     let captionToRender = "";
@@ -262,6 +276,8 @@ class Image extends Component {
               key={`${zoomObjectId}_${zoomSecret}`}
               id={zoomObjectId}
               secret={zoomSecret}
+              label={a11y.alt}
+              describedById={describedBy}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           )}
@@ -269,7 +285,7 @@ class Image extends Component {
             aria-hidden={showZoomImageView.toString()}
             className="image-art-object__img"
             src={imageUrlToRender || object.imageUrlLarge}
-            alt={object.title}
+            alt={a11y.alt}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={(ref) => (this.ref = ref)}
@@ -304,6 +320,7 @@ class Image extends Component {
         <div className="image-caption">
           {captionToRender && (
             <div
+              id={captionId}
               className="font-smallprint color-medium image-caption__content"
               style={{
                 width:
@@ -311,6 +328,36 @@ class Image extends Component {
               }}
             >
               {captionToRender}
+            </div>
+          )}
+          {/* Full text alternative for images of text (letter transcription / archival description).
+              Visible to everyone and associated with the viewer via aria-describedby (WCAG 1.1.1). */}
+          {a11y.longText && (
+            <details
+              className="image-caption__longtext font-smallprint color-medium"
+              style={{
+                marginTop: "0.5rem",
+                width:
+                  this.ref && this.ref.width > 100 ? this.ref.width : "100%",
+              }}
+            >
+              <summary style={{ cursor: "pointer" }}>
+                {a11y.longKind === "Transcription"
+                  ? "Read transcription"
+                  : "Image description"}
+              </summary>
+              <div
+                id={longTextId}
+                className="image-caption__longtext-body"
+                style={{ whiteSpace: "pre-line" }}
+              >
+                {a11y.longText}
+              </div>
+            </details>
+          )}
+          {a11y.note && (
+            <div className="image-caption__a11y-note font-smallprint color-medium">
+              {a11y.note}
             </div>
           )}
         </div>

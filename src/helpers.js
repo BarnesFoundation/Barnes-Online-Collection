@@ -86,6 +86,37 @@ export const getImageURLFromRendition = (rendition, imageType) => {
   return `${ui.netxBaseURL}${imageProxy.file.url}/`;
 };
 
+/**
+ * Build the accessibility text alternatives for a carousel image (WCAG 1.1.1).
+ * Returns a concise `alt` (accessible name for the <img>/viewer) plus, for images of text
+ * (letters/documents), the full `longText` to surface visibly on the page and associate via
+ * aria-describedby — never stuff a whole transcription into an alt attribute.
+ *
+ * Tiering: transcription (image of text) → archival description → visual description → name.
+ */
+export const getImageA11y = (rendition, object = {}) => {
+  const nameFallback = object.people
+    ? `${object.people}. ${object.title || ""}`.trim()
+    : object.title || "";
+  if (!rendition) {
+    return { alt: nameFallback, longText: "", longKind: "", note: "" };
+  }
+  const caption =
+    (rendition.attributes &&
+      (rendition.attributes["Archives Correspondence Caption"]?.[0] ||
+        rendition.attributes["Artwork Caption (TMS)"]?.[0])) ||
+    "";
+  const note = rendition.accessibilityNote || "";
+  if (rendition.transcription) {
+    return { alt: caption || nameFallback, longText: rendition.transcription, longKind: "Transcription", note };
+  }
+  if (rendition.isArchive && rendition.description) {
+    return { alt: caption || rendition.description, longText: rendition.description, longKind: "Description", note };
+  }
+  // Artwork: the (curator or fallback) visual description is concise enough to serve as the alt.
+  return { alt: rendition.description || caption || nameFallback, longText: "", longKind: "", note };
+};
+
 /** Determines if renditions from NetX should be rendered
  * TODO - Move to config file
  */
