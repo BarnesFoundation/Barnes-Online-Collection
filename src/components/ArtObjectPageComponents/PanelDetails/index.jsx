@@ -355,7 +355,7 @@ class Image extends Component {
               </div>
             </details>
           )}
-          {a11y.note && (
+          {a11y.note && a11y.longKind !== "Transcription" && (
             <div className="image-caption__a11y-note font-smallprint color-medium">
               {a11y.note}
             </div>
