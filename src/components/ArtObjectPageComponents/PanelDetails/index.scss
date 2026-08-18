@@ -95,12 +95,39 @@
 
 .image-caption {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
   &__content {
     margin-top: 10px;
     max-width: 100%;
+    text-align: center;
+  }
+
+  // Text alternative for images of text (letter transcription / archival description).
+  &__longtext {
+    margin-top: 10px;
+    max-width: 100%;
+
+    summary {
+      cursor: pointer;
+      text-align: center;
+    }
+
+    &-body {
+      margin-top: 8px;
+      text-align: left; // a letter reads left-aligned
+      line-height: 1.5;
+    }
+  }
+
+  &__a11y-note {
+    margin-top: 8px;
+    max-width: 100%;
+    text-align: center;
+    font-style: italic;
+    opacity: 0.8;
   }
 }
 
