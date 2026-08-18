@@ -25,6 +25,8 @@ const COL_TO_FIELD = {
   birth_date: "birthDate", death_date: "deathDate", artist_prefix: "artistPrefix", artist_suffix: "artistSuffix",
   culture: "culture", display_date: "displayDate", dimensions: "dimensions", credit_line: "creditLine",
   bibliography: "bibliography", exh_history: "exhHistory", published_provenance: "publishedProvenance",
+  published_archives_reference: "publishedArchivesReference", // feeds the "Archives Reference" accordion tab
+  image_caption: "imageCaption", // pre-formatted primary caption (fixes single-image caption / "undefined")
   period: "period", highlight: "highlight", sorted_name: "sortedName", classification: "classification",
   begin_date: "beginDate", end_date: "endDate", copyright: "copyright",
   constituents: "constituents", // structured multi-constituent array (prefix/name/suffix/role/dates/nationality); additive, V1 `people` unchanged
