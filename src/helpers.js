@@ -86,6 +86,25 @@ export const getImageURLFromRendition = (rendition, imageType) => {
   return `${ui.netxBaseURL}${imageProxy.file.url}/`;
 };
 
+/**
+ * Accessible name (alt text) for a carousel image (WCAG 1.1.1). Screen-reader only — no visible output.
+ * Uses the curator-authored NetX description (visual/archival) where present, else the caption, else the
+ * object name. For archival images the caption already names the document, so it's the sensible fallback.
+ */
+export const getImageAltText = (rendition, object = {}) => {
+  const nameFallback = object.people
+    ? `${object.people}. ${object.title || ""}`.trim()
+    : object.title || "";
+  if (!rendition) return object.visualDescription || nameFallback;
+  const caption =
+    (rendition.attributes &&
+      (rendition.attributes["Archives Correspondence Caption"]?.[0] ||
+        rendition.attributes["Artwork Caption (TMS)"]?.[0])) ||
+    "";
+  if (rendition.isArchive) return rendition.description || caption || nameFallback;
+  return rendition.description || caption || nameFallback;
+};
+
 /** Determines if renditions from NetX should be rendered
  * TODO - Move to config file
  */

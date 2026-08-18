@@ -12,7 +12,11 @@ import * as PrintActions from "../../../actions/prints";
 import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import "./index.css";
-import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
+import {
+  NETX_ENABLED,
+  getImageURLFromRendition,
+  getImageAltText,
+} from "../../../helpers";
 
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
@@ -138,7 +142,7 @@ const Thumbnails = ({
       key={i}
       onClick={() => setActiveImageIndex(i)}
       isActive={activeImageIndex === i}
-      alt={object.title}
+      alt={getImageAltText(rendition, object)}
       rendition={rendition}
     />
   ));
@@ -236,6 +240,11 @@ class Image extends Component {
     const zoomSecret = activeRendition ? activeRendition.secret : object.imageSecret;
     const showZoomImageView = Boolean(!didCatchFailure && zoomObjectId);
 
+    // Accessible name for the active slide (WCAG 1.1.1) — screen-reader only, no visible change.
+    // The viewer is described by the already-visible caption (stable id so association survives re-renders).
+    const altText = getImageAltText(activeRendition, object);
+    const captionId = `image-caption-${zoomObjectId}-${zoomSecret || "primary"}`;
+
     let additionalStyle = {};
     let imageUrlToRender = "";
     let captionToRender = "";
@@ -262,6 +271,8 @@ class Image extends Component {
               key={`${zoomObjectId}_${zoomSecret}`}
               id={zoomObjectId}
               secret={zoomSecret}
+              label={altText}
+              describedById={captionId}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           )}
@@ -269,7 +280,7 @@ class Image extends Component {
             aria-hidden={showZoomImageView.toString()}
             className="image-art-object__img"
             src={imageUrlToRender || object.imageUrlLarge}
-            alt={object.title}
+            alt={altText}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={(ref) => (this.ref = ref)}
@@ -304,6 +315,7 @@ class Image extends Component {
         <div className="image-caption">
           {captionToRender && (
             <div
+              id={captionId}
               className="font-smallprint color-medium image-caption__content"
               style={{
                 width:
