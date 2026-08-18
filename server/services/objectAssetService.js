@@ -1,137 +1,103 @@
-/** Service responsible for abstracting out the utilities for retrieving asset information for the Barnes Collection
- *  and caching the responses to avoid refetching object information that is needed frequently
+/** Attaches carousel renditions (and, for a single object, provenance + archives reference) to search
+ *  results by reading the V2 collection store (`collection_object.images[]` jsonb) instead of fetching
+ *  live from the NetX DAMS. Read-only. The primary/grid images already resolve via CloudFront
+ *  (imageSecret); this only sources the carousel/alternate/archival renditions.
  *
+ *  Rendition shape mirrors the former NetX shape so the front-end caption code is unchanged; `_cf: true`
+ *  routes image-URL building to CloudFront (getImageURLFromRendition).
  */
-const damsService = require("./damsService");
+const pool = require("../utils/pgClient");
 const memoryCache = require("memory-cache");
 const { oneWeek } = require("../constants/times");
 
-const OBJECT_CACHE = "OBJECT_CACHE";
-const ENSEMBLE_CACHE = "ENSEMBLE_CACHE";
+const SCHEMA = process.env.PG_SCHEMA || "collection";
+const CACHE_PREFIX = "V2_ASSET_CACHE";
+const cacheKey = (id) => `${CACHE_PREFIX}_${id}`;
 
-function makeObjectCacheKey(objectNumber) {
-  return `${OBJECT_CACHE}_${objectNumber}`;
+/** A V2 images[] entry -> a rendition object the carousel understands (CloudFront via _cf). */
+function toRendition(im, objectId) {
+  return {
+    _cf: true,
+    objectId,
+    secret: im.secret,
+    fileName: `${im.secret}.jpg`,
+    isPrimary: !!im.isPrimary,
+    isArchive: !!im.isArchive,
+    attributes: {
+      "Sync Type": [im.isArchive ? "Archives Sync" : ""],
+      "Archives Correspondence Caption": [im.caption || ""],
+      "Artwork Caption (TMS)": [im.caption || ""],
+    },
+  };
 }
 
-function makeEnsembleCacheKey(ensembleIndex) {
-  return `${ENSEMBLE_CACHE}_${ensembleIndex}`;
-}
-async function getAssetByObjectNumber(objectNumber) {
-  const objectCacheKey = makeObjectCacheKey(objectNumber);
-  const objectAsset = memoryCache.get(objectCacheKey);
+/** Batch-read V2 rows for the given object ids, with a per-id in-memory cache (mirrors the old DAMS cache). */
+async function fetchV2ByIds(ids) {
+  const out = new Map();
+  const missing = [];
+  for (const id of ids) {
+    const cached = memoryCache.get(cacheKey(id));
+    if (cached !== null && cached !== undefined) out.set(id, cached);
+    else missing.push(id);
+  }
 
-  // If we don't have a cached version of this object asset
-  // let's fetch it live, store it, then return it
-  if (!objectAsset) {
-    const liveObjectAsset = await damsService.getAssetByObjectNumber(
-      objectNumber
+  if (missing.length) {
+    const { rows } = await pool.query(
+      `SELECT id, images, published_provenance, published_archives_reference
+         FROM ${SCHEMA}.collection_object
+        WHERE id = ANY($1)`,
+      [missing]
     );
-    memoryCache.put(objectCacheKey, liveObjectAsset, oneWeek);
-
-    return liveObjectAsset;
+    const byId = new Map(rows.map((r) => [Number(r.id), r]));
+    for (const id of missing) {
+      const r = byId.get(Number(id)) || {};
+      const rec = {
+        images: Array.isArray(r.images) ? r.images : [],
+        publishedProvenance: r.published_provenance || "",
+        publishedArchivesReference: r.published_archives_reference || "",
+      };
+      memoryCache.put(cacheKey(id), rec, oneWeek);
+      out.set(id, rec);
+    }
   }
-
-  // Otherwise, we have the cached version
-  return objectAsset;
+  return out;
 }
 
-async function getAssetsForArtworks(artworks) {
-  if (artworks.length === 0) {
-    return artworks;
-  }
-
-  const artworksInformation = artworks.map((result) => {
-    return {
-      objectId: result._source.id,
-      objectNumber: result._source.invno ? result._source.invno : null,
-    };
-  });
-
-  // If we're fetching multiple artworks - then we typically do not need
-  // archival renditions to be included in our response. So we're fine
-  // with just this general assets call
-  if (artworks.length > 1) {
-    const objectIds = artworksInformation
-      .map(({ objectId }) => objectId)
-      .filter((objectId) => objectId);
-    const artworkAssetsMap = await damsService.getAssetsByObjectIds(objectIds);
-
-    return artworks.map((artwork) => {
-      artwork._source["renditions"] =
-        artworkAssetsMap[artwork._source.id] || [];
-      return artwork;
-    });
-  }
-
-  // Otherwise, we're fetching a single artwork object's renditions
-  // so we do need archival renditions as part of our list
-  // and need some extra work to do so
-  const artwork = { ...artworks[0] };
-  const artworkWithDAMSInformation = await addAssetFields(artwork);
-
-  return [artworkWithDAMSInformation];
-}
-
-async function getEnsembleImageUrl(ensembleIndex) {
-  const ensembleCacheKey = makeEnsembleCacheKey(ensembleIndex);
-  const ensembleImageUrl = memoryCache.get(ensembleCacheKey);
-
-  // If we don't have a cached version of this ensemble image url
-  // let's fetch it live, store it, then return it
-  if (!ensembleImageUrl) {
-    const liveEnsembleImageUrl = await damsService.getEnsembleImageUrl(
-      ensembleIndex
-    );
-    memoryCache.put(ensembleCacheKey, liveEnsembleImageUrl, oneWeek);
-
-    return liveEnsembleImageUrl;
-  }
-
-  // Otherwise, we have the cached version
-  return ensembleImageUrl;
-}
-
-/** Utility function to integrate new fields into the artwork object
- * using information provided by rendition assets from the DAMS
- *
- * Fields added include
- * - Renditions list from DAMS, including Archival Images
- * - Ensemble Image URL for the ensemble image that lives in NetX
- * - Published Provenance text
- * - Published Archives Reference text
+/**
+ * Enrich each ES hit with its carousel renditions from the V2 store. A single-object request (the object
+ * page) also gets its archival renditions + provenance/archives-reference text; multi-object requests
+ * (search/grid) omit archival renditions, matching the prior behavior.
  */
-async function addAssetFields(artwork) {
-  // Fetch the related asset from the DAMS
-  const objectNumber = artwork._source.invno ? artwork._source.invno : null;
-  const artworkAssets = await getAssetByObjectNumber(objectNumber);
+async function getAssetsForArtworks(artworks) {
+  if (!artworks || artworks.length === 0) return artworks;
 
-  // We store the renditions but also aditional fields needed
-  // for single artwork rendering
-  const renditions = artworkAssets || [];
-  const rendition = renditions[0];
+  const ids = artworks
+    .map((a) => a._source && a._source.id)
+    .filter((id) => id !== null && id !== undefined);
+  const v2 = await fetchV2ByIds(ids);
+  const isSingle = artworks.length === 1;
 
-  // Get the ensemble image url to use from the DAMS
-  const ensembleImageUrl = artwork._source.ensembleIndex
-    ? await getEnsembleImageUrl(artwork._source.ensembleIndex)
-    : null;
+  return artworks.map((artwork) => {
+    const id = artwork._source.id;
+    const rec = v2.get(id) || {
+      images: [],
+      publishedProvenance: "",
+      publishedArchivesReference: "",
+    };
+    const images = isSingle ? rec.images : rec.images.filter((im) => !im.isArchive);
+    artwork._source.renditions = images.map((im) => toRendition(im, id));
 
-  // Add new fields based on information from the DAMS
-  artwork._source["ensembleImageUrl"] = ensembleImageUrl;
-  artwork._source["renditions"] = renditions;
-  artwork._source["publishedProvenance"] = rendition
-    ? damsService.getValueFromAsset("Published Provenance (TMS)", rendition)
-    : "";
-  artwork._source["publishedArchivesReference"] = rendition
-    ? damsService.getValueFromAsset(
-        "Published Archives Reference (TMS)",
-        rendition
-      )
-    : "";
-
-  return artwork;
+    if (isSingle) {
+      // Only overwrite provenance when V2 has it (ES already carries a copy; don't blank it).
+      if (rec.publishedProvenance) {
+        artwork._source.publishedProvenance = rec.publishedProvenance;
+      }
+      artwork._source.publishedArchivesReference = rec.publishedArchivesReference;
+    }
+    return artwork;
+  });
 }
 
 module.exports = {
-  getAssetByObjectNumber,
   getAssetsForArtworks,
 };
