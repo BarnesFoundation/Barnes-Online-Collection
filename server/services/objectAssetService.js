@@ -45,7 +45,7 @@ async function fetchV2ByIds(ids) {
 
   if (missing.length) {
     const { rows } = await pool.query(
-      `SELECT id, images, published_provenance, published_archives_reference
+      `SELECT id, images, published_provenance, published_archives_reference, image_caption
          FROM ${SCHEMA}.collection_object
         WHERE id = ANY($1)`,
       [missing]
@@ -57,6 +57,7 @@ async function fetchV2ByIds(ids) {
         images: Array.isArray(r.images) ? r.images : [],
         publishedProvenance: r.published_provenance || "",
         publishedArchivesReference: r.published_archives_reference || "",
+        imageCaption: r.image_caption || "",
       };
       memoryCache.put(cacheKey(id), rec, oneWeek);
       out.set(id, rec);
@@ -93,6 +94,7 @@ async function getAssetsForArtworks(artworks) {
       images: [],
       publishedProvenance: "",
       publishedArchivesReference: "",
+      imageCaption: "",
     };
     const images = isSingle ? rec.images : rec.images.filter((im) => !im.isArchive);
     artwork._source.renditions = images.map((im) => toRendition(im, id));
@@ -103,6 +105,8 @@ async function getAssetsForArtworks(artworks) {
         artwork._source.publishedProvenance = rec.publishedProvenance;
       }
       artwork._source.publishedArchivesReference = rec.publishedArchivesReference;
+      // Pre-formatted primary caption from V2 (ES has none): fixes the single-image caption / "undefined".
+      if (rec.imageCaption) artwork._source.imageCaption = rec.imageCaption;
     }
     return artwork;
   });
