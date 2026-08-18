@@ -203,47 +203,53 @@ class Image extends Component {
     this.setState({ didCatchFailure: true });
   };
 
+  componentDidUpdate(prevProps) {
+    // New carousel slide → give its zoom viewer a fresh attempt (one slide's failure must not
+    // permanently disable zoom for the others).
+    if (
+      prevProps.activeImageIndex !== this.props.activeImageIndex &&
+      this.state.didCatchFailure
+    ) {
+      this.setState({ didCatchFailure: false });
+    }
+  }
+
   render() {
     const { onLoad, isLoaded, object, activeImageIndex, setActiveImageIndex } =
       this.props;
     const { renditions } = object;
 
-    // This indicates that there was an error with rendering the Zoom component
+    // This indicates that there was an error rendering the Zoom component for the CURRENT slide.
     const { didCatchFailure } = this.state;
     // `_cf` renditions come from the V2 images[] (CloudFront) and are shown regardless of NETX_ENABLED.
     const renditionsExist =
       renditions?.length > 0 && (NETX_ENABLED || renditions[0]?._cf);
-    const showZoomImageView = Boolean(
-      !didCatchFailure &&
-        object.id &&
-        !renditionsExist &&
-        activeImageIndex === 0
-    );
+
+    // Deep-zoom EVERY slide: the active image is the active rendition (carousel: primary/alternate/
+    // archival) or, with no renditions, the object's primary. Each carries objectId + secret, which map
+    // to per-secret tiles tiles/{objectId}/{secret}/ (Zoom falls back to legacy tiles/{objectId}/).
+    const activeRendition =
+      renditionsExist && renditions[activeImageIndex]
+        ? renditions[activeImageIndex]
+        : null;
+    const zoomObjectId = activeRendition ? activeRendition.objectId : object.id;
+    const zoomSecret = activeRendition ? activeRendition.secret : object.imageSecret;
+    const showZoomImageView = Boolean(!didCatchFailure && zoomObjectId);
 
     let additionalStyle = {};
     let imageUrlToRender = "";
     let captionToRender = "";
 
-    // If we encountered failure during rendering of the Zoom component, we'll hide it
-    // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
-    if (!didCatchFailure && !renditionsExist && activeImageIndex === 0) {
+    // Hide the static <img> while the zoom viewer is showing; it stays as the fallback if zoom fails.
+    if (showZoomImageView) {
       additionalStyle = { ...additionalStyle, display: "none" };
     }
 
-    // We'll render the image from the object renditions itself
-    if (renditionsExist && renditions[activeImageIndex]) {
-      imageUrlToRender = getImageURLFromRendition(
-        renditions[activeImageIndex],
-        "Zoom"
-      );
-      captionToRender = getCaptionFromArtworkRendition(
-        renditions[activeImageIndex],
-        object
-      );
-    }
-
-    // Otherwise, no renditions exist so we'll render the default image
-    else {
+    // Static fallback image + caption for the active slide.
+    if (activeRendition) {
+      imageUrlToRender = getImageURLFromRendition(activeRendition, "Zoom");
+      captionToRender = getCaptionFromArtworkRendition(activeRendition, object);
+    } else {
       imageUrlToRender = object.imageUrlLarge;
       captionToRender = getCaptionFromArtworkRendition(null, object);
     }
@@ -253,7 +259,9 @@ class Image extends Component {
         <div className="image-art-object">
           {showZoomImageView && (
             <Zoom
-              id={object.id}
+              key={`${zoomObjectId}_${zoomSecret}`}
+              id={zoomObjectId}
+              secret={zoomSecret}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           )}
