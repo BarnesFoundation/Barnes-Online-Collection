@@ -9,13 +9,11 @@ There are two environments:
 
 ---
 
-## Production (Elastic Beanstalk)
+## Elastic Beanstalk (dev + prod) — autodeploy on merge
 
-NodeJS platform; the Express server serves the built React app. **Deploy only when the galleries are closed and there are no events.**
-```sh
-npm run build          # build-css → react-scripts build → postbuild (gulp) → dist.zip
-```
-Upload the resulting `dist.zip` via the Elastic Beanstalk Console (see README §Deployment). Prod reads the production ElasticSearch instance.
+Both the dev and prod Elastic Beanstalk instances **autodeploy on merge** (set up by Leigh) — there is **no manual `dist.zip` / EB-Console upload step**. Merging to the corresponding branch triggers the build (`npm run build` → `react-scripts build` → gulp `postbuild` → `dist.zip`) and deploys it automatically. The NodeJS Express server serves the built React app; prod reads the production ElasticSearch instance.
+
+Because **merge = deploy** for these, only merge prod-affecting changes when the galleries are closed and there are no events.
 
 ---
 
