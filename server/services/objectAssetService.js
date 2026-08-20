@@ -74,7 +74,15 @@ async function getAssetsForArtworks(artworks) {
   const ids = artworks
     .map((a) => a._source && a._source.id)
     .filter((id) => id !== null && id !== undefined);
-  const v2 = await fetchV2ByIds(ids);
+
+  // Degrade gracefully: if the V2 store is unreachable/unconfigured, serve the results WITHOUT carousel
+  // renditions rather than 500-ing search + object pages (search/tombstone/primary image are unaffected).
+  let v2 = new Map();
+  try {
+    v2 = await fetchV2ByIds(ids);
+  } catch (e) {
+    console.error(`[objectAssetService] V2 read failed; serving without carousel renditions: ${e.message}`);
+  }
   const isSingle = artworks.length === 1;
 
   return artworks.map((artwork) => {
