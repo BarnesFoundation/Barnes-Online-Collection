@@ -360,7 +360,7 @@ class PanelDetails extends Component {
     const objectCopyrightDetails = getObjectCopyright(object);
     const accordionTabList = getTabList(object);
 
-    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
+    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/image-request-publication-permission-application/def/field4=${object.people}&field3=${object.title}&field5=${object.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
 
     return (
