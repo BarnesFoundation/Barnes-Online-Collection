@@ -297,7 +297,7 @@ export const Footer = ({ hasHours }) => {
                   <br />
                   Members: 10am – 5pm
                   <br />
-                  Closed July 4, Thanksgiving, and Christmas 
+                  Closed July 4, Thanksgiving, and Christmas
                 </p>
               </div>
               <Newsletter />
