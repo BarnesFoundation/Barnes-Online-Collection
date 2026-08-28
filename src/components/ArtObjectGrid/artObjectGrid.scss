@@ -37,6 +37,14 @@
     }
   }
 
+  // Reserve a viewport of height until results arrive. Sized images (V2 dims) let the grid jump from
+  // 0 → full height in ONE layout when the async data lands; without this reserve that yanks the
+  // footer down by the whole grid height in a single large layout shift (CLS). Holding a viewport
+  // keeps the footer below the fold during that jump, so the shift lands off-screen and isn't counted.
+  &:not(.has-elements) {
+    min-height: 100vh;
+  }
+
   &.has-elements {
     .component-art-object-grid-results {
       display: block;
@@ -105,6 +113,33 @@
     padding: 0;
   }
 
+  // CSS-grid masonry (replaces react-masonry-component). Tiles are real grid items; CssMasonry
+  // (ArtObjectGrid.jsx) sets each tile's `grid-row-end: span N` from its measured height. The
+  // --masonry-row / --masonry-gap custom props are READ by that JS — keep them equal to the
+  // grid-auto-rows / gap values here. Default = 2 columns (matches legacy keyword-search masonry).
+  .css-masonry {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 2px;
+    column-gap: $art-object-grid-gap;
+    list-style: none;
+    --masonry-row: 2px;
+    --masonry-gap: #{$art-object-grid-gap};
+
+    > .masonry-grid-element {
+      width: auto !important; // override the legacy absolute-masonry column widths (50%/33%/25%)
+      padding: 0;
+      transition: none;
+    }
+  }
+
+  // full-size grid (landing) keeps its responsive column counts: 2 (small) / 3 (medium) / 4 (large).
+  &[data-grid-style="full-size"] .css-masonry {
+    @include breakpoint('small-')  { grid-template-columns: repeat(2, 1fr); }
+    @include breakpoint('medium-') { grid-template-columns: repeat(3, 1fr); }
+    @include breakpoint('large+')  { grid-template-columns: repeat(4, 1fr); }
+  }
+
   .masonry-grid-element {
     padding: $art-object-grid-gap / 2;
     margin: 0;
@@ -117,6 +152,14 @@
       // this ensures the masonry calculations work right
       display: block;
       width: 100%;
+    }
+
+    // The <img> carries width/height attrs (V2 dims) to reserve its aspect box (CLS). WITHOUT this
+    // height:auto the attribute height wins over the aspect-ratio and the image is stretched to that
+    // pixel height (object-fit defaults to fill). height:auto lets the attr-derived aspect-ratio set
+    // the height → correct aspect AND correct reserved box.
+    img {
+      height: auto;
     }
 
     .grid-list-el {

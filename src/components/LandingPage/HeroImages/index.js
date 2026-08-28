@@ -1,12 +1,21 @@
-import peasants from "./peasants.jpg";
-import room22SouthWall from "./room22SouthWall.jpg";
-import room15SouthWall from "./room15SouthWall.jpg";
-import room13NorthWall from "./room13NorthWall.jpg";
-import mainRoomWestWall from "./mainRoomWestWall.jpg";
+// All hero slides served from public/heroes/ as optimized JPGs (≤1600px, mozjpeg q72) — the 4
+// rotation slides were 941KB of unoptimized JPGs competing for slow-4G bandwidth on mobile; now
+// ~463KB total (−51%). The first slide (peasants) is the LCP element and is additionally preloaded
+// in public/index.html + injected as the static hero — keep that path in sync with the <link rel=preload>.
+const peasants = process.env.PUBLIC_URL + "/heroes/peasants-hero.jpg";
+const room22SouthWall = process.env.PUBLIC_URL + "/heroes/room22.jpg";
+const room15SouthWall = process.env.PUBLIC_URL + "/heroes/room15.jpg";
+const room13NorthWall = process.env.PUBLIC_URL + "/heroes/room13.jpg";
+const mainRoomWestWall = process.env.PUBLIC_URL + "/heroes/mainroom.jpg";
 
+const PUB = process.env.PUBLIC_URL || "";
 const sceneOne = {
   src: peasants,
   // srcName: 'peasants',
+  // Responsive LCP hero: mobile picks the 1200px WebP (~48KB), desktop the 1675px JPG (~119KB) —
+  // matches the preload + static-hero injector in index.html so React re-renders the same fetch.
+  srcSet: `${PUB}/heroes/peasants-hero-sm.webp 1200w, ${PUB}/heroes/peasants-hero.jpg 1675w`,
+  sizes: "100vw",
   text: "The Barnes Foundation houses one of the world’s great collections of modern European paintings, with numerous works by Renoir, Cézanne, Matisse, Picasso, Van Gogh, and Modigliani.",
 };
 

@@ -14,6 +14,15 @@ const ARTISTS_RADIOS_ARRAY = [
   ARTISTS_RADIOS.ALPHABETICAL,
 ];
 
+/** Sort key for the "Alphabetical" artist sort: surname (last token of the first constituent),
+ *  lowercased for a locale-friendly A–Z. Robust to missing/multi-constituent names. */
+const artistSortKey = (a) => {
+  const name = (a && (a.sortedName || a.key)) || "";
+  const first = name.split(";")[0].trim();
+  const parts = first.split(/\s+/).filter(Boolean);
+  return (parts.length > 1 ? parts[parts.length - 1] : first).toLocaleLowerCase();
+};
+
 export class ArtistSideMenuContent extends Component {
   constructor(props) {
     super(props);
@@ -30,17 +39,15 @@ export class ArtistSideMenuContent extends Component {
   changeSort = (artistRadio) => {
     const { data } = this.props;
 
-    this.setState({
-      artistRadio,
-      data:
-        artistRadio === ARTISTS_RADIOS.ALPHABETICAL
-          ? data.sort((a, b) => a.sortedName.localeCompare(b.sortedName))
-          : data.sort((a, b) => {
-              if (a.doc_count > b.doc_count) return -1;
-              if (a.doc_count < b.doc_count) return 1;
-              return 0;
-            }),
-    });
+    // Copy before sorting (never mutate the shared searchAssets array), and use a robust surname key
+    // for alphabetical (the old code called a.sortedName.localeCompare directly, which threw whenever an
+    // artist had no sortedName — silently leaving the list stuck in abundance order).
+    const sorted =
+      artistRadio === ARTISTS_RADIOS.ALPHABETICAL
+        ? [...data].sort((a, b) => artistSortKey(a).localeCompare(artistSortKey(b), "en"))
+        : [...data].sort((a, b) => (b.doc_count || 0) - (a.doc_count || 0));
+
+    this.setState({ artistRadio, data: sorted });
   };
 
   render() {

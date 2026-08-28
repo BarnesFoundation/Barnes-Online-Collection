@@ -28,6 +28,17 @@ const generateObjectImageUrls = (object) => {
   newObject.imageUrlLarge = `${imageUrlBase}/${imageIdReg}_b.jpg`;
   newObject.imageUrlForWufoo = `${canonicalRootNoProt}${imageTrackBaseUrl}${imageIdOrig}`;
 
+  // Responsive + modern-format sources for the grid <picture> (enrichGridFormats generates
+  // _m 640 + WebP/AVIF at 640/1024). The browser picks the smallest FORMAT it supports (AVIF→WebP→
+  // JPG) and, within it, the right SIZE for the slot × DPR. The <img> JPG srcset is the fallback and
+  // works even before the modern derivatives exist.
+  const gs = `${imageUrlBase}/${imageIdReg}`;
+  newObject.gridSources = {
+    avif: `${gs}_m.avif 640w, ${gs}_b.avif 1024w`,
+    webp: `${gs}_m.webp 640w, ${gs}_b.webp 1024w`,
+    jpg: `${gs}_n.jpg 320w, ${gs}_m.jpg 640w, ${gs}_b.jpg 1024w`,
+  };
+
   return newObject;
 };
 

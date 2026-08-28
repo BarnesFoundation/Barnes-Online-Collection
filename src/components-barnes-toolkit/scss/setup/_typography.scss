@@ -68,19 +68,26 @@ Try to use classes to determine the size of fonts/headings:
  * © 2017 MyFonts Inc
 */
 
-/* @import must be at top of file, otherwise CSS will not work */
-@import url("//hello.myfonts.net/count/3399db");
+/* MyFonts pageview counter fully REMOVED (2026-08, CTO sign-off). The FF Milo Serif fonts below are
+ * self-hosted (/fonts/3399DB_*), so the legacy `hello.myfonts.net/count/3399db` beacon served no
+ * functional purpose and only set a third-party cookie (Lighthouse "Uses third-party cookies"). It
+ * previously lived here as a render-blocking @import, then as a deferred beacon in public/index.html;
+ * now gone entirely. Monotype's current self-hosting kits ship without it (ours was a 2017 build). */
 
 // #styleguideOverride: the create-react-app restricts relative imports. Use this instead
 // $font_path: '../fonts/';
 $font_path: '/fonts/';
 
+// font-display: swap — render text immediately in the fallback face and swap when the webfont
+// arrives, instead of blocking on it (FOIT). Removes the PSI "font display" flag (~130ms) and,
+// more importantly, means text is never invisible while the font downloads on slow connections.
 @font-face {
   font-family: 'Calibre';
   src: url($font_path + 'CalibreWeb-Regular.woff2') format('woff2'),
        url($font_path + 'CalibreWeb-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -89,6 +96,7 @@ $font_path: '/fonts/';
        url($font_path + 'CalibreWeb-Medium.woff') format('woff');
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -97,6 +105,7 @@ $font_path: '/fonts/';
         url($font_path + '3399DB_0_0.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -105,6 +114,7 @@ $font_path: '/fonts/';
         url($font_path + '3399DB_1_0.woff') format('woff');
   font-weight: bold;
 	font-style: normal;
+  font-display: swap;
 }
 
 

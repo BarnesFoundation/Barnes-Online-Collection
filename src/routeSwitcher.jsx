@@ -1,15 +1,22 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import TourPage from "./components/TourPage/TourPage";
-import LandingPage from "./components/LandingPage/LandingPage";
-import ArtObjectPage from "./components/ArtObjectPage/ArtObjectPage";
-import ArtObjectPageModal from "./components/ArtObjectPageComponents/ArtObjectPageModal";
+import LandingPage from "./components/LandingPage/LandingPage"; // eager: the initial / LCP route
 import * as ModalActions from "./actions/modal";
-import NotFound from "./components/NotFound/notFound";
+
+// Every non-landing route is lazy-loaded so its code — and its heavy deps (e.g. the OpenSeadragon
+// IIIF zoom viewer pulled in by ArtObjectPage) — is code-split out of the landing's INITIAL bundle.
+// That shrinks the JavaScript the browser must parse/execute before React paints the landing hero,
+// which is the landing LCP. LandingPage stays eager so the first paint isn't gated on a chunk fetch.
+const TourPage = lazy(() => import("./components/TourPage/TourPage"));
+const ArtObjectPage = lazy(() => import("./components/ArtObjectPage/ArtObjectPage"));
+const ArtObjectPageModal = lazy(() =>
+  import("./components/ArtObjectPageComponents/ArtObjectPageModal")
+);
+const NotFound = lazy(() => import("./components/NotFound/notFound"));
 
 const renderMergedProps = (component, ...rest) =>
   React.createElement(component, Object.assign({}, ...rest));
@@ -96,23 +103,31 @@ class RouteSwitcher extends Component {
 
     return (
       <div>
-        <Switch location={primaryRouteLocation}>
-          <Route exact path="/" component={LandingPage} />
-          <Route exact path="/objects/" component={LandingPage} />
-          <Route exact path="/objects/:id" component={ArtObjectPage} />
-          <Route exact path="/objects/:id/:title" component={ArtObjectPage} />
-          <Route
-            exact
-            path="/objects/:id/:title/:panel"
-            component={ArtObjectPage}
-          />
-          <Route exact path="/tour" component={LandingPage} />
-          <Route path="/tour/:id" component={TourPage} />
-          <Route exact path="/eye-spy" component={LandingPage} />
-          <Route path="/eye-spy/:id" component={TourPage} />
-          <Route path="*" component={NotFound} />
-        </Switch>
-        {this.modalRouteComponents}
+        {/* Primary route tree. Suspense reserves a viewport of height while a lazy route chunk
+            loads so the transition is CLS-clean. LandingPage is eager, so first paint never hits it. */}
+        <Suspense
+          fallback={<div style={{ minHeight: "100vh" }} aria-busy="true" />}
+        >
+          <Switch location={primaryRouteLocation}>
+            <Route exact path="/" component={LandingPage} />
+            <Route exact path="/objects/" component={LandingPage} />
+            <Route exact path="/objects/:id" component={ArtObjectPage} />
+            <Route exact path="/objects/:id/:title" component={ArtObjectPage} />
+            <Route
+              exact
+              path="/objects/:id/:title/:panel"
+              component={ArtObjectPage}
+            />
+            <Route exact path="/tour" component={LandingPage} />
+            <Route path="/tour/:id" component={TourPage} />
+            <Route exact path="/eye-spy" component={LandingPage} />
+            <Route path="/eye-spy/:id" component={TourPage} />
+            <Route path="*" component={NotFound} />
+          </Switch>
+        </Suspense>
+        {/* Modal overlay in its own boundary (fallback null) so opening a modal doesn't blank the
+            page underneath while its chunk loads. */}
+        <Suspense fallback={null}>{this.modalRouteComponents}</Suspense>
       </div>
     );
   }

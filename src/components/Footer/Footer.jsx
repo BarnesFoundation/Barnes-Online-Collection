@@ -123,6 +123,7 @@ class Newsletter extends Component {
               <button
                 className="m-newsletter__btn btn btn--icon"
                 type="submit"
+                aria-label="Sign up for the newsletter"
                 onClick={(e) => {
                   e.preventDefault();
                   this.submit();

@@ -298,6 +298,8 @@ class SiteHeader extends Component {
                 Take a Class
               </a>
               <btn
+                role="button"
+                aria-label="Search"
                 onClick={toggleGlobalSearch}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {

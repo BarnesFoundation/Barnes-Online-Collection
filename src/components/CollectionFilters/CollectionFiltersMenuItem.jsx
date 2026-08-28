@@ -32,6 +32,10 @@ const CollectionFiltersMenuItem = ({
   return (
     <button
       className={filterClassNames}
+      // Accessible name — the visible label is inside <MediaQuery>, which renders nothing until it
+      // evaluates client-side, so audits (a11y + agentic "discernible text") see an icon-only button.
+      // An unconditional aria-label fixes it without changing the visual.
+      aria-label={slug === "search" ? "Search collection" : `Filter by ${title}`}
       onClick={() => {
         scrollMenuIntoView();
 

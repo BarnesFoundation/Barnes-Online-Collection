@@ -129,11 +129,14 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// redirect http to https
-if (process.env.NODE_ENV === "production") {
+// redirect http to https — gated behind FORCE_HTTPS (off by default). App Runner / CloudFront terminate
+// TLS at the edge and forward HTTP to the container; an unconditional redirect here 301s the platform
+// health check and fails deployment. Leave FORCE_HTTPS unset behind those; the edge already enforces TLS.
+if (process.env.NODE_ENV === "production" && process.env.FORCE_HTTPS === "true") {
   app.enable("trust proxy");
   app.use(function (req, res, next) {
     if (
+      req.path !== "/health" &&
       req.headers["x-forwarded-proto"] &&
       req.headers["x-forwarded-proto"].toLowerCase() === "http"
     ) {
@@ -145,6 +148,36 @@ if (process.env.NODE_ENV === "production") {
 
 app.get("/health", (req, res) => {
   res.json({ success: true });
+});
+
+// Lightweight in-memory rate limiter (1b guardrail): bounds abusive query volume per client on the
+// search/read API — a resilience backstop against the search-flood class of incident. Fixed window,
+// per App Runner instance. Parameterized SQL + the query-shape allowlist are the primary defenses.
+const rlBuckets = new Map();
+const RL_WINDOW_MS = 60 * 1000;
+const RL_MAX = 150; // requests/min/IP to the query endpoints
+app.use((req, res, next) => {
+  if (!/^\/api\/(search|related|advancedSearchSuggest)/.test(req.path)) return next();
+  const ip = (req.headers["x-forwarded-for"] || req.ip || "unknown").toString().split(",")[0].trim();
+  const now = Date.now();
+  let b = rlBuckets.get(ip);
+  if (!b || now - b.start >= RL_WINDOW_MS) { b = { start: now, count: 0 }; rlBuckets.set(ip, b); }
+  b.count += 1;
+  if (b.count > RL_MAX) return res.status(429).json({ error: "rate limit exceeded" });
+  if (rlBuckets.size > 5000) for (const [k, v] of rlBuckets) if (now - v.start >= RL_WINDOW_MS) rlBuckets.delete(k);
+  next();
+});
+
+// CloudFront-only gate: CloudFront injects a secret `x-origin-verify` header on the /api origin; reject
+// /api requests that don't carry it, so the (public) Lambda Function URL can't be hit directly. Fail-OPEN
+// when X_ORIGIN_VERIFY is unset (so a missing env can't take /api down); the header approach works for POST,
+// unlike CloudFront OAC SigV4 which is unreliable for request bodies.
+app.use((req, res, next) => {
+  const expected = process.env.X_ORIGIN_VERIFY;
+  if (!expected) return next(); // fail-open if not configured
+  if (!req.path.startsWith("/api")) return next();
+  if (req.headers["x-origin-verify"] === expected) return next();
+  return res.status(403).json({ error: "forbidden" });
 });
 
 // if in production, and .htpasswd file exists, set up authentication
@@ -198,21 +231,19 @@ function getObjectDescriptors(objectID) {
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => {
-      const hits = response.data.hits.hits;
-      const hitSource = hits.length ? hits[0]._source : {};
-
-      return hitSource;
+  // In-process (was self-HTTP to canonicalRoot) — avoids an internet round-trip and works without egress.
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => {
+      const hits = data.hits.hits;
+      return hits.length ? hits[0]._source : {};
     })
     .catch((error) => {
       console.error(`[error] getObjectDescriptors:`, error.message);
-      console.error(error);
     });
 }
 
-function getRelatedObjects(objectID) {
+function getRelatedObjects(objectID, dissimilarPercent = 0) {
   let body = bodybuilder()
     .filter("exists", "imageSecret")
     .from(0)
@@ -227,13 +258,15 @@ function getRelatedObjects(objectID) {
       fields: ALL_MORE_LIKE_THIS_FIELDS,
       min_term_freq: 1,
       minimum_should_match: "10%",
+      // "more similar ↔ more surprising" slider (0-100) → pgvector neighbor offset (elasticSearchService.moreLikeThis)
+      dissimilar_percent: dissimilarPercent,
     })
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => response.data.hits.hits)
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => data.hits.hits)
     .catch((error) => console.error(error.message));
 }
 
@@ -287,43 +320,19 @@ const getRelated = (objectID, dissimilarPercent) => {
   if (objectID === undefined) {
     throw new Error(`[error] in getRelated: objectID undefined`);
   }
-  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100);
-  const similarRatio = similarPercent / 100.0;
-
-  return axios
-    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
-    .then(
-      axios.spread((objectDescriptors, relatedObjects) => {
-        const sources = relatedObjects.map((object) => {
-          const _source = object._source;
-          Object.assign(_source, { id: parseInt(object._id) });
-          return _source;
-        });
-
-        const sorted = sources.sort(
-          (a, b) =>
-            getDistance(a, objectDescriptors) -
-            getDistance(b, objectDescriptors)
-        );
-        const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length);
-        const similarItemCount = Math.floor(maxSize * similarRatio);
-        const similarItems = sorted.slice(0, similarItemCount);
-        const dissimilarItems = sorted.slice(-(maxSize - similarItemCount));
-        const objects = similarItems.concat(dissimilarItems).map((object) => ({
-          _index: esIndex,
-          _type: "object",
-          _id: object.id,
-          _source: object,
-        }));
-
-        return {
-          hits: {
-            total: objects.length,
-            hits: objects,
-          },
-        };
-      })
-    );
+  // The pgvector store now handles BOTH similarity and the "more similar ↔ more surprising" slider (via a
+  // neighbor offset — see elasticSearchService.moreLikeThis), so the returned set already reflects
+  // dissimilarPercent and its own distance order. Return it as-is. (The old ES-era descriptor-distance
+  // re-sort + similar/dissimilar split was a no-op on the new fields and never changed the result set.)
+  return getRelatedObjects(objectID, clamp(dissimilarPercent, 0, 100)).then((relatedObjects) => {
+    const objects = (relatedObjects || []).map((object) => ({
+      _index: esIndex,
+      _type: "object",
+      _id: object._id,
+      _source: Object.assign({}, object._source, { id: parseInt(object._id) }),
+    }));
+    return { hits: { total: objects.length, hits: objects } };
+  });
 };
 
 app.get(
@@ -376,21 +385,13 @@ const getObject = (id) => {
 
   body = body.query("match", "_id", id).build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, {
-      params: {
-        body: body,
-      },
-    })
-    .then((response) => {
-      const objects = response.data.hits.hits.map((object) =>
+  return elasticSearchService
+    .performSearch(body)
+    .then((data) => {
+      const objects = data.hits.hits.map((object) =>
         Object.assign({}, object._source, { id: object._id })
       );
-      const object = objects.find((object) => {
-        return parseInt(object.id, 10) === parseInt(id, 10);
-      });
-
-      return object;
+      return objects.find((object) => parseInt(object.id, 10) === parseInt(id, 10));
     });
 };
 
@@ -572,17 +573,19 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
     .send();
 });
 
-/** Endpoint for locally generating the assets file for the frontend */
-app.use("/api/build-search-assets", async (req, res) => {
-  const result = await buildSearchAssets.generateAndWriteAssets();
-  res.json(result);
-});
-
-/** Endpoint for generating the assets file during deployment */
-app.use("/api/get-search-assets", async (req, res) => {
-  const result = await buildSearchAssets.generateAssets();
-  res.json(result);
-});
+/** Serve the prebuilt search assets (filter dropdown options) from the static file baked at build time
+ * (generated from the Postgres V2 store). Was: regenerated from ElasticSearch aggregations. */
+const SEARCH_ASSETS_PATH = path.resolve(__dirname, "..", "build", "resources", "searchAssets.json");
+const serveSearchAssets = (req, res) => {
+  try {
+    res.type("application/json").send(fs.readFileSync(SEARCH_ASSETS_PATH, "utf8"));
+  } catch (e) {
+    console.error(`[error] searchAssets: ${e.message}`);
+    res.status(500).json({ error: "search assets unavailable" });
+  }
+};
+app.use("/api/build-search-assets", serveSearchAssets);
+app.use("/api/get-search-assets", serveSearchAssets);
 
 /** Endpoint for retrieving entries from the www Craft site */
 app.get("/api/entries", craftService.entryCacher);

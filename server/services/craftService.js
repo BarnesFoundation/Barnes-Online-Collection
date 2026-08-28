@@ -1,3 +1,4 @@
+const pgPool = require("../utils/pgClient");
 const axios = require("axios");
 const memoryCache = require("memory-cache");
 const esClient = require("../utils/esClient");
@@ -35,9 +36,14 @@ const getEntries = () => {
       entryRequest("library-archives"),
       entryRequest("the-barnes-arboretum"),
     ];
-    const responses = await Promise.all(entriesRequests);
-    const entries = responses.map((response) => response.data);
-
+    // Degrade gracefully if Craft is unreachable (e.g. no outbound internet) — never reject/crash.
+    let entries = [];
+    try {
+      const responses = await Promise.all(entriesRequests);
+      entries = responses.map((response) => response.data);
+    } catch (error) {
+      console.error(`[error] getEntries (Craft unreachable): ${error.message}`);
+    }
     resolve(entries);
   });
 };
@@ -45,54 +51,31 @@ const getEntries = () => {
 /** Fetches the results for a query against the Craft site */
 const getSuggestions = async (request, response) => {
   const { q } = request.query;
-  const aConfig = {
-    ...craftRequestConfig,
-    url: `/api/suggest?q=${q}`,
-  };
-
-  const suggestionResponse = await axios(aConfig);
-
-  response.json(suggestionResponse.data);
+  try {
+    const suggestionResponse = await axios({ ...craftRequestConfig, url: `/api/suggest?q=${q}` });
+    response.json(suggestionResponse.data);
+  } catch (error) {
+    console.error(`[error] getSuggestions (Craft unreachable): ${error.message}`);
+    response.json({});
+  }
 };
 
 /** Fetches the auto-suggest results for a query against the Craft site */
 const getAutoSuggestions = async (request, response) => {
   const { q: query } = request.query;
 
-  const {
-    aggregations: {
-      people: { buckets },
-    },
-  } = await esClient.search({
-    body: {
-      size: 0,
-      query: {
-        bool: {
-          filter: {
-            exists: {
-              field: "imageSecret",
-            },
-          },
-          must: {
-            multi_match: {
-              query: query,
-              type: "bool_prefix",
-              fields: ["people", "people.text", "people.suggest"],
-            },
-          },
-        },
-      },
-      _source: ["id", "title", "people"],
-      aggregations: {
-        people: {
-          terms: {
-            field: "people.text",
-            size: 200,
-          },
-        },
-      },
-    },
-  });
+  // Postgres-backed (was ES more_like_this/agg): distinct artist names matching the query, with counts.
+  let buckets = [];
+  if (query && query.trim()) {
+    const { rows } = await pgPool.query(
+      `SELECT people AS key, count(*)::int AS doc_count
+         FROM collection.collection_object
+        WHERE image_secret <> '' AND people <> '' AND people ILIKE $1
+        GROUP BY people ORDER BY doc_count DESC LIMIT 200`,
+      [`%${query.trim()}%`]
+    );
+    buckets = rows;
+  }
 
   // Wrap return results in <strong> tags.
   const highlighted = buckets.map(({ key, doc_count }) => {
@@ -119,11 +102,15 @@ const entryCacher = async (_, response) => {
 
   if (body) {
     response.append("x-cached", true);
-    response.send(body);
-  } else {
+    return response.send(body);
+  }
+  try {
     const entries = await getEntries();
     response.json(entries);
     memoryCache.put(key, entries, oneDay);
+  } catch (error) {
+    console.error(`[error] entryCacher: ${error.message}`);
+    response.json([]);
   }
 };
 

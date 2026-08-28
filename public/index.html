@@ -12,6 +12,66 @@
   <meta name="theme-color" content="#000000">
 
   <!--
+      LCP optimization: the landing hero (first slide) is React-rendered, so without this the browser
+      can't discover it until the JS bundle executes. Preloading a STABLE public-folder copy starts
+      the fetch during HTML parse (parallel to the bundle) so it's cached by the time React paints it.
+      Must stay in lockstep with heroes[0].src in src/components/LandingPage/HeroImages/index.js.
+    -->
+  <link rel="preload" as="image" fetchpriority="high"
+    imagesrcset="%PUBLIC_URL%/heroes/peasants-hero-sm.webp 1200w, %PUBLIC_URL%/heroes/peasants-hero.jpg 1675w"
+    imagesizes="100vw" href="%PUBLIC_URL%/heroes/peasants-hero.jpg">
+
+  <!--
+      Static LCP hero, injected from the <head> (head markup survives react-scripts build; arbitrary
+      body markup does not). We add an <img> of the already-preloaded hero as soon as <body> exists —
+      well before the deferred app bundle downloads/parses/executes — so on throttled mobile the
+      Largest Contentful Paint is ~FCP instead of waiting seconds for React to render the hero. Once
+      React mounts (children appear in #root, rendering heroes[0] = this same cached image at
+      opacity 1), a MutationObserver removes the static <img> — a seamless swap. Inline styles only,
+      so it doesn't depend on the render-blocking CSS.
+    -->
+  <script>
+    (function () {
+      function makeHero() {
+        if (document.getElementById("static-hero")) return true; // already injected
+        if (!document.body) return false; // <body> not parsed yet — retry (do NOT mark done)
+        var img = document.createElement("img");
+        img.id = "static-hero";
+        // Responsive: mobile picks the 1200px WebP (~48KB), desktop the 1675px JPG (~119KB). Matches
+        // the <link rel=preload imagesrcset> above so the fetch is already in flight. src = JPG is the
+        // no-srcset/no-WebP fallback. This is the LCP element on mobile — smaller = lower LCP.
+        img.srcset = "%PUBLIC_URL%/heroes/peasants-hero-sm.webp 1200w, %PUBLIC_URL%/heroes/peasants-hero.jpg 1675w";
+        img.sizes = "100vw";
+        img.src = "%PUBLIC_URL%/heroes/peasants-hero.jpg";
+        img.alt = "The Barnes Foundation collection";
+        img.setAttribute("fetchpriority", "high");
+        img.style.cssText =
+          "position:fixed;top:0;left:0;width:100%;height:100vh;object-fit:cover;object-position:center;z-index:0";
+        document.body.insertBefore(img, document.body.firstChild);
+        // Remove the static hero once React mounts (renders heroes[0], the same cached image). We
+        // poll for #root gaining children rather than observing it directly, because at inject time
+        // (right when <body> opens) #root doesn't exist yet.
+        var poll = setInterval(function () {
+          var root = document.getElementById("root");
+          if (root && root.childNodes.length) {
+            var sh = document.getElementById("static-hero");
+            if (sh) sh.remove();
+            clearInterval(poll);
+          }
+        }, 60);
+        setTimeout(function () { clearInterval(poll); }, 30000);
+        return true;
+      }
+      // Inject the instant <body> is parseable; fall back to DOMContentLoaded.
+      if (!makeHero()) {
+        var iv = setInterval(function () { if (makeHero()) clearInterval(iv); }, 10);
+        document.addEventListener("DOMContentLoaded", function () { makeHero(); clearInterval(iv); });
+      }
+    })();
+  </script>
+
+
+  <!--
       Notice the use of %PUBLIC_URL% in these tags.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -44,16 +104,39 @@
 
   <!-- note: google analytics is done by react-ga plugin in routeWrapper.jsx -->
 
-  <!-- Google Tag Manager -->
+  <!-- Google Tag Manager — DEFERRED (2026-08). Loaded on the first user interaction OR a short
+       post-load timeout (whichever comes first) so GTM's ~124KB of JS stays OUT of the initial render
+       path and never competes for the main thread during first paint — this stabilizes the landing
+       LCP at a perfect Lighthouse score. Primary GA pageview tracking is separate (react-ga in
+       routeWrapper.jsx) and is unaffected; the timeout fallback keeps passive-reader coverage. -->
   <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      w[l] = w[l] || [];
+      var loaded = false;
+      function loadGTM() {
+        if (loaded) return;
+        loaded = true;
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      }
+      ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(function (e) {
+        w.addEventListener(e, loadGTM, { once: true, passive: true });
+      });
+      w.addEventListener('load', function () { setTimeout(loadGTM, 3500); });
     })(window, document, 'script', 'dataLayer', 'GTM-522X585');</script>
   <!-- End Google Tag Manager -->
+
+  <!--
+      Legacy MyFonts pageview counter REMOVED (2026-08, CTO sign-off). The FF Milo Serif fonts are
+      self-hosted (see src/components-barnes-toolkit/scss/setup/_typography.scss @font-face →
+      /fonts/3399DB_*), so the `hello.myfonts.net/count/3399db` beacon did nothing functional — it
+      only set a third-party Cloudflare cookie (__cf_bm), the sole item flagged by Lighthouse
+      "Uses third-party cookies". Monotype's current self-hosting kits ship without this legacy
+      counter (ours was a 2017 build). Deleting it removes our only third-party cookie.
+    -->
 </head>
 
 <body>
