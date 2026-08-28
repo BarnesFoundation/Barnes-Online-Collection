@@ -210,7 +210,9 @@ class Image extends Component {
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const renditionsExist = NETX_ENABLED && renditions?.length > 0;
+    // Renditions render when they come from live NetX (legacy) OR from the V2 store (`_cf`).
+    const renditionsExist =
+      renditions?.length > 0 && (NETX_ENABLED || renditions[0]?._cf);
     const showZoomImageView = Boolean(
       !didCatchFailure &&
         object.id &&

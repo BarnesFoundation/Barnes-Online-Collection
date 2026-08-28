@@ -69,7 +69,9 @@ const GridListElement = ({
   if (isFilterResult)
     gridListElementClassNames = `${gridListElementClassNames} search-results-grid__element`;
   const renditions =
-    NETX_ENABLED && object.renditions ? object.renditions : null;
+    object.renditions && (NETX_ENABLED || object.renditions[0]?._cf)
+      ? object.renditions
+      : null;
   const primaryRendition = renditions?.length ? renditions[0] : null;
 
   const artworkRenditionThumbnailUrl = primaryRendition
