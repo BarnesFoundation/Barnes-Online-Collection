@@ -3,17 +3,26 @@
 Deploy ownership belongs to the Lead Developer. This documents each target so deploys transfer cleanly
 (remediation card **CS-60**). Account `744014450301`, region `us-east-1`.
 
-There are two environments:
-- **Production** — the live legacy site on this `development` branch, served from Elastic Beanstalk, reading ElasticSearch.
+There are two deploy targets:
+- **Legacy site (Elastic Beanstalk)** — the live site served from EB, reading ElasticSearch. Two environments: **dev** (`collection-server-development`) and **prod** (`collection-server-production`). See below.
 - **Evolved dev preview** — the ElasticSearch→Postgres-V2 site on the `pg-v2-backend-swap` branch (and its feature branches). Review-only; promote-or-not is an open decision (**CS-61**). Its deploy tooling (`Dockerfile.lambda`) lives on that branch, not here.
 
 ---
 
 ## Elastic Beanstalk (dev + prod) — autodeploy on merge
 
-Both the dev and prod Elastic Beanstalk instances **autodeploy on merge** (set up by Leigh) — there is **no manual `dist.zip` / EB-Console upload step**. Merging to the corresponding branch triggers the build (`npm run build` → `react-scripts build` → gulp `postbuild` → `dist.zip`) and deploys it automatically. The NodeJS Express server serves the built React app; prod reads the production ElasticSearch instance.
+Both EB environments **autodeploy on merge** (set up by Leigh) — there is **no manual `dist.zip` / EB-Console upload step**. Each environment watches its own branch (CodePipeline → CodeBuild → EB):
 
-Because **merge = deploy** for these, only merge prod-affecting changes when the galleries are closed and there are no events.
+| Branch | Pipeline | EB environment |
+|---|---|---|
+| `development` | `collection-dev-deploy` | `collection-server-development` (**dev**) |
+| `master` | `collection-prod-deploy` | `collection-server-production` (**prod**) |
+
+Merging to a branch triggers the build (`npm ci` → `npm run write-search-assets` → `npm run build`) and deploys the `dist/` artifact automatically. The NodeJS Express server serves the built React app; prod reads the production ElasticSearch instance.
+
+> **Branch naming is legacy.** The team's intended pattern (not yet set up on this repo) is `main` → merge to `development` for a dev deploy → `development` → `production` for a prod deploy. Until that's in place it's `development`→dev, `master`→prod.
+
+Because **merge = deploy**, only merge **prod**-affecting changes (to `master`) when the galleries are closed and there are no events. Merges to `development` deploy the **dev** environment only.
 
 ---
 
@@ -41,9 +50,30 @@ aws lambda wait function-updated --function-name barnes-collection-www
 ```
 One `docker build -f Dockerfile.lambda` produces both artifacts — extract `/app/build` (or `/var/task/build`) for the static sync, and push the same image for the Lambda. **Rollback:** re-push the prior ECR digest and re-run `update-function-code`.
 
-**V2 connectivity (env):** the Lambda needs `PG_HOST` / `PG_PORT` / `PG_USER` / `PG_DATABASE` (+ `PG_PASSWORD` or `PG_IAM_AUTH=true`) and a network path to the V2 Postgres. Required for CS-55 (renditions from V2) on the prod server too — see that PR.
+## V2 connectivity (CS-55 read path)
 
-### Image / IIIF-tile CDN
+Both the Lambda and the EB server can read carousel renditions from the V2 Postgres store (`collection.collection_object`) instead of live NetX. The V2 store is the RDS instance **`netx-intermediate-database`**, fronted by the **`collection-proxy`** RDS Proxy (POSTGRESQL, IAM auth required).
+
+**EB server (legacy site) — where the vars go.** The `PG_*` vars belong on the **EB environment** (`aws:elasticbeanstalk:application:environment`), **not** the CodeBuild project — the buildspec is build-time only (`REACT_APP_*`) and does not reach the runtime server. Set on each env that should read V2:
+
+| Var | Value |
+|---|---|
+| `PG_HOST` | `collection-proxy.proxy-cra1dp6a1lpd.us-east-1.rds.amazonaws.com` (the RDS **Proxy**) |
+| `PG_PORT` | `5432` |
+| `PG_USER` | `collection_reader` (read-only role) |
+| `PG_DATABASE` | `postgres` |
+| `PG_SCHEMA` | `collection` |
+| `PG_IAM_AUTH` | `true` (no stored password) |
+
+IAM auth also requires: the EB **instance role** has `rds-db:connect` on the proxy for `collection_reader`, and the env's security group is in the proxy's ingress. Use a **dedicated instance profile** per env (e.g. `collection-server-development-ec2-role`) — do **not** add the grant to the shared account-wide `aws-elasticbeanstalk-ec2-role`.
+
+Gotcha: `server/app.js` sets process-wide static AWS creds via `AWS.config.update(...)`, so `pgClient` gives its `RDS.Signer` explicit `EC2MetadataCredentials` to sign the token as the instance role, not the static user. If IAM auth ever fails in a way that reads like a DB-permission error, check that first. If the store is unreachable the site **degrades gracefully** (serves results without carousel renditions), so a misconfig shows as missing renditions, not a 500.
+
+Wired on **dev** 2026-08-28 (CS-55). **Prod** needs the same on `collection-server-production` + its own instance profile — Steve's call (account-wide role + prod deploy).
+
+**Lambda (`barnes-collection-www`):** same vars; its role `barnes-collection-www-lambda-role` already carries the scoped `rds-db:connect`.
+
+## Image / IIIF-tile CDN
 Processed images + tiles live in S3 `barnes-data-processing-production`, served by CloudFront **`EBT379J21563X`** (`d2r83x5xt28klo.cloudfront.net`). To invalidate after overwriting a key, use an exact-path **batch file** (not `--paths $VAR`; wildcards cap at 15 in-progress):
 ```sh
 aws cloudfront create-invalidation --distribution-id EBT379J21563X --invalidation-batch file://batch.json
