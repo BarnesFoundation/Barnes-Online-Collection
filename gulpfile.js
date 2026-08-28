@@ -7,6 +7,7 @@ function build() {
 	return src(
     [
       "package.json",
+      "package-lock.json",
       ".npmrc",
       "build/**",
       "server/**",

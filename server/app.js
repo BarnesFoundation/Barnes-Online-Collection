@@ -43,8 +43,6 @@ const {
   MORE_LIKE_THIS_FIELDS,
   BASIC_FIELDS,
 } = require("./constants/fields");
-const NETX_ENABLED =
-  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -198,15 +196,13 @@ app.use("/api/search", async (req, res) => {
   const searchQuery = req.method === "GET" ? req.query.body : req.body.body;
   const searchResponse = await elasticSearchService.search(searchQuery);
 
-  // In case we want to disable interaction with NetX for now
-  if (NETX_ENABLED === false) {
-    return res.json(searchResponse);
+  // Enrich each hit with its carousel renditions from the V2 collection store (replaces the former
+  // live NetX DAMS fetch). Guard against error responses that carry no hits.
+  if (searchResponse && searchResponse.hits && Array.isArray(searchResponse.hits.hits)) {
+    searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
+      searchResponse.hits.hits
+    );
   }
-
-  // Get information from the DAMS and store it into the response
-  searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
-    searchResponse.hits.hits,
-  );
 
   return res.json(searchResponse);
 });
