@@ -24,6 +24,8 @@ Merging to a branch triggers the build (`npm ci` → `npm run write-search-asset
 
 Because **merge = deploy**, only merge **prod**-affecting changes (to `master`) when the galleries are closed and there are no events. Merges to `development` deploy the **dev** environment only.
 
+> **Dependency pinning (CS-63).** The deploy artifact ships `package-lock.json`, so EB installs the exact tree that was built and tested instead of re-resolving version ranges at deploy time. **Keep `package.json` and `package-lock.json` in sync** — regenerate the lock whenever you change dependencies, under Node 14 to match the platform: `docker run --rm -v "$PWD:/app" -w /app node:14 npm install --package-lock-only`. If a deploy ever fails on a lock mismatch, **regenerate the lock — do not drop the lockfile from the artifact.** Why it matters: the runtime is Node 14 (EOL — see CS-64), so an unpinned range can resolve to a version Node 14 can't run. This is exactly what broke the CS-55 deploy — `pg: ^8.13.1` re-resolved to 8.23.0 at deploy and crashed on `Cannot find module 'util/types'`.
+
 ---
 
 ## Evolved dev preview (run from the `pg-v2-backend-swap` branch)
