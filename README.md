@@ -9,6 +9,8 @@ This project is a virtual gallery of the Barnes Foundation collection of artwork
 
 Since the site only does *read* operations from the ElasticSearch database, we use the production instance for our local and development environments as well.
 
+As of CS-55, the artwork-page **carousel renditions** are read from the V2 collection Postgres (`collection_object.images[]`) instead of being fetched live from NetX. This is also **read-only** — set the `PG_*` variables (see `.env-template`) to point at the shared V2 collection database; there is **no local copy to run**. If the `PG_*` variables are unset, object pages still render (search, tombstone, and the primary image all come from ElasticSearch/CloudFront) — only the alternate/archival carousel renditions will be absent.
+
 ## Requirements
 
 To be able to run this project for local development, your environment will necessitate the following

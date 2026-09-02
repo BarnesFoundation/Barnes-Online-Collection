@@ -1,8 +1,6 @@
 const artObjectTitles = require("../src/artObjectTitles.json");
-const async = require("async");
 const auth = require("http-auth");
 const AWS = require("aws-sdk");
-const axios = require("axios");
 const bodybuilder = require("bodybuilder");
 const bodyParser = require("body-parser");
 const memoryCache = require("memory-cache");
@@ -45,8 +43,6 @@ const {
   MORE_LIKE_THIS_FIELDS,
   BASIC_FIELDS,
 } = require("./constants/fields");
-const NETX_ENABLED =
-  (process.env.REACT_APP_NETX_ENABLED === "false" ? false : true) || false;
 
 const normalizeDissimilarPercent = (req, res, next) => {
   if (req.query.dissimilarPercent !== undefined) {
@@ -74,25 +70,31 @@ const relatedCache = (req, res, next) => {
     const body = memoryCache.get(key);
     if (body) {
       res.append("x-cached", true);
-      res.send(body);
-    } else {
-      next();
+      return res.send(body);
     }
 
-    // warm cache
-    async.each(
-      Array(11)
-        .fill()
-        .map((_, index) => index * 10),
-      (dissimilarity) => {
-        const key = cacheKey(objectID, dissimilarity);
-        if (!memoryCache.get(key)) {
-          getRelated(objectID, dissimilarity).then((relatedObject) => {
-            memoryCache.put(key, relatedObject, oneDay);
-          });
+    // warm cache: fetch once from ES, compute all 11 dissimilarity variations
+    fetchAndSortRelated(objectID)
+      .then(({ objectDescriptors, sorted }) => {
+        for (let d = 0; d <= 100; d += 10) {
+          const warmKey = cacheKey(objectID, d);
+          if (!memoryCache.get(warmKey)) {
+            memoryCache.put(
+              warmKey,
+              computeRelated(objectDescriptors, sorted, d),
+              oneDay,
+            );
+          }
         }
-      }
-    );
+      })
+      .catch((error) => {
+        console.error(
+          `[error] cache warming for object ${objectID}:`,
+          error.message,
+        );
+      });
+
+    next();
   }
 };
 
@@ -103,7 +105,7 @@ const getIndexHtmlPromise = () => {
       "utf8",
       (err, data) => {
         err ? reject(err) : resolve(data);
-      }
+      },
     );
   });
 };
@@ -122,7 +124,7 @@ const app = express();
 // Setup logger
 app.use(
   morgan(
-    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'
+    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms',
   )
 );
 
@@ -133,6 +135,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "production") {
   app.enable("trust proxy");
   app.use(function (req, res, next) {
+    if (
+      req.headers["x-cf-proto"] === "https" ||
+      (req.headers["x-forwarded-proto"] &&
+        req.headers["x-forwarded-proto"].toLowerCase() === "https")
+    ) {
+      return next();
+    }
     if (
       req.headers["x-forwarded-proto"] &&
       req.headers["x-forwarded-proto"].toLowerCase() === "http"
@@ -147,6 +156,17 @@ app.get("/health", (req, res) => {
   res.json({ success: true });
 });
 
+// Block requests that bypass CloudFront
+if (process.env.NODE_ENV === "production") {
+  app.use(function (req, res, next) {
+    if (req.path === "/health") return next();
+    if (req.headers["x-cf-secret"] !== "Fuckth3b0ts!") {
+      return res.status(403).send("Forbidden");
+    }
+    return next();
+  });
+}
+
 // if in production, and .htpasswd file exists, set up authentication
 if (process.env.NODE_ENV === "production" && fs.existsSync(htpasswdFilePath)) {
   const basic = auth.basic({
@@ -158,7 +178,7 @@ if (process.env.NODE_ENV === "production" && fs.existsSync(htpasswdFilePath)) {
 // Serve static assets
 // let index fall through to the wild card route
 app.use(
-  express.static(path.resolve(__dirname, "..", "build"), { index: false })
+  express.static(path.resolve(__dirname, "..", "build"), { index: false }),
 );
 
 app.get("/api/latestIndex", (req, res) => {
@@ -176,15 +196,13 @@ app.use("/api/search", async (req, res) => {
   const searchQuery = req.method === "GET" ? req.query.body : req.body.body;
   const searchResponse = await elasticSearchService.search(searchQuery);
 
-  // In case we want to disable interaction with NetX for now
-  if (NETX_ENABLED === false) {
-    return res.json(searchResponse);
+  // Enrich each hit with its carousel renditions from the V2 collection store (replaces the former
+  // live NetX DAMS fetch). Guard against error responses that carry no hits.
+  if (searchResponse && searchResponse.hits && Array.isArray(searchResponse.hits.hits)) {
+    searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
+      searchResponse.hits.hits
+    );
   }
-
-  // Get information from the DAMS and store it into the response
-  searchResponse.hits.hits = await objectAssetService.getAssetsForArtworks(
-    searchResponse.hits.hits
-  );
 
   return res.json(searchResponse);
 });
@@ -198,17 +216,14 @@ function getObjectDescriptors(objectID) {
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => {
-      const hits = response.data.hits.hits;
-      const hitSource = hits.length ? hits[0]._source : {};
-
-      return hitSource;
+  return elasticSearchService
+    .search(body)
+    .then((searchResponse) => {
+      const hits = searchResponse.hits.hits;
+      return hits.length ? hits[0]._source : {};
     })
     .catch((error) => {
       console.error(`[error] getObjectDescriptors:`, error.message);
-      console.error(error);
     });
 }
 
@@ -231,10 +246,12 @@ function getRelatedObjects(objectID) {
     .rawOption("_source", BASIC_FIELDS)
     .build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, { params: { body } })
-    .then((response) => response.data.hits.hits)
-    .catch((error) => console.error(error.message));
+  return elasticSearchService
+    .search(body)
+    .then((searchResponse) => searchResponse.hits.hits)
+    .catch((error) =>
+      console.error(`[error] getRelatedObjects:`, error.message),
+    );
 }
 
 const getDistance = (from, to) => {
@@ -252,7 +269,7 @@ const getDistance = (from, to) => {
   });
 
   const distanceKeys = descriptorKeys.filter((descriptorKey) =>
-    commonKeys.some((commonKey) => commonKey.indexOf(descriptorKey) === 0)
+    commonKeys.some((commonKey) => commonKey.indexOf(descriptorKey) === 0),
   );
 
   const distance = distanceKeys.reduce((sum, key) => {
@@ -271,6 +288,58 @@ const getDistance = (from, to) => {
   return distanceKeys.length > 0 ? distance / distanceKeys.length : Infinity;
 };
 
+const computeRelated = (objectDescriptors, sorted, dissimilarPercent) => {
+  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100);
+  const similarRatio = similarPercent / 100.0;
+  const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length);
+  const similarItemCount = Math.floor(maxSize * similarRatio);
+  const similarItems = sorted.slice(0, similarItemCount);
+  const dissimilarItems = sorted.slice(-(maxSize - similarItemCount));
+  const objects = similarItems.concat(dissimilarItems).map((object) => ({
+    _index: esIndex,
+    _type: "object",
+    _id: object.id,
+    _source: object,
+  }));
+
+  return {
+    hits: {
+      total: objects.length,
+      hits: objects,
+    },
+  };
+};
+
+const fetchAndSortRelated = (objectID) => {
+  return Promise.all([
+    getObjectDescriptors(objectID),
+    getRelatedObjects(objectID),
+  ]).then(([objectDescriptors, relatedObjects]) => {
+    const sources = relatedObjects.map((object) => {
+      const _source = object._source;
+      Object.assign(_source, { id: parseInt(object._id) });
+      return _source;
+    });
+
+    const sorted = sources.sort(
+      (a, b) =>
+        getDistance(a, objectDescriptors) - getDistance(b, objectDescriptors),
+    );
+
+    return { objectDescriptors, sorted };
+  });
+};
+
+const getRelated = (objectID, dissimilarPercent) => {
+  if (objectID === undefined) {
+    throw new Error(`[error] in getRelated: objectID undefined`);
+  }
+
+  return fetchAndSortRelated(objectID).then(({ objectDescriptors, sorted }) =>
+    computeRelated(objectDescriptors, sorted, dissimilarPercent),
+  );
+};
+
 const getApiRelated = async (req, res) => {
   const { objectID, dissimilarPercent } = req.query;
   getRelated(objectID, req.x_dissimilar_percent || dissimilarPercent)
@@ -283,54 +352,11 @@ const getApiRelated = async (req, res) => {
     });
 };
 
-const getRelated = (objectID, dissimilarPercent) => {
-  if (objectID === undefined) {
-    throw new Error(`[error] in getRelated: objectID undefined`);
-  }
-  const similarPercent = 100 - clamp(dissimilarPercent, 0, 100);
-  const similarRatio = similarPercent / 100.0;
-
-  return axios
-    .all([getObjectDescriptors(objectID), getRelatedObjects(objectID)])
-    .then(
-      axios.spread((objectDescriptors, relatedObjects) => {
-        const sources = relatedObjects.map((object) => {
-          const _source = object._source;
-          Object.assign(_source, { id: parseInt(object._id) });
-          return _source;
-        });
-
-        const sorted = sources.sort(
-          (a, b) =>
-            getDistance(a, objectDescriptors) -
-            getDistance(b, objectDescriptors)
-        );
-        const maxSize = Math.min(BARNES_SETTINGS.size, sorted.length);
-        const similarItemCount = Math.floor(maxSize * similarRatio);
-        const similarItems = sorted.slice(0, similarItemCount);
-        const dissimilarItems = sorted.slice(-(maxSize - similarItemCount));
-        const objects = similarItems.concat(dissimilarItems).map((object) => ({
-          _index: esIndex,
-          _type: "object",
-          _id: object.id,
-          _source: object,
-        }));
-
-        return {
-          hits: {
-            total: objects.length,
-            hits: objects,
-          },
-        };
-      })
-    );
-};
-
 app.get(
   "/api/related",
   normalizeDissimilarPercent,
   relatedCache,
-  getApiRelated
+  getApiRelated,
 );
 
 const getSignedUrl = (invno) => {
@@ -366,7 +392,7 @@ app.post("/api/objects/:object_invno/download", (req, res) => {
       } else {
         res.status(500).json({ success: false });
       }
-    }
+    },
   );
 });
 
@@ -376,22 +402,16 @@ const getObject = (id) => {
 
   body = body.query("match", "_id", id).build();
 
-  return axios
-    .get(`${canonicalRoot}/api/search`, {
-      params: {
-        body: body,
-      },
-    })
-    .then((response) => {
-      const objects = response.data.hits.hits.map((object) =>
-        Object.assign({}, object._source, { id: object._id })
-      );
-      const object = objects.find((object) => {
-        return parseInt(object.id, 10) === parseInt(id, 10);
-      });
-
-      return object;
+  return elasticSearchService.search(body).then((searchResponse) => {
+    const objects = searchResponse.hits.hits.map((object) =>
+      Object.assign({}, object._source, { id: object._id }),
+    );
+    const object = objects.find((object) => {
+      return parseInt(object.id, 10) === parseInt(id, 10);
     });
+
+    return object;
+  });
 };
 
 const renderAppObjectPage = (req, res, next) => {

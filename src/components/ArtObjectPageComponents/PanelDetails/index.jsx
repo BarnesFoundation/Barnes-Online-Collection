@@ -210,7 +210,9 @@ class Image extends Component {
 
     // This indicates that there was an error with rendering the Zoom component
     const { didCatchFailure } = this.state;
-    const renditionsExist = NETX_ENABLED && renditions?.length > 0;
+    // Renditions render when they come from live NetX (legacy) OR from the V2 store (`_cf`).
+    const renditionsExist =
+      renditions?.length > 0 && (NETX_ENABLED || renditions[0]?._cf);
     const showZoomImageView = Boolean(
       !didCatchFailure &&
         object.id &&
@@ -360,7 +362,7 @@ class PanelDetails extends Component {
     const objectCopyrightDetails = getObjectCopyright(object);
     const accordionTabList = getTabList(object);
 
-    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-request/def/field22=${object.people}&field21=${object.title}&field20=${object.invno}`;
+    const requestImageUrl = `https://barnesfoundation.wufoo.com/forms/image-request-publication-permission-application/def/field4=${object.people}&field3=${object.title}&field5=${object.invno}`;
     const downloadRequestUrl = `https://barnesfoundation.wufoo.com/forms/barnes-foundation-image-use-information/def/field22=${object.people}&field372=${object.title}&field20=${object.invno}&field374=${object.imageUrlForWufoo}`;
 
     return (

@@ -62,8 +62,19 @@ export const getQueryFilterUrl = (qval) => {
   return getQueryUrl("filter", qval);
 };
 
+const cfImageBase = ui.imagesPrefix
+  ? `${ui.imageBaseURL}/${ui.imagesPrefix}`
+  : ui.imageBaseURL;
+
 /** Gets the URL for rendering the specified image type from the rendition */
 export const getImageURLFromRendition = (rendition, imageType) => {
+  // Carousel renditions sourced from the V2 store (CloudFront-tiled) rather than live NetX.
+  // `${objectId}_${secret}_{n|b}.jpg` matches the primary-image URL convention (objectDataUtils).
+  if (rendition._cf) {
+    const suffix = imageType === "Thumbnail" ? "n" : "b"; // Zoom/Preview → the 1024 preview
+    return `${cfImageBase}/${rendition.objectId}_${rendition.secret}_${suffix}.jpg`;
+  }
+
   const imageProxy = rendition.proxies.find(
     (proxy) => proxy.name === imageType
   );
