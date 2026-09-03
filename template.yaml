@@ -262,6 +262,12 @@ Resources:
           TargetOriginId: s3-fe
           ViewerProtocolPolicy: redirect-to-https
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # Managed-CachingOptimized
+          FunctionAssociations:
+            # Match dev: a CloudFront Function (not error responses) rewrites SPA routes to
+            # /index.html, passes /api/* + real static assets through, and avoids the SEO-slug-
+            # with-dots 403 bug. Replicated verbatim from dev's `barnes-spa-rewrite`.
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SpaRewriteFunction.FunctionMetadata.FunctionARN
         CacheBehaviors:
           - PathPattern: /api/*
             TargetOriginId: lambda-api
@@ -269,16 +275,44 @@ Resources:
             AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
-        CustomErrorResponses:
-          # SPA deep-link fallback so client-side routes resolve to index.html.
-          # CONFIRM: dev's distribution has NO custom error responses — check whether it relies on a
-          # CloudFront Function (viewer-request rewrite) instead, and match whichever dev actually uses.
-          - ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-          - ErrorCode: 404
-            ResponseCode: 200
-            ResponsePagePath: /index.html
+  # SPA routing — a CloudFront Function (viewer-request) rewrites client-side routes to /index.html.
+  # Verbatim from dev's `barnes-spa-rewrite`; note the SEO-slug-with-dots handling.
+  SpaRewriteFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub "barnes-spa-rewrite-${EnvName}"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Rewrite SPA routes to /index.html; pass through /api/* and real static assets.
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var req = event.request;
+          var uri = req.uri;
+
+          // API requests pass through to the Lambda origin.
+          if (uri.startsWith('/api/')) {
+            return req;
+          }
+
+          // Real static assets pass through to S3 — detected by a KNOWN file extension on the LAST
+          // path segment. We must NOT treat "any dot in the path" as a file: SEO slugs contain dots
+          // (e.g. ".../Portrait-de-Mlle.-J."), which previously fell through to S3 and 403'd.
+          var lastSeg = uri.substring(uri.lastIndexOf('/') + 1);
+          var dot = lastSeg.lastIndexOf('.');
+          if (dot > -1) {
+            var ext = lastSeg.substring(dot + 1).toLowerCase();
+            var exts = ['js','mjs','css','map','json','jpg','jpeg','png','gif','svg','webp','avif',
+                        'ico','txt','xml','woff','woff2','ttf','eot','pdf','webmanifest','html'];
+            if (exts.indexOf(ext) !== -1) {
+              return req;
+            }
+          }
+
+          // Everything else is a client-side (SPA) route → serve the app shell.
+          req.uri = '/index.html';
+          return req;
+        }
 
 Outputs:
   DistributionId:
