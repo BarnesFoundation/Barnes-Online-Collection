@@ -163,6 +163,16 @@ Resources:
           X_ORIGIN_VERIFY: !Ref XOriginVerify
           REACT_APP_NETX_ENABLED: "false"
           REACT_APP_WWW_URL: https://www.barnesfoundation.org
+          # --- CONFIRM: complete the runtime env set before deploy. A grep of development's server/
+          #     shows it also reads these (source values from the EB env `collection-server-development`):
+          #       non-secret: GRAPHCMS_ENDPOINT, AWS_REGION, AWS_BUCKET, REACT_APP_AWS_BUCKET,
+          #         REACT_APP_CANONICAL_ROOT, REACT_APP_GOOGLE_ANALYTICS_ID, REACT_APP_IMAGE_BASE_URL,
+          #         REACT_APP_IMAGES_PREFIX, REACT_APP_NETX_BASE_URL
+          #       secret (pass at deploy / Secrets Manager): NETX_API_TOKEN
+          #     S3 access: PREFER the Lambda execution role (add s3 perms below) over the static
+          #       AWS_ACCESS_KEY / AWS_SECRET_KEY the EB app uses — drop the static keys.
+          #     (The FE *build* in CI needs ALL REACT_APP_* baked in; the subset above is what the
+          #      server additionally reads at runtime, so those go in this Lambda env too.) ---
       Policies:
         - Statement:
             - Sid: RdsIamConnect
