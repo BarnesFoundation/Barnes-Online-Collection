@@ -1,0 +1,39 @@
+# SAM deploy config — evolved stack (see template.yaml).
+# NON-SECRET parameters only. Secrets (XOriginVerify, ES creds) are passed at deploy time via
+# --parameter-overrides from CI secrets / Secrets Manager, and are intentionally NOT committed here.
+#
+#   sam build
+#   sam deploy --config-env dev   --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY"
+#   sam deploy --config-env prod  --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY"   # prod: human-approved window only
+
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "collection-evolved-dev"
+region = "us-east-1"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+parameter_overrides = [
+  "EnvName=dev",
+  "DomainName=dev.collection.barnesfoundation.org",
+  "AcmCertificateArn=arn:aws:acm:us-east-1:744014450301:certificate/53e35848-685f-4892-b517-9b0a4818c64e",
+  "VpcSubnetIds=subnet-021d7a72948b68fb1",   # CONFIRM: add a 2nd AZ subnet for HA
+  "VpcSecurityGroupIds=sg-2480035b",
+  "ElasticsearchHost=",                       # CONFIRM: dev ran without one — see template CONFIRM
+]
+
+[prod.deploy.parameters]
+stack_name = "collection-evolved-prod"
+region = "us-east-1"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+parameter_overrides = [
+  "EnvName=prod",
+  "DomainName=collection.barnesfoundation.org",
+  "AcmCertificateArn=CONFIRM_PROD_CERT_ARN",
+  "VpcSubnetIds=CONFIRM_PROD_SUBNETS",        # >=2 AZs
+  "VpcSecurityGroupIds=CONFIRM_PROD_SG",
+  "ElasticsearchHost=CONFIRM_ES_HOST_OR_EMPTY",
+]
