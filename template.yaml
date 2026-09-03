@@ -2,9 +2,12 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
 Description: >
-  Barnes Collection Online — evolved stack (CloudFront + S3 static FE + zip Lambda API + Postgres V2).
-  One template, parameterized for dev/prod (deploy as two stacks in the same account). This is the
-  AWS-native (SAM) replacement for BOTH the container-image Lambda and the Elastic Beanstalk deploy.
+  Barnes Collection Online — CS-67 HOSTING MOVE: run the CURRENT collection app on CloudFront + S3
+  static FE + zip Lambda API, instead of Elastic Beanstalk. This is a pure infra change — it deploys
+  `development`'s app AS-IS (search from ElasticSearch, carousel renditions from Postgres V2 per CS-55);
+  NO functionality changes. The evolved ES→Postgres data-layer + FE work is a separate, later PR.
+  One template, parameterized for dev/prod (two stacks, same account). AWS-native (SAM), replacing
+  both the container-image Lambda and the Elastic Beanstalk deploy.
 
   Why zip, not container (CS-64): the Express API has no native deps, so it runs on a managed Node
   runtime. The old container was a multi-stage image that BUILT the CRA3/Node-12 FE *and* ran the
@@ -57,13 +60,29 @@ Parameters:
     Default: prx-0eeb2d0b5fd9a37d3
     Description: RDS Proxy resource id, for the rds-db:connect grant (from CS-55).
 
-  # ---- ElasticSearch: RETIRED. Search runs fully on Postgres (elasticSearchService.js uses pgClient,
-  #      incl. vector similarity via `embedding <=>`). esClient is a dead import (craftService.js
-  #      requires it but never calls it), so no ES connection is made — no ES host/creds needed. Only
-  #      ELASTICSEARCH_INDEX survives, read as a label in app.js with a "collection" default. ----
+  # ---- ElasticSearch (Elastic Cloud / found.io) — this PR is scoped to a HOSTING move: it deploys
+  #      `development`'s CURRENT app, whose search + craft suggestions read from ES (elasticSearchService
+  #      and craftService both call esClient.search). (The evolved branch moves search to Postgres, but
+  #      that data-layer change is a SEPARATE, later PR.) ----
+  ElasticsearchHost:
+    Type: String
+    Default: 5e8337e9f81d465da3b4c143cd3d4c2b.us-east-1.aws.found.io
+  ElasticsearchPort:
+    Type: String
+    Default: "9243"
+  ElasticsearchProtocol:
+    Type: String
+    Default: https
   ElasticsearchIndex:
     Type: String
     Default: collection
+  ElasticsearchUsername:
+    Type: String
+    Default: elastic
+  ElasticsearchPassword:
+    Type: String
+    NoEcho: true
+    Description: ES password — pass at deploy from a CI secret / Secrets Manager; do not commit.
 
   # ---- Secrets: pass at deploy (samconfig is NOT committed with these) or move to Secrets Manager ----
   XOriginVerify:
@@ -79,7 +98,9 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
     # dev today: subnet-021d7a72948b68fb1 (single subnet)
     Description: >
-      Private subnets with egress to the RDS Proxy + ES + AWS APIs.
+      Private subnets with egress to the RDS Proxy AND to the public internet (ES on Elastic Cloud +
+      the Craft CMS), so they need a NAT gateway. NOTE: the evolved dev Lambda was Postgres-only and
+      may sit in a subnet WITHOUT NAT — verify NAT egress before deploy, or ES/craft calls will hang.
       # CONFIRM: use >=2 subnets across AZs for prod (dev runs a single subnet — not HA).
   VpcSecurityGroupIds:
     Type: List<AWS::EC2::SecurityGroup::Id>
@@ -131,8 +152,13 @@ Resources:
           PG_SCHEMA: !Ref PgSchema
           PG_USER: !Ref PgUser
           PG_IAM_AUTH: "true"
-          # ElasticSearch retired — search runs on Postgres. Only the index label remains.
+          # ElasticSearch (Elastic Cloud) — development's search + craft suggestions
+          ELASTICSEARCH_HOST: !Ref ElasticsearchHost
+          ELASTICSEARCH_PORT: !Ref ElasticsearchPort
+          ELASTICSEARCH_PROTOCOL: !Ref ElasticsearchProtocol
           ELASTICSEARCH_INDEX: !Ref ElasticsearchIndex
+          ELASTICSEARCH_USERNAME: !Ref ElasticsearchUsername
+          ELASTICSEARCH_PASSWORD: !Ref ElasticsearchPassword
           # App config
           X_ORIGIN_VERIFY: !Ref XOriginVerify
           REACT_APP_NETX_ENABLED: "false"

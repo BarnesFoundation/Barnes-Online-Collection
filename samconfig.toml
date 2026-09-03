@@ -1,10 +1,10 @@
-# SAM deploy config — evolved stack (see template.yaml).
-# NON-SECRET parameters only. Secrets (XOriginVerify, ES creds) are passed at deploy time via
-# --parameter-overrides from CI secrets / Secrets Manager, and are intentionally NOT committed here.
+# SAM deploy config — CS-67 hosting move (see template.yaml).
+# NON-SECRET parameters only. Secrets (XOriginVerify, ElasticsearchPassword) are passed at deploy
+# time via --parameter-overrides from CI secrets / Secrets Manager, and are NOT committed here.
 #
 #   sam build
-#   sam deploy --config-env dev   --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY"
-#   sam deploy --config-env prod  --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY"   # prod: human-approved window only
+#   sam deploy --config-env dev  --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY ElasticsearchPassword=$ES_PASSWORD"
+#   sam deploy --config-env prod --parameter-overrides "XOriginVerify=$X_ORIGIN_VERIFY ElasticsearchPassword=$ES_PASSWORD"  # prod: human-approved window only
 
 version = 0.1
 
