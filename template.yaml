@@ -57,24 +57,13 @@ Parameters:
     Default: prx-0eeb2d0b5fd9a37d3
     Description: RDS Proxy resource id, for the rds-db:connect grant (from CS-55).
 
-  # ---- ElasticSearch (still read by server/utils/esClient.js until search moves to Postgres, CS-66) ----
+  # ---- ElasticSearch: RETIRED. Search runs fully on Postgres (elasticSearchService.js uses pgClient,
+  #      incl. vector similarity via `embedding <=>`). esClient is a dead import (craftService.js
+  #      requires it but never calls it), so no ES connection is made — no ES host/creds needed. Only
+  #      ELASTICSEARCH_INDEX survives, read as a label in app.js with a "collection" default. ----
   ElasticsearchIndex:
     Type: String
     Default: collection
-  ElasticsearchHost:
-    Type: String
-    Default: ""
-    Description: >
-      # CONFIRM: the dev Lambda carried ELASTICSEARCH_INDEX only — no HOST/USER/PASS/PROTOCOL/PORT —
-      # yet esClient.js reads all of them. Either ES is still needed here (supply these, creds via
-      # Secrets Manager) or search already reads from Postgres and esClient is vestigial. Resolve
-      # before deploy so we don't ship a half-wired data layer.
-  ElasticsearchPort:
-    Type: String
-    Default: "443"
-  ElasticsearchProtocol:
-    Type: String
-    Default: https
 
   # ---- Secrets: pass at deploy (samconfig is NOT committed with these) or move to Secrets Manager ----
   XOriginVerify:
@@ -83,12 +72,7 @@ Parameters:
     Description: >
       Shared secret CloudFront injects as the `X-Origin-Verify` request header so the API rejects
       traffic that did not come through CloudFront (defense-in-depth alongside the Function URL OAC).
-  ElasticsearchSecretArn:
-    Type: String
-    Default: ""
-    Description: >
-      Optional Secrets Manager ARN holding ES username/password. Preferred over plaintext params.
-      # Follow-up: wire {{resolve:secretsmanager:...}} for ES creds + X-Origin-Verify.
+      # Follow-up: source from Secrets Manager via {{resolve:secretsmanager:...}} rather than a param.
 
   # ---- Networking (Lambda must be in-VPC to reach the RDS Proxy) — dev values below ----
   VpcSubnetIds:
@@ -147,11 +131,8 @@ Resources:
           PG_SCHEMA: !Ref PgSchema
           PG_USER: !Ref PgUser
           PG_IAM_AUTH: "true"
-          # ElasticSearch (see CONFIRM on ElasticsearchHost)
+          # ElasticSearch retired — search runs on Postgres. Only the index label remains.
           ELASTICSEARCH_INDEX: !Ref ElasticsearchIndex
-          ELASTICSEARCH_HOST: !Ref ElasticsearchHost
-          ELASTICSEARCH_PORT: !Ref ElasticsearchPort
-          ELASTICSEARCH_PROTOCOL: !Ref ElasticsearchProtocol
           # App config
           X_ORIGIN_VERIFY: !Ref XOriginVerify
           REACT_APP_NETX_ENABLED: "false"
