@@ -14,7 +14,7 @@ As of CS-55, the artwork-page **carousel renditions** are read from the V2 colle
 ## Requirements
 
 To be able to run this project for local development, your environment will necessitate the following
-- NPM/Node (v10.9.0)
+- Node.js 24 (ships with npm 11) — matches `.nvmrc`; required by react-scripts 5 (CS-64)
 
 Please install the above prior to proceeding further.
 
