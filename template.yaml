@@ -1,0 +1,344 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Barnes Collection Online — CS-67 HOSTING MOVE: run the CURRENT collection app on CloudFront + S3
+  static FE + zip Lambda API, instead of Elastic Beanstalk. This is a pure infra change — it deploys
+  `development`'s app AS-IS (search from ElasticSearch, carousel renditions from Postgres V2 per CS-55);
+  NO functionality changes. The evolved ES→Postgres data-layer + FE work is a separate, later PR.
+  One template, parameterized for dev/prod (two stacks, same account). AWS-native (SAM), replacing
+  both the container-image Lambda and the Elastic Beanstalk deploy.
+
+  Why zip, not container (CS-64): the Express API has no native deps, so it runs on a managed Node
+  runtime. The old container was a multi-stage image that BUILT the CRA3/Node-12 FE *and* ran the
+  Node-18 API in one artifact. Post-CS-64 the FE builds in CI (react-scripts 5 / Node 24) and uploads
+  to S3; the API runs here as a zip Lambda on nodejs22.x, unchanged, via the Lambda Web Adapter.
+
+  VXP-safe: this stack is read-only and additive. It does not touch ElasticSearch's write path; the
+  legacy EB stack stays standing for instant rollback until the cutover is proven.
+
+  ---------------------------------------------------------------------------------------------------
+  DRAFT FOR REVIEW — not deploy-ready. Open questions are marked `# CONFIRM`. Nothing here deploys on
+  merge; the deploy trigger (GitHub Action or a thin CodePipeline running `sam deploy`) is a follow-up.
+  ---------------------------------------------------------------------------------------------------
+
+Parameters:
+  EnvName:
+    Type: String
+    AllowedValues: [dev, prod]
+    Description: Deploy target. Drives resource names and (via samconfig) the per-env parameter set.
+
+  DomainName:
+    Type: String
+    Description: dev.collection.barnesfoundation.org (dev) or collection.barnesfoundation.org (prod).
+
+  AcmCertificateArn:
+    Type: String
+    # dev today: arn:aws:acm:us-east-1:744014450301:certificate/53e35848-685f-4892-b517-9b0a4818c64e
+    Description: >
+      ACM cert in us-east-1 (CloudFront requires us-east-1) covering DomainName.
+      # CONFIRM: prod cert ARN for collection.barnesfoundation.org.
+
+  # ---- Data layer (Postgres V2 via RDS Proxy; IAM auth, no password) — defaults match CS-55 prod ----
+  PgHost:
+    Type: String
+    Default: collection-proxy.proxy-cra1dp6a1lpd.us-east-1.rds.amazonaws.com
+  PgPort:
+    Type: String
+    Default: "5432"
+  PgDatabase:
+    Type: String
+    Default: postgres
+  PgSchema:
+    Type: String
+    Default: collection
+  PgUser:
+    Type: String
+    Default: collection_reader
+  RdsProxyResourceId:
+    Type: String
+    Default: prx-0eeb2d0b5fd9a37d3
+    Description: RDS Proxy resource id, for the rds-db:connect grant (from CS-55).
+
+  # ---- ElasticSearch (Elastic Cloud / found.io) — this PR is scoped to a HOSTING move: it deploys
+  #      `development`'s CURRENT app, whose search + craft suggestions read from ES (elasticSearchService
+  #      and craftService both call esClient.search). (The evolved branch moves search to Postgres, but
+  #      that data-layer change is a SEPARATE, later PR.) ----
+  ElasticsearchHost:
+    Type: String
+    Default: 5e8337e9f81d465da3b4c143cd3d4c2b.us-east-1.aws.found.io
+  ElasticsearchPort:
+    Type: String
+    Default: "9243"
+  ElasticsearchProtocol:
+    Type: String
+    Default: https
+  ElasticsearchIndex:
+    Type: String
+    Default: collection
+  ElasticsearchUsername:
+    Type: String
+    Default: elastic
+  ElasticsearchPassword:
+    Type: String
+    NoEcho: true
+    Description: ES password — pass at deploy from a CI secret / Secrets Manager; do not commit.
+
+  # ---- Secrets: pass at deploy (samconfig is NOT committed with these) or move to Secrets Manager ----
+  XOriginVerify:
+    Type: String
+    NoEcho: true
+    Description: >
+      Shared secret CloudFront injects as the `X-Origin-Verify` request header so the API rejects
+      traffic that did not come through CloudFront (defense-in-depth alongside the Function URL OAC).
+      # Follow-up: source from Secrets Manager via {{resolve:secretsmanager:...}} rather than a param.
+
+  # ---- Networking (Lambda must be in-VPC to reach the RDS Proxy) — dev values below ----
+  VpcSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    # dev today: subnet-021d7a72948b68fb1 (single subnet)
+    Description: >
+      Private subnets with egress to the RDS Proxy AND to the public internet (ES on Elastic Cloud +
+      the Craft CMS), so they need a NAT gateway. NOTE: the evolved dev Lambda was Postgres-only and
+      may sit in a subnet WITHOUT NAT — verify NAT egress before deploy, or ES/craft calls will hang.
+      # CONFIRM: use >=2 subnets across AZs for prod (dev runs a single subnet — not HA).
+  VpcSecurityGroupIds:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    # dev today: sg-2480035b
+    Description: Security group(s) allowing egress to the RDS Proxy (5432), ES, and AWS endpoints.
+
+  LwaLayerArn:
+    Type: String
+    Default: arn:aws:lambda:us-east-1:753240598075:layer:LambdaAdapterLayerX86:24
+    Description: >
+      AWS Lambda Web Adapter layer (public). Lets the unmodified Express `app.listen(8080)` server
+      run in Lambda. # CONFIRM: pin the current version for us-east-1/x86_64 at deploy time.
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 1536
+    Runtime: nodejs22.x
+    Architectures: [x86_64]
+
+Resources:
+  # ================================================================================================
+  # API — zip Lambda on nodejs22.x, Express served unchanged via the Lambda Web Adapter
+  # ================================================================================================
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "barnes-collection-www-${EnvName}"
+      # CodeUri "./" packages the repo (the server requires files from src/ and scripts/ at runtime).
+      # Follow-up: add a .samignore / makefile build to trim to server + prod deps + required src/scripts.
+      CodeUri: ./
+      Handler: run.sh
+      Layers:
+        - !Ref LwaLayerArn
+      VpcConfig:
+        SubnetIds: !Ref VpcSubnetIds
+        SecurityGroupIds: !Ref VpcSecurityGroupIds
+      Environment:
+        Variables:
+          # Lambda Web Adapter wiring
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
+          AWS_LWA_PORT: "8080"
+          PORT: "8080"
+          NODE_ENV: production
+          # Postgres V2 (IAM auth — no password)
+          PG_HOST: !Ref PgHost
+          PG_PORT: !Ref PgPort
+          PG_DATABASE: !Ref PgDatabase
+          PG_SCHEMA: !Ref PgSchema
+          PG_USER: !Ref PgUser
+          PG_IAM_AUTH: "true"
+          # ElasticSearch (Elastic Cloud) — development's search + craft suggestions
+          ELASTICSEARCH_HOST: !Ref ElasticsearchHost
+          ELASTICSEARCH_PORT: !Ref ElasticsearchPort
+          ELASTICSEARCH_PROTOCOL: !Ref ElasticsearchProtocol
+          ELASTICSEARCH_INDEX: !Ref ElasticsearchIndex
+          ELASTICSEARCH_USERNAME: !Ref ElasticsearchUsername
+          ELASTICSEARCH_PASSWORD: !Ref ElasticsearchPassword
+          # App config
+          X_ORIGIN_VERIFY: !Ref XOriginVerify
+          REACT_APP_NETX_ENABLED: "false"
+          REACT_APP_WWW_URL: https://www.barnesfoundation.org
+          # --- CONFIRM: complete the runtime env set before deploy. A grep of development's server/
+          #     shows it also reads these (source values from the EB env `collection-server-development`):
+          #       non-secret: GRAPHCMS_ENDPOINT, AWS_REGION, AWS_BUCKET, REACT_APP_AWS_BUCKET,
+          #         REACT_APP_CANONICAL_ROOT, REACT_APP_GOOGLE_ANALYTICS_ID, REACT_APP_IMAGE_BASE_URL,
+          #         REACT_APP_IMAGES_PREFIX, REACT_APP_NETX_BASE_URL
+          #       secret (pass at deploy / Secrets Manager): NETX_API_TOKEN
+          #     S3 access: PREFER the Lambda execution role (add s3 perms below) over the static
+          #       AWS_ACCESS_KEY / AWS_SECRET_KEY the EB app uses — drop the static keys.
+          #     (The FE *build* in CI needs ALL REACT_APP_* baked in; the subset above is what the
+          #      server additionally reads at runtime, so those go in this Lambda env too.) ---
+      Policies:
+        - Statement:
+            - Sid: RdsIamConnect
+              Effect: Allow
+              Action: rds-db:connect
+              Resource: !Sub "arn:aws:rds-db:${AWS::Region}:${AWS::AccountId}:dbuser:${RdsProxyResourceId}/${PgUser}"
+        # VPC ENI management is added automatically by SAM when VpcConfig is set.
+      FunctionUrlConfig:
+        AuthType: AWS_IAM          # CloudFront OAC signs (SigV4); blocks anonymous direct hits to the URL
+        InvokeMode: BUFFERED
+
+  # Allow CloudFront (via OAC) to invoke the Function URL
+  ApiUrlCloudFrontPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ApiFunction
+      Action: lambda:InvokeFunctionUrl
+      Principal: cloudfront.amazonaws.com
+      FunctionUrlAuthType: AWS_IAM
+      SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  # ================================================================================================
+  # Front end — private S3 bucket holding the static React build, read only via CloudFront OAC
+  # ================================================================================================
+  FeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "barnes-collection-www-fe-${EnvName}-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  FeBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FeBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${FeBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
+
+  FeOac:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "collection-fe-oac-${EnvName}"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  LambdaOac:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "collection-lambda-oac-${EnvName}"
+        OriginAccessControlOriginType: lambda
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # ================================================================================================
+  # CloudFront — default -> S3 FE, /api/* -> Lambda Function URL
+  # ================================================================================================
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: !Sub "Barnes Collection Online — evolved stack (${EnvName})"
+        Enabled: true
+        HttpVersion: http2and3
+        Aliases:
+          - !Ref DomainName
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Origins:
+          - Id: s3-fe
+            DomainName: !GetAtt FeBucket.RegionalDomainName
+            OriginAccessControlId: !Ref FeOac
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+          - Id: lambda-api
+            # Host portion of the Function URL (https://<host>/)
+            DomainName: !Select [2, !Split ["/", !GetAtt ApiFunctionUrl.FunctionUrl]]
+            OriginAccessControlId: !Ref LambdaOac
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              HTTPSPort: 443
+              OriginSSLProtocols: [TLSv1.2]
+            OriginCustomHeaders:
+              - HeaderName: X-Origin-Verify
+                HeaderValue: !Ref XOriginVerify
+        DefaultCacheBehavior:
+          TargetOriginId: s3-fe
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # Managed-CachingOptimized
+          FunctionAssociations:
+            # Match dev: a CloudFront Function (not error responses) rewrites SPA routes to
+            # /index.html, passes /api/* + real static assets through, and avoids the SEO-slug-
+            # with-dots 403 bug. Replicated verbatim from dev's `barnes-spa-rewrite`.
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SpaRewriteFunction.FunctionMetadata.FunctionARN
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: lambda-api
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+  # SPA routing — a CloudFront Function (viewer-request) rewrites client-side routes to /index.html.
+  # Verbatim from dev's `barnes-spa-rewrite`; note the SEO-slug-with-dots handling.
+  SpaRewriteFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub "barnes-spa-rewrite-${EnvName}"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Rewrite SPA routes to /index.html; pass through /api/* and real static assets.
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var req = event.request;
+          var uri = req.uri;
+
+          // API requests pass through to the Lambda origin.
+          if (uri.startsWith('/api/')) {
+            return req;
+          }
+
+          // Real static assets pass through to S3 — detected by a KNOWN file extension on the LAST
+          // path segment. We must NOT treat "any dot in the path" as a file: SEO slugs contain dots
+          // (e.g. ".../Portrait-de-Mlle.-J."), which previously fell through to S3 and 403'd.
+          var lastSeg = uri.substring(uri.lastIndexOf('/') + 1);
+          var dot = lastSeg.lastIndexOf('.');
+          if (dot > -1) {
+            var ext = lastSeg.substring(dot + 1).toLowerCase();
+            var exts = ['js','mjs','css','map','json','jpg','jpeg','png','gif','svg','webp','avif',
+                        'ico','txt','xml','woff','woff2','ttf','eot','pdf','webmanifest','html'];
+            if (exts.indexOf(ext) !== -1) {
+              return req;
+            }
+          }
+
+          // Everything else is a client-side (SPA) route → serve the app shell.
+          req.uri = '/index.html';
+          return req;
+        }
+
+Outputs:
+  DistributionId:
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Value: !GetAtt Distribution.DomainName
+    Description: Point the DomainName DNS record (CNAME/alias) here after verifying the stack.
+  ApiFunctionUrl:
+    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  FeBucketName:
+    Value: !Ref FeBucket
+    Description: CI uploads the react-scripts 5 build output here, then invalidates the distribution.
