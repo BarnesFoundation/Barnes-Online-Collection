@@ -76,6 +76,7 @@ class Zoom extends Component {
 
   componentWillUnmount() {
     if (this.osd) {
+      this.detachWheelGesture();
       this.osd.destroy();
     }
   }
@@ -85,6 +86,7 @@ class Zoom extends Component {
    */
   componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
+      this.detachWheelGesture();
       this.osd.destroy();
       this.setUpOSD();
     }
@@ -111,7 +113,12 @@ class Zoom extends Component {
         immediateRender: false,
         minZoomLevel: 0,
         maxZoomLevel: 8,
+        // We take over wheel handling ourselves (see attachWheelGesture) so a scroll over the
+        // blank/letterbox area bubbles up as a normal page scroll instead of being trapped as a zoom.
+        gestureSettingsMouse: { scrollToZoom: false },
       });
+
+      this.attachWheelGesture();
 
       this.osd.addHandler("open", () => {
         const imageBounds = this.osd.world.getItemAt(0).getBounds();
@@ -151,6 +158,82 @@ class Zoom extends Component {
         this.isFullScreen = !this.isFullScreen;
       };
     }
+  };
+
+  /**
+   * Natural scroll/zoom transition on the deep-zoom canvas.
+   *
+   * Wheel/gesture over the IMAGE zooms; over the blank/letterbox area it bubbles up as a normal
+   * page scroll. The interpretation is decided on the FIRST tick of a gesture and held until the
+   * wheel stream pauses, so an ongoing zoom-out keeps zooming even as the image shrinks out from
+   * under the pointer -- it does not snap into a page scroll mid-gesture. No hint, no
+   * click-to-activate; the transition is meant to feel automatic.
+   */
+  attachWheelGesture = () => {
+    const el = this.osd && this.osd.element;
+    if (!el) return;
+
+    this.detachWheelGesture(); // don't stack listeners across OSD re-inits
+
+    const GESTURE_GAP_MS = 150; // a pause longer than this begins a fresh gesture
+    const ZOOM_STEP = 1.15; // zoom factor per wheel notch
+
+    this._gestureMode = null; // "zoom" | "scroll"
+    this._lastWheelTs = 0;
+
+    this._onWheel = (event) => {
+      if (!this.osd || !this.osd.viewport) return;
+
+      const now =
+        typeof performance !== "undefined" ? performance.now() : Date.now();
+      const newGesture = now - this._lastWheelTs > GESTURE_GAP_MS;
+      this._lastWheelTs = now;
+
+      const rect = el.getBoundingClientRect();
+      const pixel = new OpenSeadragon.Point(
+        event.clientX - rect.left,
+        event.clientY - rect.top
+      );
+      const point = this.osd.viewport.pointFromPixel(pixel);
+
+      // Commit the interpretation once, at the start of the gesture.
+      if (newGesture) {
+        this._gestureMode = this.isOverImage(point) ? "zoom" : "scroll";
+      }
+
+      // Scroll: let the event bubble so the page scrolls normally.
+      if (this._gestureMode === "scroll") return;
+
+      // Zoom: consume the event and zoom toward the pointer.
+      event.preventDefault();
+      const factor = event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP;
+      this.osd.viewport.zoomBy(factor, point);
+      this.osd.viewport.applyConstraints();
+    };
+
+    el.addEventListener("wheel", this._onWheel, { passive: false });
+  };
+
+  detachWheelGesture = () => {
+    const el = this.osd && this.osd.element;
+    if (el && this._onWheel) {
+      el.removeEventListener("wheel", this._onWheel);
+    }
+  };
+
+  /**
+   * Is the given viewport point within the image's bounds (vs. the blank/letterbox area)?
+   */
+  isOverImage = (point) => {
+    const item = this.osd && this.osd.world && this.osd.world.getItemAt(0);
+    if (!item) return false;
+    const b = item.getBounds();
+    return (
+      point.x >= b.x &&
+      point.x <= b.x + b.width &&
+      point.y >= b.y &&
+      point.y <= b.y + b.height
+    );
   };
 
   render() {
