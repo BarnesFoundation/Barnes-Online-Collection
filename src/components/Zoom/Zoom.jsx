@@ -41,7 +41,7 @@ class Zoom extends Component {
    * @param {string} url - url of info.json fike.
    * @param {number} scaleErrorLevel - level of scale error, if any.
    */
-  async fetchTileSource(url, scaleErrorLevel) {
+  async fetchTileSource(url, scaleErrorLevel, suppressFailCb = false) {
     const { catchFailureInViewer } = this.props;
 
     try {
@@ -74,7 +74,8 @@ class Zoom extends Component {
       return res;
     } catch (e) {
       console.log(e);
-      if (catchFailureInViewer) {
+      // suppressFailCb lets the caller try a fallback tile source before giving up on the viewer.
+      if (catchFailureInViewer && !suppressFailCb) {
         catchFailureInViewer();
       }
     }
@@ -90,8 +91,8 @@ class Zoom extends Component {
    * Capture change in ID from parent, if there is a change remount the OSD component.
    */
   componentDidUpdate(prevProps) {
-    if (prevProps.id !== this.props.id) {
-      this.osd.destroy();
+    if (prevProps.id !== this.props.id || prevProps.secret !== this.props.secret) {
+      if (this.osd) this.osd.destroy();
       this.setUpOSD();
     }
   }
@@ -101,11 +102,24 @@ class Zoom extends Component {
    * @param {number?} scaleErrorLevel - If an error has been thrown at a previous scale level.
    */
   setUpOSD = async (scaleErrorLevel = 0) => {
-    const { id } = this.props;
-    const res = await this.fetchTileSource(
-      `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
-      scaleErrorLevel
-    );
+    const { id, secret } = this.props;
+    // Prefer this image's per-secret tiles (tiles/{id}/{secret}/); fall back to the legacy
+    // tiles/{id}/ (the primary's secret-independent path) when per-secret tiles aren't published yet.
+    let res;
+    if (secret) {
+      res = await this.fetchTileSource(
+        `${IMAGE_BASE_URL}/tiles/${id}/${secret}/info.json`,
+        scaleErrorLevel,
+        true
+      );
+    }
+    if (!res) {
+      res = await this.fetchTileSource(
+        `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
+        scaleErrorLevel
+      );
+    }
+    if (!res) return; // both sources failed; fetchTileSource already signaled catchFailureInViewer
 
     if (this.ref) {
       this.osd = OpenSeadragon({
