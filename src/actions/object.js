@@ -52,6 +52,8 @@ export const getObject = (id) => {
       "bibliography",
       "exhHistory",
       "publishedProvenance",
+      "publishedArchivesReference",
+      "imageCaption",
       "constituents",
       "onLoan",
       "images",

@@ -57,12 +57,21 @@ function getCaptionFromArtworkRendition(rendition, object = {}) {
       : rendition.attributes["Artwork Caption (TMS)"][0];
   }
 
-  // If caption is still falsey by now, we'll fallback to the default caption schema
-  return caption
-    ? caption
-    : object.people
-    ? `${object.people}. ${object.title}, ${object.displayDate}. ${object.invno}. ${object.creditLine}`
-    : "";
+  if (caption) return caption;
+
+  // No per-rendition caption (e.g. single-image objects): prefer the pre-formatted primary caption
+  // (Artwork Caption (TMS), "Artist. Title, date, medium. The Barnes Foundation, invno.").
+  if (object.imageCaption) return object.imageCaption;
+
+  // Last-resort: assemble from whatever fields exist, skipping empties so we never render "undefined".
+  const bits = [];
+  if (object.people) bits.push(object.people);
+  const titleDate = [object.title, object.displayDate].filter(Boolean).join(", ");
+  if (titleDate) bits.push(titleDate);
+  if (object.medium) bits.push(object.medium);
+  const tail = [object.creditLine, object.invno].filter(Boolean).join(", ");
+  if (tail) bits.push(tail);
+  return bits.join(". ");
 }
 
 class Thumbnail extends Component {
