@@ -249,27 +249,14 @@ Resources:
               Resource: !Sub "arn:aws:s3:::${AwsBucket}"
         # VPC ENI management is added automatically by SAM when VpcConfig is set.
       FunctionUrlConfig:
-        AuthType: AWS_IAM          # CloudFront OAC signs (SigV4); blocks anonymous direct hits to the URL
+        # AuthType NONE, NOT AWS_IAM/OAC. CloudFront OAC signs SigV4, but a Lambda function URL rejects
+        # SigV4 on POST/PUT requests that carry a body ("signature does not match") — a known OAC+Lambda
+        # limitation that broke POST /api/search (the object grid; GET signs fine). So the URL is public
+        # and the origin is gated by the X-Origin-Verify secret header CloudFront injects (below). PROD:
+        # the app must enforce that header (see NodeEnvValue note); on dev it does not, so the raw
+        # function URL is directly reachable — acceptable for a dev preview of public collection data.
+        AuthType: NONE
         InvokeMode: BUFFERED
-
-  # Allow CloudFront (via OAC) to invoke the Function URL
-  ApiUrlCloudFrontPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !Ref ApiFunction
-      Action: lambda:InvokeFunctionUrl
-      Principal: cloudfront.amazonaws.com
-      FunctionUrlAuthType: AWS_IAM
-      SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}"
-
-  LambdaOac:
-    Type: AWS::CloudFront::OriginAccessControl
-    Properties:
-      OriginAccessControlConfig:
-        Name: !Sub "collection-lambda-oac-${EnvName}"
-        OriginAccessControlOriginType: lambda
-        SigningBehavior: always
-        SigningProtocol: sigv4
 
   # ================================================================================================
   # CloudFront — single origin: the Lambda Function URL (the whole app). No S3 origin, no SPA-rewrite
@@ -292,7 +279,6 @@ Resources:
         Origins:
           - Id: lambda-app
             DomainName: !Select [2, !Split ["/", !GetAtt ApiFunctionUrl.FunctionUrl]]
-            OriginAccessControlId: !Ref LambdaOac
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
               HTTPSPort: 443
