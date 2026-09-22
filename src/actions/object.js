@@ -86,6 +86,10 @@ export const getObject = (id) => {
               objectId: object.id,
               secret: im.secret,
               fileName: `${im.secret}.jpg`,
+              isPrimary: !!im.isPrimary,
+              isArchive: !!im.isArchive,
+              // Alt text (WCAG 1.1.1): the curator-authored NetX visual/archival description.
+              description: im.description || "",
               attributes: {
                 "Sync Type": [im.isArchive ? "Archives Sync" : ""],
                 "Archives Correspondence Caption": [im.caption || ""],

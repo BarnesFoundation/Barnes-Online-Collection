@@ -180,8 +180,15 @@ class Zoom extends Component {
   };
 
   render() {
+    const { label, describedById } = this.props;
     return (
-      <div className="osd-zoom">
+      <div
+        className="osd-zoom"
+        role="group"
+        aria-roledescription="Zoomable image"
+        aria-label={label || "Zoomable image"}
+        aria-describedby={describedById || undefined}
+      >
         <div
           className="osd-zoom__view"
           ref={(ref) => {
@@ -195,29 +202,43 @@ class Zoom extends Component {
           <div className="osd-zoom__button-group">
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Zoom in"
               onClick={() => {
                 if (this.zoomIn) this.zoomIn();
               }}
             >
-              <span className="osd-zoom__button-content">+</span>
+              <span className="osd-zoom__button-content" aria-hidden="true">
+                +
+              </span>
             </button>
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Zoom out"
               onClick={() => {
                 if (this.zoomOut) this.zoomOut();
               }}
             >
-              <span className="osd-zoom__button-content osd-zoom__button-content--minus">
+              <span
+                className="osd-zoom__button-content osd-zoom__button-content--minus"
+                aria-hidden="true"
+              >
                 -
               </span>
             </button>
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Full screen"
               onClick={() => {
                 this.fullScreen();
               }}
             >
-              <span className="osd-zoom__button-content osd-zoom__button-content--full-screen">
+              <span
+                className="osd-zoom__button-content osd-zoom__button-content--full-screen"
+                aria-hidden="true"
+              >
                 <FullScreenIcon />
               </span>
             </button>
