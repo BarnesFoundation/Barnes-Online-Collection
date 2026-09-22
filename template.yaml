@@ -86,12 +86,10 @@ Parameters:
   GraphCmsEndpoint:
     Type: String
     Default: https://api-us-east-1.hygraph.com/v2/cl2kqpf8s0tsj01xr80ob95fo/master
-  AwsRegionValue:
-    Type: String
-    Default: us-east-1
   AwsBucket:
     Type: String
     Default: barnes-data-processing-production
+    Description: S3 bucket the server signs/reads object downloads from (app.js s3.getSignedUrl/getObject).
   WwwUsername:
     Type: String
     Default: barnes
@@ -128,13 +126,8 @@ Parameters:
       literal in server/app.js (NOT XOriginVerify below). Reconcile that header before a prod cutover.
 
   # ---- Secrets: NoEcho params, passed at deploy (values live on the EB dev env) — never committed ----
-  AwsAccessKey:
-    Type: String
-    NoEcho: true
-    Description: Static IAM key the app's AWS SDK uses (server/app.js AWS.config.update). Hardening follow-up = Lambda role.
-  AwsSecretKey:
-    Type: String
-    NoEcho: true
+  # NOTE: AWS_ACCESS_KEY / AWS_SECRET_KEY are intentionally NOT parameters — they are Lambda-reserved
+  # env keys and cannot be set. The app gets AWS credentials from the Lambda execution role instead.
   GraphCmsApiToken:
     Type: String
     NoEcho: true
@@ -220,10 +213,9 @@ Resources:
           GRAPHCMS_API_TOKEN: !Ref GraphCmsApiToken
           # NetX DAMS
           NETX_API_TOKEN: !Ref NetxApiToken
-          # AWS SDK (app reads its OWN static keys, not the Lambda role — see app.js AWS.config.update)
-          AWS_ACCESS_KEY: !Ref AwsAccessKey
-          AWS_SECRET_KEY: !Ref AwsSecretKey
-          AWS_REGION: !Ref AwsRegionValue
+          # AWS SDK credentials come from the Lambda EXECUTION ROLE (below), not static keys:
+          # AWS_ACCESS_KEY / AWS_SECRET_KEY / AWS_REGION are Lambda-reserved and cannot be set here.
+          # AWS_REGION is auto-provided by the runtime; only the bucket name is app config.
           AWS_BUCKET: !Ref AwsBucket
           # WWW basic-auth pair (used when NODE_ENV=production)
           WWW_USERNAME: !Ref WwwUsername
@@ -240,10 +232,21 @@ Resources:
           REACT_APP_WWW_URL: !Ref ReactAppWwwUrl
       Policies:
         - Statement:
+            # RDS Proxy IAM auth — the execution role signs the short-lived DB token (pgClient.js).
             - Sid: RdsIamConnect
               Effect: Allow
               Action: rds-db:connect
               Resource: !Sub "arn:aws:rds-db:${AWS::Region}:${AWS::AccountId}:dbuser:${RdsProxyResourceId}/${PgUser}"
+            # S3 — the app signs/reads object downloads (app.js s3.getSignedUrl/getObject) via the role
+            # (was the static IAM user on EB; same access, sourced from the role in Lambda).
+            - Sid: S3ReadCollectionAssets
+              Effect: Allow
+              Action: [s3:GetObject]
+              Resource: !Sub "arn:aws:s3:::${AwsBucket}/*"
+            - Sid: S3ListCollectionAssets
+              Effect: Allow
+              Action: [s3:ListBucket]
+              Resource: !Sub "arn:aws:s3:::${AwsBucket}"
         # VPC ENI management is added automatically by SAM when VpcConfig is set.
       FunctionUrlConfig:
         AuthType: AWS_IAM          # CloudFront OAC signs (SigV4); blocks anonymous direct hits to the URL
