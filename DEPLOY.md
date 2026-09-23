@@ -9,7 +9,8 @@ single origin in front of the Lambda.
 
 **Dev deploys are automatic (CS-78):** every merge to `development` runs
 `.github/workflows/deploy-dev.yml`, which builds, packages, deploys the `barnes-collection-www-dev` stack
-and smoke-tests it (`scripts/smoke-test.sh`). It authenticates with GitHub OIDC via the role in
+and smoke-tests it (`scripts/smoke-test.sh`) at **https://dev.collection.barnesfoundation.org**, which
+now points at this stack (DNS: Route53 A-alias -> the stack's CloudFront distribution; the stack owns the alias). It authenticates with GitHub OIDC via the role in
 `infra/gha-deploy-role.yaml` — no AWS keys or app secrets in GitHub. The manual steps below are for
 prod, for a first-time stack, or for debugging a failed run.
 

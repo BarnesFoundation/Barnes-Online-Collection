@@ -26,6 +26,10 @@ env:
   ARTIFACTS_BUCKET: barnes-online-collection-deploy-artifacts-744014450301
   VPC_SUBNET_IDS: subnet-021d7a72948b68fb1
   VPC_SECURITY_GROUP_IDS: sg-2480035b
+  # The dev site's public name. Passed explicitly on every deploy so a deploy can never drop the
+  # CloudFront alias (the template defaults DomainName to "", i.e. no alias).
+  DOMAIN_NAME: dev.collection.barnesfoundation.org
+  ACM_CERT_ARN: arn:aws:acm:us-east-1:744014450301:certificate/53e35848-685f-4892-b517-9b0a4818c64e
 
 jobs:
   deploy:
@@ -79,15 +83,13 @@ jobs:
             --template-file packaged.yaml --stack-name "$STACK_NAME" \
             --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
             --parameter-overrides EnvName=dev \
-              "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS" \
+              "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS"               "DomainName=$DOMAIN_NAME" "AcmCertificateArn=$ACM_CERT_ARN" \
             --tags project=barnes-online-collection env=dev \
             --no-fail-on-empty-changeset
 
       - name: Smoke test
-        run: |
-          DOMAIN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
-            --query "Stacks[0].Outputs[?OutputKey=='DistributionDomainName'].OutputValue" --output text)
-          bash scripts/smoke-test.sh "https://$DOMAIN"
+        # Against the public URL people actually use (DNS -> this stack's CloudFront distribution).
+        run: bash scripts/smoke-test.sh "https://$DOMAIN_NAME"
 
       - name: On failure, show why the stack update failed
         if: failure()
