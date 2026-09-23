@@ -3,12 +3,21 @@ AWSTemplateFormatVersion: "2010-09-09"
 # CS-78 — the IAM role GitHub Actions assumes to deploy the collection site's Lambda stack (template.yaml).
 # Auth is GitHub OIDC (no stored AWS keys): only workflow runs on the listed branch refs of this repo can
 # assume it. Uses the account's existing token.actions.githubusercontent.com OIDC provider (shared — also
-# used by thebarn-es-redirect). Deployed ONCE by hand, and again only when the allowed refs or permissions
-# change:
+# used by thebarn-es-redirect). One stack per env, deployed by hand, and again only when the allowed
+# subjects or permissions change:
 #
-#   aws cloudformation deploy --stack-name barnes-online-collection-gha-deploy-dev \
-#     --template-file infra/gha-deploy-role.yaml --capabilities CAPABILITY_NAMED_IAM \
-#     --parameter-overrides DevDistributionId=E22AQ2LQ5QLAAK
+#   dev:  aws cloudformation deploy --stack-name barnes-online-collection-gha-deploy-dev \
+#           --template-file infra/gha-deploy-role.yaml --capabilities CAPABILITY_NAMED_IAM \
+#           --parameter-overrides DistributionId=E22AQ2LQ5QLAAK
+#   prod: aws cloudformation deploy --stack-name barnes-online-collection-gha-deploy-prod \
+#           --template-file infra/gha-deploy-role.yaml --capabilities CAPABILITY_NAMED_IAM \
+#           --parameter-overrides EnvName=prod AppStackName=barnes-collection-www-prod \
+#             WebAclArn=<prod web ACL ARN> CreateArtifactsBucket=false \
+#             "AllowedSubjects=repo:BarnesFoundation/Barnes-Online-Collection:environment:production,repo:barnesfoundation/barnes-online-collection:environment:production"
+#         then, after the first prod deploy creates the distribution, redeploy with DistributionId=<id>.
+#
+# Prod trusts ONLY jobs running in the GitHub "production" Environment (whose required reviewer is Steve),
+# so AWS credentials for prod exist only after that approval.
 #
 # Permissions are scoped to the dev app stack's own resources (stack, function, its generated execution
 # role, its CloudFront distribution, its secret). Hardening follow-up: a permissions boundary on the
@@ -27,17 +36,37 @@ Parameters:
   EnvName:
     Type: String
     Default: dev
-  DevDistributionId:
+  DistributionId:
     Type: String
-    Description: CloudFront distribution the app stack owns (stack output DistributionId). dev = E22AQ2LQ5QLAAK.
+    Default: ""
+    Description: >
+      CloudFront distribution the app stack owns (its DistributionId output); dev = E22AQ2LQ5QLAAK.
+      Leave empty only to bootstrap an env whose distribution doesn't exist yet: the role may then create
+      and manage distributions account-wide. Pin it right after the first deploy.
+  WebAclArn:
+    Type: String
+    Default: ""
+    Description: WAFv2 web ACL the app stack attaches to its distribution (prod); empty = none.
+  CreateArtifactsBucket:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "true"
+    Description: The artifacts bucket is shared across envs; only the dev role stack creates it.
   LwaLayerAccount:
     Type: String
     Default: "753240598075"
     Description: AWS account that publishes the Lambda Web Adapter layer.
 
+Conditions:
+  PinnedDistribution: !Not [!Equals [!Ref DistributionId, ""]]
+  HasWebAcl: !Not [!Equals [!Ref WebAclArn, ""]]
+  OwnsArtifactsBucket: !Equals [!Ref CreateArtifactsBucket, "true"]
+
 Resources:
   ArtifactsBucket:
     Type: AWS::S3::Bucket
+    Condition: OwnsArtifactsBucket
+    DeletionPolicy: Retain
     Properties:
       BucketName: !Sub "barnes-online-collection-deploy-artifacts-${AWS::AccountId}"
       PublicAccessBlockConfiguration:
@@ -81,11 +110,11 @@ Resources:
               - Sid: Artifacts
                 Effect: Allow
                 Action: [s3:PutObject, s3:GetObject]
-                Resource: !Sub "${ArtifactsBucket.Arn}/*"
+                Resource: !Sub "arn:aws:s3:::barnes-online-collection-deploy-artifacts-${AWS::AccountId}/*"
               - Sid: ArtifactsList
                 Effect: Allow
                 Action: s3:ListBucket
-                Resource: !GetAtt ArtifactsBucket.Arn
+                Resource: !Sub "arn:aws:s3:::barnes-online-collection-deploy-artifacts-${AWS::AccountId}"
 
               # Create/execute change sets on the app stack (+ the SAM transform it uses).
               - Sid: AppStack
@@ -187,7 +216,8 @@ Resources:
                   - ec2:DescribeNetworkInterfaces
                 Resource: "*"
 
-              # The app stack's CloudFront distribution (updates only — recreating it is a manual step).
+              # The app stack's CloudFront distribution. Pinned to its id once it exists; while bootstrapping
+              # (DistributionId empty) the role may create one and manage distributions account-wide.
               - Sid: Distribution
                 Effect: Allow
                 Action:
@@ -197,7 +227,35 @@ Resources:
                   - cloudfront:TagResource
                   - cloudfront:UntagResource
                   - cloudfront:ListTagsForResource
-                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DevDistributionId}"
+                Resource: !If
+                  - PinnedDistribution
+                  - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+                  - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+              - !If
+                - PinnedDistribution
+                - !Ref "AWS::NoValue"
+                - Sid: BootstrapCreateDistribution
+                  Effect: Allow
+                  Action: cloudfront:CreateDistribution
+                  Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+              # The stack's own cache policies (CloudFront can't scope these by name).
+              - Sid: CachePolicies
+                Effect: Allow
+                Action:
+                  - cloudfront:CreateCachePolicy
+                  - cloudfront:GetCachePolicy
+                  - cloudfront:GetCachePolicyConfig
+                  - cloudfront:UpdateCachePolicy
+                  - cloudfront:DeleteCachePolicy
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:cache-policy/*"
+              # Attaching a WAF web ACL to the distribution requires reading it.
+              - !If
+                - HasWebAcl
+                - Sid: WebAcl
+                  Effect: Allow
+                  Action: [wafv2:GetWebACL]
+                  Resource: !Ref WebAclArn
+                - !Ref "AWS::NoValue"
 
               # CloudFormation resolves the template's {{resolve:secretsmanager:...}} references with the
               # deployer's credentials.
@@ -211,4 +269,4 @@ Outputs:
     Value: !GetAtt DeployRole.Arn
     Description: Set as role-to-assume in .github/workflows/deploy-dev.yml.
   ArtifactsBucketName:
-    Value: !Ref ArtifactsBucket
+    Value: !Sub "barnes-online-collection-deploy-artifacts-${AWS::AccountId}"

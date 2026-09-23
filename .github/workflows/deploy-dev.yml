@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - development
+      - CS-78-prod-deploy   # TEMP: prove the shared template changes on dev before merge. REMOVE before merging.
   workflow_dispatch:
 
 permissions:
@@ -24,7 +25,8 @@ env:
   STACK_NAME: barnes-collection-www-dev
   DEPLOY_ROLE: arn:aws:iam::744014450301:role/barnes-online-collection-gha-deploy-dev
   ARTIFACTS_BUCKET: barnes-online-collection-deploy-artifacts-744014450301
-  VPC_SUBNET_IDS: subnet-021d7a72948b68fb1
+  # Two private subnets (us-east-1f + us-east-1a) so the Lambda spans two AZs; see infra/lambda-network.yaml.
+  VPC_SUBNET_IDS: subnet-021d7a72948b68fb1,subnet-032319d3c76379c66
   VPC_SECURITY_GROUP_IDS: sg-2480035b
   # The dev site's public name. Passed explicitly on every deploy so a deploy can never drop the
   # CloudFront alias (the template defaults DomainName to "", i.e. no alias).

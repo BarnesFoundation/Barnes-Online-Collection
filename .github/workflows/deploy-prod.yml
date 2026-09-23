@@ -1,0 +1,123 @@
+name: Deploy prod (Lambda)
+
+# CS-78 — deploys a RELEASE of `development` to the PROD Lambda stack. It never runs on its own:
+# publish a GitHub Release (tag v*, cut from development) or run it manually, and the job then waits in
+# the "production" Environment for Steve's approval before it gets any AWS credentials (the prod deploy
+# role trusts only jobs in that Environment). See DEPLOY.md.
+#
+# Until the cutover, DOMAIN_NAME is empty: prod runs in parallel on its own *.cloudfront.net URL while
+# collection.barnesfoundation.org keeps serving from Elastic Beanstalk, untouched. The cutover (on
+# Steve's go) sets DOMAIN_NAME/ACM_CERT_ARN here and moves the alias off the old CloudFront distribution.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # mint the GitHub OIDC token the prod AWS role trusts
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  STACK_NAME: barnes-collection-www-prod
+  DEPLOY_ROLE: arn:aws:iam::744014450301:role/barnes-online-collection-gha-deploy-prod
+  ARTIFACTS_BUCKET: barnes-online-collection-deploy-artifacts-744014450301
+  VPC_SUBNET_IDS: subnet-021d7a72948b68fb1,subnet-032319d3c76379c66
+  VPC_SECURITY_GROUP_IDS: sg-2480035b
+  # The current prod CloudFront's bot-blocker web ACL (shared, not duplicated).
+  WEB_ACL_ARN: arn:aws:wafv2:us-east-1:744014450301:global/webacl/CreatedByCloudFront-dc7f11db/29e249dc-ae58-4b70-b7f0-c7ee51fb4ffc
+  # EMPTY until the cutover (see header).
+  DOMAIN_NAME: ""
+  ACM_CERT_ARN: ""
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production   # required reviewer: Steve
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history + branches, for the check below
+
+      - name: Only ship commits that are on development
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/development || {
+            echo "::error::$GITHUB_SHA is not on development. Cut the release from development."; exit 1; }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build front end
+        # REACT_APP_* are baked in at build time and mirror the prod EB env (collection-server-production).
+        env:
+          CI: "false"
+          REACT_APP_AWS_BUCKET: barnes-data-processing
+          REACT_APP_CANONICAL_ROOT: https://collection.barnesfoundation.org
+          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-16
+          REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
+          REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
+          REACT_APP_NETX_ENABLED: "true"
+          REACT_APP_PRINTS_ENDPOINT: https://prints.barnesfoundation.org/utility/object_reference_uri
+          REACT_APP_WWW_URL: https://barnesfoundation.org
+        run: |
+          npm run build-css
+          npx craco build
+
+      - name: Assemble Lambda package
+        run: bash scripts/package-lambda.sh
+
+      - name: AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy stack
+        # Values differing from the template's (dev) defaults, mirrored from the prod EB env.
+        # EnablePostgresV2=false keeps CS-55 dormant, as it is on prod today; activating it is its own step.
+        run: |
+          aws cloudformation package \
+            --template-file template.yaml \
+            --s3-bucket "$ARTIFACTS_BUCKET" --s3-prefix "$STACK_NAME" \
+            --output-template-file packaged.yaml
+          aws cloudformation deploy \
+            --template-file packaged.yaml --stack-name "$STACK_NAME" \
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --parameter-overrides EnvName=prod NodeEnvValue=production EnablePostgresV2=false \
+              ElasticsearchHost=a3bf81f3efa82d7e9a6b1c6fcc91e1d3.us-east-1.aws.found.io \
+              ReactAppCanonicalRoot=https://collection.barnesfoundation.org \
+              ReactAppGoogleAnalyticsId=UA-25091665-16 \
+              ReactAppWwwUrl=https://barnesfoundation.org \
+              WufooSubdomain=testbarnes WufooDownloadForm=z1vuiamj18t6od1 \
+              "WebAclArn=$WEB_ACL_ARN" \
+              "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS" \
+              "DomainName=$DOMAIN_NAME" "AcmCertificateArn=$ACM_CERT_ARN" \
+            --tags project=barnes-online-collection env=prod \
+            --no-fail-on-empty-changeset
+
+      - name: Smoke test
+        # The public URL once cut over; until then the stack's own CloudFront URL.
+        env:
+          EXPECT_RENDITIONS: "false"   # Postgres V2 off on prod until CS-55 is activated
+        run: |
+          if [ -n "$DOMAIN_NAME" ]; then URL="https://$DOMAIN_NAME"; else
+            URL="https://$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+              --query "Stacks[0].Outputs[?OutputKey=='DistributionDomainName'].OutputValue" --output text)"; fi
+          bash scripts/smoke-test.sh "$URL"
+
+      - name: On failure, show why the stack update failed
+        if: failure()
+        run: |
+          aws cloudformation describe-stack-events --stack-name "$STACK_NAME" --max-items 25 \
+            --query "StackEvents[?contains(ResourceStatus,'FAILED')].[Timestamp,LogicalResourceId,ResourceStatusReason]" \
+            --output table || true
