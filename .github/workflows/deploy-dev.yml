@@ -1,0 +1,98 @@
+name: Deploy dev (Lambda)
+
+# CS-78 — deploys `development` to the dev Lambda stack (template.yaml) on every merge, replacing the
+# Elastic Beanstalk dev pipeline (collection-dev-deploy). AWS access is GitHub OIDC -> the role in
+# infra/gha-deploy-role.yaml; no AWS keys or app secrets are stored in GitHub (the template reads app
+# secrets from Secrets Manager). See DEPLOY.md.
+on:
+  push:
+    branches:
+      - development
+      - CS-78-dev-ci   # TEMP: prove the workflow on this branch before merge. REMOVE before merging.
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # mint the GitHub OIDC token the AWS role trusts
+  contents: read
+
+# Never run two deploys of the same stack at once; a later merge waits for the running one.
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  STACK_NAME: barnes-collection-www-dev
+  DEPLOY_ROLE: arn:aws:iam::744014450301:role/barnes-online-collection-gha-deploy-dev
+  ARTIFACTS_BUCKET: barnes-online-collection-deploy-artifacts-744014450301
+  VPC_SUBNET_IDS: subnet-021d7a72948b68fb1
+  VPC_SECURITY_GROUP_IDS: sg-2480035b
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22   # same major as the Lambda runtime (nodejs22.x)
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build front end
+        # = `npm run build` minus its postbuild step (gulp dist.zip), which only packages for Elastic
+        # Beanstalk. REACT_APP_* are baked in at build time and mirror the dev env (EB env
+        # collection-server-development / the template's parameter defaults).
+        env:
+          CI: "false"   # CRA warnings must not fail the build (GitHub sets CI=true)
+          REACT_APP_AWS_BUCKET: barnes-data-processing
+          REACT_APP_CANONICAL_ROOT: http://dev.collection.barnesfoundation.org
+          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-17
+          REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
+          REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
+          REACT_APP_NETX_ENABLED: "true"
+          REACT_APP_PRINTS_ENDPOINT: https://prints.barnesfoundation.org/utility/object_reference_uri
+          REACT_APP_WWW_URL: https://www.barnesfoundation.org
+        run: |
+          npm run build-css
+          npx craco build
+
+      - name: Assemble Lambda package
+        run: bash scripts/package-lambda.sh
+
+      - name: AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.DEPLOY_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy stack
+        run: |
+          aws cloudformation package \
+            --template-file template.yaml \
+            --s3-bucket "$ARTIFACTS_BUCKET" --s3-prefix "$STACK_NAME" \
+            --output-template-file packaged.yaml
+          aws cloudformation deploy \
+            --template-file packaged.yaml --stack-name "$STACK_NAME" \
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --parameter-overrides EnvName=dev \
+              "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS" \
+            --tags project=barnes-online-collection env=dev \
+            --no-fail-on-empty-changeset
+
+      - name: Smoke test
+        run: |
+          DOMAIN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='DistributionDomainName'].OutputValue" --output text)
+          bash scripts/smoke-test.sh "https://$DOMAIN"
+
+      - name: On failure, show why the stack update failed
+        if: failure()
+        run: |
+          aws cloudformation describe-stack-events --stack-name "$STACK_NAME" --max-items 25 \
+            --query "StackEvents[?contains(ResourceStatus,'FAILED')].[Timestamp,LogicalResourceId,ResourceStatusReason]" \
+            --output table || true

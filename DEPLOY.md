@@ -5,13 +5,23 @@ in parallel with the live Elastic Beanstalk site, then cuts over by DNS. **No fu
 the FULL Express server runs on the Lambda (SSR meta/OG on `/` + object pages, canonical
 `/objects/:id` → `/objects/:id/<title-slug>/` 301s, `/track/image-download` GA+redirect,
 `express.static` of the built FE, AND `/api/*`) — exactly what the EB container did. CloudFront is a
-single origin in front of the Lambda. CI auto-deploy is a follow-up (CS-78); until then deploys are
-deliberate and run from here.
+single origin in front of the Lambda.
+
+**Dev deploys are automatic (CS-78):** every merge to `development` runs
+`.github/workflows/deploy-dev.yml`, which builds, packages, deploys the `barnes-collection-www-dev` stack
+and smoke-tests it (`scripts/smoke-test.sh`). It authenticates with GitHub OIDC via the role in
+`infra/gha-deploy-role.yaml` — no AWS keys or app secrets in GitHub. The manual steps below are for
+prod, for a first-time stack, or for debugging a failed run.
 
 ## 0. Prerequisites
 
-- **Secrets** (values live on the EB env `collection-server-development`; pass at deploy, never commit):
-  `ElasticsearchPassword`, `AwsAccessKey`, `AwsSecretKey`, `GraphCmsApiToken`, `NetxApiToken`, `WwwPassword`.
+- **Secrets** live in AWS Secrets Manager as `barnes-collection-www/<env>` (JSON keys
+  `ELASTICSEARCH_PASSWORD`, `GRAPHCMS_API_TOKEN`, `NETX_API_TOKEN`, `WWW_PASSWORD`, `X_ORIGIN_VERIFY`);
+  the template reads them with `{{resolve:secretsmanager:...}}`, so no deploy passes secrets. dev is
+  created; prod needs `barnes-collection-www/prod`. After changing a value, redeploy with a template or
+  parameter change — CloudFormation only re-reads a secret when the resource using it changes.
+- **CI deploy role** (once per env): `infra/gha-deploy-role.yaml` (GitHub OIDC role + artifacts bucket;
+  deploy command in its header). dev: `barnes-online-collection-gha-deploy-dev`.
 - **VPC egress** — the Lambda's subnets must reach the RDS Proxy AND the public internet (ES on Elastic
   Cloud + the Craft/Hygraph CMS + NetX), i.e. a subnet with a NAT gateway. dev: `subnet-021d7a72948b68fb1` / `sg-2480035b`.
 - **LWA layer** — pin the current us-east-1/x86_64 Lambda Web Adapter layer version (`LwaLayerArn`).
@@ -53,25 +63,24 @@ scripts/package-lambda.sh
 SAM CLI:
 ```
 sam build && sam deploy --config-env dev \
-  --parameter-overrides "VpcSubnetIds=... VpcSecurityGroupIds=... <secrets>"
+  --parameter-overrides "VpcSubnetIds=... VpcSecurityGroupIds=..."
 ```
 Or AWS-native (no SAM CLI needed — CloudFormation applies the SAM transform):
 ```
 aws cloudformation package --template-file template.yaml \
-  --s3-bucket <artifacts-bucket> --s3-prefix collection-www-dev \
+  --s3-bucket barnes-online-collection-deploy-artifacts-744014450301 --s3-prefix barnes-collection-www-dev \
   --output-template-file packaged.yaml
 aws cloudformation deploy --template-file packaged.yaml --stack-name barnes-collection-www-dev \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-  --parameter-overrides EnvName=dev VpcSubnetIds=subnet-021d7a72948b68fb1 \
-    VpcSecurityGroupIds=sg-2480035b XOriginVerify=<v> ElasticsearchPassword=<v> \
-    AwsAccessKey=<v> AwsSecretKey=<v> GraphCmsApiToken=<v> NetxApiToken=<v> WwwPassword=<v>
+  --parameter-overrides EnvName=dev VpcSubnetIds=subnet-021d7a72948b68fb1 VpcSecurityGroupIds=sg-2480035b
 ```
 Leave `DomainName` empty for a parallel test stack on the default `*.cloudfront.net` domain (no alias,
 no DNS, no CNAME conflict). Note the outputs: `DistributionId`, `DistributionDomainName`, `ApiFunctionUrl`.
 
 ## 4. Verify on the CloudFront domain (BEFORE any DNS change)
 
-Hit `https://<DistributionDomainName>/` and a few deep links + `/api/search?...`. Confirm search (ES),
+Run `scripts/smoke-test.sh https://<DistributionDomainName>` (health, app shell, GET + POST search,
+Postgres renditions, the canonical redirect), then hit a few deep links by hand. Confirm search (ES),
 object pages (incl. the canonical title-slug redirect + server-rendered meta), carousel renditions
 (Postgres, CS-55), and `/track/image-download/...` all work. This is the whole site on Lambda with no
 public traffic yet.
