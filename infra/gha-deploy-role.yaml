@@ -227,6 +227,9 @@ Resources:
                   - cloudfront:TagResource
                   - cloudfront:UntagResource
                   - cloudfront:ListTagsForResource
+                  # post-deploy invalidation (the workflows clear the edge cache before smoke-testing)
+                  - cloudfront:CreateInvalidation
+                  - cloudfront:GetInvalidation
                 Resource: !If
                   - PinnedDistribution
                   - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
