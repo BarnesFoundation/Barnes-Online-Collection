@@ -1,0 +1,2066 @@
+{
+	"artists": [
+		{
+			"sortedName": "Unidentified Maker",
+			"key": "Unidentified Maker",
+			"doc_count": 1670
+		},
+		{
+			"sortedName": "Unidentified artist",
+			"key": "Unidentified artist",
+			"doc_count": 275
+		},
+		{
+			"key": "Pierre-Auguste Renoir",
+			"doc_count": 180
+		},
+		{
+			"key": "Unidentified artist ; Kichizô Inagaki",
+			"doc_count": 81
+		},
+		{
+			"key": "William Glackens",
+			"doc_count": 71
+		},
+		{
+			"key": "Paul Cézanne",
+			"doc_count": 67
+		},
+		{
+			"key": "Henri Matisse",
+			"doc_count": 59
+		},
+		{
+			"key": "Jules Pascin",
+			"doc_count": 57
+		},
+		{
+			"key": "Pablo Picasso",
+			"doc_count": 45
+		},
+		{
+			"key": "Charles Demuth",
+			"doc_count": 44
+		},
+		{
+			"sortedName": "Renoir Jean",
+			"key": "Jean Renoir",
+			"doc_count": 39
+		},
+		{
+			"key": "Chaim Soutine",
+			"doc_count": 21
+		},
+		{
+			"key": "Maurice Prendergast",
+			"doc_count": 21
+		},
+		{
+			"key": "Henri Rousseau",
+			"doc_count": 18
+		},
+		{
+			"doc_count": 17
+		},
+		{
+			"key": "Amedeo Modigliani",
+			"doc_count": 16
+		},
+		{
+			"key": "Giorgio de Chirico",
+			"doc_count": 13
+		},
+		{
+			"key": "Jean Hugo",
+			"doc_count": 12
+		},
+		{
+			"key": "Maurice Utrillo",
+			"doc_count": 12
+		},
+		{
+			"key": "Edgar Degas",
+			"doc_count": 11
+		},
+		{
+			"key": "Utagawa Kunisada",
+			"doc_count": 11
+		},
+		{
+			"key": "Alfred Maurer",
+			"doc_count": 10
+		},
+		{
+			"key": "Jacques Lipchitz",
+			"doc_count": 10
+		},
+		{
+			"key": "Luigi Settanni",
+			"doc_count": 10
+		},
+		{
+			"key": "Paul Klee",
+			"doc_count": 10
+		},
+		{
+			"key": "Utagawa Kuniyoshi",
+			"doc_count": 10
+		},
+		{
+			"key": "Angelo Pinto",
+			"doc_count": 9
+		},
+		{
+			"key": "Qiu Ying",
+			"doc_count": 9
+		},
+		{
+			"key": "Emil Larson",
+			"doc_count": 8
+		},
+		{
+			"key": "Georges Rouault",
+			"doc_count": 8
+		},
+		{
+			"key": "Albert Marquet",
+			"doc_count": 7
+		},
+		{
+			"key": "Alexis Gritchenko",
+			"doc_count": 7
+		},
+		{
+			"key": "José Raphael Aragon",
+			"doc_count": 7
+		},
+		{
+			"key": "Vincent van Gogh",
+			"doc_count": 7
+		},
+		{
+			"key": "Charles Prendergast",
+			"doc_count": 6
+		},
+		{
+			"key": "Ernest Lawson",
+			"doc_count": 6
+		},
+		{
+			"key": "Georges Seurat",
+			"doc_count": 6
+		},
+		{
+			"key": "Jean-Baptiste-Camille Corot",
+			"doc_count": 6
+		},
+		{
+			"key": "José Aragon",
+			"doc_count": 6
+		},
+		{
+			"key": "Pedro Fresquis",
+			"doc_count": 6
+		},
+		{
+			"key": "Unidentified Maker ; Kichizô Inagaki",
+			"doc_count": 6
+		},
+		{
+			"key": "Utagawa Yoshiiku",
+			"doc_count": 6
+		},
+		{
+			"key": "Wols",
+			"doc_count": 6
+		},
+		{
+			"key": "Francis McCarthy",
+			"doc_count": 5
+		},
+		{
+			"key": "Honoré Daumier",
+			"doc_count": 5
+		},
+		{
+			"key": "May Preston",
+			"doc_count": 5
+		},
+		{
+			"key": "Paul Signac",
+			"doc_count": 5
+		},
+		{
+			"key": "Alo Altripp",
+			"doc_count": 4
+		},
+		{
+			"key": "Catalina Zuni",
+			"doc_count": 4
+		},
+		{
+			"key": "Claude Monet",
+			"doc_count": 4
+		},
+		{
+			"key": "Edith Dimock",
+			"doc_count": 4
+		},
+		{
+			"key": "El Greco (Domenikos Theotokopoulos)",
+			"doc_count": 4
+		},
+		{
+			"key": "Francisco de Goya",
+			"doc_count": 4
+		},
+		{
+			"key": "Georges Braque",
+			"doc_count": 4
+		},
+		{
+			"key": "Gustave Courbet",
+			"doc_count": 4
+		},
+		{
+			"key": "Horace Pippin",
+			"doc_count": 4
+		},
+		{
+			"key": "Jean-Siméon Chardin",
+			"doc_count": 4
+		},
+		{
+			"key": "John Kane",
+			"doc_count": 4
+		},
+		{
+			"key": "Pierre Bonnard",
+			"doc_count": 4
+		},
+		{
+			"key": "The A. J. Santero",
+			"doc_count": 4
+		},
+		{
+			"key": "Édouard Manet",
+			"doc_count": 4
+		},
+		{
+			"key": "André Derain",
+			"doc_count": 3
+		},
+		{
+			"key": "Biagio Pinto",
+			"doc_count": 3
+		},
+		{
+			"key": "Corneille de Lyon",
+			"doc_count": 3
+		},
+		{
+			"key": "Jacopo Tintoretto",
+			"doc_count": 3
+		},
+		{
+			"key": "Jean Bourdichon",
+			"doc_count": 3
+		},
+		{
+			"key": "Joan Miró",
+			"doc_count": 3
+		},
+		{
+			"key": "José Benito Ortega",
+			"doc_count": 3
+		},
+		{
+			"key": "Marie Laurencin",
+			"doc_count": 3
+		},
+		{
+			"key": "Marsden Hartley",
+			"doc_count": 3
+		},
+		{
+			"key": "Peter Rubens",
+			"doc_count": 3
+		},
+		{
+			"sortedName": "Lotiron Robert",
+			"key": "Robert Lotiron",
+			"doc_count": 3
+		},
+		{
+			"key": "Abraham Hankins",
+			"doc_count": 2
+		},
+		{
+			"key": "Afro",
+			"doc_count": 2
+		},
+		{
+			"key": "Albert Nulty",
+			"doc_count": 2
+		},
+		{
+			"key": "Alfred Sisley",
+			"doc_count": 2
+		},
+		{
+			"key": "Arthur Davies",
+			"doc_count": 2
+		},
+		{
+			"key": "Baldassare Embriachi",
+			"doc_count": 2
+		},
+		{
+			"key": "Barbara Reiff",
+			"doc_count": 2
+		},
+		{
+			"key": "Claude Lorrain",
+			"doc_count": 2
+		},
+		{
+			"key": "Elaine Bailey",
+			"doc_count": 2
+		},
+		{
+			"key": "Gerard David",
+			"doc_count": 2
+		},
+		{
+			"key": "Giacomo Guardi",
+			"doc_count": 2
+		},
+		{
+			"key": "Henri de Toulouse-Lautrec",
+			"doc_count": 2
+		},
+		{
+			"key": "James Morrice",
+			"doc_count": 2
+		},
+		{
+			"key": "James Preston",
+			"doc_count": 2
+		},
+		{
+			"key": "Jean Guiraud",
+			"doc_count": 2
+		},
+		{
+			"key": "Jean Lurçat",
+			"doc_count": 2
+		},
+		{
+			"key": "John Sloan",
+			"doc_count": 2
+		},
+		{
+			"key": "Lenna Glackens",
+			"doc_count": 2
+		},
+		{
+			"key": "Louis Marcoussis",
+			"doc_count": 2
+		},
+		{
+			"sortedName": "Ward Lynd",
+			"key": "Lynd Ward",
+			"doc_count": 2
+		},
+		{
+			"key": "Marc Chagall",
+			"doc_count": 2
+		},
+		{
+			"key": "Mary Cassatt",
+			"doc_count": 2
+		},
+		{
+			"key": "Maurice Sterne",
+			"doc_count": 2
+		},
+		{
+			"key": "Paul Cézanne ; Auguste Clot",
+			"doc_count": 2
+		},
+		{
+			"key": "Paul Gauguin",
+			"doc_count": 2
+		},
+		{
+			"key": "Randall Morgan",
+			"doc_count": 2
+		},
+		{
+			"key": "Raoul Dufy",
+			"doc_count": 2
+		},
+		{
+			"key": "Rhenish Master",
+			"doc_count": 2
+		},
+		{
+			"key": "Robert Laurent",
+			"doc_count": 2
+		},
+		{
+			"key": "Rosalia Toribio",
+			"doc_count": 2
+		},
+		{
+			"key": "Salvatore Pinto",
+			"doc_count": 2
+		},
+		{
+			"key": "Santo Niño Santero",
+			"doc_count": 2
+		},
+		{
+			"key": "Thomas Benton",
+			"doc_count": 2
+		},
+		{
+			"key": "Thomas Maling",
+			"doc_count": 2
+		},
+		{
+			"key": "Thomas Wildes",
+			"doc_count": 2
+		},
+		{
+			"key": "Unidentified artist ; Kichizô Inagaki ; Barbus Müller ; Antoine Rabany",
+			"doc_count": 2
+		},
+		{
+			"key": "Utagawa Toyokuni",
+			"doc_count": 2
+		},
+		{
+			"key": "Violette de Mazia",
+			"doc_count": 2
+		},
+		{
+			"key": "A. Moreau",
+			"doc_count": 1
+		},
+		{
+			"key": "Acoma Mary ; Unidentified Maker",
+			"doc_count": 1
+		},
+		{
+			"key": "Adolphe Monticelli",
+			"doc_count": 1
+		},
+		{
+			"key": "Albert Lebourg",
+			"doc_count": 1
+		},
+		{
+			"key": "Albrecht Dürer",
+			"doc_count": 1
+		},
+		{
+			"key": "Alice Halicka",
+			"doc_count": 1
+		},
+		{
+			"key": "Ando Hiroshige",
+			"doc_count": 1
+		},
+		{
+			"key": "Andrew Dasburg",
+			"doc_count": 1
+		},
+		{
+			"key": "Antonio Molleno",
+			"doc_count": 1
+		},
+		{
+			"key": "Aristodimos Kaldis",
+			"doc_count": 1
+		},
+		{
+			"key": "Arroh-a-och",
+			"doc_count": 1
+		},
+		{
+			"key": "Austrian Master",
+			"doc_count": 1
+		},
+		{
+			"key": "Barton Church",
+			"doc_count": 1
+		},
+		{
+			"key": "Benozzo Gozzoli",
+			"doc_count": 1
+		},
+		{
+			"key": "Bernardino Pinturicchio ; Unidentified artist",
+			"doc_count": 1
+		},
+		{
+			"key": "Blasco de Grañén",
+			"doc_count": 1
+		},
+		{
+			"key": "Bonifazio de' Pitati ; Giorgione",
+			"doc_count": 1
+		},
+		{
+			"sortedName": "Kreiter C.",
+			"key": "C. Kreiter",
+			"doc_count": 1
+		},
+		{
+			"key": "Camille Pissarro",
+			"doc_count": 1
+		},
+		{
+			"key": "Canaletto",
+			"doc_count": 1
+		},
+		{
+			"key": "Central German Master",
+			"doc_count": 1
+		},
+		{
+			"key": "Charles Conder",
+			"doc_count": 1
+		},
+		{
+			"key": "Charles Fromuth",
+			"doc_count": 1
+		},
+		{
+			"key": "Cristoforo di Bindoccio ; Meo di Piero",
+			"doc_count": 1
+		},
+		{
+			"key": "David Ellinger",
+			"doc_count": 1
+		},
+		{
+			"key": "Domenico Veneziano ; Unidentified artist",
+			"doc_count": 1
+		},
+		{
+			"key": "Dutch Master ; Flemish Master",
+			"doc_count": 1
+		},
+		{
+			"key": "E. Webster",
+			"doc_count": 1
+		},
+		{
+			"key": "Ebenezer Tracy",
+			"doc_count": 1
+		},
+		{
+			"key": "Edouard Vuillard",
+			"doc_count": 1
+		},
+		{
+			"key": "Emile Bernard",
+			"doc_count": 1
+		},
+		{
+			"key": "Eugène Delacroix",
+			"doc_count": 1
+		},
+		{
+			"key": "Flemish Master ; Cologne Master",
+			"doc_count": 1
+		},
+		{
+			"key": "Florence Shubert",
+			"doc_count": 1
+		},
+		{
+			"key": "Frans Hals",
+			"doc_count": 1
+		},
+		{
+			"key": "François Clouet",
+			"doc_count": 1
+		},
+		{
+			"key": "Geer van Velde",
+			"doc_count": 1
+		},
+		{
+			"key": "George Gray",
+			"doc_count": 1
+		},
+		{
+			"key": "George Kars",
+			"doc_count": 1
+		},
+		{
+			"key": "George Luks",
+			"doc_count": 1
+		},
+		{
+			"key": "Georges Rouault ; Unidentified artist",
+			"doc_count": 1
+		},
+		{
+			"key": "Gerrit Berckheyde",
+			"doc_count": 1
+		},
+		{
+			"key": "Gherardo Starnina",
+			"doc_count": 1
+		},
+		{
+			"key": "Gino Severini",
+			"doc_count": 1
+		},
+		{
+			"key": "Giovanni di Pietro ; Vecchietta (Lorenzio di Pietro)",
+			"doc_count": 1
+		},
+		{
+			"key": "Gustave Miklos",
+			"doc_count": 1
+		},
+		{
+			"key": "Guy Pène du Bois",
+			"doc_count": 1
+		},
+		{
+			"key": "Hans Baldung",
+			"doc_count": 1
+		},
+		{
+			"key": "Hans Memling",
+			"doc_count": 1
+		},
+		{
+			"key": "Hans von Kulmbach",
+			"doc_count": 1
+		},
+		{
+			"key": "Harry Sefarbi",
+			"doc_count": 1
+		},
+		{
+			"key": "Hasegawa Sadanobu",
+			"doc_count": 1
+		},
+		{
+			"key": "Hashimot Sadahide",
+			"doc_count": 1
+		},
+		{
+			"key": "Helen Toombs",
+			"doc_count": 1
+		},
+		{
+			"key": "Henri Cross",
+			"doc_count": 1
+		},
+		{
+			"key": "Hieronymus Bosch",
+			"doc_count": 1
+		},
+		{
+			"key": "Hieronymus Bosch ; Unidentified artist",
+			"doc_count": 1
+		},
+		{
+			"key": "Hilda Husik",
+			"doc_count": 1
+		},
+		{
+			"key": "Howard Rackliffe",
+			"doc_count": 1
+		},
+		{
+			"key": "Hugh Mesibov",
+			"doc_count": 1
+		},
+		{
+			"key": "Hélène Perdriat",
+			"doc_count": 1
+		},
+		{
+			"key": "Israel Trask",
+			"doc_count": 1
+		},
+		{
+			"key": "Jack Arycon",
+			"doc_count": 1
+		},
+		{
+			"key": "Jacques Lipchitz ;",
+			"doc_count": 1
+		},
+		{
+			"key": "Jacques Lipchitz ; H. Rouard",
+			"doc_count": 1
+		},
+		{
+			"key": "Jan van Couver",
+			"doc_count": 1
+		},
+		{
+			"key": "Jan van Goyen",
+			"doc_count": 1
+		},
+		{
+			"key": "Jean Fouquet",
+			"doc_count": 1
+		},
+		{
+			"key": "Jean-Antoine Watteau ; Jean-Baptiste Pater",
+			"doc_count": 1
+		},
+		{
+			"key": "Jerome Myers",
+			"doc_count": 1
+		},
+		{
+			"key": "Joan Miró ; Unidentified artist",
+			"doc_count": 1
+		},
+		{
+			"key": "Johann Bieber ; Jacob Bieber",
+			"doc_count": 1
+		},
+		{
+			"key": "Johann Eyer",
+			"doc_count": 1
+		},
+		{
+			"key": "Johannes Leman",
+			"doc_count": 1
+		},
+		{
+			"key": "John Bieber",
+			"doc_count": 1
+		},
+		{
+			"key": "John Will",
+			"doc_count": 1
+		},
+		{
+			"key": "Joseph Chandler",
+			"doc_count": 1
+		},
+		{
+			"key": "Joseph Constant",
+			"doc_count": 1
+		},
+		{
+			"key": "Joseph Lehn",
+			"doc_count": 1
+		},
+		{
+			"key": "Joshua Letts",
+			"doc_count": 1
+		},
+		{
+			"key": "Juan de Flandes",
+			"doc_count": 1
+		},
+		{
+			"key": "June Groff",
+			"doc_count": 1
+		},
+		{
+			"key": "Karl Priebe",
+			"doc_count": 1
+		},
+		{
+			"key": "Kichizô Inagaki ; Barnes Foundation Master",
+			"doc_count": 1
+		},
+		{
+			"key": "Kichizô Inagaki ; Master of the Barnes Baule Couple",
+			"doc_count": 1
+		},
+		{
+			"key": "Kichizô Inagaki ; Master of the Rounded Volumes",
+			"doc_count": 1
+		},
+		{
+			"key": "Kichizô Inagaki ; Owie Kimou",
+			"doc_count": 1
+		},
+		{
+			"key": "Kichizô Inagaki ; The Bouaflé Master",
+			"doc_count": 1
+		},
+		{
+			"key": "Kitagawa Kikumaro",
+			"doc_count": 1
+		},
+		{
+			"key": "Kristján DavíÐsson",
+			"doc_count": 1
+		}
+	],
+	"cultures": [
+		"Acoma Pueblo",
+		"Akan",
+		"Akye",
+		"American",
+		"Anyi",
+		"Austrian",
+		"Baluch",
+		"Bamana",
+		"Bamileke",
+		"Baule",
+		"Beembe",
+		"Chinese",
+		"Continental",
+		"Cretan",
+		"Cypriot",
+		"Dan",
+		"Dogon peoples",
+		"Dutch",
+		"Edo",
+		"Egyptian",
+		"English",
+		"Etruscan",
+		"European",
+		"Fang",
+		"Flemish",
+		"French",
+		"German",
+		"Greek",
+		"Guro",
+		"Indian",
+		"Iranian",
+		"Italian",
+		"Japanese",
+		"Jula",
+		"Kanyok",
+		"Kissa",
+		"Kongo",
+		"Korean",
+		"Kota",
+		"Kuba",
+		"Kulango",
+		"Kyaman",
+		"Lagoon",
+		"Lega",
+		"Luba",
+		"Luluwa",
+		"Mande",
+		"Marka",
+		"Merina",
+		"Mesopotamian",
+		"Mexican",
+		"Middle Eastern",
+		"Mossi",
+		"Navajo",
+		"Ndengese",
+		"Netherlandish",
+		"New Mexican",
+		"Nsapo",
+		"Oceanian",
+		"Pende",
+		"Persian",
+		"Punu",
+		"Roman",
+		"San Ildefonso Pueblo",
+		"Santa Ana Pueblo",
+		"Santo Domingo Pueblo",
+		"Sapi",
+		"Scottish",
+		"Senufo",
+		"Sherbro",
+		"Songye",
+		"Spanish",
+		"Sri Lankan",
+		"Suku",
+		"Syrian",
+		"Swedish",
+		"Teke",
+		"Tesuque Pueblo",
+		"Thai",
+		"Tsogho",
+		"Turkish",
+		"Vili",
+		"Yaka",
+		"Zia Pueblo",
+		"Zuni Pueblo",
+		"Belorussian",
+		"Icelandic",
+		"Ukrainian",
+		"Polish",
+		"Swiss",
+		"Norwegian",
+		"Canadian",
+		"Russian"
+	],
+	"mediums": [
+		{
+			"key": "Iron",
+			"doc_count": 886
+		},
+		{
+			"key": "Oil on canvas",
+			"doc_count": 537
+		},
+		{
+			"key": "Wood",
+			"doc_count": 97
+		},
+		{
+			"key": "Silver alloy, turquoise",
+			"doc_count": 75
+		},
+		{
+			"key": "Pewter",
+			"doc_count": 67
+		},
+		{
+			"key": "Glass",
+			"doc_count": 60
+		},
+		{
+			"key": "Oil on panel",
+			"doc_count": 53
+		},
+		{
+			"key": "Ceramic",
+			"doc_count": 40
+		},
+		{
+			"key": "Redware",
+			"doc_count": 38
+		},
+		{
+			"key": "Watercolor and graphite on wove paper",
+			"doc_count": 34
+		},
+		{
+			"key": "Brass",
+			"doc_count": 33
+		},
+		{
+			"key": "Wool",
+			"doc_count": 32
+		},
+		{
+			"key": "Water-based paint on wood panel",
+			"doc_count": 31
+		},
+		{
+			"key": "Earthenware with polychrome decoration over tin-glaze",
+			"doc_count": 27
+		},
+		{
+			"key": "Cotton",
+			"doc_count": 24
+		},
+		{
+			"key": "Bone",
+			"doc_count": 23
+		},
+		{
+			"key": "Metal",
+			"doc_count": 23
+		},
+		{
+			"key": "Silver alloy, turquoise, copper alloy",
+			"doc_count": 18
+		},
+		{
+			"key": "Chinese black ink and heavily applied pigments on silk",
+			"doc_count": 17
+		},
+		{
+			"key": "Fired clay, basalt temper and slip",
+			"doc_count": 17
+		},
+		{
+			"key": "Japanese woodblock print",
+			"doc_count": 17
+		},
+		{
+			"key": "Black crayon on brown wove paper",
+			"doc_count": 16
+		},
+		{
+			"key": "Brass and iron",
+			"doc_count": 16
+		},
+		{
+			"key": "Bronze",
+			"doc_count": 15
+		},
+		{
+			"key": "Oak",
+			"doc_count": 15
+		},
+		{
+			"key": "Oil on wood panel",
+			"doc_count": 15
+		},
+		{
+			"key": "Silver alloy, turquoise, leather",
+			"doc_count": 13
+		},
+		{
+			"key": "Woodblock print",
+			"doc_count": 13
+		},
+		{
+			"key": "Copper alloy",
+			"doc_count": 12
+		},
+		{
+			"key": "Pine",
+			"doc_count": 12
+		},
+		{
+			"key": "Silver alloy, copper alloy",
+			"doc_count": 12
+		},
+		{
+			"key": "Wool and cotton",
+			"doc_count": 12
+		},
+		{
+			"key": "Limestone",
+			"doc_count": 11
+		},
+		{
+			"key": "Oil and gold on panel",
+			"doc_count": 11
+		},
+		{
+			"key": "Oil on canvas (later mounted to fiberboard)",
+			"doc_count": 11
+		},
+		{
+			"key": "Wood, pigment",
+			"doc_count": 11
+		},
+		{
+			"key": "Fired clay and slip",
+			"doc_count": 10
+		},
+		{
+			"key": "Iron and brass",
+			"doc_count": 10
+		},
+		{
+			"key": "Reverse painting on glass",
+			"doc_count": 9
+		},
+		{
+			"key": "Walnut",
+			"doc_count": 9
+		},
+		{
+			"key": "Watercolor and graphite on laid paper",
+			"doc_count": 9
+		},
+		{
+			"key": "Marble",
+			"doc_count": 8
+		},
+		{
+			"key": "Silver alloy, leather",
+			"doc_count": 8
+		},
+		{
+			"key": "Limestone with polychromy and gilding",
+			"doc_count": 7
+		},
+		{
+			"key": "Oil on paperboard",
+			"doc_count": 7
+		},
+		{
+			"key": "Painted tulip poplar",
+			"doc_count": 7
+		},
+		{
+			"key": "Tempera and gold on panel",
+			"doc_count": 7
+		},
+		{
+			"key": "Tin over sheet iron",
+			"doc_count": 7
+		},
+		{
+			"key": "Various woods",
+			"doc_count": 7
+		},
+		{
+			"key": "",
+			"doc_count": 6
+		},
+		{
+			"key": "Earthenware",
+			"doc_count": 6
+		},
+		{
+			"key": "Oil on canvas (later mounted to hardboard)",
+			"doc_count": 6
+		},
+		{
+			"key": "Oil on canvas (later mounted to panel)",
+			"doc_count": 6
+		},
+		{
+			"key": "Painted pine",
+			"doc_count": 6
+		},
+		{
+			"key": "Tin-glazed earthenware",
+			"doc_count": 6
+		},
+		{
+			"key": "Watercolor and graphite on thin wove paper",
+			"doc_count": 6
+		},
+		{
+			"key": "Watercolor and pen and ink on wove paper",
+			"doc_count": 6
+		},
+		{
+			"key": "Carved wood",
+			"doc_count": 5
+		},
+		{
+			"key": "Charcoal on laid paper",
+			"doc_count": 5
+		},
+		{
+			"key": "Fired clay, sherd temper and slip",
+			"doc_count": 5
+		},
+		{
+			"key": "Graphite on wove paper",
+			"doc_count": 5
+		},
+		{
+			"key": "Ivory",
+			"doc_count": 5
+		},
+		{
+			"key": "Pewter and wood",
+			"doc_count": 5
+		},
+		{
+			"key": "Stone",
+			"doc_count": 5
+		},
+		{
+			"key": "Watercolor with graphite underdrawing on parchment",
+			"doc_count": 5
+		},
+		{
+			"key": "Wood, copper alloy, brass, iron",
+			"doc_count": 5
+		},
+		{
+			"key": "Cast iron",
+			"doc_count": 4
+		},
+		{
+			"key": "Copper",
+			"doc_count": 4
+		},
+		{
+			"key": "Gouache and pen and ink on wove paper",
+			"doc_count": 4
+		},
+		{
+			"key": "Iron and copper",
+			"doc_count": 4
+		},
+		{
+			"key": "Maple and rush",
+			"doc_count": 4
+		},
+		{
+			"key": "Oil on wood panel (later mounted to plywood)",
+			"doc_count": 4
+		},
+		{
+			"key": "Opaque paint and gold on paper",
+			"doc_count": 4
+		},
+		{
+			"key": "Painted wood",
+			"doc_count": 4
+		},
+		{
+			"key": "Tin over sheet iron and iron",
+			"doc_count": 4
+		},
+		{
+			"key": "Watercolor and charcoal on laid paper",
+			"doc_count": 4
+		},
+		{
+			"key": "Wood, ceramic",
+			"doc_count": 4
+		},
+		{
+			"key": "Wood, iron",
+			"doc_count": 4
+		},
+		{
+			"key": "Brush and iron gall ink with graphite underdrawing on antique laid paper",
+			"doc_count": 3
+		},
+		{
+			"key": "Carved and painted wood",
+			"doc_count": 3
+		},
+		{
+			"key": "Cotton warp and wool weft with silk highlights",
+			"doc_count": 3
+		},
+		{
+			"key": "Earthenware with polychrome decoration",
+			"doc_count": 3
+		},
+		{
+			"key": "Fired clay, temper and slip",
+			"doc_count": 3
+		},
+		{
+			"key": "Gouache on wove paper",
+			"doc_count": 3
+		},
+		{
+			"key": "Linen and cotton",
+			"doc_count": 3
+		},
+		{
+			"key": "Linen ground with cotton embroidery",
+			"doc_count": 3
+		},
+		{
+			"key": "Maple",
+			"doc_count": 3
+		},
+		{
+			"key": "Oak and pine",
+			"doc_count": 3
+		},
+		{
+			"key": "Oil and tempera on panel",
+			"doc_count": 3
+		},
+		{
+			"key": "Oil on commercial wallboard",
+			"doc_count": 3
+		},
+		{
+			"key": "Oil on paper",
+			"doc_count": 3
+		},
+		{
+			"key": "Oil on paperboard (later mounted to plywood panel)",
+			"doc_count": 3
+		},
+		{
+			"key": "Pen and ink on brown wove paper",
+			"doc_count": 3
+		},
+		{
+			"key": "Silver alloy, turquoise, leather, copper alloy",
+			"doc_count": 3
+		},
+		{
+			"key": "Silver, with possible other alloys",
+			"doc_count": 3
+		},
+		{
+			"key": "Soapstone",
+			"doc_count": 3
+		},
+		{
+			"key": "Stoneware",
+			"doc_count": 3
+		},
+		{
+			"key": "Tempera and gold with brown ink underdrawing on parchment",
+			"doc_count": 3
+		},
+		{
+			"key": "Tempera with gold leaf on panel",
+			"doc_count": 3
+		},
+		{
+			"key": "Walnut and fabric",
+			"doc_count": 3
+		},
+		{
+			"key": "Walnut and pine",
+			"doc_count": 3
+		},
+		{
+			"key": "Wood, copper alloy",
+			"doc_count": 3
+		},
+		{
+			"key": "Bast canvas with wool embroidery",
+			"doc_count": 2
+		},
+		{
+			"key": "Birch",
+			"doc_count": 2
+		},
+		{
+			"key": "Black crayon on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Black crayon with gouache on brown wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Charcoal on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Copper alloy and iron",
+			"doc_count": 2
+		},
+		{
+			"key": "Copper gilt",
+			"doc_count": 2
+		},
+		{
+			"key": "Elephant ivory",
+			"doc_count": 2
+		},
+		{
+			"key": "Etching",
+			"doc_count": 2
+		},
+		{
+			"key": "Fired clay, ground sherd temper and slip",
+			"doc_count": 2
+		},
+		{
+			"key": "Fired clay, quartz temper and slip",
+			"doc_count": 2
+		},
+		{
+			"key": "Granite (?)",
+			"doc_count": 2
+		},
+		{
+			"key": "Graphite and watercolor on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Ink on paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Iron and wood",
+			"doc_count": 2
+		},
+		{
+			"key": "Iron, wood, copper alloy",
+			"doc_count": 2
+		},
+		{
+			"key": "Ivory, pigment",
+			"doc_count": 2
+		},
+		{
+			"key": "Limestone with pigment",
+			"doc_count": 2
+		},
+		{
+			"key": "Limestone with traces of polychromy and gilding",
+			"doc_count": 2
+		},
+		{
+			"key": "Linen",
+			"doc_count": 2
+		},
+		{
+			"key": "Linen and wool",
+			"doc_count": 2
+		},
+		{
+			"key": "Linen, cotton",
+			"doc_count": 2
+		},
+		{
+			"key": "Oak and cherry",
+			"doc_count": 2
+		},
+		{
+			"key": "Oak and fruit wood",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil and tempera (?) with gold leaf on panel",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil and tooled gold leaf on wood panel (later mounted to plywood panel)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil in canvas",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on Beaver Board",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on academy board (later mounted to hardboard)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on canvas panel",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on cardboard (later mounted to panel)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on cardboard (later mounted to plywood panel)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on hardboard (later mounted to plywood panel)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on hardwood panel",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on panel (later mounted to plywood)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on paperboard (later mounted to cradled panel)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil on wood panel (later mounted to cradle)",
+			"doc_count": 2
+		},
+		{
+			"key": "Oil pastel and black crayon on brown wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Opaque paint, gold, and pen and ink on paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Opaque water-based paint with graphite on ruled blue wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Painted enamel on copper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pastel and charcoal on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pen and brown ink on thin wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pen and brown ink on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pen and ink on thin wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pen and ink with watercolor on laid paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Pewter and metal",
+			"doc_count": 2
+		},
+		{
+			"key": "Salt glazed stoneware",
+			"doc_count": 2
+		},
+		{
+			"key": "Sandstone",
+			"doc_count": 2
+		},
+		{
+			"key": "Silk",
+			"doc_count": 2
+		},
+		{
+			"key": "Silk and cotton or bast",
+			"doc_count": 2
+		},
+		{
+			"key": "Silk velvet",
+			"doc_count": 2
+		},
+		{
+			"key": "Silver",
+			"doc_count": 2
+		},
+		{
+			"key": "Silver alloy, vegetable fiber",
+			"doc_count": 2
+		},
+		{
+			"key": "Silver-plated pewter",
+			"doc_count": 2
+		},
+		{
+			"key": "Stone, possibly steatite",
+			"doc_count": 2
+		},
+		{
+			"key": "Tempera with brown ink scribe lines, inscribed red ink, and gold and silver on parchment",
+			"doc_count": 2
+		},
+		{
+			"key": "Tempera, gold leaf, granular gold paint, inscribed red and brown inks with lead pencil scribe lines and underdrawing on parchment",
+			"doc_count": 2
+		},
+		{
+			"key": "Terracotta with slip decoration",
+			"doc_count": 2
+		},
+		{
+			"key": "Tulip poplar",
+			"doc_count": 2
+		},
+		{
+			"key": "Turquoise, coral, vegetable fiber",
+			"doc_count": 2
+		},
+		{
+			"key": "Walnut and beech(?)",
+			"doc_count": 2
+		},
+		{
+			"key": "Water-based paint on cotton velveteen",
+			"doc_count": 2
+		},
+		{
+			"key": "Watercolor and pen and ink on laid paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Watercolor and pen and ink with graphite on wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Watercolor on thick wove paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Watercolor with graphite underdrawing on wove paper; artist-mounted to paperboard",
+			"doc_count": 2
+		},
+		{
+			"key": "Wood (estimate walnut)",
+			"doc_count": 2
+		},
+		{
+			"key": "Wood and metal",
+			"doc_count": 2
+		},
+		{
+			"key": "Wood engraving on Japanese paper",
+			"doc_count": 2
+		},
+		{
+			"key": "Wood with polychromy and gilding",
+			"doc_count": 2
+		},
+		{
+			"key": "Wrought Iron",
+			"doc_count": 2
+		},
+		{
+			"key": "Ash and rush",
+			"doc_count": 1
+		},
+		{
+			"key": "Ash and walnut",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast canvas and cotton",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast canvas and wool",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast canvas with silk and cotton embroidery",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast canvas with silk and wool embroidery",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast canvas with wool and silk embroidery",
+			"doc_count": 1
+		},
+		{
+			"key": "Bast, linen and silk embroidery",
+			"doc_count": 1
+		},
+		{
+			"key": "Birch; pine secondary",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon and white gouache on thick illustration board",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon and white gouache on wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon and white gouache with blue crayon underdrawing on paperboard",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon on Japanese paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon on thin wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Black crayon, charcoal, ink washes, and white gouache on wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Blue crayon on wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Blue silk, velvet with tan and gold cotton cording couched and floral decoration",
+			"doc_count": 1
+		},
+		{
+			"key": "Brass, copper and iron",
+			"doc_count": 1
+		},
+		{
+			"key": "Brass, iron and copper",
+			"doc_count": 1
+		},
+		{
+			"key": "Brass, iron, and copper",
+			"doc_count": 1
+		},
+		{
+			"key": "Bronze with gilding",
+			"doc_count": 1
+		},
+		{
+			"key": "Brown watercolor and pen and blue ink on ruled blue wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Brush and blue ink and water-based paint on wove paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Brush and ink and black crayon on laid paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Brush and ink with red ink seal on Japanese paper",
+			"doc_count": 1
+		},
+		{
+			"key": "Brush and ink, charcoal, graphite, black crayon, and white gouache on paperboard",
+			"doc_count": 1
+		}
+	],
+	"classifications": [
+		{
+			"key": "Paintings",
+			"doc_count": 1019
+		},
+		{
+			"key": "Metalworks",
+			"doc_count": 887
+		},
+		{
+			"key": "Vessels",
+			"doc_count": 291
+		},
+		{
+			"key": "Sculptures",
+			"doc_count": 261
+		},
+		{
+			"key": "Jewelry",
+			"doc_count": 153
+		},
+		{
+			"key": "Furniture",
+			"doc_count": 150
+		},
+		{
+			"key": "Textiles",
+			"doc_count": 130
+		},
+		{
+			"key": "Drawings",
+			"doc_count": 98
+		},
+		{
+			"key": "Tools and Equipment",
+			"doc_count": 97
+		},
+		{
+			"key": "Lighting Devices",
+			"doc_count": 88
+		},
+		{
+			"key": "Prints",
+			"doc_count": 47
+		},
+		{
+			"key": "Manuscripts",
+			"doc_count": 24
+		},
+		{
+			"key": "Flatware",
+			"doc_count": 6
+		},
+		{
+			"key": "Works on Paper",
+			"doc_count": 6
+		},
+		{
+			"key": "Enamels",
+			"doc_count": 2
+		},
+		{
+			"key": "Timepieces",
+			"doc_count": 2
+		},
+		{
+			"key": "Architecture",
+			"doc_count": 1
+		},
+		{
+			"key": "Frames",
+			"doc_count": 1
+		}
+	],
+	"locations": {
+		"Main Room": [
+			1,
+			2,
+			3,
+			4
+		],
+		"Room 2": [
+			5,
+			6,
+			7,
+			8
+		],
+		"Room 3": [
+			9,
+			10,
+			11,
+			12
+		],
+		"Room 4": [
+			13,
+			14,
+			15,
+			16
+		],
+		"Room 5": [
+			17,
+			18,
+			19,
+			20
+		],
+		"Room 6": [
+			21,
+			22,
+			23,
+			24
+		],
+		"Room 7": [
+			25,
+			26,
+			27,
+			28
+		],
+		"Room 8": [
+			29,
+			30,
+			31,
+			32
+		],
+		"Room 9": [
+			33,
+			34,
+			35,
+			36
+		],
+		"Room 10": [
+			37,
+			38,
+			39,
+			40
+		],
+		"Room 11": [
+			41,
+			42,
+			43,
+			44
+		],
+		"Room 12": [
+			45,
+			46,
+			47,
+			48
+		],
+		"Room 13": [
+			49,
+			50,
+			51,
+			52
+		],
+		"Room 14": [
+			53,
+			54,
+			55,
+			56
+		],
+		"Room 15": [
+			57,
+			58,
+			59,
+			60
+		],
+		"Room 16": [
+			61,
+			62,
+			63,
+			64
+		],
+		"Room 17": [
+			65,
+			66,
+			67,
+			68
+		],
+		"Room 18": [
+			69,
+			70,
+			71,
+			72
+		],
+		"Room 19": [
+			73,
+			74,
+			75,
+			76
+		],
+		"Room 20": [
+			77,
+			78,
+			79,
+			80
+		],
+		"Room 21": [
+			81,
+			82,
+			83,
+			84
+		],
+		"Room 22": [
+			85,
+			86,
+			87,
+			88
+		],
+		"Room 23": [
+			89,
+			90,
+			91,
+			92
+		],
+		"Le Bonheur de vivre": [
+			93
+		],
+		"Second Floor Balcony (Room 24)": [
+			94,
+			95,
+			96
+		],
+		"Mezzanine": [
+			97,
+			98,
+			99,
+			100
+		],
+		"Gallery Foyer": [
+			101,
+			102,
+			103,
+			104
+		],
+		"Lower Lobby": [
+			105,
+			106,
+			107,
+			108
+		]
+	},
+	"copyrights": {
+		"In Copyright": [
+			1,
+			3
+		],
+		"Copyright Undetermined": [
+			2,
+			6
+		],
+		"Public Domain": [
+			4,
+			7,
+			8,
+			10
+		]
+	},
+	"years": [
+		"-4000",
+		"1",
+		"1000",
+		"1500",
+		"1600",
+		"1700",
+		"1800",
+		"1810",
+		"1820",
+		"1830",
+		"1840",
+		"1850",
+		"1860",
+		"1870",
+		"1880",
+		"1890",
+		"1900",
+		"1905",
+		"1910",
+		"1915",
+		"1920",
+		"1930",
+		"1940",
+		"1950",
+		"1960"
+	],
+	"culturesMap": {
+		"Native American": [
+			"Acoma Pueblo",
+			"Acoma Pueblo/Laguna Pueblo",
+			"Navajo",
+			"Probably Zuni Pueblo",
+			"San Ildefonso Pueblo",
+			"Santa Ana Pueblo",
+			"Santo Domingo Pueblo",
+			"Tesuque Pueblo",
+			"Zia Pueblo",
+			"Zuni Pueblo"
+		],
+		"Asian": [
+			"Central Indian",
+			"Chinese",
+			"Indian",
+			"Indian (Andhra Pradesh?)",
+			"Indian (Mathura)",
+			"Japanese",
+			"Korean",
+			"Thai"
+		],
+		"African": [
+			"Akan",
+			"Bamana",
+			"Bamana or Marka",
+			"Bamileke",
+			"Baule",
+			"Beembe",
+			"Benin Kingdom, Edo",
+			"Bwende",
+			"Dan",
+			"Dogon peoples",
+			"Edo",
+			"Fang",
+			"Fang Betsi",
+			"Fang-Beti",
+			"Guro",
+			"Jula or Kulango",
+			"Kanyok",
+			"Kissi",
+			"Kongo",
+			"Kongo or Vili",
+			"Kongo-Vili",
+			"Kota",
+			"Kota, Mbamba group",
+			"Kota, Ndassa or Wumbu group",
+			"Kuba",
+			"Kuba or Ndengese",
+			"Kuba, Shoowa",
+			"Kyaman or Akye",
+			"Lagoon",
+			"Lagoon, Baule, or Anyi",
+			"Lega",
+			"Luba/Songye",
+			"Luluwa",
+			"Mande, possibly Malinké",
+			"Merina",
+			"Mossi",
+			"Nsapo",
+			"Pende, Central or Kwilu",
+			"Possibly Suku",
+			"Probably Luba",
+			"Punu",
+			"Senufo",
+			"Southern Fang",
+			"Suku or Hungaan",
+			"Teke",
+			"Tsogho",
+			"Yaka"
+		],
+		"Latin American": [
+			"Mexican",
+			"Colonial Mexican"
+		]
+	}
+}
