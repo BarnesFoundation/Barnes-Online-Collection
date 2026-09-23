@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - development
-      - CS-78-search-assets   # TEMP: prove the fix on dev before merge. REMOVE before merging.
   workflow_dispatch:
 
 permissions:
