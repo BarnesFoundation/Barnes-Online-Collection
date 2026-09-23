@@ -1,0 +1,214 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# CS-78 — the IAM role GitHub Actions assumes to deploy the collection site's Lambda stack (template.yaml).
+# Auth is GitHub OIDC (no stored AWS keys): only workflow runs on the listed branch refs of this repo can
+# assume it. Uses the account's existing token.actions.githubusercontent.com OIDC provider (shared — also
+# used by thebarn-es-redirect). Deployed ONCE by hand, and again only when the allowed refs or permissions
+# change:
+#
+#   aws cloudformation deploy --stack-name barnes-online-collection-gha-deploy-dev \
+#     --template-file infra/gha-deploy-role.yaml --capabilities CAPABILITY_NAMED_IAM \
+#     --parameter-overrides DevDistributionId=E22AQ2LQ5QLAAK
+#
+# Permissions are scoped to the dev app stack's own resources (stack, function, its generated execution
+# role, its CloudFront distribution, its secret). Hardening follow-up: a permissions boundary on the
+# function role, since this role can create roles named <AppStackName>-*.
+Description: GitHub Actions OIDC deploy role for Barnes Collection Online (dev Lambda stack) + artifacts bucket.
+
+Parameters:
+  AllowedSubjects:
+    Type: CommaDelimitedList
+    # GitHub's OIDC `sub` for a push to a branch is repo:<owner>/<repo>:ref:refs/heads/<branch>. Both case
+    # spellings of the repo are listed because the IAM match is case-sensitive.
+    Default: "repo:BarnesFoundation/Barnes-Online-Collection:ref:refs/heads/development,repo:barnesfoundation/barnes-online-collection:ref:refs/heads/development"
+  AppStackName:
+    Type: String
+    Default: barnes-collection-www-dev
+  EnvName:
+    Type: String
+    Default: dev
+  DevDistributionId:
+    Type: String
+    Description: CloudFront distribution the app stack owns (stack output DistributionId). dev = E22AQ2LQ5QLAAK.
+  LwaLayerAccount:
+    Type: String
+    Default: "753240598075"
+    Description: AWS account that publishes the Lambda Web Adapter layer.
+
+Resources:
+  ArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "barnes-online-collection-deploy-artifacts-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-old-lambda-packages
+            Status: Enabled
+            ExpirationInDays: 30
+
+  DeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "barnes-online-collection-gha-deploy-${EnvName}"
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Ref AllowedSubjects
+      Policies:
+        - PolicyName: deploy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # `aws cloudformation package` uploads the Lambda zip here.
+              - Sid: Artifacts
+                Effect: Allow
+                Action: [s3:PutObject, s3:GetObject]
+                Resource: !Sub "${ArtifactsBucket.Arn}/*"
+              - Sid: ArtifactsList
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt ArtifactsBucket.Arn
+
+              # Create/execute change sets on the app stack (+ the SAM transform it uses).
+              - Sid: AppStack
+                Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:ListStackResources
+                  - cloudformation:GetTemplate
+                  - cloudformation:GetTemplateSummary
+                Resource: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AppStackName}/*"
+              - Sid: SamTransform
+                Effect: Allow
+                Action: cloudformation:CreateChangeSet
+                Resource: !Sub "arn:aws:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31"
+              - Sid: CfnRead
+                Effect: Allow
+                Action: [cloudformation:ValidateTemplate, cloudformation:GetTemplateSummary]
+                Resource: "*"
+
+              # The app function itself.
+              - Sid: Function
+                Effect: Allow
+                Action:
+                  - lambda:CreateFunction
+                  - lambda:DeleteFunction
+                  - lambda:GetFunction
+                  - lambda:GetFunctionConfiguration
+                  - lambda:UpdateFunctionCode
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:ListTags
+                  - lambda:TagResource
+                  - lambda:UntagResource
+                  - lambda:CreateFunctionUrlConfig
+                  - lambda:GetFunctionUrlConfig
+                  - lambda:UpdateFunctionUrlConfig
+                  - lambda:DeleteFunctionUrlConfig
+                  - lambda:AddPermission
+                  - lambda:RemovePermission
+                  - lambda:GetPolicy
+                  # read/update calls the CloudFormation Lambda resource handler makes
+                  - lambda:ListVersionsByFunction
+                  - lambda:GetFunctionCodeSigningConfig
+                  - lambda:GetRuntimeManagementConfig
+                  - lambda:PutRuntimeManagementConfig
+                  - lambda:GetFunctionRecursionConfig
+                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:barnes-collection-www-${EnvName}"
+              - Sid: WebAdapterLayer
+                Effect: Allow
+                Action: lambda:GetLayerVersion
+                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${LwaLayerAccount}:layer:LambdaAdapterLayer*"
+
+              # The execution role SAM generates for the function (named <stack>-ApiFunctionRole-<suffix>).
+              - Sid: FunctionRole
+                Effect: Allow
+                Action:
+                  - iam:GetRole
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:TagRole
+                  - iam:UntagRole
+                  - iam:GetRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:ListRolePolicies
+                  - iam:ListAttachedRolePolicies
+                  - iam:UpdateRole
+                  - iam:UpdateAssumeRolePolicy
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/${AppStackName}-*"
+              - Sid: FunctionRoleManagedPolicies
+                Effect: Allow
+                Action: [iam:AttachRolePolicy, iam:DetachRolePolicy]
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/${AppStackName}-*"
+                Condition:
+                  ArnEquals:
+                    iam:PolicyARN:
+                      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+                      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+              - Sid: PassFunctionRole
+                Effect: Allow
+                Action: iam:PassRole
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/${AppStackName}-*"
+                Condition:
+                  StringEquals:
+                    iam:PassedToService: lambda.amazonaws.com
+
+              # Lambda validates the VPC config against the caller's EC2 read access.
+              - Sid: VpcRead
+                Effect: Allow
+                Action:
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeVpcs
+                  - ec2:DescribeNetworkInterfaces
+                Resource: "*"
+
+              # The app stack's CloudFront distribution (updates only — recreating it is a manual step).
+              - Sid: Distribution
+                Effect: Allow
+                Action:
+                  - cloudfront:GetDistribution
+                  - cloudfront:GetDistributionConfig
+                  - cloudfront:UpdateDistribution
+                  - cloudfront:TagResource
+                  - cloudfront:UntagResource
+                  - cloudfront:ListTagsForResource
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DevDistributionId}"
+
+              # CloudFormation resolves the template's {{resolve:secretsmanager:...}} references with the
+              # deployer's credentials.
+              - Sid: AppSecret
+                Effect: Allow
+                Action: [secretsmanager:GetSecretValue, secretsmanager:DescribeSecret]
+                Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:barnes-collection-www/${EnvName}-*"
+
+Outputs:
+  DeployRoleArn:
+    Value: !GetAtt DeployRole.Arn
+    Description: Set as role-to-assume in .github/workflows/deploy-dev.yml.
+  ArtifactsBucketName:
+    Value: !Ref ArtifactsBucket

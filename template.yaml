@@ -77,10 +77,6 @@ Parameters:
   ElasticsearchUsername:
     Type: String
     Default: elastic
-  ElasticsearchPassword:
-    Type: String
-    NoEcho: true
-    Description: ES password — pass at deploy from the EB dev env / Secrets Manager; do not commit.
 
   # ---- Non-secret app config (defaults mirror EB env `collection-server-development`) ----
   GraphCmsEndpoint:
@@ -123,27 +119,16 @@ Parameters:
     Description: >
       Mirrors EB dev (development). NOTE for prod: when NODE_ENV=production the app enforces an HTTPS
       redirect, HTTP basic auth, AND rejects any request whose header `x-cf-secret` != a hardcoded
-      literal in server/app.js (NOT XOriginVerify below). Reconcile that header before a prod cutover.
+      literal in server/app.js (NOT the X_ORIGIN_VERIFY secret). Reconcile that header before a prod cutover.
 
-  # ---- Secrets: NoEcho params, passed at deploy (values live on the EB dev env) — never committed ----
-  # NOTE: AWS_ACCESS_KEY / AWS_SECRET_KEY are intentionally NOT parameters — they are Lambda-reserved
-  # env keys and cannot be set. The app gets AWS credentials from the Lambda execution role instead.
-  GraphCmsApiToken:
-    Type: String
-    NoEcho: true
-  NetxApiToken:
-    Type: String
-    NoEcho: true
-  WwwPassword:
-    Type: String
-    NoEcho: true
-  XOriginVerify:
-    Type: String
-    NoEcho: true
-    Default: ""
-    Description: >
-      Shared secret CloudFront injects as `X-Origin-Verify`. Defense-in-depth alongside the Function
-      URL OAC. Inert on dev (NODE_ENV=development). See NodeEnvValue note re: the app's x-cf-secret.
+  # ---- Secrets: NOT parameters. They live in AWS Secrets Manager as `barnes-collection-www/<EnvName>`
+  # (JSON keys ELASTICSEARCH_PASSWORD, GRAPHCMS_API_TOKEN, NETX_API_TOKEN, WWW_PASSWORD, X_ORIGIN_VERIFY)
+  # and are read below via {{resolve:secretsmanager:...}} dynamic references, so a deploy (local or CI)
+  # passes no secrets at all. The deploying principal needs secretsmanager:GetSecretValue on it.
+  # CloudFormation re-reads a secret only when the resource using it changes — after rotating a value,
+  # redeploy with a template/parameter change to pick it up.
+  # AWS_ACCESS_KEY / AWS_SECRET_KEY are intentionally absent — Lambda-reserved env keys; the app uses the
+  # Lambda execution role instead.
 
   # ---- Networking (Lambda must be in-VPC to reach the RDS Proxy; needs NAT egress to ES + Craft) ----
   VpcSubnetIds:
@@ -207,21 +192,21 @@ Resources:
           ELASTICSEARCH_PROTOCOL: !Ref ElasticsearchProtocol
           ELASTICSEARCH_INDEX: !Ref ElasticsearchIndex
           ELASTICSEARCH_USERNAME: !Ref ElasticsearchUsername
-          ELASTICSEARCH_PASSWORD: !Ref ElasticsearchPassword
+          ELASTICSEARCH_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:ELASTICSEARCH_PASSWORD}}"
           # Craft CMS (Hygraph/GraphCMS)
           GRAPHCMS_ENDPOINT: !Ref GraphCmsEndpoint
-          GRAPHCMS_API_TOKEN: !Ref GraphCmsApiToken
+          GRAPHCMS_API_TOKEN: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:GRAPHCMS_API_TOKEN}}"
           # NetX DAMS
-          NETX_API_TOKEN: !Ref NetxApiToken
+          NETX_API_TOKEN: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:NETX_API_TOKEN}}"
           # AWS SDK credentials come from the Lambda EXECUTION ROLE (below), not static keys:
           # AWS_ACCESS_KEY / AWS_SECRET_KEY / AWS_REGION are Lambda-reserved and cannot be set here.
           # AWS_REGION is auto-provided by the runtime; only the bucket name is app config.
           AWS_BUCKET: !Ref AwsBucket
           # WWW basic-auth pair (used when NODE_ENV=production)
           WWW_USERNAME: !Ref WwwUsername
-          WWW_PASSWORD: !Ref WwwPassword
+          WWW_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WWW_PASSWORD}}"
           # App config + REACT_APP_* the server reads at runtime (mirror of EB dev)
-          X_ORIGIN_VERIFY: !Ref XOriginVerify
+          X_ORIGIN_VERIFY: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_ORIGIN_VERIFY}}"
           REACT_APP_AWS_BUCKET: !Ref ReactAppAwsBucket
           REACT_APP_CANONICAL_ROOT: !Ref ReactAppCanonicalRoot
           REACT_APP_GOOGLE_ANALYTICS_ID: !Ref ReactAppGoogleAnalyticsId
@@ -285,7 +270,7 @@ Resources:
               OriginSSLProtocols: [TLSv1.2]
             OriginCustomHeaders:
               - HeaderName: X-Origin-Verify
-                HeaderValue: !Ref XOriginVerify
+                HeaderValue: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_ORIGIN_VERIFY}}"
         DefaultCacheBehavior:
           TargetOriginId: lambda-app
           ViewerProtocolPolicy: redirect-to-https
