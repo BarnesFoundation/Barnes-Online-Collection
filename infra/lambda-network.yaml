@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# CS-67/CS-78 — a second PRIVATE subnet for the collection Lambda, so it runs in two Availability Zones.
+# The Lambda must sit in private subnets that route to the NAT gateway (for ElasticSearch on Elastic
+# Cloud, the Craft/Hygraph CMS and NetX) and can reach the RDS Proxy. The default VPC's only such subnet
+# was subnet-021d7a72948b68fb1 (us-east-1f); every other subnet there is public (IGW route), which gives a
+# Lambda no internet egress.
+#
+# This adds 172.31.128.0/20 in us-east-1a — the AZ the NAT gateway lives in — on the SAME private route
+# table as the existing subnet (0.0.0.0/0 -> nat-0a6eb4d4044d399c1). The NAT stays a single point of
+# failure for outbound calls; a second NAT (~$35/mo + data) is the full-HA follow-up. Deployed once:
+#
+#   aws cloudformation deploy --stack-name barnes-online-collection-lambda-network \
+#     --template-file infra/lambda-network.yaml
+Description: Second private subnet (us-east-1a) for the Barnes Collection Online Lambda.
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-ff9cbf99
+  AvailabilityZone:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: us-east-1a
+  CidrBlock:
+    Type: String
+    Default: 172.31.128.0/20
+  PrivateRouteTableId:
+    Type: String
+    Default: rtb-071c2e28ab49eeed4
+    Description: The existing private route table (0.0.0.0/0 -> NAT) used by subnet-021d7a72948b68fb1.
+
+Resources:
+  PrivateSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      AvailabilityZone: !Ref AvailabilityZone
+      CidrBlock: !Ref CidrBlock
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: collection-lambda-private-b
+        - Key: project
+          Value: barnes-online-collection
+
+  PrivateSubnetBRoutes:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetB
+      RouteTableId: !Ref PrivateRouteTableId
+
+Outputs:
+  PrivateSubnetBId:
+    Value: !Ref PrivateSubnetB
+    Description: Add to the app stack's VpcSubnetIds alongside subnet-021d7a72948b68fb1.

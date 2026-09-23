@@ -113,16 +113,37 @@ Parameters:
   ReactAppWwwUrl:
     Type: String
     Default: https://www.barnesfoundation.org
+  EnablePostgresV2:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "true"
+    Description: >
+      Postgres V2 carousel renditions (CS-55). "false" omits the PG_* settings entirely, so the app's
+      V2 read fails fast and it serves the primary image only, which is prod's behavior today (CS-55 is
+      shipped but not activated on prod). Activating CS-55 on prod is its own, later step.
+  WufooSubdomain:
+    Type: String
+    Default: ""
+    Description: Image-download request form (POST /api/objects/:invno/download). Empty on dev, like the EB dev env.
+  WufooDownloadForm:
+    Type: String
+    Default: ""
+  WebAclArn:
+    Type: String
+    Default: ""
+    Description: WAFv2 (CLOUDFRONT scope) web ACL to attach; prod uses the existing bot-blocker ACL. Empty = none.
   NodeEnvValue:
     Type: String
     Default: development
     Description: >
-      Mirrors EB dev (development). NOTE for prod: when NODE_ENV=production the app enforces an HTTPS
-      redirect, HTTP basic auth, AND rejects any request whose header `x-cf-secret` != a hardcoded
-      literal in server/app.js (NOT the X_ORIGIN_VERIFY secret). Reconcile that header before a prod cutover.
+      development on dev, production on prod (mirrors each EB env). With NODE_ENV=production the app
+      enforces an HTTPS redirect (via X-CF-Proto / X-Forwarded-Proto) and rejects any request whose
+      `x-cf-secret` header != a literal hardcoded in server/app.js. CloudFront sends both (see the
+      origin's custom headers); the X-CF-Secret value lives in the secret as X_CF_SECRET.
 
   # ---- Secrets: NOT parameters. They live in AWS Secrets Manager as `barnes-collection-www/<EnvName>`
-  # (JSON keys ELASTICSEARCH_PASSWORD, GRAPHCMS_API_TOKEN, NETX_API_TOKEN, WWW_PASSWORD, X_ORIGIN_VERIFY)
+  # (JSON keys ELASTICSEARCH_PASSWORD, GRAPHCMS_API_TOKEN, NETX_API_TOKEN, WUFOO_USERNAME, WUFOO_PASSWORD, WWW_PASSWORD,
+  # X_CF_SECRET, X_ORIGIN_VERIFY; every env's secret carries all keys, unused ones hold a placeholder)
   # and are read below via {{resolve:secretsmanager:...}} dynamic references, so a deploy (local or CI)
   # passes no secrets at all. The deploying principal needs secretsmanager:GetSecretValue on it.
   # CloudFormation re-reads a secret only when the resource using it changes — after rotating a value,
@@ -133,7 +154,7 @@ Parameters:
   # ---- Networking (Lambda must be in-VPC to reach the RDS Proxy; needs NAT egress to ES + Craft) ----
   VpcSubnetIds:
     Type: List<AWS::EC2::Subnet::Id>
-    Description: Private subnets with NAT egress (ES on Elastic Cloud + Craft CMS) AND reach to the RDS Proxy (dev subnet-021d7a72948b68fb1).
+    Description: Private subnets with NAT egress (ES on Elastic Cloud + Craft CMS) AND reach to the RDS Proxy (subnet-021d7a72948b68fb1 us-east-1f + subnet-032319d3c76379c66 us-east-1a, see infra/lambda-network.yaml).
   VpcSecurityGroupIds:
     Type: List<AWS::EC2::SecurityGroup::Id>
     Description: SG(s) allowing egress to the RDS Proxy (5432), ES, and AWS endpoints (dev sg-2480035b).
@@ -145,6 +166,11 @@ Parameters:
 
 Conditions:
   HasCustomDomain: !Not [!Equals [!Ref DomainName, ""]]
+  # The cert is decoupled from the alias so a distribution can hold the cert BEFORE it takes the alias,
+  # which is what CloudFront's zero-downtime `associate-alias` move requires (see DEPLOY.md, cutover).
+  HasCertificate: !Not [!Equals [!Ref AcmCertificateArn, ""]]
+  UsePostgresV2: !Equals [!Ref EnablePostgresV2, "true"]
+  HasWebAcl: !Not [!Equals [!Ref WebAclArn, ""]]
 
 Globals:
   Function:
@@ -179,13 +205,13 @@ Resources:
           AWS_LWA_PORT: "8080"
           PORT: "8080"
           NODE_ENV: !Ref NodeEnvValue
-          # Postgres V2 (IAM auth — no password)
-          PG_HOST: !Ref PgHost
-          PG_PORT: !Ref PgPort
-          PG_DATABASE: !Ref PgDatabase
-          PG_SCHEMA: !Ref PgSchema
-          PG_USER: !Ref PgUser
-          PG_IAM_AUTH: "true"
+          # Postgres V2 (IAM auth, no password). Omitted entirely when EnablePostgresV2=false.
+          PG_HOST: !If [UsePostgresV2, !Ref PgHost, !Ref "AWS::NoValue"]
+          PG_PORT: !If [UsePostgresV2, !Ref PgPort, !Ref "AWS::NoValue"]
+          PG_DATABASE: !If [UsePostgresV2, !Ref PgDatabase, !Ref "AWS::NoValue"]
+          PG_SCHEMA: !If [UsePostgresV2, !Ref PgSchema, !Ref "AWS::NoValue"]
+          PG_USER: !If [UsePostgresV2, !Ref PgUser, !Ref "AWS::NoValue"]
+          PG_IAM_AUTH: !If [UsePostgresV2, "true", !Ref "AWS::NoValue"]
           # ElasticSearch (Elastic Cloud)
           ELASTICSEARCH_HOST: !Ref ElasticsearchHost
           ELASTICSEARCH_PORT: !Ref ElasticsearchPort
@@ -202,7 +228,12 @@ Resources:
           # AWS_ACCESS_KEY / AWS_SECRET_KEY / AWS_REGION are Lambda-reserved and cannot be set here.
           # AWS_REGION is auto-provided by the runtime; only the bucket name is app config.
           AWS_BUCKET: !Ref AwsBucket
-          # WWW basic-auth pair (used when NODE_ENV=production)
+          # Wufoo image-download request form (app.js POST /api/objects/:invno/download)
+          WUFOO_SUBDOMAIN: !Ref WufooSubdomain
+          WUFOO_DOWNLOAD_FORM: !Ref WufooDownloadForm
+          WUFOO_USERNAME: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WUFOO_USERNAME}}"   # the Wufoo API key
+          WUFOO_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WUFOO_PASSWORD}}"
+          # WWW basic-auth pair for the Craft API (craftService.js; used when NODE_ENV != production)
           WWW_USERNAME: !Ref WwwUsername
           WWW_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WWW_PASSWORD}}"
           # App config + REACT_APP_* the server reads at runtime (mirror of EB dev)
@@ -254,9 +285,11 @@ Resources:
         Comment: !Sub "Barnes Collection Online — monolith on Lambda (${EnvName})"
         Enabled: true
         HttpVersion: http2and3
+        IPV6Enabled: true
+        WebACLId: !If [HasWebAcl, !Ref WebAclArn, !Ref "AWS::NoValue"]
         Aliases: !If [HasCustomDomain, [!Ref DomainName], !Ref "AWS::NoValue"]
         ViewerCertificate: !If
-          - HasCustomDomain
+          - HasCertificate
           - AcmCertificateArn: !Ref AcmCertificateArn
             SslSupportMethod: sni-only
             MinimumProtocolVersion: TLSv1.2_2021
@@ -271,12 +304,75 @@ Resources:
             OriginCustomHeaders:
               - HeaderName: X-Origin-Verify
                 HeaderValue: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_ORIGIN_VERIFY}}"
+              # What the app checks when NODE_ENV=production (mirrors the current prod CloudFront).
+              - HeaderName: X-CF-Secret
+                HeaderValue: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_CF_SECRET}}"
+              - HeaderName: X-CF-Proto
+                HeaderValue: https
+              - HeaderName: X-Forwarded-Proto
+                HeaderValue: https
         DefaultCacheBehavior:
           TargetOriginId: lambda-app
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
-          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled (origin controls; faithful)
+          # Honor the app's own Cache-Control (what the current prod CloudFront does); no header, no cache.
+          CachePolicyId: !Ref OriginCacheControlPolicy
           OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: lambda-app
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+          # CRA's build/static/* files are content-hashed, so they are immutable: cache them at the edge for
+          # a year. Otherwise every JS/CSS request on a page load hits (and may cold-start) the Lambda.
+          - PathPattern: /static/*
+            TargetOriginId: lambda-app
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD]
+            CachePolicyId: !Ref ImmutableAssetsPolicy
+
+  # Cache key / TTLs for the default behavior. Deliberately NOT a managed policy: those put the Host
+  # header in the cache key, which forwards the viewer Host to the origin, and a Lambda function URL
+  # rejects requests for a Host it doesn't own.
+  OriginCacheControlPolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub "barnes-collection-www-${EnvName}-origin-cache-control"
+        Comment: Honor origin Cache-Control; no Host in the key (Lambda function URL origin).
+        MinTTL: 0
+        DefaultTTL: 0
+        MaxTTL: 31536000
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: none
+          CookiesConfig:
+            CookieBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: all
+
+  ImmutableAssetsPolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub "barnes-collection-www-${EnvName}-immutable-assets"
+        Comment: Content-hashed build assets (/static/*), cached for a year regardless of origin headers.
+        MinTTL: 31536000
+        DefaultTTL: 31536000
+        MaxTTL: 31536000
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: none
+          CookiesConfig:
+            CookieBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
 
 Outputs:
   DistributionId:
