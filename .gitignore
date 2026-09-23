@@ -11,6 +11,9 @@
 # production
 /build
 
+# CS-67 Lambda deploy package (built by scripts/package-lambda.sh; never committed)
+/lambda-pkg
+
 # scss
 *.css
 
