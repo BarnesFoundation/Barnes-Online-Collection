@@ -1,16 +1,19 @@
 name: Deploy prod (Lambda)
 
 # CS-78 — deploys a RELEASE of `development` to the PROD Lambda stack. It never runs on its own:
-# publish a GitHub Release (tag v*, cut from development) or run it manually, and the job then waits in
-# the "production" Environment for Steve's approval before it gets any AWS credentials (the prod deploy
-# role trusts only jobs in that Environment). See DEPLOY.md.
+# publish a full GitHub Release (tag v*, cut from development; pre-releases do NOT trigger it) or run it
+# manually, and the job then waits in the "production" Environment for approval (Leigh or Steve) before
+# it gets any AWS credentials (the prod deploy role trusts only jobs in that Environment). See DEPLOY.md.
 #
 # Until the cutover, DOMAIN_NAME is empty: prod runs in parallel on its own *.cloudfront.net URL while
-# collection.barnesfoundation.org keeps serving from Elastic Beanstalk, untouched. The cutover (on
-# Steve's go) sets DOMAIN_NAME/ACM_CERT_ARN here and moves the alias off the old CloudFront distribution.
+# collection.barnesfoundation.org keeps serving from Elastic Beanstalk, untouched. The distribution
+# already holds the collection cert (ACM_CERT_ARN), which lets the cutover move the name over with
+# CloudFront's zero-downtime associate-alias; the cutover then sets DOMAIN_NAME here (DEPLOY.md §6).
 on:
   release:
-    types: [published]
+    # `released` = a full release is published, or a pre-release is promoted to a release. (`published`
+    # would also fire for pre-releases.)
+    types: [released]
   workflow_dispatch:
 
 permissions:
@@ -32,12 +35,14 @@ env:
   WEB_ACL_ARN: arn:aws:wafv2:us-east-1:744014450301:global/webacl/CreatedByCloudFront-dc7f11db/29e249dc-ae58-4b70-b7f0-c7ee51fb4ffc
   # EMPTY until the cutover (see header).
   DOMAIN_NAME: ""
-  ACM_CERT_ARN: ""
+  # The collection cert (collection + www.collection), held from the first deploy so the cutover can use
+  # associate-alias. Without an alias it has no effect on the *.cloudfront.net URL.
+  ACM_CERT_ARN: arn:aws:acm:us-east-1:744014450301:certificate/0510ebbf-854f-4aaf-85d9-2d70323661fb
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production   # required reviewer: Steve
+    environment: production   # required reviewers: Leigh or Steve
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
