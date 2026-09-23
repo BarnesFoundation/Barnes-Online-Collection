@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - development
-      - CS-78-prod-deploy   # TEMP: prove the shared template changes on dev before merge. REMOVE before merging.
   workflow_dispatch:
 
 permissions:
