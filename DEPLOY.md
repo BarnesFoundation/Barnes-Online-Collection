@@ -93,8 +93,9 @@ public traffic yet.
 
 Prod deploys only through `.github/workflows/deploy-prod.yml`, and only with Steve's approval:
 
-1. **Release:** publish a GitHub Release with a `v*` tag cut from `development` (or run the workflow
-   manually on `development`). The job refuses any commit that isn't on `development`.
+1. **Release:** publish a (full) GitHub Release with a `v*` tag cut from `development`, or run the
+   workflow manually on `development`. Pre-releases don't trigger it. The job refuses any commit that
+   isn't on `development`.
 2. **Approval:** the job runs in the GitHub **`production`** Environment and waits for its required
    reviewer (Steve). The prod AWS role (`barnes-online-collection-gha-deploy-prod`) trusts only jobs
    in that Environment, so no AWS credentials exist until he approves.
@@ -118,8 +119,8 @@ the stack exists, redeploy the role with `DistributionId=<stack output>` to pin 
 ## 6. Cutover (collection.barnesfoundation.org — on Steve's explicit go, galleries-closed window)
 
 Zero-downtime, unlike the dev cutover (which removed the alias first and accepted a short blip):
-1. **Cert first:** set only `ACM_CERT_ARN` (the collection cert, `…/0510ebbf-…`) in `deploy-prod.yml` and
-   deploy (approved). The prod distribution now holds the cert but not the alias; the site is unaffected.
+1. **Cert first:** already done: `deploy-prod.yml` sets `ACM_CERT_ARN` (the collection cert,
+   `…/0510ebbf-…`) from the first deploy, so the prod distribution holds the cert but not the alias.
 2. **Prove ownership:** Route53 (zone `Z4SK0ES98JH0U`) TXT record `_collection.barnesfoundation.org` →
    the prod distribution's `*.cloudfront.net` domain (required by `associate-alias` to move an alias
    that another distribution holds).
