@@ -29,9 +29,9 @@ Parameters:
     Type: CommaDelimitedList
     # GitHub's OIDC `sub` is repo:<owner>/<repo>:ref:<ref> (a branch run or a release run at its tag) or
     # repo:<owner>/<repo>:environment:<name> (a job in an Environment). The dev default trusts manual runs
-    # on development and pre-release runs at v* tags; prod passes environment:production. Both case
+    # on main and pre-release runs at v* tags; prod passes environment:production. Both case
     # spellings of the repo are listed because the IAM match is case-sensitive.
-    Default: "repo:BarnesFoundation/Barnes-Online-Collection:ref:refs/heads/development,repo:barnesfoundation/barnes-online-collection:ref:refs/heads/development,repo:BarnesFoundation/Barnes-Online-Collection:ref:refs/tags/v*,repo:barnesfoundation/barnes-online-collection:ref:refs/tags/v*"
+    Default: "repo:BarnesFoundation/Barnes-Online-Collection:ref:refs/heads/main,repo:barnesfoundation/barnes-online-collection:ref:refs/heads/main,repo:BarnesFoundation/Barnes-Online-Collection:ref:refs/tags/v*,repo:barnesfoundation/barnes-online-collection:ref:refs/tags/v*"
   AppStackName:
     Type: String
     Default: barnes-collection-www-dev

@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: development
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -53,7 +53,7 @@ jobs:
           git add public/resources/searchAssets.json
           git commit -m "chore: refresh search assets (advanced-search dropdown options)"
           git push -f origin "$BRANCH"
-          gh pr create --base development --head "$BRANCH" \
+          gh pr create --base main --head "$BRANCH" \
             --title "Refresh search assets ($(date -u +%F))" \
             --body "Automated regeneration of \`public/resources/searchAssets.json\` from the live site's \`/api/get-search-assets\`. After merging, it reaches dev with the next pre-release and prod when that release is promoted." \
             || echo "A PR for $BRANCH is already open."

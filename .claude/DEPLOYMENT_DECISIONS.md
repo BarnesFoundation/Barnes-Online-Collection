@@ -57,7 +57,7 @@ current as of its date; update or add an entry when a decision changes.
 ## Release process (CS-78)
 
 - **Release-driven deploys:** a pre-release deploys to dev; promoting that same release deploys the
-  same commit to prod after approval. Merges to `development` deploy nothing, so dev stays on the build
+  same commit to prod after approval. Merges to `main` deploy nothing, so dev stays on the build
   being QA'd (Leigh's choice).
 - **Prod workflow passes the domain explicitly.** The template defaults `DomainName` to empty, which
   would remove the alias. Releases `v2.0.0`–`v2.0.2` predate this and must never be redeployed.
