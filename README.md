@@ -4,12 +4,12 @@ This project is a virtual gallery of the Barnes Foundation collection of artwork
 - React/Redux for the front end of the site
 - NodeJS Express server for the backend API and serving the site build
 - ElasticSearch for the database of artwork records and their corresponding meta data
-- Imgix for caching/CDN of the artwork images and tile images. The source image repository itself is an AWS S3 bucket
+- AWS CloudFront (over an S3 bucket) for artwork images and deep-zoom tiles; imgix is still used for the footer's "More from the collection" images
 - Gulp for the legacy Elastic Beanstalk `dist.zip` (the `postbuild` step; not used by the Lambda deploys)
 
-Since the site only does *read* operations from the ElasticSearch database, we use the production instance for our local and development environments as well.
+The site only *reads* from ElasticSearch. Dev and prod use separate ElasticSearch clusters; for local development, point `.env` at the dev cluster (the dev host is in `deploy-dev.yml` / `template.yaml`, and the password is in AWS Secrets Manager `barnes-collection-www/dev`).
 
-As of CS-55, the artwork-page **carousel renditions** are read from the V2 collection Postgres (`collection_object.images[]`) instead of being fetched live from NetX. This is also **read-only** — set the `PG_*` variables (see `.env-template`) to point at the shared V2 collection database; there is **no local copy to run**. If the `PG_*` variables are unset, object pages still render (search, tombstone, and the primary image all come from ElasticSearch/CloudFront) — only the alternate/archival carousel renditions will be absent.
+As of CS-55, the artwork-page **carousel renditions** are read from the V2 collection Postgres (`collection_object.images[]`) instead of being fetched live from NetX. This is also **read-only** — set the `PG_*` variables (see `.env-template`) to point at the shared V2 collection database; there is **no local copy to run**. If the `PG_*` variables are unset, object pages still render (search, tombstone, and the primary image all come from ElasticSearch/CloudFront) — only the alternate/archival carousel renditions will be absent. Renditions are on for dev and off on prod (`EnablePostgresV2=false`) until CS-55 is activated there.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ Install the necessary dependencies
 
 `npm ci`
 
-Copy the `.env` file and populate it with the correct values
+Copy `.env-template` to `.env` and fill in the values
 
 Build and run the application
 ```
@@ -59,7 +59,7 @@ As described earlier, the backend API server is built using an Express server wr
 
 It is possible -- if needed -- to require basic HTTP authentication for a deployment instance of the site. This would come in handy  with a development or testing instance of the site that you don't want accessible to the public but still deployed publicly. 
 
-To achieve this, you just need to create a `.htpasswd` file with username and encrypted password using the `htpasswd` program.
+To achieve this, you just need to create a `.htpasswd` file with username and encrypted password using the `htpasswd` program. (The Lambda deploys don't include a `.htpasswd`, so they don't use this.)
 
 
 ### Useful API Endpoints
@@ -69,7 +69,7 @@ This server wraps all calls to Elasticsearch in its own HTTP API. It uses the `e
 
 - `GET /api/objects/:object_id` returns json of the art object matching the `:object_id`
 
-- `GET /api/search` returns 10 art objects matching a query `q`, which is formatting according to [this documentation](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search)
+- `GET /api/search?body=<json>` or `POST /api/search` with `{"body": <json>}` runs an ElasticSearch query ([format](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#api-search)) and returns the response. Each hit is also enriched with its Postgres V2 carousel renditions where Postgres is configured.
 
 - `GET /api/related` gets json of related objects to a given object. It takes two query parameters - `objectID` and `dissimilarPercent`. `dissimilarPercent` should be a number between 0 and 100.
 
@@ -77,7 +77,7 @@ This server wraps all calls to Elasticsearch in its own HTTP API. It uses the `e
 
 ### Related objects
 
-The meat of the logic of getting related objects is in the [getDistance](https://github.com/BarnesFoundation/barnes-collection-www/blob/master/server/app.js#L338-L364) function called in [server/app.js#L378-L413](https://github.com/BarnesFoundation/barnes-collection-www/blob/master/server/app.js#L378-L413). This function takes two objects, and calculates a euclidean-ish distance between them.
+The meat of the logic of getting related objects is the `getDistance` function in [server/app.js](server/app.js), used by the `/api/related` route. It takes two objects and calculates a euclidean-ish distance between them.
 
 1. Grab 1000 objects from elasticsearch that have at least one field in `MORE_LIKE_THIS_FIELDS` in common with `objectID`
 2. Iterate through all `MORE_LIKE_THIS_FIELDS`, and sum the distances using `getDistance`
@@ -102,6 +102,6 @@ To add a tour to the site you will need to add a new JSON config file to the tou
 To add an Eye Spy Scavenger Hunt, do the same as for a tour but in the [eyeSpy folder](server/constants/tours/eyeSpy/) and [index file](server/constants/tours/eyeSpy/index.js). This will add a new page with the slug defined in [index.js](server/constants/tours/eyeSpy/index.js) at `eye-spy/<slug>`. 
 
 
-Once the new page has been added, the [sitemap](public/sitemap.xml) should be updated. This can be done by either manually adding the new page or by deploying the changes to prod, running the sitemap script described [above](README.md#sitemap-generation), and then redeploying the app with the updated sitemap.
+Once the new page has been added, the [sitemap](public/sitemap.xml) should be updated. This can be done either by manually adding the new page, or by releasing the change, running the sitemap script described [above](README.md#sitemap-generation) against the live site, committing the updated `public/sitemap.xml`, and shipping it in the next release (see [DEPLOY.md](DEPLOY.md)).
 
 There should not be any updates required to the client side when a new tour is added. Both the tours and scavenger hunts are set up the same way, but use different templates and endpoints to help differentiate between how the data should be presented.
