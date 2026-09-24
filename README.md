@@ -47,11 +47,11 @@ refreshed weekly by a GitHub Actions workflow. To regenerate it locally, start t
 
 See **[DEPLOY.md](DEPLOY.md)**. In short:
 
-- **Dev:** publish a GitHub **pre-release** (tag `v*`, target `development`). It deploys to
+- **Dev:** publish a GitHub **pre-release** (tag `v*`, target `main`). It deploys to
   https://dev.collection.barnesfoundation.org.
 - **Prod:** promote that same release (untick "pre-release"), then approve the run. It deploys to
   https://collection.barnesfoundation.org.
-- Merging to `development` does not deploy anything.
+- Merging to `main` does not deploy anything.
 
 ## Backend API Server
 

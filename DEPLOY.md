@@ -11,13 +11,13 @@ Actions. You don't need AWS access for a normal deploy.
 | Workflow         | Deploy dev (Lambda)                         | Deploy prod (Lambda)                        |
 | CloudFormation   | `barnes-collection-www-dev`                 | `barnes-collection-www-prod`                |
 
-**Merging a PR into `development` does not deploy anything.**
+**Merging a PR into `main` does not deploy anything.**
 
 ## Deploy to dev
 
 1. GitHub → **Releases** → **Draft a new release**.
 2. **Choose a tag** → type a new one named for the version you plan to ship (e.g. `v2.0.4`).
-   **Target:** `development`.
+   **Target:** `main`.
 3. Tick **Set as a pre-release**, then **Publish release**.
 4. **Actions** → *Deploy dev (Lambda)* runs automatically (about 5 minutes). Green means it deployed and
    passed the smoke test.
@@ -39,7 +39,7 @@ Prod always gets the exact commit that was tested on dev.
   advanced-search dropdown file, compression, object-page redirects).
 - **A failed "Deploy stack" step:** the run's last step prints the CloudFormation error.
 - **Redeploy:** Actions → the workflow → **Run workflow** → pick a branch or tag that is on
-  `development`. Prod runs still need approval.
+  `main`. Prod runs still need approval.
 - **App logs:** CloudWatch (us-east-1) log groups `/aws/lambda/barnes-collection-www-dev` and
   `/aws/lambda/barnes-collection-www-prod`.
 
