@@ -7,12 +7,19 @@ the FULL Express server runs on the Lambda (SSR meta/OG on `/` + object pages, c
 `express.static` of the built FE, AND `/api/*`) — exactly what the EB container did. CloudFront is a
 single origin in front of the Lambda.
 
-**Dev deploys are automatic (CS-78):** every merge to `development` runs
-`.github/workflows/deploy-dev.yml`, which builds, packages, deploys the `barnes-collection-www-dev` stack
-and smoke-tests it (`scripts/smoke-test.sh`) at **https://dev.collection.barnesfoundation.org**, which
-now points at this stack (DNS: Route53 A-alias -> the stack's CloudFront distribution; the stack owns the alias). It authenticates with GitHub OIDC via the role in
-`infra/gha-deploy-role.yaml` — no AWS keys or app secrets in GitHub. The manual steps below are for
-prod, for a first-time stack, or for debugging a failed run.
+**Deploys are release-driven (CS-78):** merging to `development` deploys nothing.
+- **Dev:** publish a GitHub **pre-release** (tag `v*`, target `development`) and
+  `.github/workflows/deploy-dev.yml` builds, packages, deploys the `barnes-collection-www-dev` stack and
+  smoke-tests it (`scripts/smoke-test.sh`). Dev stays on that build until the next pre-release.
+- **Prod:** after QA, edit the same release and untick "pre-release". `deploy-prod.yml` then ships the
+  exact same commit once Leigh or Steve approves it (see §5). Name the tag for the version you intend to
+  ship (e.g. `v2.0.3`), since promoting keeps the tag.
+
+Dev is **https://dev.collection.barnesfoundation.org** and prod is **https://collection.barnesfoundation.org**
+(each a Route53 A/AAAA alias to its stack's CloudFront distribution; each stack owns its alias). Both
+workflows authenticate with GitHub OIDC via the roles in `infra/gha-deploy-role.yaml`, so there are no
+AWS keys or app secrets in GitHub. The manual steps below are for a first-time stack or for debugging a
+failed run.
 
 ## 0. Prerequisites
 

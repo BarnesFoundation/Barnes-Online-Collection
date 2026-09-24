@@ -55,5 +55,5 @@ jobs:
           git push -f origin "$BRANCH"
           gh pr create --base development --head "$BRANCH" \
             --title "Refresh search assets ($(date -u +%F))" \
-            --body "Automated regeneration of \`public/resources/searchAssets.json\` from the live site's \`/api/get-search-assets\`. Merging deploys it to dev; it reaches prod with the next release." \
+            --body "Automated regeneration of \`public/resources/searchAssets.json\` from the live site's \`/api/get-search-assets\`. After merging, it reaches dev with the next pre-release and prod when that release is promoted." \
             || echo "A PR for $BRANCH is already open."

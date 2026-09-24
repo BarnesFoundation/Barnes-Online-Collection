@@ -1,20 +1,24 @@
 name: Deploy dev (Lambda)
 
-# CS-78 — deploys `development` to the dev Lambda stack (template.yaml) on every merge, replacing the
-# Elastic Beanstalk dev pipeline (collection-dev-deploy). AWS access is GitHub OIDC -> the role in
-# infra/gha-deploy-role.yaml; no AWS keys or app secrets are stored in GitHub (the template reads app
-# secrets from Secrets Manager). See DEPLOY.md.
+# CS-78 — deploys a PRE-RELEASE of `development` to the dev Lambda stack (template.yaml). Merges to
+# development don't deploy anything; dev changes only when someone publishes a pre-release, so it stays
+# on the build being QA'd. The release flow is:
+#   1. publish a GitHub pre-release (tag v*, target development)  -> this workflow deploys it to dev
+#   2. QA it on dev.collection.barnesfoundation.org
+#   3. edit that release and untick "pre-release" (promote it)     -> deploy-prod.yml ships the same commit
+# A manual run (Actions -> Run workflow) redeploys any ref that is on development.
+# AWS access is GitHub OIDC -> the role in infra/gha-deploy-role.yaml; no AWS keys or app secrets are
+# stored in GitHub (the template reads app secrets from Secrets Manager). See DEPLOY.md.
 on:
-  push:
-    branches:
-      - development
+  release:
+    types: [prereleased]   # a pre-release is published (promoting it fires `released` -> prod instead)
   workflow_dispatch:
 
 permissions:
   id-token: write   # mint the GitHub OIDC token the AWS role trusts
   contents: read
 
-# Never run two deploys of the same stack at once; a later merge waits for the running one.
+# Never run two deploys of the same stack at once; a later one waits for the running one.
 concurrency:
   group: deploy-dev
   cancel-in-progress: false
@@ -38,6 +42,13 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history + branches, for the check below
+
+      - name: Only ship commits that are on development
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/development || {
+            echo "::error::$GITHUB_SHA is not on development. Cut the pre-release from development."; exit 1; }
 
       - uses: actions/setup-node@v4
         with:

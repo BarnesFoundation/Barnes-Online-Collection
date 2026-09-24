@@ -1,9 +1,10 @@
 name: Deploy prod (Lambda)
 
 # CS-78 — deploys a RELEASE of `development` to the PROD Lambda stack. It never runs on its own:
-# publish a full GitHub Release (tag v*, cut from development; pre-releases do NOT trigger it) or run it
-# manually, and the job then waits in the "production" Environment for approval (Leigh or Steve) before
-# it gets any AWS credentials (the prod deploy role trusts only jobs in that Environment). See DEPLOY.md.
+# promote a QA'd pre-release to a full release (or publish a full release directly, tag v* cut from
+# development), or run it manually, and the job then waits in the "production" Environment for approval
+# (Leigh or Steve) before it gets any AWS credentials (the prod deploy role trusts only jobs in that
+# Environment). Pre-releases deploy to dev instead (deploy-dev.yml). See DEPLOY.md.
 #
 # collection.barnesfoundation.org is served by this stack (cut over 2026-09-24 via CloudFront
 # associate-alias; see DEPLOY.md §6). DOMAIN_NAME is passed on every deploy so no deploy can drop the
