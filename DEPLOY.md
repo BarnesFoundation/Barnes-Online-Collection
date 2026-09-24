@@ -1,159 +1,109 @@
-# Collection site — Lambda deploy & switchover runbook (CS-67, monolith)
+# Deploying the collection site
 
-This deploys the **current app as-is** to a **CloudFront + single zip-Lambda** stack (`template.yaml`),
-in parallel with the live Elastic Beanstalk site, then cuts over by DNS. **No functionality changes:**
-the FULL Express server runs on the Lambda (SSR meta/OG on `/` + object pages, canonical
-`/objects/:id` → `/objects/:id/<title-slug>/` 301s, `/track/image-download` GA+redirect,
-`express.static` of the built FE, AND `/api/*`) — exactly what the EB container did. CloudFront is a
-single origin in front of the Lambda.
+collection.barnesfoundation.org runs on AWS: a CloudFront distribution in front of one Lambda function,
+which runs the Express app (`server/`) and serves the built React front end. Deploys run in GitHub
+Actions. You don't need AWS access for a normal deploy.
 
-**Deploys are release-driven (CS-78):** merging to `development` deploys nothing.
-- **Dev:** publish a GitHub **pre-release** (tag `v*`, target `development`) and
-  `.github/workflows/deploy-dev.yml` builds, packages, deploys the `barnes-collection-www-dev` stack and
-  smoke-tests it (`scripts/smoke-test.sh`). Dev stays on that build until the next pre-release.
-- **Prod:** after QA, edit the same release and untick "pre-release". `deploy-prod.yml` then ships the
-  exact same commit once Leigh or Steve approves it (see §5). Name the tag for the version you intend to
-  ship (e.g. `v2.0.3`), since promoting keeps the tag.
+|                  | Dev                                         | Prod                                        |
+| ---------------- | ------------------------------------------- | ------------------------------------------- |
+| URL              | https://dev.collection.barnesfoundation.org | https://collection.barnesfoundation.org     |
+| Deployed by      | publishing a **pre-release**                | promoting it to a **release** + approval    |
+| Workflow         | Deploy dev (Lambda)                         | Deploy prod (Lambda)                        |
+| CloudFormation   | `barnes-collection-www-dev`                 | `barnes-collection-www-prod`                |
 
-Dev is **https://dev.collection.barnesfoundation.org** and prod is **https://collection.barnesfoundation.org**
-(each a Route53 A/AAAA alias to its stack's CloudFront distribution; each stack owns its alias). Both
-workflows authenticate with GitHub OIDC via the roles in `infra/gha-deploy-role.yaml`, so there are no
-AWS keys or app secrets in GitHub. The manual steps below are for a first-time stack or for debugging a
-failed run.
+**Merging a PR into `development` does not deploy anything.**
 
-## 0. Prerequisites
+## Deploy to dev
 
-- **Secrets** live in AWS Secrets Manager as `barnes-collection-www/<env>` (JSON keys
-  `ELASTICSEARCH_PASSWORD`, `GRAPHCMS_API_TOKEN`, `NETX_API_TOKEN`, `WWW_PASSWORD`, `X_ORIGIN_VERIFY`);
-  the template reads them with `{{resolve:secretsmanager:...}}`, so no deploy passes secrets. dev is
-  created; prod needs `barnes-collection-www/prod`. After changing a value, redeploy with a template or
-  parameter change — CloudFormation only re-reads a secret when the resource using it changes.
-- **CI deploy role** (once per env): `infra/gha-deploy-role.yaml` (GitHub OIDC role + artifacts bucket;
-  deploy command in its header). dev: `barnes-online-collection-gha-deploy-dev`.
-- **VPC egress** — the Lambda's subnets must reach the RDS Proxy AND the public internet (ES on Elastic
-  Cloud + the Craft/Hygraph CMS + NetX), i.e. a subnet with a NAT gateway. dev: `subnet-021d7a72948b68fb1` / `sg-2480035b`.
-- **LWA layer** — pin the current us-east-1/x86_64 Lambda Web Adapter layer version (`LwaLayerArn`).
-- **Prod only:** an ACM cert (us-east-1) for `collection.barnesfoundation.org`, `DomainName` set, and
-  ≥2 subnets across AZs. Also reconcile the origin-verify header (see note in step 4).
+1. GitHub → **Releases** → **Draft a new release**.
+2. **Choose a tag** → type a new one named for the version you plan to ship (e.g. `v2.0.4`).
+   **Target:** `development`.
+3. Tick **Set as a pre-release**, then **Publish release**.
+4. **Actions** → *Deploy dev (Lambda)* runs automatically (about 5 minutes). Green means it deployed and
+   passed the smoke test.
 
-## 1. Build the FE
+Dev stays on that build until the next pre-release.
 
-`REACT_APP_*` are baked into the bundle at build time from the target env's config. Build with the
-same values as the EB env you are mirroring.
+## Deploy to prod
 
-```
+1. After QA on dev, open the same release, **untick "Set as a pre-release"**, and click **Update release**.
+2. **Actions** → *Deploy prod (Lambda)* starts and waits for approval. Leigh or Steve: open the run →
+   **Review deployments** → approve.
+3. About 5 minutes later, green means it deployed and passed the smoke test on the live site.
+
+Prod always gets the exact commit that was tested on dev.
+
+## Check a deploy
+
+- **Actions tab:** each run shows the build, the deploy and the smoke test (health, search, the
+  advanced-search dropdown file, compression, object-page redirects).
+- **A failed "Deploy stack" step:** the run's last step prints the CloudFormation error.
+- **Redeploy:** Actions → the workflow → **Run workflow** → pick a branch or tag that is on
+  `development`. Prod runs still need approval.
+- **App logs:** CloudWatch (us-east-1) log groups `/aws/lambda/barnes-collection-www-dev` and
+  `/aws/lambda/barnes-collection-www-prod`.
+
+## Roll back prod
+
+Redeploy the previous release: Actions → *Deploy prod (Lambda)* → **Run workflow** → **Use workflow
+from:** the previous tag → approve.
+
+> ⚠️ **Never redeploy `v2.0.0`–`v2.0.2`.** Their workflow predates the prod domain setting, and running
+> them would disconnect collection.barnesfoundation.org from the site.
+
+**While Elastic Beanstalk is still running** (until it's retired), the whole site can also be pointed back
+at it. This needs AWS admin access; see "Emergency: back to Elastic Beanstalk" at the end.
+
+## Configuration and secrets
+
+- **Secrets** (ElasticSearch password, Craft/NetX tokens, Wufoo, origin-verification secrets) live in AWS
+  Secrets Manager: `barnes-collection-www/dev` and `barnes-collection-www/prod`. After changing one,
+  redeploy. CloudFormation only picks up a changed secret when something else in the deploy changes too;
+  if the new value doesn't take effect, ask whoever manages AWS.
+- **Build-time settings** (`REACT_APP_*`) are in the *Build front end* step of each workflow file.
+- **Runtime settings** are parameters in `template.yaml`. Prod's values are set in
+  `deploy-prod.yml` → *Deploy stack*.
+
+## Advanced-search dropdown data
+
+`public/resources/searchAssets.json` holds the advanced-search dropdown options and is committed to the
+repo. The *Refresh search assets* workflow regenerates it every Monday and opens a PR if anything
+changed. Merge that PR, and the update ships with the next release.
+
+## Where things live
+
+- `template.yaml`: the app's AWS stack (Lambda + CloudFront). Its comments explain the design choices.
+- `.github/workflows/`: `deploy-dev.yml`, `deploy-prod.yml`, `refresh-search-assets.yml`.
+- `scripts/package-lambda.sh` builds the Lambda package; `scripts/smoke-test.sh` checks a deployed site.
+- `infra/`: one-time AWS setup (the GitHub deploy roles and the Lambda's network). You rarely touch it.
+
+## Deploying without GitHub Actions
+
+Only if Actions is unavailable. Needs AWS admin access and a **Linux** machine or container: the front-end
+build fails on Windows.
+
+```bash
 npm ci
-REACT_APP_IMAGE_BASE_URL=... REACT_APP_NETX_ENABLED=true ...(all REACT_APP_*)... npm run build
-```
-
-On a non-Linux dev box, build in a Linux container so `craco.config.js`'s css-loader url filter
-matches (it keys on a `/css-loader/` path — Windows backslash paths miss it) and so any native deps
-match the Lambda platform:
-
-```
-docker run --rm -v "$PWD:/repo:ro" -v "$PWD/out:/out" -e CI=false <REACT_APP_* -e ...> node:20 \
-  bash -c 'cd /repo && tar cf - --exclude=node_modules --exclude=build --exclude=.git . \
-    | (mkdir /work && cd /work && tar xf -) && cd /work && npm ci && npm run build && cp -r build /out/'
-```
-
-## 2. Assemble the Lambda package
-
-`template.yaml`'s `CodeUri` is `lambda-pkg/` — the full server + `build/` + prod-only `node_modules`.
-Build it on Linux (matches the `nodejs22.x` runtime):
-
-```
-scripts/package-lambda.sh
-# non-Linux: docker run --rm -v "$PWD:/repo" -w /repo node:20 bash scripts/package-lambda.sh
-```
-
-## 3. Deploy the stack
-
-SAM CLI:
-```
-sam build && sam deploy --config-env dev \
-  --parameter-overrides "VpcSubnetIds=... VpcSecurityGroupIds=..."
-```
-Or AWS-native (no SAM CLI needed — CloudFormation applies the SAM transform):
-```
+# export the REACT_APP_* values from the matching workflow's "Build front end" step, then:
+npm run build-css && npx craco build
+bash scripts/package-lambda.sh
 aws cloudformation package --template-file template.yaml \
-  --s3-bucket barnes-online-collection-deploy-artifacts-744014450301 --s3-prefix barnes-collection-www-dev \
+  --s3-bucket barnes-online-collection-deploy-artifacts-744014450301 --s3-prefix <stack-name> \
   --output-template-file packaged.yaml
-aws cloudformation deploy --template-file packaged.yaml --stack-name barnes-collection-www-dev \
+aws cloudformation deploy --template-file packaged.yaml --stack-name <stack-name> \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-  --parameter-overrides EnvName=dev VpcSubnetIds=subnet-021d7a72948b68fb1 VpcSecurityGroupIds=sg-2480035b
+  --parameter-overrides <copy the list from the matching workflow's "Deploy stack" step>
+bash scripts/smoke-test.sh https://<site>        # prod: EXPECT_RENDITIONS=false bash scripts/smoke-test.sh ...
 ```
-Leave `DomainName` empty for a parallel test stack on the default `*.cloudfront.net` domain (no alias,
-no DNS, no CNAME conflict). Note the outputs: `DistributionId`, `DistributionDomainName`, `ApiFunctionUrl`.
 
-## 4. Verify on the CloudFront domain (BEFORE any DNS change)
+## Emergency: back to Elastic Beanstalk
 
-Run `scripts/smoke-test.sh https://<DistributionDomainName>` (health, app shell, GET + POST search,
-Postgres renditions, the canonical redirect), then hit a few deep links by hand. Confirm search (ES),
-object pages (incl. the canonical title-slug redirect + server-rendered meta), carousel renditions
-(Postgres, CS-55), and `/track/image-download/...` all work. This is the whole site on Lambda with no
-public traffic yet.
+Only while the old Elastic Beanstalk site and its CloudFront distribution (`E2DCK8G8J67P5`,
+`d12eupwxjvau2q.cloudfront.net`) still exist. Needs AWS admin access. It takes effect within seconds.
 
-**Postgres (CS-55):** set `EXPECT_RENDITIONS=false` for an env deployed with `EnablePostgresV2=false`
-(prod, until CS-55 is activated) — the smoke test then asserts there are *no* renditions.
-
-**Search assets:** `public/resources/searchAssets.json` (the advanced-search dropdown options) is
-committed and ships with every build. On Elastic Beanstalk it was generated by the CodeBuild buildspec
-and refreshed by a daily cron; now `.github/workflows/refresh-search-assets.yml` regenerates it weekly
-(or on demand) from the live site and opens a PR only when it changed.
-
-## 5. Prod
-
-Prod deploys only through `.github/workflows/deploy-prod.yml`, and only with Steve's approval:
-
-1. **Release:** publish a (full) GitHub Release with a `v*` tag cut from `development`, or run the
-   workflow manually on `development`. Pre-releases don't trigger it. The job refuses any commit that
-   isn't on `development`.
-2. **Approval:** the job runs in the GitHub **`production`** Environment and waits for its required
-   reviewer (Steve). The prod AWS role (`barnes-online-collection-gha-deploy-prod`) trusts only jobs
-   in that Environment, so no AWS credentials exist until he approves.
-3. **Deploy + smoke test:** stack `barnes-collection-www-prod` with the prod settings (mirrors the EB env
-   `collection-server-production`): `NODE_ENV=production`, the prod ES cluster, Wufoo, the existing
-   bot-blocker WAF web ACL, and `EnablePostgresV2=false` (CS-55 stays dormant, as on prod today).
-
-What the prod stack reproduces from the current prod CloudFront (`E2DCK8G8J67P5`): the WAF web ACL; the
-`X-CF-Secret` / `X-CF-Proto` / `X-Forwarded-Proto` origin headers the app checks in production mode
-(`X-CF-Secret` comes from the secret's `X_CF_SECRET`); origin-driven caching on the default behavior and
-no caching on `/api/*`; IPv6. New on top: content-hashed `/static/*` assets are cached at the edge for a
-year.
-
-**Before the cutover** `DOMAIN_NAME` is empty in the workflow, so prod runs in parallel on its own
-`*.cloudfront.net` URL while `collection.barnesfoundation.org` keeps serving from Elastic Beanstalk.
-
-**First prod deploy only:** the prod role starts in bootstrap mode (it may create a distribution). Once
-the stack exists, redeploy the role with `DistributionId=<stack output>` to pin it (see
-`infra/gha-deploy-role.yaml`).
-
-## 6. Cutover (collection.barnesfoundation.org)
-
-**Done 2026-09-24** (attempt #2, 13:52 UTC, Leigh's go). Attempt #1 on 2026-09-23 was rolled back after
-~6 minutes: `searchAssets.json` was missing and responses were uncompressed. Both were fixed in #328, and
-the smoke test now checks both. After the switch, watch real traffic (status codes, top 404s, `[error]`
-log lines) for ~10 minutes, not just the smoke test. The steps below are what was run, and they are
-also how to redo it:
-
-Zero-downtime, unlike the dev cutover (which removed the alias first and accepted a short blip):
-1. **Cert first:** already done: `deploy-prod.yml` sets `ACM_CERT_ARN` (the collection cert,
-   `…/0510ebbf-…`) from the first deploy, so the prod distribution holds the cert but not the alias.
-2. **Prove ownership:** Route53 (zone `Z4SK0ES98JH0U`) TXT record `_collection.barnesfoundation.org` →
-   the prod distribution's `*.cloudfront.net` domain (required by `associate-alias` to move an alias
-   that another distribution holds).
-3. **Move the alias atomically:** back up `E2DCK8G8J67P5`'s config, then
-   `aws cloudfront associate-alias --target-distribution-id <prod dist> --alias collection.barnesfoundation.org`.
-   CloudFront edges route by host name, so requests should reach the new distribution once this
-   propagates, even while DNS still points at the old one. Confirm with the smoke test before step 5.
-4. **Let the stack own it:** set `DOMAIN_NAME=collection.barnesfoundation.org` and deploy (approved) — no
-   change to the live alias, but no later deploy can drop it.
-5. **DNS:** A + AAAA alias records for `collection` → the prod stack's distribution; remove the TXT record.
-6. `EXPECT_RENDITIONS=false scripts/smoke-test.sh https://collection.barnesfoundation.org`.
-
-## 7. Rollback
-
-Before the cutover there is nothing to roll back — prod traffic never left Elastic Beanstalk. After it:
-`associate-alias` the name back to `E2DCK8G8J67P5` (the TXT record must then point at
-`d12eupwxjvau2q.cloudfront.net`) and point the Route53 records back at it; EB and the old distribution stay running and untouched throughout, so this is immediate.
-Decommissioning EB (and its pipelines) happens only after the Lambda site is proven.
+1. Route53 zone `Z4SK0ES98JH0U`: TXT record `_collection.barnesfoundation.org` = `"d12eupwxjvau2q.cloudfront.net"`.
+2. `aws cloudfront associate-alias --target-distribution-id E2DCK8G8J67P5 --alias collection.barnesfoundation.org`
+3. Route53: point the `collection` A record at `d12eupwxjvau2q.cloudfront.net`, delete the AAAA record and
+   the TXT record.
+4. Set the prod stack's `DomainName` parameter to empty (and `DOMAIN_NAME` in `deploy-prod.yml`), so the
+   next prod deploy doesn't try to take the name back.
