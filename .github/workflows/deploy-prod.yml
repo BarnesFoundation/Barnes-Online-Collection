@@ -110,6 +110,17 @@ jobs:
             --tags project=barnes-online-collection env=prod \
             --no-fail-on-empty-changeset
 
+      - name: Invalidate CloudFront cache
+        # Anything fetched while the stack update was rolling out (e.g. an uncompressed /static/* asset,
+        # which the edge then keeps for a year) is cleared before the smoke test and before users see it.
+        # A wildcard counts as one invalidation path.
+        run: |
+          DIST=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)
+          INV=$(aws cloudfront create-invalidation --distribution-id "$DIST" --paths "/*" \
+            --query Invalidation.Id --output text)
+          aws cloudfront wait invalidation-completed --distribution-id "$DIST" --id "$INV"
+
       - name: Smoke test
         # The public URL once cut over; until then the stack's own CloudFront URL.
         env:

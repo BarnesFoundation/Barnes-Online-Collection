@@ -203,6 +203,9 @@ Resources:
           # Lambda Web Adapter wiring
           AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
           AWS_LWA_PORT: "8080"
+          # gzip/br at the origin, like the nginx proxy in front of the app on Elastic Beanstalk. CloudFront
+          # can't compress /api/* (an uncached behavior), so this is what compresses search responses.
+          AWS_LWA_ENABLE_COMPRESSION: "true"
           PORT: "8080"
           NODE_ENV: !Ref NodeEnvValue
           # Postgres V2 (IAM auth, no password). Omitted entirely when EnablePostgresV2=false.
@@ -315,6 +318,7 @@ Resources:
           TargetOriginId: lambda-app
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+          Compress: true   # the current prod CloudFront compresses every behavior
           # Honor the app's own Cache-Control (what the current prod CloudFront does); no header, no cache.
           CachePolicyId: !Ref OriginCacheControlPolicy
           OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
@@ -325,6 +329,7 @@ Resources:
             AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+            Compress: true
           # CRA's build/static/* files are content-hashed, so they are immutable: cache them at the edge for
           # a year. Otherwise every JS/CSS request on a page load hits (and may cold-start) the Lambda.
           - PathPattern: /static/*
@@ -332,6 +337,7 @@ Resources:
             ViewerProtocolPolicy: redirect-to-https
             AllowedMethods: [GET, HEAD]
             CachePolicyId: !Ref ImmutableAssetsPolicy
+            Compress: true
 
   # Cache key / TTLs for the default behavior. Deliberately NOT a managed policy: those put the Host
   # header in the cache key, which forwards the viewer Host to the origin, and a Lambda function URL

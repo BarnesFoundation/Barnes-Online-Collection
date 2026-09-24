@@ -52,6 +52,23 @@ else
   echo "ok   no renditions (Postgres V2 off, as configured)"
 fi
 
+# The advanced-search dropdowns load this file; a missing one broke them in cutover attempt #1.
+sa=$(curl -sS -m 30 "$BASE/resources/searchAssets.json")
+jq -e '(.artists | length) > 0 and (.classifications | length) > 0' <<<"$sa" >/dev/null \
+  || fail "searchAssets.json missing or empty (advanced-search dropdowns)"
+echo "ok   searchAssets.json ($(jq '.artists | length' <<<"$sa") artists)"
+
+# Compression: the prod site serves JS brotli and search responses gzipped; an uncompressed stack is a
+# silent page-weight regression.
+enc() { curl -s -o /dev/null -D - -m 30 -H 'Accept-Encoding: gzip, br' "$@" | tr -d '\r' \
+          | awk -F': ' 'tolower($1)=="content-encoding"{print $2}'; }
+js=$(curl -sS -m 30 "$BASE/asset-manifest.json" | jq -r '.files["main.js"]')
+e=$(enc "$BASE$js"); [ -n "$e" ] || fail "main JS served uncompressed ($js)"
+echo "ok   JS compressed ($e)"
+e=$(enc -X POST -H 'Content-Type: application/json' -d "{\"body\":$q}" "$BASE/api/search")
+[ -n "$e" ] || fail "POST /api/search served uncompressed"
+echo "ok   search responses compressed ($e)"
+
 loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -m 30 --max-redirs 0 "$BASE/objects/7069")
 [[ "$loc" == 301\ */objects/7069/* ]] || fail "canonical redirect /objects/7069 -> '$loc'"
 echo "ok   SSR canonical redirect ($loc)"

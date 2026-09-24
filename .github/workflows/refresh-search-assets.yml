@@ -1,0 +1,59 @@
+name: Refresh search assets
+
+# Regenerates public/resources/searchAssets.json, the advanced-search dropdown options (artists, mediums
+# and classifications aggregated from ElasticSearch; rooms, cultures, copyrights and years from lists in
+# the repo), from the live site's /api/get-search-assets, and opens a PR only if it changed.
+#
+# The file is committed so builds never depend on ES or the live site. Elastic Beanstalk used to
+# regenerate it daily (CodeBuild buildspec + an .ebextensions cron); this keeps it from going stale.
+on:
+  schedule:
+    - cron: "0 13 * * 1"   # Mondays 13:00 UTC (9am ET)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install (runtime deps only; the script needs axios)
+        run: npm ci --omit=dev --no-audit --no-fund
+
+      - name: Regenerate
+        # The script logs fetch errors instead of failing, so validate what it wrote.
+        run: |
+          npm run write-search-assets
+          jq -e '(.artists | length) > 0 and (.classifications | length) > 0 and (.mediums | length) > 0' \
+            public/resources/searchAssets.json > /dev/null
+
+      - name: Open a PR if it changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- public/resources/searchAssets.json; then
+            echo "Search assets unchanged."; exit 0
+          fi
+          BRANCH="chore/refresh-search-assets-$(date -u +%Y%m%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add public/resources/searchAssets.json
+          git commit -m "chore: refresh search assets (advanced-search dropdown options)"
+          git push -f origin "$BRANCH"
+          gh pr create --base development --head "$BRANCH" \
+            --title "Refresh search assets ($(date -u +%F))" \
+            --body "Automated regeneration of \`public/resources/searchAssets.json\` from the live site's \`/api/get-search-assets\`. Merging deploys it to dev; it reaches prod with the next release." \
+            || echo "A PR for $BRANCH is already open."
