@@ -121,7 +121,13 @@ year.
 the stack exists, redeploy the role with `DistributionId=<stack output>` to pin it (see
 `infra/gha-deploy-role.yaml`).
 
-## 6. Cutover (collection.barnesfoundation.org — on Steve's explicit go, galleries-closed window)
+## 6. Cutover (collection.barnesfoundation.org)
+
+**Done 2026-09-24** (attempt #2, 13:52 UTC, Leigh's go). Attempt #1 on 2026-09-23 was rolled back after
+~6 minutes: `searchAssets.json` was missing and responses were uncompressed. Both were fixed in #328, and
+the smoke test now checks both. After the switch, watch real traffic (status codes, top 404s, `[error]`
+log lines) for ~10 minutes, not just the smoke test. The steps below are what was run, and they are
+also how to redo it:
 
 Zero-downtime, unlike the dev cutover (which removed the alias first and accepted a short blip):
 1. **Cert first:** already done: `deploy-prod.yml` sets `ACM_CERT_ARN` (the collection cert,
