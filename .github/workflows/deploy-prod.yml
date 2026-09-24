@@ -5,10 +5,9 @@ name: Deploy prod (Lambda)
 # manually, and the job then waits in the "production" Environment for approval (Leigh or Steve) before
 # it gets any AWS credentials (the prod deploy role trusts only jobs in that Environment). See DEPLOY.md.
 #
-# Until the cutover, DOMAIN_NAME is empty: prod runs in parallel on its own *.cloudfront.net URL while
-# collection.barnesfoundation.org keeps serving from Elastic Beanstalk, untouched. The distribution
-# already holds the collection cert (ACM_CERT_ARN), which lets the cutover move the name over with
-# CloudFront's zero-downtime associate-alias; the cutover then sets DOMAIN_NAME here (DEPLOY.md §6).
+# collection.barnesfoundation.org is served by this stack (cut over 2026-09-24 via CloudFront
+# associate-alias; see DEPLOY.md §6). DOMAIN_NAME is passed on every deploy so no deploy can drop the
+# alias; the template defaults it to "", which would remove it.
 on:
   release:
     # `released` = a full release is published, or a pre-release is promoted to a release. (`published`
@@ -33,10 +32,9 @@ env:
   VPC_SECURITY_GROUP_IDS: sg-2480035b
   # The current prod CloudFront's bot-blocker web ACL (shared, not duplicated).
   WEB_ACL_ARN: arn:aws:wafv2:us-east-1:744014450301:global/webacl/CreatedByCloudFront-dc7f11db/29e249dc-ae58-4b70-b7f0-c7ee51fb4ffc
-  # EMPTY until the cutover (see header).
-  DOMAIN_NAME: ""
-  # The collection cert (collection + www.collection), held from the first deploy so the cutover can use
-  # associate-alias. Without an alias it has no effect on the *.cloudfront.net URL.
+  # The live public name. MUST stay set: an empty value would strip the alias from the distribution.
+  DOMAIN_NAME: collection.barnesfoundation.org
+  # The collection cert (collection + www.collection).
   ACM_CERT_ARN: arn:aws:acm:us-east-1:744014450301:certificate/0510ebbf-854f-4aaf-85d9-2d70323661fb
 
 jobs:
@@ -122,7 +120,7 @@ jobs:
           aws cloudfront wait invalidation-completed --distribution-id "$DIST" --id "$INV"
 
       - name: Smoke test
-        # The public URL once cut over; until then the stack's own CloudFront URL.
+        # The public URL (the stack's own CloudFront URL if DOMAIN_NAME were ever empty).
         env:
           EXPECT_RENDITIONS: "false"   # Postgres V2 off on prod until CS-55 is activated
         run: |
