@@ -73,4 +73,10 @@ loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' -m 30 --max-redirs 
 [[ "$loc" == 301\ */objects/7069/* ]] || fail "canonical redirect /objects/7069 -> '$loc'"
 echo "ok   SSR canonical redirect ($loc)"
 
+# The object page's artist link puts raw JSON braces in the query string; the function URL 400s on those
+# unless the CloudFront viewer-request function encodes them (-g: send the braces raw, like a browser).
+code=$(curl -sg -o /dev/null -w '%{http_code}' -m 30 "$BASE/objects/?qtype=filter&qval={%22advancedFilters%22:{%22Artist%22:{%22Pablo%20Picasso%22:{%22filterType%22:%22Artist%22,%22value%22:%22Pablo%20Picasso%22,%22term%22:%22Pablo%20Picasso%22,%22index%22:1}}}}")
+[ "$code" = 200 ] || fail "filter URL with raw braces -> $code"
+echo "ok   filter URL with raw braces"
+
 echo "SMOKE OK: $BASE"
