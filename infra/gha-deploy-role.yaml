@@ -253,6 +253,10 @@ Resources:
                   - cloudfront:UpdateFunction
                   - cloudfront:PublishFunction
                   - cloudfront:DeleteFunction
+                  # CloudFormation tags the function it creates (aws:cloudformation:* tags).
+                  - cloudfront:TagResource
+                  - cloudfront:UntagResource
+                  - cloudfront:ListTagsForResource
                 Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:function/barnes-collection-www-${EnvName}-*"
               # The stack's own cache policies (CloudFront can't scope these by name).
               - Sid: CachePolicies
