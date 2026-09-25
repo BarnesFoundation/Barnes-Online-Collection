@@ -322,6 +322,9 @@ Resources:
           # Honor the app's own Cache-Control (what the current prod CloudFront does); no header, no cache.
           CachePolicyId: !Ref OriginCacheControlPolicy
           OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt QueryStringEncodeFunction.FunctionMetadata.FunctionARN
         CacheBehaviors:
           - PathPattern: /api/*
             TargetOriginId: lambda-app
@@ -330,6 +333,9 @@ Resources:
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
             Compress: true
+            FunctionAssociations:
+              - EventType: viewer-request
+                FunctionARN: !GetAtt QueryStringEncodeFunction.FunctionMetadata.FunctionARN
           # CRA's build/static/* files are content-hashed, so they are immutable: cache them at the edge for
           # a year. Otherwise every JS/CSS request on a page load hits (and may cold-start) the Lambda.
           - PathPattern: /static/*
@@ -338,6 +344,36 @@ Resources:
             AllowedMethods: [GET, HEAD]
             CachePolicyId: !Ref ImmutableAssetsPolicy
             Compress: true
+
+  # A Lambda function URL answers 400 (empty body) to a query string with a raw { } | ^ ` \ " < >.
+  # Browsers leave { } | ^ ` \ unencoded, and the site's own filter links put raw JSON in `qval`
+  # (/objects/?qtype=filter&qval={...}), so artist links, reloads and shared/bookmarked search URLs all
+  # 400'd after the cutover (EB accepted them). Percent-encode those characters at the edge; the app
+  # decodes them as before.
+  QueryStringEncodeFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub "barnes-collection-www-${EnvName}-encode-querystring"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Percent-encode query-string characters a Lambda function URL rejects.
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function enc(s) {
+          return s.replace(/[{}|^`\\"<>]/g, function (c) {
+            return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+          });
+        }
+        function handler(event) {
+          var q = event.request.querystring, out = {};
+          for (var k in q) {
+            var v = q[k], nv = { value: enc(v.value) };
+            if (v.multiValue) nv.multiValue = v.multiValue.map(function (m) { return { value: enc(m.value) }; });
+            out[enc(k)] = nv;
+          }
+          event.request.querystring = out;
+          return event.request;
+        }
 
   # Cache key / TTLs for the default behavior. Deliberately NOT a managed policy: those put the Host
   # header in the cache key, which forwards the viewer Host to the origin, and a Lambda function URL
