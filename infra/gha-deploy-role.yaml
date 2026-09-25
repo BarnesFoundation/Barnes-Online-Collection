@@ -243,6 +243,21 @@ Resources:
                   Effect: Allow
                   Action: cloudfront:CreateDistribution
                   Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+              # The stack's own CloudFront Functions (e.g. the query-string encoder), scoped by name.
+              - Sid: CloudFrontFunctions
+                Effect: Allow
+                Action:
+                  - cloudfront:CreateFunction
+                  - cloudfront:DescribeFunction
+                  - cloudfront:GetFunction
+                  - cloudfront:UpdateFunction
+                  - cloudfront:PublishFunction
+                  - cloudfront:DeleteFunction
+                  # CloudFormation tags the function it creates (aws:cloudformation:* tags).
+                  - cloudfront:TagResource
+                  - cloudfront:UntagResource
+                  - cloudfront:ListTagsForResource
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:function/barnes-collection-www-${EnvName}-*"
               # The stack's own cache policies (CloudFront can't scope these by name).
               - Sid: CachePolicies
                 Effect: Allow
