@@ -1,0 +1,166 @@
+name: PR preview
+
+# CS-82: every PR into main gets its own preview at https://pr-<number>.preview.collection.barnesfoundation.org,
+# rebuilt on every push and deleted when the PR is closed or merged.
+#
+# Each preview is a small stack (template.yaml with CreateCloudFront=false): a Lambda plus its function URL,
+# running the PR's code against dev's data and settings. One shared CloudFront distribution
+# (infra/preview-edge.yaml) serves all previews; its router looks up pr-<number> in a KeyValueStore, which
+# this workflow writes on deploy and deletes on close. AWS access is the narrow preview role
+# (infra/gha-preview-role.yaml): preview stacks only, no CloudFront, nothing on dev or prod.
+# PRs from forks are skipped (GitHub gives them no AWS credentials).
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main]
+
+permissions:
+  id-token: write        # mint the GitHub OIDC token the preview role trusts
+  contents: read
+  pull-requests: write   # post / update the preview link comment
+
+# One run per PR at a time; a new push waits for the previous deploy instead of interrupting a stack update.
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  PR: ${{ github.event.pull_request.number }}
+  STACK_NAME: barnes-collection-www-pr-${{ github.event.pull_request.number }}
+  PREVIEW_HOST: pr-${{ github.event.pull_request.number }}.preview.collection.barnesfoundation.org
+  PREVIEW_ROLE: arn:aws:iam::744014450301:role/barnes-online-collection-gha-deploy-preview
+  PREVIEW_KVS_ARN: arn:aws:cloudfront::744014450301:key-value-store/2aa571ac-56f0-4951-9c2b-b36d54b478e0
+  ARTIFACTS_BUCKET: barnes-online-collection-deploy-artifacts-744014450301
+  VPC_SUBNET_IDS: subnet-021d7a72948b68fb1,subnet-032319d3c76379c66
+  VPC_SECURITY_GROUP_IDS: sg-2480035b
+  COMMENT_MARKER: "<!-- cs-82-preview -->"
+
+jobs:
+  deploy:
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4   # the PR's merge commit with main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build front end
+        # Same REACT_APP_* as the dev build (deploy-dev.yml), except the canonical root is the preview's URL.
+        env:
+          CI: "false"
+          REACT_APP_AWS_BUCKET: barnes-data-processing
+          REACT_APP_CANONICAL_ROOT: https://${{ env.PREVIEW_HOST }}
+          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-17
+          REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
+          REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
+          REACT_APP_NETX_ENABLED: "true"
+          REACT_APP_PRINTS_ENDPOINT: https://prints.barnesfoundation.org/utility/object_reference_uri
+          REACT_APP_WWW_URL: https://www.barnesfoundation.org
+        run: |
+          npm run build-css
+          npx craco build
+
+      - name: Assemble Lambda package
+        run: bash scripts/package-lambda.sh
+
+      - name: AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.PREVIEW_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy preview stack
+        run: |
+          aws cloudformation package \
+            --template-file template.yaml \
+            --s3-bucket "$ARTIFACTS_BUCKET" --s3-prefix "$STACK_NAME" \
+            --output-template-file packaged.yaml
+          aws cloudformation deploy \
+            --template-file packaged.yaml --stack-name "$STACK_NAME" \
+            --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+            --parameter-overrides "EnvName=pr-$PR" SecretsEnv=dev CreateCloudFront=false \
+              "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS" \
+            --tags project=barnes-online-collection env=preview pr="$PR" \
+            --no-fail-on-empty-changeset
+
+      - name: Register with the preview router
+        run: |
+          URL=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiFunctionUrl'].OutputValue" --output text)
+          ORIGIN=$(echo "$URL" | sed -E 's#^https://##; s#/$##')
+          ETAG=$(aws cloudfront-keyvaluestore describe-key-value-store --kvs-arn "$PREVIEW_KVS_ARN" --query ETag --output text)
+          aws cloudfront-keyvaluestore put-key --kvs-arn "$PREVIEW_KVS_ARN" \
+            --key "pr-$PR" --value "$ORIGIN" --if-match "$ETAG" > /dev/null
+          echo "pr-$PR -> $ORIGIN"
+          sleep 15   # KeyValueStore writes reach the edge within seconds
+
+      - name: Smoke test
+        run: bash scripts/smoke-test.sh "https://$PREVIEW_HOST"
+
+      - name: Comment the preview link on the PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BODY="$COMMENT_MARKER
+          **Preview:** https://$PREVIEW_HOST
+
+          Built from \`${GITHUB_SHA::7}\` (this PR merged with \`main\`), running on dev's data and settings. It updates on every push and is deleted when the PR is closed."
+          ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$COMMENT_MARKER\")) | .id" | head -1)
+          if [ -n "$ID" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$ID" -f body="$BODY" > /dev/null
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$BODY" > /dev/null
+          fi
+
+      - name: On failure, show why the stack update failed
+        if: failure()
+        run: |
+          aws cloudformation describe-stack-events --stack-name "$STACK_NAME" --max-items 25 \
+            --query "StackEvents[?contains(ResourceStatus,'FAILED')].[Timestamp,LogicalResourceId,ResourceStatusReason]" \
+            --output table || true
+
+  teardown:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.PREVIEW_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Unregister from the preview router
+        run: |
+          ETAG=$(aws cloudfront-keyvaluestore describe-key-value-store --kvs-arn "$PREVIEW_KVS_ARN" --query ETag --output text)
+          aws cloudfront-keyvaluestore delete-key --kvs-arn "$PREVIEW_KVS_ARN" --key "pr-$PR" --if-match "$ETAG" > /dev/null \
+            || echo "pr-$PR was not registered"
+
+      - name: Delete the preview stack
+        run: |
+          if aws cloudformation describe-stacks --stack-name "$STACK_NAME" > /dev/null 2>&1; then
+            aws cloudformation delete-stack --stack-name "$STACK_NAME"
+            aws cloudformation wait stack-delete-complete --stack-name "$STACK_NAME"
+          else
+            echo "No preview stack for PR $PR"
+          fi
+
+      - name: Update the PR comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$COMMENT_MARKER\")) | .id" | head -1)
+          [ -z "$ID" ] || gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$ID" \
+            -f body="$COMMENT_MARKER
+          ~~Preview: https://$PREVIEW_HOST~~ (removed when the PR was closed)" > /dev/null

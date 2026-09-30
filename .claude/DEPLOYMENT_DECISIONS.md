@@ -62,6 +62,21 @@ current as of its date; update or add an entry when a decision changes.
 - **Prod workflow passes the domain explicitly.** The template defaults `DomainName` to empty, which
   would remove the alias. Releases `v2.0.0`–`v2.0.2` predate this and must never be redeployed.
 
+## PR previews (CS-82)
+
+- **One shared preview CloudFront, not one per PR.** A per-PR distribution would need a GitHub role that can
+  update and delete *any* distribution in the account: CloudFormation doesn't stamp its own (unforgeable) tag on
+  distributions, so there's no safe way to scope it. Since any same-repo PR branch can assume the preview role,
+  that would let a PR change the prod CloudFront without the prod approval gate.
+- Instead, `infra/preview-edge.yaml` holds a wildcard cert, the `*.preview.collection.barnesfoundation.org`
+  DNS record, and one distribution. Its viewer-request router maps the `pr-<n>` host label to that PR's Lambda
+  function URL through a CloudFront KeyValueStore. Each preview stack is `template.yaml` with
+  `CreateCloudFront=false`, and the preview role (`infra/gha-preview-role.yaml`) has no CloudFront permissions:
+  only `pr-*` stacks, functions and roles, the dev secret, and the KeyValueStore.
+- The preview cache policies key on an `x-preview-env` header the router sets. Keying on Host isn't possible:
+  that forwards Host, and a function URL rejects a foreign Host.
+- Previews reuse dev's secret (`SecretsEnv=dev`) and dev's data.
+
 ## Cutover history
 
 - **2026-09-23, attempt 1: rolled back after ~6 minutes.** The advanced-search dropdowns were empty

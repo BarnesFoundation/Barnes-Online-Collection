@@ -13,6 +13,16 @@ Actions. You don't need AWS access for a normal deploy.
 
 **Merging a PR into `main` does not deploy anything.**
 
+## PR previews
+
+Every PR into `main` gets its own preview site at **`https://pr-<number>.preview.collection.barnesfoundation.org`**.
+The *PR preview* workflow builds and deploys it (about 5 minutes), runs the smoke test, and posts the link as a
+comment on the PR. Each push updates the same preview. Closing or merging the PR deletes it.
+
+- Previews run the PR's code (merged with `main`) against **dev's data and settings**.
+- PRs from forks don't get previews.
+- "No preview is deployed for pr-N" means it's still building, or the PR is closed.
+
 ## Deploy to dev
 
 1. GitHub → **Releases** → **Draft a new release**.
@@ -73,9 +83,10 @@ changed. Merge that PR, and the update ships with the next release.
 ## Where things live
 
 - `template.yaml`: the app's AWS stack (Lambda + CloudFront). Its comments explain the design choices.
-- `.github/workflows/`: `deploy-dev.yml`, `deploy-prod.yml`, `refresh-search-assets.yml`.
+- `.github/workflows/`: `deploy-dev.yml`, `deploy-prod.yml`, `preview.yml` (PR previews), `refresh-search-assets.yml`.
 - `scripts/package-lambda.sh` builds the Lambda package; `scripts/smoke-test.sh` checks a deployed site.
-- `infra/`: one-time AWS setup (the GitHub deploy roles and the Lambda's network). You rarely touch it.
+- `infra/`: one-time AWS setup (the GitHub deploy roles, the Lambda's network, and `preview-edge.yaml`, the
+  shared CloudFront that serves all PR previews). You rarely touch it.
 
 ## Deploying without GitHub Actions
 

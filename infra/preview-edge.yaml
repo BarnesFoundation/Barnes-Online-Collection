@@ -1,0 +1,229 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# CS-82: the shared front door for PR previews. Deploy it once, by hand:
+#
+#   aws cloudformation deploy --stack-name barnes-collection-www-preview-edge \
+#     --template-file infra/preview-edge.yaml --capabilities CAPABILITY_IAM \
+#     --tags project=barnes-online-collection env=preview
+#
+# Each PR preview is its own small stack (template.yaml with CreateCloudFront=false): just a Lambda and its
+# function URL. This one distribution serves all of them at https://pr-<n>.preview.collection.barnesfoundation.org.
+# Its viewer-request function takes the pr-<n> label from the Host header, looks up that PR's function-URL
+# host in a CloudFront KeyValueStore, and sends the request there. The preview workflow writes and deletes
+# the KeyValueStore entries, so it never needs any CloudFront distribution permissions (a per-PR distribution
+# would have needed rights over every distribution in the account, prod included).
+Description: "Barnes Collection Online PR previews (CS-82) - wildcard cert, DNS, one shared CloudFront and router."
+
+Parameters:
+  PreviewDomain:
+    Type: String
+    Default: preview.collection.barnesfoundation.org
+  HostedZoneId:
+    Type: String
+    Default: Z4SK0ES98JH0U   # barnesfoundation.org
+  PlaceholderOriginDomain:
+    Type: String
+    Default: preview-origin.invalid
+    Description: >
+      The distribution's configured origin. It is never used: the router either rewrites the origin to a
+      PR's function URL or answers 404 itself.
+
+Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub "*.${PreviewDomain}"
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Sub "*.${PreviewDomain}"
+          HostedZoneId: !Ref HostedZoneId
+
+  # pr-<n> -> that preview's function URL host (xxxx.lambda-url.us-east-1.on.aws).
+  Origins:
+    Type: AWS::CloudFront::KeyValueStore
+    Properties:
+      Name: barnes-collection-www-preview-origins
+      Comment: PR number -> preview Lambda function URL host (written by .github/workflows/preview.yml).
+
+  Router:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: barnes-collection-www-preview-router
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Route pr-<n>.preview... to that PR's Lambda; percent-encode query chars a function URL rejects.
+        Runtime: cloudfront-js-2.0
+        KeyValueStoreAssociations:
+          - KeyValueStoreARN: !GetAtt Origins.Arn
+      FunctionCode: !Sub |
+        import cf from 'cloudfront';
+        const kvs = cf.kvs('${Origins.Id}');
+
+        function notFound(msg) {
+          return {
+            statusCode: 404,
+            statusDescription: 'Not Found',
+            headers: { 'content-type': { value: 'text/plain; charset=utf-8' }, 'cache-control': { value: 'no-store' } },
+            body: { encoding: 'text', data: msg },
+          };
+        }
+
+        // Same encoding as template.yaml's QueryStringEncodeFunction (see PR #333).
+        function enc(s) {
+          return s.replace(/[{}|^`\\"<>]/g, function (c) {
+            return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+          });
+        }
+
+        async function handler(event) {
+          const request = event.request;
+          const host = request.headers.host ? request.headers.host.value : '';
+          const label = host.split('.')[0];
+          if (!/^pr-[0-9]+$/.test(label)) return notFound('Unknown preview.');
+
+          let origin;
+          try {
+            origin = await kvs.get(label);
+          } catch (e) {
+            return notFound('No preview is deployed for ' + label + ' (still building, or the PR is closed).');
+          }
+          cf.updateRequestOrigin({ domainName: origin });
+
+          // Part of the cache key (see the cache policies), so previews never share cached responses.
+          request.headers['x-preview-env'] = { value: label };
+
+          const q = request.querystring, out = {};
+          for (const k in q) {
+            const v = q[k], nv = { value: enc(v.value) };
+            if (v.multiValue) nv.multiValue = v.multiValue.map(function (m) { return { value: enc(m.value) }; });
+            out[enc(k)] = nv;
+          }
+          request.querystring = out;
+          return request;
+        }
+
+  # Same TTL behaviour as template.yaml's policies, plus x-preview-env in the key. The Host header is NOT
+  # in the key: including it would forward it, and a Lambda function URL rejects a foreign Host.
+  OriginCacheControlPolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: barnes-collection-www-preview-origin-cache-control
+        Comment: PR previews - honor origin Cache-Control; keyed by preview.
+        MinTTL: 0
+        DefaultTTL: 0
+        MaxTTL: 31536000
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers: [x-preview-env]
+          CookiesConfig:
+            CookieBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: all
+  ImmutableAssetsPolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: barnes-collection-www-preview-immutable-assets
+        Comment: PR previews - content-hashed /static/* cached for a year; keyed by preview.
+        MinTTL: 31536000
+        DefaultTTL: 31536000
+        MaxTTL: 31536000
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers: [x-preview-env]
+          CookiesConfig:
+            CookieBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: Barnes Collection Online - PR previews (CS-82)
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Aliases: [!Sub "*.${PreviewDomain}"]
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Origins:
+          - Id: preview-lambda
+            DomainName: !Ref PlaceholderOriginDomain
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              HTTPSPort: 443
+              OriginSSLProtocols: [TLSv1.2]
+            OriginCustomHeaders:
+              - HeaderName: X-CF-Proto
+                HeaderValue: https
+              - HeaderName: X-Forwarded-Proto
+                HeaderValue: https
+        DefaultCacheBehavior:
+          TargetOriginId: preview-lambda
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+          Compress: true
+          CachePolicyId: !Ref OriginCacheControlPolicy
+          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt Router.FunctionMetadata.FunctionARN
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: preview-lambda
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # Managed-AllViewerExceptHostHeader
+            Compress: true
+            FunctionAssociations:
+              - EventType: viewer-request
+                FunctionARN: !GetAtt Router.FunctionMetadata.FunctionARN
+          - PathPattern: /static/*
+            TargetOriginId: preview-lambda
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD]
+            CachePolicyId: !Ref ImmutableAssetsPolicy
+            Compress: true
+            FunctionAssociations:
+              - EventType: viewer-request
+                FunctionARN: !GetAtt Router.FunctionMetadata.FunctionARN
+
+  DnsA:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "*.${PreviewDomain}."
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt Distribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2   # CloudFront's fixed alias zone
+  DnsAAAA:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "*.${PreviewDomain}."
+      Type: AAAA
+      AliasTarget:
+        DNSName: !GetAtt Distribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+
+Outputs:
+  KeyValueStoreArn:
+    Value: !GetAtt Origins.Arn
+    Description: Set as PREVIEW_KVS_ARN in .github/workflows/preview.yml and in infra/gha-preview-role.yaml.
+  DistributionId:
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Value: !GetAtt Distribution.DomainName

@@ -22,8 +22,9 @@ Description: >
 Parameters:
   EnvName:
     Type: String
-    AllowedValues: [dev, prod]
-    Description: Deploy target. Drives resource names.
+    AllowedPattern: "^(dev|prod|pr-[0-9]+)$"
+    ConstraintDescription: dev, prod, or pr-<number> (a PR preview)
+    Description: Deploy target. Drives resource names. pr-<number> is a PR preview stack (CS-82).
 
   DomainName:
     Type: String
@@ -164,6 +165,21 @@ Parameters:
     Default: arn:aws:lambda:us-east-1:753240598075:layer:LambdaAdapterLayerX86:24
     Description: AWS Lambda Web Adapter layer (public, us-east-1/x86_64). Pin at deploy.
 
+  # ---- PR previews (CS-82) ----
+  SecretsEnv:
+    Type: String
+    Default: ""
+    Description: >
+      Which env's Secrets Manager secret to read (barnes-collection-www/<SecretsEnv>). Empty = EnvName,
+      which is what dev and prod use. PR previews pass "dev".
+  CreateCloudFront:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "true"
+    Description: >
+      "false" deploys only the Lambda + function URL, no distribution. PR previews use it: they are served
+      by the one shared preview distribution in infra/preview-edge.yaml, which routes pr-<n>.preview... here.
+
 Conditions:
   HasCustomDomain: !Not [!Equals [!Ref DomainName, ""]]
   # The cert is decoupled from the alias so a distribution can hold the cert BEFORE it takes the alias,
@@ -171,6 +187,8 @@ Conditions:
   HasCertificate: !Not [!Equals [!Ref AcmCertificateArn, ""]]
   UsePostgresV2: !Equals [!Ref EnablePostgresV2, "true"]
   HasWebAcl: !Not [!Equals [!Ref WebAclArn, ""]]
+  HasSecretsEnv: !Not [!Equals [!Ref SecretsEnv, ""]]
+  WithCloudFront: !Equals [!Ref CreateCloudFront, "true"]
 
 Globals:
   Function:
@@ -221,12 +239,12 @@ Resources:
           ELASTICSEARCH_PROTOCOL: !Ref ElasticsearchProtocol
           ELASTICSEARCH_INDEX: !Ref ElasticsearchIndex
           ELASTICSEARCH_USERNAME: !Ref ElasticsearchUsername
-          ELASTICSEARCH_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:ELASTICSEARCH_PASSWORD}}"
+          ELASTICSEARCH_PASSWORD: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:ELASTICSEARCH_PASSWORD}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # Craft CMS (Hygraph/GraphCMS)
           GRAPHCMS_ENDPOINT: !Ref GraphCmsEndpoint
-          GRAPHCMS_API_TOKEN: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:GRAPHCMS_API_TOKEN}}"
+          GRAPHCMS_API_TOKEN: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:GRAPHCMS_API_TOKEN}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # NetX DAMS
-          NETX_API_TOKEN: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:NETX_API_TOKEN}}"
+          NETX_API_TOKEN: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:NETX_API_TOKEN}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # AWS SDK credentials come from the Lambda EXECUTION ROLE (below), not static keys:
           # AWS_ACCESS_KEY / AWS_SECRET_KEY / AWS_REGION are Lambda-reserved and cannot be set here.
           # AWS_REGION is auto-provided by the runtime; only the bucket name is app config.
@@ -234,13 +252,13 @@ Resources:
           # Wufoo image-download request form (app.js POST /api/objects/:invno/download)
           WUFOO_SUBDOMAIN: !Ref WufooSubdomain
           WUFOO_DOWNLOAD_FORM: !Ref WufooDownloadForm
-          WUFOO_USERNAME: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WUFOO_USERNAME}}"   # the Wufoo API key
-          WUFOO_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WUFOO_PASSWORD}}"
+          WUFOO_USERNAME: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:WUFOO_USERNAME}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]   # the Wufoo API key
+          WUFOO_PASSWORD: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:WUFOO_PASSWORD}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # WWW basic-auth pair for the Craft API (craftService.js; used when NODE_ENV != production)
           WWW_USERNAME: !Ref WwwUsername
-          WWW_PASSWORD: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:WWW_PASSWORD}}"
+          WWW_PASSWORD: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:WWW_PASSWORD}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # App config + REACT_APP_* the server reads at runtime (mirror of EB dev)
-          X_ORIGIN_VERIFY: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_ORIGIN_VERIFY}}"
+          X_ORIGIN_VERIFY: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:X_ORIGIN_VERIFY}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           REACT_APP_AWS_BUCKET: !Ref ReactAppAwsBucket
           REACT_APP_CANONICAL_ROOT: !Ref ReactAppCanonicalRoot
           REACT_APP_GOOGLE_ANALYTICS_ID: !Ref ReactAppGoogleAnalyticsId
@@ -283,6 +301,7 @@ Resources:
   # ================================================================================================
   Distribution:
     Type: AWS::CloudFront::Distribution
+    Condition: WithCloudFront
     Properties:
       DistributionConfig:
         Comment: !Sub "Barnes Collection Online — monolith on Lambda (${EnvName})"
@@ -306,10 +325,10 @@ Resources:
               OriginSSLProtocols: [TLSv1.2]
             OriginCustomHeaders:
               - HeaderName: X-Origin-Verify
-                HeaderValue: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_ORIGIN_VERIFY}}"
+                HeaderValue: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:X_ORIGIN_VERIFY}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
               # What the app checks when NODE_ENV=production (mirrors the current prod CloudFront).
               - HeaderName: X-CF-Secret
-                HeaderValue: !Sub "{{resolve:secretsmanager:barnes-collection-www/${EnvName}:SecretString:X_CF_SECRET}}"
+                HeaderValue: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:X_CF_SECRET}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
               - HeaderName: X-CF-Proto
                 HeaderValue: https
               - HeaderName: X-Forwarded-Proto
@@ -352,6 +371,7 @@ Resources:
   # decodes them as before.
   QueryStringEncodeFunction:
     Type: AWS::CloudFront::Function
+    Condition: WithCloudFront
     Properties:
       Name: !Sub "barnes-collection-www-${EnvName}-encode-querystring"
       AutoPublish: true
@@ -380,6 +400,7 @@ Resources:
   # rejects requests for a Host it doesn't own.
   OriginCacheControlPolicy:
     Type: AWS::CloudFront::CachePolicy
+    Condition: WithCloudFront
     Properties:
       CachePolicyConfig:
         Name: !Sub "barnes-collection-www-${EnvName}-origin-cache-control"
@@ -399,6 +420,7 @@ Resources:
 
   ImmutableAssetsPolicy:
     Type: AWS::CloudFront::CachePolicy
+    Condition: WithCloudFront
     Properties:
       CachePolicyConfig:
         Name: !Sub "barnes-collection-www-${EnvName}-immutable-assets"
@@ -418,8 +440,10 @@ Resources:
 
 Outputs:
   DistributionId:
+    Condition: WithCloudFront
     Value: !Ref Distribution
   DistributionDomainName:
+    Condition: WithCloudFront
     Value: !GetAtt Distribution.DomainName
     Description: Verify the stack here first; point the DomainName DNS record here after verifying.
   ApiFunctionUrl:
