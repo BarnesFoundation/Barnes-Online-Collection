@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# CS-82: the IAM role .github/workflows/preview.yml assumes to deploy and delete PR preview stacks
+# (template.yaml with EnvName=pr-<n>, CreateCloudFront=false, SecretsEnv=dev) and to register them with the
+# shared preview router (infra/preview-edge.yaml). Deploy by hand, after the preview-edge stack:
+#
+#   aws cloudformation deploy --stack-name barnes-online-collection-gha-deploy-preview \
+#     --template-file infra/gha-preview-role.yaml --capabilities CAPABILITY_NAMED_IAM \
+#     --parameter-overrides KeyValueStoreArn=<preview-edge KeyValueStoreArn output>
+#
+# Any same-repo PR branch can assume this role (fork PRs get no OIDC token), so it is deliberately narrow:
+# only barnes-collection-www-pr-* stacks, functions and roles, read access to the dev secret, and the
+# preview KeyValueStore. It has NO CloudFront distribution permissions, and nothing on dev or prod.
+Description: GitHub Actions OIDC role for Barnes Collection Online PR previews (CS-82).
+
+Parameters:
+  AllowedSubjects:
+    Type: CommaDelimitedList
+    # A pull_request run's OIDC sub is repo:<owner>/<repo>:pull_request. Both repo spellings, since the
+    # IAM match is case-sensitive.
+    Default: "repo:BarnesFoundation/Barnes-Online-Collection:pull_request,repo:barnesfoundation/barnes-online-collection:pull_request"
+  KeyValueStoreArn:
+    Type: String
+    Description: The preview-edge stack's KeyValueStoreArn output.
+  LwaLayerAccount:
+    Type: String
+    Default: "753240598075"
+
+Resources:
+  PreviewRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: barnes-online-collection-gha-deploy-preview
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Ref AllowedSubjects
+      Policies:
+        - PolicyName: preview
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # `aws cloudformation package` uploads the Lambda zip (the bucket is owned by the dev role stack).
+              - Sid: Artifacts
+                Effect: Allow
+                Action: [s3:PutObject, s3:GetObject]
+                Resource: !Sub "arn:aws:s3:::barnes-online-collection-deploy-artifacts-${AWS::AccountId}/barnes-collection-www-pr-*"
+              - Sid: ArtifactsList
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:aws:s3:::barnes-online-collection-deploy-artifacts-${AWS::AccountId}"
+
+              - Sid: PreviewStacks
+                Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DeleteStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:ListStackResources
+                  - cloudformation:GetTemplate
+                  - cloudformation:GetTemplateSummary
+                Resource: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/barnes-collection-www-pr-*/*"
+              - Sid: SamTransform
+                Effect: Allow
+                Action: cloudformation:CreateChangeSet
+                Resource: !Sub "arn:aws:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31"
+              - Sid: CfnRead
+                Effect: Allow
+                Action: [cloudformation:ValidateTemplate, cloudformation:GetTemplateSummary]
+                Resource: "*"
+
+              - Sid: Function
+                Effect: Allow
+                Action:
+                  - lambda:CreateFunction
+                  - lambda:DeleteFunction
+                  - lambda:GetFunction
+                  - lambda:GetFunctionConfiguration
+                  - lambda:UpdateFunctionCode
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:ListTags
+                  - lambda:TagResource
+                  - lambda:UntagResource
+                  - lambda:CreateFunctionUrlConfig
+                  - lambda:GetFunctionUrlConfig
+                  - lambda:UpdateFunctionUrlConfig
+                  - lambda:DeleteFunctionUrlConfig
+                  - lambda:AddPermission
+                  - lambda:RemovePermission
+                  - lambda:GetPolicy
+                  - lambda:ListVersionsByFunction
+                  - lambda:GetFunctionCodeSigningConfig
+                  - lambda:GetRuntimeManagementConfig
+                  - lambda:PutRuntimeManagementConfig
+                  - lambda:GetFunctionRecursionConfig
+                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:barnes-collection-www-pr-*"
+              - Sid: WebAdapterLayer
+                Effect: Allow
+                Action: lambda:GetLayerVersion
+                Resource: !Sub "arn:aws:lambda:${AWS::Region}:${LwaLayerAccount}:layer:LambdaAdapterLayer*"
+
+              # The execution role SAM generates for each preview function (<stack>-ApiFunctionRole-<suffix>).
+              - Sid: FunctionRole
+                Effect: Allow
+                Action:
+                  - iam:GetRole
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:TagRole
+                  - iam:UntagRole
+                  - iam:GetRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:ListRolePolicies
+                  - iam:ListAttachedRolePolicies
+                  - iam:UpdateRole
+                  - iam:UpdateAssumeRolePolicy
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/barnes-collection-www-pr-*"
+              - Sid: FunctionRoleManagedPolicies
+                Effect: Allow
+                Action: [iam:AttachRolePolicy, iam:DetachRolePolicy]
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/barnes-collection-www-pr-*"
+                Condition:
+                  ArnEquals:
+                    iam:PolicyARN:
+                      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+                      - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+              - Sid: PassFunctionRole
+                Effect: Allow
+                Action: iam:PassRole
+                Resource: !Sub "arn:aws:iam::${AWS::AccountId}:role/barnes-collection-www-pr-*"
+                Condition:
+                  StringEquals:
+                    iam:PassedToService: lambda.amazonaws.com
+
+              - Sid: VpcRead
+                Effect: Allow
+                Action:
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeVpcs
+                  - ec2:DescribeNetworkInterfaces
+                Resource: "*"
+
+              # Previews run on dev's settings, so CloudFormation resolves dev's secret for them.
+              - Sid: DevSecret
+                Effect: Allow
+                Action: [secretsmanager:GetSecretValue, secretsmanager:DescribeSecret]
+                Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:barnes-collection-www/dev-*"
+
+              # Register / unregister pr-<n> -> function URL host with the preview router.
+              - Sid: PreviewRouter
+                Effect: Allow
+                Action:
+                  - cloudfront-keyvaluestore:DescribeKeyValueStore
+                  - cloudfront-keyvaluestore:GetKey
+                  - cloudfront-keyvaluestore:PutKey
+                  - cloudfront-keyvaluestore:DeleteKey
+                Resource: !Ref KeyValueStoreArn
+
+Outputs:
+  PreviewRoleArn:
+    Value: !GetAtt PreviewRole.Arn
+    Description: Set as PREVIEW_ROLE in .github/workflows/preview.yml.
