@@ -11,6 +11,7 @@ import * as ObjectActions from "../../../actions/object";
 import * as PrintActions from "../../../actions/prints";
 import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
+import { trackEvent } from "../../../analytics";
 import "./index.css";
 import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
 
@@ -402,6 +403,15 @@ class PanelDetails extends Component {
                 }
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent("request_image_start", {
+                    object_id: String(object.id),
+                    request_type:
+                      objectCopyrightDetails.type === "large"
+                        ? "download"
+                        : "publication",
+                  })
+                }
               >
                 {objectCopyrightDetails.type === "large"
                   ? "Download Image"
