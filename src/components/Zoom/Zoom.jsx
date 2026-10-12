@@ -126,9 +126,12 @@ class Zoom extends Component {
         this.trackedZoomId = id;
         trackEvent("image_zoom", { object_id: String(id) });
       };
-      ["canvas-scroll", "canvas-click", "canvas-double-click", "canvas-pinch"].forEach(
-        (name) => this.osd.addHandler(name, onZoomGesture)
-      );
+      [
+        "canvas-scroll",
+        "canvas-click",
+        "canvas-double-click",
+        "canvas-pinch",
+      ].forEach((name) => this.osd.addHandler(name, onZoomGesture));
 
       this.osd.addHandler("tile-load-failed", () => {
         this.osd.destroy();

@@ -155,7 +155,9 @@ export const trackResults = (filters, total) => {
 
   if (total === 0) {
     const types = [
-      ...ordered.filter((f) => f.filterType !== "search").map((f) => filterTypeName(f.filterType)),
+      ...ordered
+        .filter((f) => f.filterType !== "search")
+        .map((f) => filterTypeName(f.filterType)),
       ...Object.entries((filters && filters.advancedFilters) || {})
         .filter(([, applied]) => applied && Object.keys(applied).length)
         .map(([type]) => filterTypeName(type)),
