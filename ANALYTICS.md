@@ -4,7 +4,7 @@ The collection site reports to two services, and only from production.
 
 | Service | What it answers                                         | Switched on by                                    |
 | ------- | ------------------------------------------------------- | ------------------------------------------------- |
-| GA4     | What visitors do: searches, filters, objects, downloads | repo variable `COLLECTION_GA4_MEASUREMENT_ID`     |
+| GA4     | What visitors do: searches, filters, objects, downloads | repo variable `COLLECTION_GA4_MEASUREMENT_ID` (`G-CGFQCSBXSD`, stream COLLECTION-PROD) |
 | Hotjar  | How it felt: recordings and heatmaps                    | repo variable `COLLECTION_HOTJAR_ID`              |
 
 Both ids are GitHub repository variables (Settings → Secrets and variables → Actions → Variables). Only the
@@ -62,10 +62,10 @@ To add an event: list it in the comment at the top of `src/analytics.js` first, 
    variable is on, and fails if the secret is missing.
 5. Optional: a hostname filter for `collection.barnesfoundation.org`. The code already only sends from there.
 
-**Legacy events ("Click", "Open", "Color", …):** these come from Google Tag Manager container
-`GTM-522X585` (loaded in `public/index.html`), which only holds old Universal Analytics click tags. The site
-code doesn't send them. They stop when that snippet is removed from the site, or when its tags are unpublished
-in GTM.
+**Legacy events ("Click", "Open", "Color", …):** these came from Google Tag Manager container `GTM-522X585`,
+whose published version held only old Universal Analytics click tags. CS-84 removed the GTM snippet from the
+site, so **these events drop to zero from that release**; that isn't a traffic drop. The container itself still
+exists in GTM, in case another site uses it.
 
 **Hotjar:** create the site in the Barnes Hotjar org, set its id as `COLLECTION_HOTJAR_ID`, and turn on
 heatmaps for `/objects/*` and the search results page.
