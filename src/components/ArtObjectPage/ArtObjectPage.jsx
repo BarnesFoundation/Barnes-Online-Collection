@@ -9,6 +9,7 @@ import SiteHtmlHelmetHead from "../SiteHtmlHelmetHead";
 import HtmlClassManager from "../HtmlClassManager";
 import ArtObjectPageShell from "../ArtObjectPageComponents/ArtObjectPageShell";
 import Footer from "../Footer/Footer";
+import { trackEvent } from "../../analytics";
 import "./artObjectPage.css";
 
 class ArtObjectPage extends Component {
@@ -26,6 +27,27 @@ class ArtObjectPage extends Component {
       panelSlug: panelSlug,
       requestObjectId: requestObjectId,
     };
+  }
+
+  componentDidMount() {
+    this.trackObjectView();
+  }
+
+  componentDidUpdate() {
+    this.trackObjectView();
+  }
+
+  /** view_item once per object shown (the object arrives after the route changes). */
+  trackObjectView() {
+    const { object } = this.props;
+    if (!object || !object.id || object.id === this.trackedObjectId) return;
+    if (Number(object.id) !== this.state.requestObjectId) return;
+    this.trackedObjectId = object.id;
+    trackEvent("view_item", {
+      object_id: String(object.id),
+      object_title: object.title,
+      artist: object.people,
+    });
   }
 
   componentWillReceiveProps(nextProps) {

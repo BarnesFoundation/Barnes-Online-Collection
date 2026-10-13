@@ -10,7 +10,7 @@ const morgan = require("morgan");
 const path = require("path");
 const request = require("request");
 const s3 = new AWS.S3();
-const googleUA = require("universal-analytics");
+const { trackFileDownload } = require("./analytics");
 
 const htpasswdFilePath = path.resolve(__dirname, "../.htpasswd");
 const { ui, meta } = require("../src/shared/config");
@@ -577,19 +577,11 @@ app.get(`${imageTrackBaseUrl}:imageId`, (req, res) => {
   const imageBucketPrefix = process.env.REACT_APP_IMAGES_PREFIX;
   const imageId = req.params.imageId;
   const downloadUrl = `${imageBaseUrl}/${imageId}`;
-  const visitor = googleUA(process.env.REACT_APP_GOOGLE_ANALYTICS_ID);
 
-  // console.log('todo: track download for imageId: ' + imageId)
-  visitor
-    .pageview(req.url, function (err) {
-      if (err) {
-        throw new Error(`Error while tracking page view ${err}`);
-      }
-
-      // console.log('redirecting to: ' + downloadUrl)
-      return res.redirect(302, downloadUrl);
-    })
-    .send();
+  // GA4 file_download (CS-84). Fire-and-forget: the redirect never waits on analytics. This replaces a
+  // Universal Analytics pageview, which stopped being processed when UA was shut down.
+  trackFileDownload(req, imageId);
+  return res.redirect(302, downloadUrl);
 });
 
 /** Endpoint for locally generating the assets file for the frontend */

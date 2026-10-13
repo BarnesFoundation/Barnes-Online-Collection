@@ -3,6 +3,7 @@ import "./ShareDialog.css";
 import { sharePlatforms, createShareForPlatform } from "./shareModule";
 import Icon from "../Icon";
 import { ClickTracker } from "../SearchInput/Dropdowns/ClickTracker";
+import { trackEvent } from "../../analytics";
 
 class Share extends React.Component {
   constructor(props) {
@@ -33,6 +34,11 @@ class Share extends React.Component {
       platform,
       this.props.object.imageUrlLarge
     );
+
+    trackEvent("share", {
+      method: String(platform).toLowerCase(),
+      object_id: String(id),
+    });
 
     if (platform === sharePlatforms.COPY_URL && this.copy) {
       this.copy.select();

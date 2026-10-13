@@ -1,21 +1,14 @@
 import React from "react";
 import CommonWrap from "./CommonWrap";
-import { ui } from "./shared/config";
+import { initAnalytics, trackPageView } from "./analytics";
 
-const ReactGA = require("react-ga");
-
-ReactGA.initialize(ui.googleAnalyticsID);
+initAnalytics();
 
 // with advice from https://github.com/ReactTraining/react-router/issues/4278
 const routeWrapper = (WrappedComponent) => {
-  const trackPage = (page) => {
-    ReactGA.set({ page });
-    ReactGA.pageview(page);
-  };
-
   const Wrapper = (props) => {
     const page = props.location.pathname;
-    trackPage(page);
+    trackPageView(page);
 
     return (
       <CommonWrap>

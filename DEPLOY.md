@@ -74,6 +74,11 @@ at it. This needs AWS admin access; see "Emergency: back to Elastic Beanstalk" a
 - **Runtime settings** are parameters in `template.yaml`. Prod's values are set in
   `deploy-prod.yml` → *Deploy stack*.
 
+## Analytics
+
+GA4 and Hotjar run only on the live site, and are switched on by GitHub repository variables. See
+[ANALYTICS.md](ANALYTICS.md) for the events, how to compare releases, and the one-time console setup.
+
 ## Advanced-search dropdown data
 
 `public/resources/searchAssets.json` holds the advanced-search dropdown options and is committed to the

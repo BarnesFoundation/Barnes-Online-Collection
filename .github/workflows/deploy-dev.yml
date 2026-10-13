@@ -72,7 +72,10 @@ jobs:
           REACT_APP_NETX_ENABLED: "true"
           REACT_APP_PRINTS_ENDPOINT: https://prints.barnesfoundation.org/utility/object_reference_uri
           REACT_APP_WWW_URL: https://www.barnesfoundation.org
+          BUILD_REF: ${{ github.event.release.tag_name || github.ref_name }}
         run: |
+          export REACT_APP_BUILD_ID="${BUILD_REF}+${GITHUB_SHA::7}"
+          echo "BUILD_ID=$REACT_APP_BUILD_ID" >> "$GITHUB_ENV"
           npm run build-css
           npx craco build
 
@@ -96,6 +99,7 @@ jobs:
             --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
             --parameter-overrides EnvName=dev \
               "VpcSubnetIds=$VPC_SUBNET_IDS" "VpcSecurityGroupIds=$VPC_SECURITY_GROUP_IDS"               "DomainName=$DOMAIN_NAME" "AcmCertificateArn=$ACM_CERT_ARN" \
+              "BuildId=$BUILD_ID" \
             --tags project=barnes-online-collection env=dev \
             --no-fail-on-empty-changeset
 
