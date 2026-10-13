@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="740" height="480" viewBox="0 0 740 480" role="img" aria-label="Map placeholder">
+  <rect width="740" height="480" fill="#e8e6e1"/>
+  <path d="M0 120 L740 90 M0 300 L740 340 M160 0 L200 480 M480 0 L440 480 M0 440 L740 200" stroke="#ffffff" stroke-width="14" fill="none"/>
+  <path d="M-20 200 C 200 160, 420 260, 760 150" stroke="#cfd8dc" stroke-width="22" fill="none"/>
+  <rect x="520" y="360" width="140" height="80" fill="#cfe3c8"/>
+  <path d="M370 170 c-22 0 -40 18 -40 40 c0 30 40 70 40 70 s40 -40 40 -70 c0 -22 -18 -40 -40 -40 z" fill="#c8102e"/>
+  <circle cx="370" cy="210" r="14" fill="#ffffff"/>
+  <text x="370" y="320" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#555" text-anchor="middle">Map placeholder</text>
+</svg>
