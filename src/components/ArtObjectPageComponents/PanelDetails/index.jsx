@@ -13,7 +13,11 @@ import { getObjectCopyright } from "../../../copyrightMap";
 import { ShareDialog } from "../../ShareDialog/ShareDialog";
 import { trackEvent } from "../../../analytics";
 import "./index.css";
-import { NETX_ENABLED, getImageURLFromRendition } from "../../../helpers";
+import {
+  NETX_ENABLED,
+  getImageURLFromRendition,
+  getImageAltText,
+} from "../../../helpers";
 
 const DEFAULT_THUMBNAIL_COUNT = 5;
 
@@ -54,12 +58,23 @@ function getCaptionFromArtworkRendition(rendition, object = {}) {
       : rendition.attributes["Artwork Caption (TMS)"][0];
   }
 
-  // If caption is still falsey by now, we'll fallback to the default caption schema
-  return caption
-    ? caption
-    : object.people
-    ? `${object.people}. ${object.title}, ${object.displayDate}. ${object.invno}. ${object.creditLine}`
-    : "";
+  if (caption) return caption;
+
+  // No per-rendition caption (e.g. single-image objects): prefer the pre-formatted primary caption
+  // (Artwork Caption (TMS), "Artist. Title, date, medium. The Barnes Foundation, invno.").
+  if (object.imageCaption) return object.imageCaption;
+
+  // Last-resort: assemble from whatever fields exist, skipping empties so we never render "undefined".
+  const bits = [];
+  if (object.people) bits.push(object.people);
+  const titleDate = [object.title, object.displayDate]
+    .filter(Boolean)
+    .join(", ");
+  if (titleDate) bits.push(titleDate);
+  if (object.medium) bits.push(object.medium);
+  const tail = [object.creditLine, object.invno].filter(Boolean).join(", ");
+  if (tail) bits.push(tail);
+  return bits.join(". ");
 }
 
 class Thumbnail extends Component {
@@ -139,7 +154,7 @@ const Thumbnails = ({
       key={i}
       onClick={() => setActiveImageIndex(i)}
       isActive={activeImageIndex === i}
-      alt={object.title}
+      alt={getImageAltText(rendition, object)}
       rendition={rendition}
     />
   ));
@@ -204,47 +219,62 @@ class Image extends Component {
     this.setState({ didCatchFailure: true });
   };
 
+  componentDidUpdate(prevProps) {
+    // New carousel slide → give its zoom viewer a fresh attempt (one slide's failure must not
+    // permanently disable zoom for the others).
+    if (
+      prevProps.activeImageIndex !== this.props.activeImageIndex &&
+      this.state.didCatchFailure
+    ) {
+      this.setState({ didCatchFailure: false });
+    }
+  }
+
   render() {
     const { onLoad, isLoaded, object, activeImageIndex, setActiveImageIndex } =
       this.props;
     const { renditions } = object;
 
-    // This indicates that there was an error with rendering the Zoom component
+    // This indicates that there was an error rendering the Zoom component for the CURRENT slide.
     const { didCatchFailure } = this.state;
     // Renditions render when they come from live NetX (legacy) OR from the V2 store (`_cf`).
     const renditionsExist =
       renditions?.length > 0 && (NETX_ENABLED || renditions[0]?._cf);
-    const showZoomImageView = Boolean(
-      !didCatchFailure &&
-        object.id &&
-        !renditionsExist &&
-        activeImageIndex === 0
-    );
+
+    // Deep-zoom EVERY slide: the active image is the active rendition (carousel: primary/alternate/
+    // archival) or, with no renditions, the object's primary. Each carries objectId + secret, which map
+    // to per-secret tiles tiles/{objectId}/{secret}/ (Zoom falls back to legacy tiles/{objectId}/).
+    const activeRendition =
+      renditionsExist && renditions[activeImageIndex]
+        ? renditions[activeImageIndex]
+        : null;
+    const zoomObjectId = activeRendition ? activeRendition.objectId : object.id;
+    const zoomSecret = activeRendition
+      ? activeRendition.secret
+      : object.imageSecret;
+    const showZoomImageView = Boolean(!didCatchFailure && zoomObjectId);
+
+    // Accessible name for the active slide (WCAG 1.1.1) — screen-reader only, no visible change.
+    // The viewer is described by the already-visible caption (stable id so association survives re-renders).
+    const altText = getImageAltText(activeRendition, object);
+    const captionId = `image-caption-${zoomObjectId}-${
+      zoomSecret || "primary"
+    }`;
 
     let additionalStyle = {};
     let imageUrlToRender = "";
     let captionToRender = "";
 
-    // If we encountered failure during rendering of the Zoom component, we'll hide it
-    // Additionally, if the user clicked on an image from the rendition thumbnails, we'll render it instead
-    if (!didCatchFailure && !renditionsExist && activeImageIndex === 0) {
+    // Hide the static <img> while the zoom viewer is showing; it stays as the fallback if zoom fails.
+    if (showZoomImageView) {
       additionalStyle = { ...additionalStyle, display: "none" };
     }
 
-    // We'll render the image from the object renditions itself
-    if (renditionsExist && renditions[activeImageIndex]) {
-      imageUrlToRender = getImageURLFromRendition(
-        renditions[activeImageIndex],
-        "Zoom"
-      );
-      captionToRender = getCaptionFromArtworkRendition(
-        renditions[activeImageIndex],
-        object
-      );
-    }
-
-    // Otherwise, no renditions exist so we'll render the default image
-    else {
+    // Static fallback image + caption for the active slide.
+    if (activeRendition) {
+      imageUrlToRender = getImageURLFromRendition(activeRendition, "Zoom");
+      captionToRender = getCaptionFromArtworkRendition(activeRendition, object);
+    } else {
       imageUrlToRender = object.imageUrlLarge;
       captionToRender = getCaptionFromArtworkRendition(null, object);
     }
@@ -254,7 +284,16 @@ class Image extends Component {
         <div className="image-art-object">
           {showZoomImageView && (
             <Zoom
-              id={object.id}
+              key={`${zoomObjectId}_${zoomSecret}`}
+              id={zoomObjectId}
+              secret={zoomSecret}
+              isPrimary={
+                !activeRendition ||
+                activeRendition.isPrimary ||
+                zoomSecret === object.imageSecret
+              }
+              label={altText}
+              describedById={captionId}
               catchFailureInViewer={this.catchFailureInViewer}
             />
           )}
@@ -262,7 +301,7 @@ class Image extends Component {
             aria-hidden={showZoomImageView.toString()}
             className="image-art-object__img"
             src={imageUrlToRender || object.imageUrlLarge}
-            alt={object.title}
+            alt={altText}
             onLoad={onLoad}
             style={{ ...additionalStyle }}
             ref={(ref) => (this.ref = ref)}
@@ -297,6 +336,7 @@ class Image extends Component {
         <div className="image-caption">
           {captionToRender && (
             <div
+              id={captionId}
               className="font-smallprint color-medium image-caption__content"
               style={{
                 width:
