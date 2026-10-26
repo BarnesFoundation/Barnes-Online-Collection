@@ -1,6 +1,8 @@
 import * as ActionTypes from "../constants";
+import { trackFilterApply } from "../analytics";
 
 export function addFilter(filter) {
+  trackFilterApply(filter);
   return {
     type: ActionTypes.ADD_FILTER,
     filter: filter,
@@ -28,10 +30,10 @@ export function clearAllFilters() {
 }
 
 // Actions for advanced filtering.
-export const addAdvancedFilter = (filter) => ({
-  type: ActionTypes.ADD_ADVANCED_FILTER,
-  filter,
-});
+export const addAdvancedFilter = (filter) => {
+  trackFilterApply(filter);
+  return { type: ActionTypes.ADD_ADVANCED_FILTER, filter };
+};
 export const removeAdvancedFilter = (filter) => ({
   type: ActionTypes.REMOVE_ADVANCED_FILTER,
   filter,

@@ -13,6 +13,7 @@ import { BARNES_SETTINGS, SEARCH_FIELDS } from "../barnesSettings";
 import { DEV_LOG } from "../devLogging";
 import { DROPDOWN_TERMS } from "../components/SearchInput/Dropdowns/Dropdowns";
 import { uniqBy } from "lodash";
+import { trackResults } from "../analytics";
 
 const RAW_OPTION = [
   "id",
@@ -126,9 +127,11 @@ const fetchResults = async (body, dispatch, options = {}) => {
         : dispatch(setObjects(objects));
       dispatch(resetMobileFilters());
     }
+    return lastIndex;
   } catch (e) {
     console.error(e);
     console.error("Error fetching results.");
+    return null;
   } finally {
     if (!options.append) dispatch(setIsPending(false));
   }
@@ -540,7 +543,12 @@ export const findFilteredObjects = (filters, fromIndex = 0) => {
     ];
   }
 
-  return (dispatch) => fetchResults(body, dispatch, options);
+  return (dispatch) =>
+    fetchResults(body, dispatch, options).then((total) => {
+      // Only the first page describes the query's results; later pages are infinite scroll.
+      if (!fromIndex) trackResults(filters, total);
+      return total;
+    });
 };
 
 const buildQueriesFromFilters = (filters) => {

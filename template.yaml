@@ -165,6 +165,19 @@ Parameters:
     Default: arn:aws:lambda:us-east-1:753240598075:layer:LambdaAdapterLayerX86:24
     Description: AWS Lambda Web Adapter layer (public, us-east-1/x86_64). Pin at deploy.
 
+  # ---- Analytics (CS-84, server/analytics.js) ----
+  Ga4MeasurementId:
+    Type: String
+    Default: ""
+    Description: >
+      GA4 measurement id (G-...) for the server-side file_download event. Empty = off. Set it only on prod,
+      and only after the env's secret has a GA4_API_SECRET key (a Measurement Protocol secret from GA4 Admin
+      > Data streams), because the template then reads that key.
+  BuildId:
+    Type: String
+    Default: ""
+    Description: Release tag + short commit of the deployed build (set by the workflows); tags server-side events.
+
   # ---- PR previews (CS-82) ----
   SecretsEnv:
     Type: String
@@ -189,6 +202,7 @@ Conditions:
   HasWebAcl: !Not [!Equals [!Ref WebAclArn, ""]]
   HasSecretsEnv: !Not [!Equals [!Ref SecretsEnv, ""]]
   WithCloudFront: !Equals [!Ref CreateCloudFront, "true"]
+  HasGa4: !Not [!Equals [!Ref Ga4MeasurementId, ""]]
 
 Globals:
   Function:
@@ -243,6 +257,13 @@ Resources:
           # Craft CMS (Hygraph/GraphCMS)
           GRAPHCMS_ENDPOINT: !Ref GraphCmsEndpoint
           GRAPHCMS_API_TOKEN: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:GRAPHCMS_API_TOKEN}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
+          # Analytics (CS-84): server-side GA4 file_download. Both omitted unless Ga4MeasurementId is set.
+          GA4_MEASUREMENT_ID: !If [HasGa4, !Ref Ga4MeasurementId, !Ref "AWS::NoValue"]
+          GA4_API_SECRET: !If
+            - HasGa4
+            - !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:GA4_API_SECRET}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
+            - !Ref "AWS::NoValue"
+          BUILD_ID: !Ref BuildId
           # NetX DAMS
           NETX_API_TOKEN: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:NETX_API_TOKEN}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           # AWS SDK credentials come from the Lambda EXECUTION ROLE (below), not static keys:

@@ -3,6 +3,7 @@ import axios from "axios";
 import OpenSeadragon from "openseadragon";
 import "./zoom.css";
 import { ui } from "../../shared/config";
+import { trackEvent } from "../../analytics";
 
 const IMAGE_BASE_URL = ui.imageBaseURL;
 
@@ -117,6 +118,20 @@ class Zoom extends Component {
         const imageBounds = this.osd.world.getItemAt(0).getBounds();
         this.osd.viewport.fitBounds(imageBounds, true);
       });
+
+      // Gestures that zoom by default in OSD. A click that ended a drag (quick=false) is a pan.
+      const onZoomGesture = (e) => {
+        if (e && e.quick === false) return;
+        if (this.trackedZoomId === id) return;
+        this.trackedZoomId = id;
+        trackEvent("image_zoom", { object_id: String(id) });
+      };
+      [
+        "canvas-scroll",
+        "canvas-click",
+        "canvas-double-click",
+        "canvas-pinch",
+      ].forEach((name) => this.osd.addHandler(name, onZoomGesture));
 
       this.osd.addHandler("tile-load-failed", () => {
         this.osd.destroy();
