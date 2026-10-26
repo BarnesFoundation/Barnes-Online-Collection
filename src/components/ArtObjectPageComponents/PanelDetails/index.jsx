@@ -287,6 +287,11 @@ class Image extends Component {
               key={`${zoomObjectId}_${zoomSecret}`}
               id={zoomObjectId}
               secret={zoomSecret}
+              isPrimary={
+                !activeRendition ||
+                activeRendition.isPrimary ||
+                zoomSecret === object.imageSecret
+              }
               label={altText}
               describedById={captionId}
               catchFailureInViewer={this.catchFailureInViewer}

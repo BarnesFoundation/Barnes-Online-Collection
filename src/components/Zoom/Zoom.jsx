@@ -100,18 +100,21 @@ class Zoom extends Component {
    * @param {number?} scaleErrorLevel - If an error has been thrown at a previous scale level.
    */
   setUpOSD = async (scaleErrorLevel = 0) => {
-    const { id, secret } = this.props;
-    // Prefer this image's per-secret tiles (tiles/{id}/{secret}/); fall back to the legacy
-    // tiles/{id}/ (the primary's secret-independent path) when per-secret tiles aren't published yet.
+    const { id, secret, isPrimary } = this.props;
+    // Prefer this image's per-secret tiles (tiles/{id}/{secret}/). The legacy tiles/{id}/ path holds
+    // the PRIMARY image's tiles, so fall back to it only for the primary (or when there is no
+    // secret). For an alternate or archival slide it would zoom the wrong picture under this
+    // slide's caption and alt text; let the viewer fail over to the still image instead.
+    const allowLegacy = !secret || isPrimary;
     let res;
     if (secret) {
       res = await this.fetchTileSource(
         `${IMAGE_BASE_URL}/tiles/${id}/${secret}/info.json`,
         scaleErrorLevel,
-        true
+        allowLegacy
       );
     }
-    if (!res) {
+    if (!res && allowLegacy) {
       res = await this.fetchTileSource(
         `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
         scaleErrorLevel
