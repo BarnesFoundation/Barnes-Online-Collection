@@ -86,7 +86,10 @@ class Zoom extends Component {
    * Capture change in ID from parent, if there is a change remount the OSD component.
    */
   componentDidUpdate(prevProps) {
-    if (prevProps.id !== this.props.id || prevProps.secret !== this.props.secret) {
+    if (
+      prevProps.id !== this.props.id ||
+      prevProps.secret !== this.props.secret
+    ) {
       if (this.osd) this.osd.destroy();
       this.setUpOSD();
     }

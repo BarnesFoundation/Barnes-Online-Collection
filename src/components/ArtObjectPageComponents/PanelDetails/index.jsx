@@ -67,7 +67,9 @@ function getCaptionFromArtworkRendition(rendition, object = {}) {
   // Last-resort: assemble from whatever fields exist, skipping empties so we never render "undefined".
   const bits = [];
   if (object.people) bits.push(object.people);
-  const titleDate = [object.title, object.displayDate].filter(Boolean).join(", ");
+  const titleDate = [object.title, object.displayDate]
+    .filter(Boolean)
+    .join(", ");
   if (titleDate) bits.push(titleDate);
   if (object.medium) bits.push(object.medium);
   const tail = [object.creditLine, object.invno].filter(Boolean).join(", ");
@@ -247,13 +249,17 @@ class Image extends Component {
         ? renditions[activeImageIndex]
         : null;
     const zoomObjectId = activeRendition ? activeRendition.objectId : object.id;
-    const zoomSecret = activeRendition ? activeRendition.secret : object.imageSecret;
+    const zoomSecret = activeRendition
+      ? activeRendition.secret
+      : object.imageSecret;
     const showZoomImageView = Boolean(!didCatchFailure && zoomObjectId);
 
     // Accessible name for the active slide (WCAG 1.1.1) — screen-reader only, no visible change.
     // The viewer is described by the already-visible caption (stable id so association survives re-renders).
     const altText = getImageAltText(activeRendition, object);
-    const captionId = `image-caption-${zoomObjectId}-${zoomSecret || "primary"}`;
+    const captionId = `image-caption-${zoomObjectId}-${
+      zoomSecret || "primary"
+    }`;
 
     let additionalStyle = {};
     let imageUrlToRender = "";
