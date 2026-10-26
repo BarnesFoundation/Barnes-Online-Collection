@@ -23,6 +23,11 @@ function toRendition(im, objectId) {
     fileName: `${im.secret}.jpg`,
     isPrimary: !!im.isPrimary,
     isArchive: !!im.isArchive,
+    // Accessibility text alternatives (WCAG 1.1.1). The FE builds a tiered alt from these:
+    // transcription (images of text) -> description -> caption -> title.
+    description: im.description || "",
+    accessibilityNote: im.accessibilityNote || "",
+    transcription: im.transcription || "",
     attributes: {
       "Sync Type": [im.isArchive ? "Archives Sync" : ""],
       "Archives Correspondence Caption": [im.caption || ""],
