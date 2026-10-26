@@ -101,7 +101,8 @@ export const getImageAltText = (rendition, object = {}) => {
       (rendition.attributes["Archives Correspondence Caption"]?.[0] ||
         rendition.attributes["Artwork Caption (TMS)"]?.[0])) ||
     "";
-  if (rendition.isArchive) return rendition.description || caption || nameFallback;
+  if (rendition.isArchive)
+    return rendition.description || caption || nameFallback;
   return rendition.description || caption || nameFallback;
 };
 
