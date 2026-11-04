@@ -127,6 +127,8 @@ export const DEFAULT_ROOM_ORDER = [
   "Room 20",
   "Le Bonheur de vivre",
   "Second Floor Balcony East (Room 24)",
+  "Second Floor Balcony South (Room 24)",
+  "Second Floor Balcony West (Room 24)",
   "Mezzanine",
   "Gallery Foyer",
   "Lower Lobby",

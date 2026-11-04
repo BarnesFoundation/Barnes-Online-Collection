@@ -48,6 +48,23 @@ describe("formatTourData", () => {
     );
   });
 
+  it("should include every object, even when its room is not in the room order", () => {
+    const tourData = formatTourData(["Main Room"], objects, objectsCopy);
+    const count = tourData.reduce((n, room) => n + room.content.length, 0);
+    expect(count).toBe(objects.length);
+    expect(tourData[0].header).toBe("Main Room");
+  });
+
+  it("should include all three Room 24 balconies in the default room order", () => {
+    expect(DEFAULT_ROOM_ORDER).toEqual(
+      expect.arrayContaining([
+        "Second Floor Balcony East (Room 24)",
+        "Second Floor Balcony South (Room 24)",
+        "Second Floor Balcony West (Room 24)",
+      ])
+    );
+  });
+
   it("should properly format room data object when room numbers are not included", () => {
     const tourData = formatTourData(DEFAULT_ROOM_ORDER, objects, objectsCopy, false);
     expect(tourData[0].header).toBe(undefined);
