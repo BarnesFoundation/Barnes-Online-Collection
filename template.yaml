@@ -96,9 +96,6 @@ Parameters:
   ReactAppCanonicalRoot:
     Type: String
     Default: http://dev.collection.barnesfoundation.org
-  ReactAppGoogleAnalyticsId:
-    Type: String
-    Default: UA-25091665-17
   ReactAppImageBaseUrl:
     Type: String
     Default: https://d2r83x5xt28klo.cloudfront.net
@@ -282,7 +279,6 @@ Resources:
           X_ORIGIN_VERIFY: !Sub ["{{resolve:secretsmanager:barnes-collection-www/${SecretsFor}:SecretString:X_ORIGIN_VERIFY}}", {SecretsFor: !If [HasSecretsEnv, !Ref SecretsEnv, !Ref EnvName]}]
           REACT_APP_AWS_BUCKET: !Ref ReactAppAwsBucket
           REACT_APP_CANONICAL_ROOT: !Ref ReactAppCanonicalRoot
-          REACT_APP_GOOGLE_ANALYTICS_ID: !Ref ReactAppGoogleAnalyticsId
           REACT_APP_IMAGE_BASE_URL: !Ref ReactAppImageBaseUrl
           REACT_APP_NETX_BASE_URL: !Ref ReactAppNetxBaseUrl
           REACT_APP_NETX_ENABLED: !Ref ReactAppNetxEnabled

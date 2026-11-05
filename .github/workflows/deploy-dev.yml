@@ -66,7 +66,6 @@ jobs:
           CI: "false"   # CRA warnings must not fail the build (GitHub sets CI=true)
           REACT_APP_AWS_BUCKET: barnes-data-processing
           REACT_APP_CANONICAL_ROOT: http://dev.collection.barnesfoundation.org
-          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-17
           REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
           REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
           REACT_APP_NETX_ENABLED: "true"
