@@ -93,7 +93,6 @@ export const formatTourData = (
   if (includeRoomNumbers) {
     // Get dictionary of art objects organized by room number
     const objByRoom = sortObjectsByRoom(objects, objectsCopy);
-    // TODO: handle when not all rooms are included
     for (const room of roomOrder) {
       // If the dictionary has a key for that room, add it to the tourData array
       if (objByRoom[room]) {
@@ -103,6 +102,12 @@ export const formatTourData = (
           content: objByRoom[room],
         };
         tourData.push(roomData);
+      }
+    }
+    // Rooms missing from the room order go at the end, so no object is dropped
+    for (const room of Object.keys(objByRoom)) {
+      if (!roomOrder.includes(room)) {
+        tourData.push({ header: room, content: objByRoom[room] });
       }
     }
   } else {
