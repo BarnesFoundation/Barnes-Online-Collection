@@ -7,7 +7,7 @@
 		"aws-sdk": "^2.814.0",
 		"axios": "^0.21.2",
 		"babel-polyfill": "^6.26.0",
-		"body-parser": "^1.17.2",
+		"body-parser": "^1.20.9",
 		"bodybuilder": "^2.2.0",
 		"braces": "^2.3.1",
 		"classnames": "^2.2.6",
