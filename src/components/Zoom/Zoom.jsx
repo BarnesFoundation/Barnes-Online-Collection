@@ -36,7 +36,7 @@ class Zoom extends Component {
    * @param {string} url - url of info.json fike.
    * @param {number} scaleErrorLevel - level of scale error, if any.
    */
-  async fetchTileSource(url, scaleErrorLevel) {
+  async fetchTileSource(url, scaleErrorLevel, suppressFailCb = false) {
     const { catchFailureInViewer } = this.props;
 
     try {
@@ -69,7 +69,8 @@ class Zoom extends Component {
       return res;
     } catch (e) {
       console.log(e);
-      if (catchFailureInViewer) {
+      // suppressFailCb lets the caller try a fallback tile source before giving up on the viewer.
+      if (catchFailureInViewer && !suppressFailCb) {
         catchFailureInViewer();
       }
     }
@@ -85,8 +86,11 @@ class Zoom extends Component {
    * Capture change in ID from parent, if there is a change remount the OSD component.
    */
   componentDidUpdate(prevProps) {
-    if (prevProps.id !== this.props.id) {
-      this.osd.destroy();
+    if (
+      prevProps.id !== this.props.id ||
+      prevProps.secret !== this.props.secret
+    ) {
+      if (this.osd) this.osd.destroy();
       this.setUpOSD();
     }
   }
@@ -96,11 +100,27 @@ class Zoom extends Component {
    * @param {number?} scaleErrorLevel - If an error has been thrown at a previous scale level.
    */
   setUpOSD = async (scaleErrorLevel = 0) => {
-    const { id } = this.props;
-    const res = await this.fetchTileSource(
-      `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
-      scaleErrorLevel
-    );
+    const { id, secret, isPrimary } = this.props;
+    // Prefer this image's per-secret tiles (tiles/{id}/{secret}/). The legacy tiles/{id}/ path holds
+    // the PRIMARY image's tiles, so fall back to it only for the primary (or when there is no
+    // secret). For an alternate or archival slide it would zoom the wrong picture under this
+    // slide's caption and alt text; let the viewer fail over to the still image instead.
+    const allowLegacy = !secret || isPrimary;
+    let res;
+    if (secret) {
+      res = await this.fetchTileSource(
+        `${IMAGE_BASE_URL}/tiles/${id}/${secret}/info.json`,
+        scaleErrorLevel,
+        allowLegacy
+      );
+    }
+    if (!res && allowLegacy) {
+      res = await this.fetchTileSource(
+        `${IMAGE_BASE_URL}/tiles/${id}/info.json`,
+        scaleErrorLevel
+      );
+    }
+    if (!res) return; // both sources failed; fetchTileSource already signaled catchFailureInViewer
 
     if (this.ref) {
       this.osd = OpenSeadragon({
@@ -169,8 +189,15 @@ class Zoom extends Component {
   };
 
   render() {
+    const { label, describedById } = this.props;
     return (
-      <div className="osd-zoom">
+      <div
+        className="osd-zoom"
+        role="group"
+        aria-roledescription="Zoomable image"
+        aria-label={label || "Zoomable image"}
+        aria-describedby={describedById || undefined}
+      >
         <div
           className="osd-zoom__view"
           ref={(ref) => {
@@ -184,29 +211,43 @@ class Zoom extends Component {
           <div className="osd-zoom__button-group">
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Zoom in"
               onClick={() => {
                 if (this.zoomIn) this.zoomIn();
               }}
             >
-              <span className="osd-zoom__button-content">+</span>
+              <span className="osd-zoom__button-content" aria-hidden="true">
+                +
+              </span>
             </button>
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Zoom out"
               onClick={() => {
                 if (this.zoomOut) this.zoomOut();
               }}
             >
-              <span className="osd-zoom__button-content osd-zoom__button-content--minus">
+              <span
+                className="osd-zoom__button-content osd-zoom__button-content--minus"
+                aria-hidden="true"
+              >
                 -
               </span>
             </button>
             <button
               className="osd-zoom__button"
+              type="button"
+              aria-label="Full screen"
               onClick={() => {
                 this.fullScreen();
               }}
             >
-              <span className="osd-zoom__button-content osd-zoom__button-content--full-screen">
+              <span
+                className="osd-zoom__button-content osd-zoom__button-content--full-screen"
+                aria-hidden="true"
+              >
                 <FullScreenIcon />
               </span>
             </button>
