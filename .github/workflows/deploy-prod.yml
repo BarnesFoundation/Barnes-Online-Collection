@@ -71,7 +71,6 @@ jobs:
           CI: "false"
           REACT_APP_AWS_BUCKET: barnes-data-processing
           REACT_APP_CANONICAL_ROOT: https://collection.barnesfoundation.org
-          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-16
           REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
           REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
           REACT_APP_NETX_ENABLED: "true"
@@ -112,7 +111,6 @@ jobs:
             --parameter-overrides EnvName=prod NodeEnvValue=production EnablePostgresV2=false \
               ElasticsearchHost=a3bf81f3efa82d7e9a6b1c6fcc91e1d3.us-east-1.aws.found.io \
               ReactAppCanonicalRoot=https://collection.barnesfoundation.org \
-              ReactAppGoogleAnalyticsId=UA-25091665-16 \
               ReactAppWwwUrl=https://barnesfoundation.org \
               WufooSubdomain=testbarnes WufooDownloadForm=z1vuiamj18t6od1 \
               "WebAclArn=$WEB_ACL_ARN" \

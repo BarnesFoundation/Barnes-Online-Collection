@@ -58,7 +58,6 @@ jobs:
           CI: "false"
           REACT_APP_AWS_BUCKET: barnes-data-processing
           REACT_APP_CANONICAL_ROOT: https://${{ env.PREVIEW_HOST }}
-          REACT_APP_GOOGLE_ANALYTICS_ID: UA-25091665-17
           REACT_APP_IMAGE_BASE_URL: https://d2r83x5xt28klo.cloudfront.net
           REACT_APP_NETX_BASE_URL: https://barnesfoundation.netx.net
           REACT_APP_NETX_ENABLED: "true"

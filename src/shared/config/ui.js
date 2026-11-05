@@ -17,8 +17,6 @@ module.exports = {
     process.env.REACT_APP_IMAGE_BASE_URL ||
     `//s3.amazonaws.com/${process.env.REACT_APP_AWS_BUCKET || ""}`,
 
-  googleAnalyticsID: process.env.REACT_APP_GOOGLE_ANALYTICS_ID || "",
-
   // GA4 + Hotjar (CS-84, see src/analytics.js). Only the prod build sets the ids, and events are sent
   // only when the page is on analyticsHost, so previews, dev, localhost and origin hostnames never report.
   ga4MeasurementId: process.env.REACT_APP_GA4_MEASUREMENT_ID || "",
